@@ -265,7 +265,7 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
   </div>
 </div>
 
-<!-- ═══════════ CADASTRO ═══════════ -->
+<!-- ═══════════ CADASTRO COM ASSINATURA DIGITAL ═══════════ -->
 <div id="cadastroScreen" class="screen bg-verde">
   <div class="cf">
     <div class="logo">
@@ -274,42 +274,68 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
       <div class="divgold"></div>
     </div>
     <div class="erro-api" id="cadErro"></div>
-    <div class="campo"><label>Nome Completo *</label>
-      <input type="text" id="cadNome" placeholder="Seu nome completo"></div>
-    <div class="campo"><label>CPF *</label>
-      <input type="text" id="cadCpf" placeholder="000.000.000-00" maxlength="14"></div>
-    <div class="campo"><label>E-mail</label>
-      <input type="email" id="cadEmail" placeholder="seu@email.com"></div>
-    <div class="campo"><label>Telefone</label>
-      <input type="text" id="cadTel" placeholder="(61) 99999-9999" maxlength="15"></div>
-    <div class="campo"><label>Tipo de Usuário *</label>
-      <select id="cadTipo">
-        <option value="">Selecione...</option>
-        <option value="aluno">👨‍🎓 Estudante</option>
-        <option value="aluno">📝 Concurseiro</option>
-        <option value="aluno">🏘️ Comunidade Geral</option>
-      </select></div>
-    <div class="campo"><label>Senha * (mín. 6 caracteres)</label>
-      <input type="password" id="cadSenha" placeholder="••••••••"></div>
-    <div class="termos-box">
-      <h4>📜 Regulamento de Uso — Ala dos Estudantes Educador Paiva Netto</h4>
-      <p><b>1. DO ACESSO.</b> O pagamento garante acesso pelo período integral do dia de uso (até 19h45). O acesso é realizado via reconhecimento facial na catraca após pagamento confirmado no aplicativo.</p><br>
-      <p><b>2. DA SAÍDA.</b> Saída temporária não configura encerramento do acesso. A saída definitiva é configurada pela recepção.</p><br>
-      <p><b>3. DA VAGA.</b> O sistema controla vagas rotativas. Ao pagar, uma vaga é reservada. A vaga é liberada após saída definitiva.</p><br>
-      <p><b>4. DO CANCELAMENTO.</b> Não há reembolso após o pagamento. O acesso é pessoal e intransferível.</p><br>
-      <h4>🔒 Política de Privacidade (LGPD)</h4>
-      <p><b>5.</b> Coletamos nome, CPF, e-mail e telefone exclusivamente para controle de acesso. Dados não são compartilhados com terceiros.</p>
+
+    <!-- Indicador de etapas -->
+    <div style="display:flex;gap:6px;margin-bottom:18px;align-items:center">
+      <div id="etapaInd1" style="flex:1;height:4px;border-radius:2px;background:var(--verde);transition:.3s"></div>
+      <div id="etapaInd2" style="flex:1;height:4px;border-radius:2px;background:var(--cinza-cl);transition:.3s"></div>
+      <span id="etapaTxt" style="font-size:.7rem;color:var(--cinza);white-space:nowrap">Etapa 1 de 2</span>
     </div>
-    <label class="check-linha">
-      <input type="checkbox" id="aceitaTermos">
-      <span>Li e aceito o <b>Regulamento de Uso</b> e a política de vagas.</span>
-    </label>
-    <label class="check-linha">
-      <input type="checkbox" id="aceitaLGPD">
-      <span>Consinto com a <b>Política de Privacidade (LGPD)</b>.</span>
-    </label>
-    <button class="btn btn-verde" id="btnCadastrar" style="margin-top:4px">✅ Criar Minha Conta</button>
-    <div class="linktxt">Já tem conta? <span id="irLogin">Fazer login</span></div>
+
+    <!-- ETAPA 1: DADOS PESSOAIS -->
+    <div id="cadEtapa1">
+      <div class="campo"><label>Nome Completo *</label>
+        <input type="text" id="cadNome" placeholder="Seu nome completo"></div>
+      <div class="campo"><label>CPF *</label>
+        <input type="text" id="cadCpf" placeholder="000.000.000-00" maxlength="14"></div>
+      <div class="campo"><label>E-mail</label>
+        <input type="email" id="cadEmail" placeholder="seu@email.com"></div>
+      <div class="campo"><label>Telefone</label>
+        <input type="text" id="cadTel" placeholder="(61) 99999-9999" maxlength="15"></div>
+      <div class="campo"><label>Tipo de Usuário *</label>
+        <select id="cadTipo">
+          <option value="">Selecione...</option>
+          <option value="aluno">👨‍🎓 Estudante</option>
+          <option value="aluno">📝 Concurseiro</option>
+          <option value="aluno">🏘️ Comunidade Geral</option>
+        </select></div>
+      <div class="campo"><label>Senha * (mín. 6 caracteres)</label>
+        <input type="password" id="cadSenha" placeholder="••••••••"></div>
+      <button class="btn btn-verde" id="btnCadEtapa1">Próximo — Ler e Assinar Termo →</button>
+      <div class="linktxt">Já tem conta? <span id="irLogin">Fazer login</span></div>
+    </div>
+
+    <!-- ETAPA 2: TERMO + ASSINATURA DIGITAL -->
+    <div id="cadEtapa2" style="display:none">
+      <div style="font-size:.73rem;font-weight:700;color:var(--verde);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">📜 Leia o Regulamento completo</div>
+      <div class="termos-box">
+        <h4>📜 Regulamento de Uso — Ala dos Estudantes Educador Paiva Netto</h4>
+        <p><b>1. DO ACESSO.</b> O pagamento garante acesso pelo período integral do dia de uso (até 19h45). O acesso é realizado via reconhecimento facial na catraca após pagamento confirmado no aplicativo.</p><br>
+        <p><b>2. DA SAÍDA.</b> Saída temporária (banheiro, lanchonete, celular) não configura encerramento do acesso. A saída definitiva é configurada pela recepção quando o usuário sai com seus materiais ou quando identificado via câmeras que a mesa está desocupada.</p><br>
+        <p><b>3. DA VAGA.</b> O sistema controla 148 vagas rotativas. Ao pagar, uma vaga é reservada e liberada na catraca. A vaga é liberada ao sistema após saída definitiva registrada pela recepção.</p><br>
+        <p><b>4. DO CANCELAMENTO.</b> Não há reembolso após o pagamento. O acesso é pessoal e intransferível.</p><br>
+        <p><b>5. DA SUSPENSÃO.</b> O descumprimento das normas pode resultar em suspensão do cadastro.</p><br>
+        <h4>🔒 Política de Privacidade (LGPD)</h4>
+        <p><b>6.</b> Coletamos nome, CPF, e-mail e telefone exclusivamente para controle de acesso. Dados não são compartilhados com terceiros. Você pode solicitar a exclusão dos seus dados a qualquer momento na recepção.</p>
+      </div>
+
+      <div style="font-size:.73rem;font-weight:700;color:var(--verde);margin:12px 0 6px;text-transform:uppercase;letter-spacing:.5px">✍️ Assine abaixo para confirmar que leu e concorda</div>
+
+      <div style="position:relative;border:2px solid var(--cinza-cl);border-radius:var(--r-sm);background:#fafafa;overflow:hidden;margin-bottom:8px" id="canvasWrap">
+        <canvas id="canvasAssinatura" style="display:block;width:100%;touch-action:none;cursor:crosshair" height="130"></canvas>
+        <div id="assinaturaPlaceholder" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#ccc;font-size:.85rem;pointer-events:none;gap:6px">
+          ✍️ Desenhe sua assinatura aqui
+        </div>
+      </div>
+
+      <div style="display:flex;gap:8px;margin-bottom:14px;align-items:center">
+        <button class="btn btn-sec btn-sm" id="btnLimparAssinatura" style="flex:0 0 auto">🗑️ Limpar</button>
+        <span style="font-size:.71rem;color:#aaa;line-height:1.4">Sua assinatura confirma que você leu e aceita o regulamento e a política de privacidade (LGPD).</span>
+      </div>
+
+      <button class="btn btn-verde" id="btnCadastrar">✅ Criar Conta e Assinar Termo</button>
+      <button class="btn btn-sec" id="btnVoltarEtapa1" style="margin-top:8px">← Voltar e editar dados</button>
+    </div>
   </div>
 </div>
 
@@ -669,7 +695,7 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
 // ═══════════════════════════════════════════════════════════
 //  CONFIGURAÇÃO — altere apenas API_BASE após o deploy
 // ═══════════════════════════════════════════════════════════
-const API_BASE = 'https://biblioteca-backend-v2-0-8je5.vercel.app'; // ← substitua após deploy
+const API_BASE = 'https://SUA-URL.vercel.app'; // ← substitua após deploy
 
 // ═══════════════════════════════════════════════════════════
 //  CAMADA DE API
@@ -816,6 +842,7 @@ function bindEventos() {
 
   // Cadastro
   document.getElementById('btnCadastrar').onclick = cadastrarUsuario;
+  // irLogin2 é o link na etapa 1 do cadastro (mesmo id já coberto acima)
 
   // App — tabs + nav
   document.querySelectorAll('.tab').forEach(b => b.onclick = () => mudarTab(b.dataset.panel));
@@ -1001,38 +1028,136 @@ async function loginAdmin() {
 }
 
 // ═══════════════════════════════════════════════════════════
-//  CADASTRO
+//  CADASTRO COM ASSINATURA DIGITAL
 // ═══════════════════════════════════════════════════════════
+let _assinaturaFeita = false;
+let _ctx = null;
+let _desenhando = false;
+
+function initCanvas() {
+  const canvas = document.getElementById('canvasAssinatura');
+  if (!canvas || _ctx) return;
+  const wrap = document.getElementById('canvasWrap');
+  const dpr = window.devicePixelRatio || 1;
+  const w = wrap.offsetWidth || 350;
+  canvas.width  = w * dpr;
+  canvas.height = 130 * dpr;
+  canvas.style.width  = w + 'px';
+  canvas.style.height = '130px';
+  _ctx = canvas.getContext('2d');
+  _ctx.scale(dpr, dpr);
+  _ctx.strokeStyle = '#1a1a1a';
+  _ctx.lineWidth = 2.2;
+  _ctx.lineCap = 'round';
+  _ctx.lineJoin = 'round';
+
+  function getPos(e) {
+    const r = canvas.getBoundingClientRect();
+    const s = e.touches ? e.touches[0] : e;
+    return { x: s.clientX - r.left, y: s.clientY - r.top };
+  }
+  canvas.addEventListener('mousedown', e => {
+    _desenhando = true;
+    const p = getPos(e);
+    _ctx.beginPath(); _ctx.moveTo(p.x, p.y);
+  });
+  canvas.addEventListener('mousemove', e => {
+    if (!_desenhando) return;
+    const p = getPos(e);
+    _ctx.lineTo(p.x, p.y); _ctx.stroke();
+    _assinaturaFeita = true;
+    document.getElementById('assinaturaPlaceholder').style.display = 'none';
+  });
+  canvas.addEventListener('mouseup',    () => _desenhando = false);
+  canvas.addEventListener('mouseleave', () => _desenhando = false);
+  canvas.addEventListener('touchstart', e => {
+    e.preventDefault(); _desenhando = true;
+    const p = getPos(e); _ctx.beginPath(); _ctx.moveTo(p.x, p.y);
+  }, { passive: false });
+  canvas.addEventListener('touchmove', e => {
+    e.preventDefault();
+    if (!_desenhando) return;
+    const p = getPos(e); _ctx.lineTo(p.x, p.y); _ctx.stroke();
+    _assinaturaFeita = true;
+    document.getElementById('assinaturaPlaceholder').style.display = 'none';
+  }, { passive: false });
+  canvas.addEventListener('touchend', e => { e.preventDefault(); _desenhando = false; }, { passive: false });
+}
+
+function limparCanvas() {
+  if (!_ctx) return;
+  const c = document.getElementById('canvasAssinatura');
+  _ctx.clearRect(0, 0, c.width, c.height);
+  _assinaturaFeita = false;
+  document.getElementById('assinaturaPlaceholder').style.display = 'flex';
+}
+
+// Etapa 1 → 2
+document.getElementById('btnCadEtapa1').addEventListener('click', () => {
+  mostrarErro('cadErro','');
+  const nome  = document.getElementById('cadNome').value.trim();
+  const cpf   = document.getElementById('cadCpf').value.replace(/\D/g,'');
+  const tipo  = document.getElementById('cadTipo').value;
+  const senha = document.getElementById('cadSenha').value;
+  if (!nome)           { mostrarErro('cadErro','Informe seu nome'); return; }
+  if (cpf.length!==11) { mostrarErro('cadErro','CPF inválido'); return; }
+  if (!tipo)           { mostrarErro('cadErro','Selecione o tipo de usuário'); return; }
+  if (senha.length<6)  { mostrarErro('cadErro','Senha mínima de 6 caracteres'); return; }
+  document.getElementById('cadEtapa1').style.display = 'none';
+  document.getElementById('cadEtapa2').style.display = 'block';
+  document.getElementById('etapaInd2').style.background = 'var(--verde)';
+  document.getElementById('etapaTxt').textContent = 'Etapa 2 de 2';
+  _ctx = null; // reset canvas para reinicializar
+  setTimeout(initCanvas, 120);
+});
+
+document.getElementById('btnVoltarEtapa1').addEventListener('click', () => {
+  document.getElementById('cadEtapa2').style.display = 'none';
+  document.getElementById('cadEtapa1').style.display = 'block';
+  document.getElementById('etapaInd2').style.background = 'var(--cinza-cl)';
+  document.getElementById('etapaTxt').textContent = 'Etapa 1 de 2';
+});
+
+document.getElementById('btnLimparAssinatura').addEventListener('click', limparCanvas);
+
 async function cadastrarUsuario() {
   mostrarErro('cadErro','');
+  if (!_assinaturaFeita) {
+    mostrarErro('cadErro','Por favor, assine o termo para continuar');
+    return;
+  }
   const nome  = document.getElementById('cadNome').value.trim();
   const cpf   = document.getElementById('cadCpf').value.replace(/\D/g,'');
   const email = document.getElementById('cadEmail').value.trim();
   const tel   = document.getElementById('cadTel').value.trim();
   const tipo  = document.getElementById('cadTipo').value;
-  const senha = document.getElementById('cadSenha').value;
-  const t1    = document.getElementById('aceitaTermos').checked;
-  const t2    = document.getElementById('aceitaLGPD').checked;
-
-  if(!nome)           { mostrarErro('cadErro','Informe seu nome'); return; }
-  if(cpf.length!==11) { mostrarErro('cadErro','CPF inválido'); return; }
-  if(!tipo)           { mostrarErro('cadErro','Selecione o tipo de usuário'); return; }
-  if(senha.length<6)  { mostrarErro('cadErro','Senha mínima de 6 caracteres'); return; }
-  if(!t1||!t2)        { mostrarErro('cadErro','Aceite os termos para continuar'); return; }
+  const assinatura = document.getElementById('canvasAssinatura').toDataURL('image/png');
 
   loading('btnCadastrar', true);
   try {
-    // Cadastro sem token — endpoint público
-    const headers = { 'Content-Type': 'application/json' };
     const r = await fetch(API_BASE + '/api/usuarios/cadastrar', {
-      method: 'POST', headers,
-      body: JSON.stringify({ nome, cpf, email, telefone: tel, tipo, senha_hash: senha })
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ nome, cpf, email, telefone: tel, tipo })
     });
     const data = await r.json();
-    if(!r.ok) throw new Error(data.erro || 'Erro ao cadastrar');
+    if (!r.ok) throw new Error(data.erro || 'Erro ao cadastrar');
 
-    toast('✅ Cadastro realizado com sucesso!');
-    setTimeout(() => mostrarTela('loginScreen'), 1500);
+    // Salva assinatura digital
+    await fetch(API_BASE + '/api/usuarios/assinar-termo', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ usuario_id: data.usuario.id, assinatura_svg: assinatura })
+    });
+
+    toast('✅ Cadastro e assinatura realizados com sucesso!');
+    // Reset
+    _ctx = null; _assinaturaFeita = false;
+    document.getElementById('cadEtapa2').style.display = 'none';
+    document.getElementById('cadEtapa1').style.display = 'block';
+    document.getElementById('etapaInd2').style.background = 'var(--cinza-cl)';
+    document.getElementById('etapaTxt').textContent = 'Etapa 1 de 2';
+    setTimeout(() => mostrarTela('loginScreen'), 1600);
   } catch(e) {
     mostrarErro('cadErro', e.message);
   } finally {
