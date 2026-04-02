@@ -695,7 +695,7 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
 // ═══════════════════════════════════════════════════════════
 //  CONFIGURAÇÃO — altere apenas API_BASE após o deploy
 // ═══════════════════════════════════════════════════════════
-const API_BASE = 'https://biblioteca-backend-v2-0-8je5.vercel.app/api'; // ← substitua após deploy
+const API_BASE = 'https://SUA-URL.vercel.app'; // ← substitua após deploy
 
 // ═══════════════════════════════════════════════════════════
 //  CAMADA DE API
@@ -721,19 +721,19 @@ const api = {
   post(path, body)  { return this.req('POST', path, body); },
 
   // Auth
-  login(tipo, senha)         { return this.post('/api/auth/login', { tipo, senha }); },
+  login(tipo, senha)         { return this.post('/auth/login', { tipo, senha }); },
 
   // Vagas
-  vagas()                    { return this.get('/api/vagas/status'); },
+  vagas()                    { return this.get('/vagas/status'); },
 
   // Usuários
-  cadastrar(dados)           { return this.post('/api/usuarios/cadastrar', dados); },
-  listarUsuarios(q)          { return this.get(`/api/usuarios/listar?busca=${q||''}`); },
+  cadastrar(dados)           { return this.post('/usuarios/cadastrar', dados); },
+  listarUsuarios(q)          { return this.get(`/usuarios/listar?busca=${q||''}`); },
 
   // Acessos
-  registrarAcesso(uid, pid)  { return this.post('/api/acessos/registrar', { usuario_id: uid, pagamento_id: pid, registrado_por: 'recepcao' }); },
-  listarAcessos(data, status){ return this.get(`/api/acessos/listar?data=${data||''}&status=${status||''}`); },
-  encerrarAcesso(id)         { return this.post('/api/acessos/encerrar', { acesso_id: id }); },
+  registrarAcesso(uid, pid)  { return this.post('/acessos/registrar', { usuario_id: uid, pagamento_id: pid, registrado_por: 'recepcao' }); },
+  listarAcessos(data, status){ return this.get(`/acessos/listar?data=${data||''}&status=${status||''}`); },
+  encerrarAcesso(id)         { return this.post('/acessos/encerrar', { acesso_id: id }); },
 };
 
 // ═══════════════════════════════════════════════════════════
@@ -957,17 +957,12 @@ async function loginUsuario() {
 
   loading('btnLogin', true);
   try {
-    // Busca usuário pelo CPF
-    const token_temp = await obterTokenPublico();
-    api.setToken(token_temp);
-    const res = await api.get(`/api/usuarios/listar?busca=${cpf}`);
+    const res = await api.get(`/usuarios/listar?busca=${cpf}`);
     const usuario = res.usuarios?.find(u => u.cpf === cpf);
 
     if(!usuario) { mostrarErro('loginErro','CPF não cadastrado'); return; }
     if(!usuario.ativo) { mostrarErro('loginErro','Conta suspensa. Fale com a recepção.'); return; }
 
-    // Autenticação local de senha (temporária até implementar auth de usuário)
-    // TODO: criar endpoint /api/auth/login-usuario com verificação bcrypt
     sess.usuario = usuario;
     sess.tipo    = 'app';
     entrarApp();
@@ -976,14 +971,6 @@ async function loginUsuario() {
   } finally {
     loading('btnLogin', false);
   }
-}
-
-// Token público temporário — em produção criar endpoint público de busca por CPF+senha
-async function obterTokenPublico() {
-  // Usa credenciais de recepção para consultas de leitura do app do usuário
-  // Isso será substituído por auth própria de usuário no Passo 2.1
-  const senha = prompt('⚠️ API_BASE não configurada ou sem token público. Configure API_BASE no código.', '');
-  throw new Error('Configure API_BASE e o sistema de auth de usuário.');
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -1135,7 +1122,7 @@ async function cadastrarUsuario() {
 
   loading('btnCadastrar', true);
   try {
-    const r = await fetch(API_BASE + '/api/usuarios/cadastrar', {
+    const r = await fetch(API_BASE + '/usuarios/cadastrar', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ nome, cpf, email, telefone: tel, tipo })
@@ -1144,7 +1131,7 @@ async function cadastrarUsuario() {
     if (!r.ok) throw new Error(data.erro || 'Erro ao cadastrar');
 
     // Salva assinatura digital
-    await fetch(API_BASE + '/api/usuarios/assinar-termo', {
+    await fetch(API_BASE + '/usuarios/assinar-termo', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ usuario_id: data.usuario.id, assinatura_svg: assinatura })
@@ -1326,7 +1313,7 @@ async function recepRegistrarSaida(acessoId, btn) {
   btn.disabled = true;
   btn.textContent = '⏳...';
   try {
-    await api.post('/api/acessos/encerrar', { acesso_id: acessoId });
+    await api.post('/acessos/encerrar', { acesso_id: acessoId });
     toast('✅ Saída registrada!');
     atualizarVagas();
     recepCarregarPresentes();
@@ -1465,7 +1452,7 @@ async function adminSalvarConfig() {
   loading('btnSalvarConfig', true);
   try {
     for(const [chave, valor] of Object.entries(config)) {
-      if(valor) await api.post('/api/configuracoes/salvar', { chave, valor });
+      if(valor) await api.post('/configuracoes/salvar', { chave, valor });
     }
     toast('✅ Configurações salvas!');
     atualizarVagas();
