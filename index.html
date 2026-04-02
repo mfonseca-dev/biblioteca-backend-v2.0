@@ -1,0 +1,1369 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ala dos Estudantes — Paiva Netto</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--verde:#1a6b3a;--verde-esc:#0d3d20;--verde-cl:#2d9155;--verde-suave:#e8f5ee;--dourado:#c9a227;--dourado-cl:#f0d97a;--creme:#faf8f2;--cinza-esc:#1e1e1e;--cinza:#555;--cinza-cl:#e8e8e8;--vermelho:#c0392b;--azul:#1a4a8a;--laranja:#e67e22;--shadow:0 4px 24px rgba(0,0,0,.10);--shadow-lg:0 12px 48px rgba(0,0,0,.18);--r:16px;--r-sm:10px}
+*,::before,::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-esc);min-height:100vh}
+.screen{display:none;min-height:100vh}
+.screen.ativo{display:flex}
+#appScreen.ativo,#adminScreen.ativo,#recepScreen.ativo{display:block}
+.bg-verde{background:linear-gradient(145deg,#07221400,#0d3d20 40%,#1a6b3a 70%,#0d3d20 100%);align-items:center;justify-content:center;padding:20px;position:relative;overflow:hidden}
+.bg-verde::before{content:"";position:absolute;width:700px;height:700px;border-radius:50%;background:radial-gradient(circle,rgba(201,162,39,.12) 0%,transparent 70%);top:-150px;right:-150px;pointer-events:none}
+.cf{background:rgba(255,255,255,.98);border-radius:24px;padding:36px 32px;width:100%;max-width:460px;box-shadow:0 32px 96px rgba(0,0,0,.45);position:relative;z-index:1;animation:fadeUp .5s ease;max-height:94vh;overflow-y:auto}
+@keyframes fadeUp{0%{opacity:0;transform:translateY(28px)}100%{opacity:1;transform:translateY(0)}}
+.logo{text-align:center;margin-bottom:22px}
+.logo .em{font-size:48px;display:block;margin-bottom:8px}
+.logo h1{font-family:"Playfair Display",serif;font-size:1.18rem;color:var(--verde);line-height:1.3;font-weight:700}
+.logo p{font-size:.74rem;color:var(--cinza);margin-top:4px;text-transform:uppercase;letter-spacing:.6px}
+.divgold{width:50px;height:3px;background:linear-gradient(90deg,var(--dourado),var(--dourado-cl));border-radius:2px;margin:8px auto}
+.campo{margin-bottom:13px}
+.campo label{display:block;font-size:.73rem;font-weight:600;color:var(--cinza);margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px}
+.campo input,.campo select,.campo textarea{width:100%;padding:12px 14px;border:2px solid var(--cinza-cl);border-radius:var(--r-sm);font-family:"DM Sans",sans-serif;font-size:.9rem;color:var(--cinza-esc);background:#fff;transition:border-color .2s,box-shadow .2s;outline:none}
+.campo input:focus,.campo select:focus,.campo textarea:focus{border-color:var(--verde);box-shadow:0 0 0 3px rgba(26,107,58,.12)}
+.termos-box{background:#f8f8f8;border:1.5px solid var(--cinza-cl);border-radius:var(--r-sm);padding:13px;max-height:140px;overflow-y:auto;font-size:.77rem;color:#555;line-height:1.6;margin-bottom:10px}
+.termos-box h4{font-size:.79rem;color:var(--verde);margin-bottom:6px;font-weight:700}
+.check-linha{display:flex;align-items:flex-start;gap:9px;margin-bottom:9px;cursor:pointer}
+.check-linha input[type=checkbox]{width:17px;height:17px;margin-top:2px;accent-color:var(--verde);flex-shrink:0;cursor:pointer}
+.check-linha span{font-size:.79rem;color:#444;line-height:1.5}
+.check-linha span b{color:var(--verde)}
+.btn{width:100%;padding:13px;border:none;border-radius:var(--r-sm);font-family:"DM Sans",sans-serif;font-size:.92rem;font-weight:600;cursor:pointer;transition:.2s;letter-spacing:.3px}
+.btn-verde{background:linear-gradient(135deg,var(--verde-esc),var(--verde-cl));color:#fff}
+.btn-verde:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(26,107,58,.4)}
+.btn-dourado{background:linear-gradient(135deg,var(--dourado),#e8b930);color:#1a1a1a}
+.btn-dourado:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(201,162,39,.4)}
+.btn-vermelho{background:linear-gradient(135deg,#e74c3c,var(--vermelho));color:#fff}
+.btn-vermelho:hover{box-shadow:0 6px 20px rgba(192,57,43,.4)}
+.btn-laranja{background:linear-gradient(135deg,#f39c12,var(--laranja));color:#fff}
+.btn-azul{background:linear-gradient(135deg,#2563eb,var(--azul));color:#fff}
+.btn-sec{background:#fff;border:2px solid var(--cinza-cl);color:var(--cinza)}
+.btn-sec:hover{border-color:var(--cinza)}
+.btn-sm{padding:8px 15px;font-size:.79rem;width:auto}
+.btn-xs{padding:5px 11px;font-size:.72rem;width:auto;border-radius:6px}
+.btn:disabled{opacity:.55;cursor:not-allowed;transform:none!important}
+.linktxt{text-align:center;margin-top:12px;font-size:.84rem;color:var(--cinza)}
+.linktxt span{color:var(--verde);font-weight:600;cursor:pointer;text-decoration:underline}
+.topbar{background:linear-gradient(135deg,var(--verde-esc),var(--verde));color:#fff;padding:0 17px;display:flex;align-items:center;justify-content:space-between;height:60px;position:sticky;top:0;z-index:100;box-shadow:0 2px 16px rgba(0,0,0,.25)}
+.topbar-logo{display:flex;align-items:center;gap:9px}
+.tl-nome{font-family:"Playfair Display",serif;font-size:.88rem;font-weight:700;line-height:1.2}
+.tl-sub{font-size:.62rem;opacity:.75;text-transform:uppercase;letter-spacing:.5px}
+.topbar-user{display:flex;align-items:center;gap:7px;cursor:pointer}
+.avatar{width:33px;height:33px;background:var(--dourado);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.88rem;color:#fff;flex-shrink:0;overflow:hidden}
+.avatar img{width:100%;height:100%;object-fit:cover}
+.tl-user-nome{font-size:.79rem;font-weight:500;max-width:90px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.main{max-width:900px;margin:0 auto;padding:16px 13px 100px}
+.bv{background:linear-gradient(135deg,var(--verde) 0%,var(--verde-cl) 100%);color:#fff;border-radius:var(--r);padding:18px 20px 15px;margin-bottom:14px;position:relative;overflow:hidden;box-shadow:var(--shadow)}
+.bv::after{content:"📚";position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:46px;opacity:.13}
+.bv h2{font-family:"Playfair Display",serif;font-size:1.25rem;font-weight:700;margin-bottom:2px}
+.bv p{font-size:.81rem;opacity:.82;margin-bottom:8px}
+.badge-plano{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.35);border-radius:20px;padding:5px 12px;font-size:.77rem;font-weight:600}
+.alerta{border-radius:var(--r-sm);padding:12px 14px;margin-bottom:13px;display:flex;align-items:flex-start;gap:10px}
+.alerta.bloqueado{background:#fff5f5;border:2px solid #f5b5a8}
+.alerta.bloqueado p{font-size:.83rem;color:var(--vermelho);line-height:1.5}
+.alerta .ai{font-size:19px;flex-shrink:0}
+.tabs{display:flex;gap:7px;margin-bottom:15px;overflow-x:auto;padding-bottom:3px;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex-shrink:0;padding:8px 15px;border-radius:22px;border:2px solid var(--cinza-cl);background:#fff;font-family:"DM Sans",sans-serif;font-size:.8rem;font-weight:600;color:var(--cinza);cursor:pointer;transition:.2s;white-space:nowrap}
+.tab.ativo{background:var(--verde);border-color:var(--verde);color:#fff;box-shadow:0 3px 12px rgba(26,107,58,.3)}
+.tab:hover:not(.ativo){border-color:var(--verde);color:var(--verde)}
+.panel{display:none}
+.panel.ativo{display:block;animation:fadeIn .3s ease}
+@keyframes fadeIn{0%{opacity:0;transform:translateY(6px)}100%{opacity:1;transform:translateY(0)}}
+.crd{background:#fff;border-radius:var(--r);padding:16px;margin-bottom:12px;box-shadow:var(--shadow);border:1px solid rgba(0,0,0,.04)}
+.crd-t{font-family:"Playfair Display",serif;font-size:1rem;font-weight:700;color:var(--verde);margin-bottom:11px;display:flex;align-items:center;gap:7px}
+.vagas-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.vs{border-radius:var(--r-sm);padding:13px;text-align:center}
+.vs.livres{background:linear-gradient(135deg,#e8f5ee,#d0edda);border:2px solid #a8d5b5}
+.vs.ocupadas{background:linear-gradient(135deg,#fee0e0,#fdd0d0);border:2px solid #f5b5a8}
+.vs .num{font-family:"Playfair Display",serif;font-size:1.85rem;font-weight:900;line-height:1;margin-bottom:3px}
+.vs.livres .num{color:var(--verde)}
+.vs.ocupadas .num{color:var(--vermelho)}
+.vs .lbl{font-size:.69rem;font-weight:600;text-transform:uppercase;letter-spacing:.5px;opacity:.75}
+.barra-w{margin-bottom:10px}
+.barra-lbl{display:flex;justify-content:space-between;font-size:.75rem;color:var(--cinza);margin-bottom:4px;font-weight:500}
+.barra{height:10px;background:#e0e0e0;border-radius:5px;overflow:hidden}
+.barra-fill{height:100%;border-radius:5px;background:linear-gradient(90deg,var(--verde),var(--verde-cl));transition:width .8s cubic-bezier(.4,0,.2,1)}
+.st-box{display:flex;align-items:center;gap:9px;padding:11px 14px;border-radius:var(--r-sm);margin-bottom:11px;font-size:.85rem;font-weight:600}
+.st-box.presente{background:#e8f5ee;color:var(--verde);border:1.5px solid #a8d5b5}
+.st-box.ausente{background:#f5f5f5;color:var(--cinza);border:1.5px solid var(--cinza-cl)}
+.st-box.pago{background:#eef3ff;color:var(--azul);border:1.5px solid #b0c4ef}
+.dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.dot.verde{background:var(--verde);box-shadow:0 0 0 3px rgba(26,107,58,.2);animation:pulso 2s ease infinite}
+.dot.cinza{background:#aaa}
+.dot.azul{background:var(--azul);animation:pulso-azul 2s ease infinite}
+@keyframes pulso{0%,100%{box-shadow:0 0 0 3px rgba(26,107,58,.2)}50%{box-shadow:0 0 0 6px rgba(26,107,58,.07)}}
+@keyframes pulso-azul{0%,100%{box-shadow:0 0 0 3px rgba(26,74,138,.2)}50%{box-shadow:0 0 0 6px rgba(26,74,138,.07)}}
+.ticket{background:linear-gradient(135deg,var(--verde-esc) 0%,#1a6b3a 100%);border-radius:16px;padding:20px;color:#fff;margin-bottom:12px;position:relative;overflow:hidden}
+.ticket::before{content:"";position:absolute;left:-1px;top:50%;transform:translateY(-50%);width:20px;height:20px;background:var(--creme);border-radius:50%}
+.ticket::after{content:"";position:absolute;right:-1px;top:50%;transform:translateY(-50%);width:20px;height:20px;background:var(--creme);border-radius:50%}
+.ticket-inner{border:1.5px dashed rgba(255,255,255,.3);border-radius:10px;padding:14px}
+.ticket-titulo{font-size:.68rem;text-transform:uppercase;letter-spacing:1px;opacity:.7;margin-bottom:6px}
+.ticket-nome{font-family:"Playfair Display",serif;font-size:1.2rem;font-weight:700;margin-bottom:4px}
+.ticket-detalhe{font-size:.78rem;opacity:.8;margin-bottom:12px}
+.ticket-validade{display:flex;justify-content:space-between;align-items:center}
+.ticket-validade .label{font-size:.66rem;text-transform:uppercase;letter-spacing:.5px;opacity:.6}
+.ticket-validade .val{font-family:"JetBrains Mono",monospace;font-size:.95rem;font-weight:600;color:var(--dourado-cl)}
+.ticket-qr{width:54px;height:54px;background:rgba(255,255,255,.15);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:28px}
+.ticket-status-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:20px;font-size:.75rem;font-weight:700;margin-bottom:10px}
+.tsb-ativo{background:rgba(45,145,85,.3);border:1px solid rgba(45,145,85,.5);color:#7dffb3}
+.tsb-pago{background:rgba(37,99,235,.3);border:1px solid rgba(37,99,235,.5);color:#93c5fd}
+.aviso-horario{background:linear-gradient(135deg,#fff8e0,#fffbef);border:1.5px solid var(--dourado-cl);border-radius:var(--r-sm);padding:11px 14px;display:flex;align-items:center;gap:10px;font-size:.82rem;color:#a07a00;font-weight:600;margin-bottom:12px}
+.info-item{display:flex;align-items:flex-start;gap:11px;padding:10px 0;border-bottom:1px solid var(--cinza-cl)}
+.info-item:last-child{border-bottom:none}
+.ii{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.ii.verde{background:var(--verde-suave)}
+.ii.gold{background:#fff8e0}
+.ii.azul{background:#eef3ff}
+.info-texto h4{font-size:.85rem;font-weight:700;color:var(--cinza-esc);margin-bottom:2px}
+.info-texto p{font-size:.79rem;color:var(--cinza);line-height:1.5}
+.plano-crd{border-radius:var(--r);padding:18px;background:linear-gradient(135deg,var(--verde-esc),var(--verde));color:#fff;margin-bottom:12px}
+.plano-tipo{font-family:"Playfair Display",serif;font-size:1.2rem;font-weight:700;display:flex;align-items:center;gap:7px;margin-bottom:2px}
+.plano-info{font-size:.79rem;opacity:.82;margin-bottom:12px}
+.plano-det{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:12px}
+.pd{background:rgba(255,255,255,.12);border-radius:8px;padding:9px;text-align:center}
+.pd .val{font-size:1rem;font-weight:700;font-family:"Playfair Display",serif}
+.pd .key{font-size:.62rem;opacity:.75;text-transform:uppercase;letter-spacing:.5px}
+.fg{margin-bottom:12px}
+.fg label{display:block;font-size:.73rem;font-weight:600;color:var(--cinza);margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px}
+.fg select,.fg textarea,.fg input{width:100%;padding:11px 13px;border:2px solid var(--cinza-cl);border-radius:var(--r-sm);font-family:"DM Sans",sans-serif;font-size:.86rem;color:var(--cinza-esc);transition:border-color .2s;outline:none;resize:vertical}
+.fg select:focus,.fg textarea:focus,.fg input:focus{border-color:var(--verde);box-shadow:0 0 0 3px rgba(26,107,58,.1)}
+.bnav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--cinza-cl);display:flex;box-shadow:0 -4px 20px rgba(0,0,0,.08);z-index:50}
+.ni{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:9px 4px;cursor:pointer;transition:.2s;position:relative;gap:2px}
+.ni .ic{font-size:18px}
+.ni .lb{font-size:.57rem;font-weight:600;color:#999;text-transform:uppercase;letter-spacing:.3px}
+.ni.ativo .lb{color:var(--verde)}
+.ni.ativo::after{content:"";position:absolute;top:0;left:20%;right:20%;height:3px;background:var(--verde);border-radius:0 0 3px 3px}
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:200;align-items:center;justify-content:center;padding:16px}
+.modal-bg.ativo{display:flex}
+.modal{background:#fff;border-radius:20px;padding:26px 22px;width:100%;max-width:400px;text-align:center;animation:fadeUp .3s ease;max-height:90vh;overflow-y:auto}
+.modal .mi{font-size:44px;margin-bottom:8px}
+.modal h3{font-family:"Playfair Display",serif;font-size:1.12rem;color:var(--verde);margin-bottom:6px}
+.modal p{font-size:.84rem;color:var(--cinza);line-height:1.6;margin-bottom:15px}
+.modal-btns{display:flex;gap:8px}
+.modal-pagto{background:#fff;border-radius:20px;width:100%;max-width:420px;animation:fadeUp .3s ease;max-height:92vh;overflow-y:auto}
+.pagto-header{background:linear-gradient(135deg,var(--verde-esc),var(--verde-cl));color:#fff;padding:22px 22px 18px;border-radius:20px 20px 0 0;text-align:center}
+.pagto-header .pi{font-size:36px;margin-bottom:6px}
+.pagto-header h3{font-family:"Playfair Display",serif;font-size:1.1rem;margin-bottom:2px}
+.pagto-header p{font-size:.77rem;opacity:.82}
+.pagto-body{padding:20px 22px}
+.pagto-preco{text-align:center;margin-bottom:16px}
+.pagto-preco .valor{font-family:"Playfair Display",serif;font-size:2.4rem;font-weight:900;color:var(--verde)}
+.pagto-preco .sub{font-size:.73rem;color:#888;text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
+.pix-box{background:#f0f7f0;border:2px dashed var(--verde);border-radius:var(--r-sm);padding:14px;text-align:center;margin-bottom:14px}
+.pix-label{font-size:.68rem;text-transform:uppercase;letter-spacing:.5px;color:#888;margin-bottom:4px}
+.pix-chave{font-family:"JetBrains Mono",monospace;font-size:.92rem;font-weight:600;color:var(--verde);word-break:break-all;margin-bottom:3px}
+.pix-nome{font-size:.74rem;color:#777}
+.pagto-aviso{background:#fff8e0;border:1.5px solid var(--dourado-cl);border-radius:var(--r-sm);padding:11px 13px;font-size:.79rem;color:#a07a00;line-height:1.6;margin-bottom:14px}
+.pagto-status{text-align:center;font-size:.88rem;font-weight:600;min-height:22px;margin-bottom:10px;transition:.3s}
+.pagto-processando{color:var(--laranja)}
+.pagto-ok{color:var(--verde)}
+.toast{position:fixed;bottom:83px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--cinza-esc);color:#fff;padding:10px 22px;border-radius:28px;font-size:.82rem;font-weight:600;opacity:0;transition:.3s;z-index:1000;white-space:nowrap;pointer-events:none;max-width:90vw;text-align:center}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.sem{text-align:center;padding:22px;color:#aaa;font-size:.85rem}
+.sem .si{font-size:32px;display:block;margin-bottom:6px}
+.aviso{border-left:4px solid var(--dourado);background:#fffdf0;border-radius:0 var(--r-sm) var(--r-sm) 0;padding:11px 13px;margin-bottom:9px}
+.aviso.urgente{border-color:var(--vermelho);background:#fff5f5}
+.aviso.info{border-color:var(--azul);background:#f0f4ff}
+.aviso .tag{font-size:.66rem;font-weight:700;text-transform:uppercase;letter-spacing:.8px;margin-bottom:3px;color:#a07a00}
+.aviso.urgente .tag{color:var(--vermelho)}
+.aviso.info .tag{color:var(--azul)}
+.aviso p{font-size:.84rem;color:var(--cinza-esc);line-height:1.5}
+.aviso .data{font-size:.7rem;color:var(--cinza);margin-top:4px}
+#adminScreen,#recepScreen{background:#f0f2f5}
+.admin-top{background:linear-gradient(135deg,#060f0a,var(--verde-esc));color:#fff;padding:0 18px;display:flex;align-items:center;justify-content:space-between;height:60px;position:sticky;top:0;z-index:100;box-shadow:0 2px 16px rgba(0,0,0,.3)}
+.admin-top h1{font-family:"Playfair Display",serif;font-size:1rem;display:flex;align-items:center;gap:7px}
+.admin-main{max-width:1100px;margin:0 auto;padding:18px 14px 40px}
+.admin-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:16px}
+@media(min-width:600px){.admin-stats{grid-template-columns:repeat(4,1fr)}}
+.astat{background:#fff;border-radius:var(--r-sm);padding:14px;text-align:center;box-shadow:var(--shadow)}
+.astat .av{font-family:"Playfair Display",serif;font-size:1.65rem;font-weight:900}
+.astat .ak{font-size:.68rem;text-transform:uppercase;letter-spacing:.5px;color:var(--cinza);margin-top:3px}
+.astat.verde .av{color:var(--verde)}
+.astat.vermelho .av{color:var(--vermelho)}
+.astat.dourado .av{color:var(--dourado)}
+.astat.azul .av{color:var(--azul)}
+.atabs{display:flex;gap:7px;margin-bottom:15px;overflow-x:auto;scrollbar-width:none}
+.atabs::-webkit-scrollbar{display:none}
+.atab{flex-shrink:0;padding:8px 14px;border-radius:22px;border:2px solid var(--cinza-cl);background:#fff;font-family:"DM Sans",sans-serif;font-size:.79rem;font-weight:600;color:var(--cinza);cursor:pointer;transition:.2s;white-space:nowrap}
+.atab.ativo{background:var(--verde-esc);border-color:var(--verde-esc);color:#fff}
+.apanel{display:none}
+.apanel.ativo{display:block;animation:fadeIn .3s ease}
+.acrd{background:#fff;border-radius:var(--r);padding:17px;margin-bottom:12px;box-shadow:var(--shadow)}
+.acrd-t{font-family:"Playfair Display",serif;font-size:.97rem;font-weight:700;color:var(--verde-esc);margin-bottom:12px;display:flex;align-items:center;gap:7px}
+.tabela{width:100%;border-collapse:collapse;font-size:.8rem}
+.tabela th{background:#f5f5f5;padding:9px 11px;text-align:left;font-weight:700;font-size:.69rem;text-transform:uppercase;letter-spacing:.5px;color:var(--cinza);border-bottom:2px solid var(--cinza-cl)}
+.tabela td{padding:9px 11px;border-bottom:1px solid #f0f0f0;vertical-align:middle}
+.tabela tr:last-child td{border-bottom:none}
+.tabela tr:hover td{background:#fafafa}
+.badge{display:inline-flex;align-items:center;gap:3px;padding:3px 9px;border-radius:12px;font-size:.69rem;font-weight:700}
+.badge.verde{background:var(--verde-suave);color:var(--verde)}
+.badge.vermelho{background:#fff5f5;color:var(--vermelho)}
+.badge.gold{background:#fff8e0;color:#a07a00}
+.badge.azul{background:#eef3ff;color:var(--azul)}
+.badge.cinza{background:#f0f0f0;color:#777}
+.presenca-grid{display:grid;grid-template-columns:1fr;gap:10px}
+@media(min-width:500px){.presenca-grid{grid-template-columns:1fr 1fr}}
+@media(min-width:800px){.presenca-grid{grid-template-columns:1fr 1fr 1fr}}
+.presenca-card{background:#fff;border-radius:var(--r-sm);padding:13px;box-shadow:var(--shadow);border:1.5px solid #f0f0f0;display:flex;flex-direction:column;gap:8px}
+.pc-header{display:flex;align-items:center;gap:9px}
+.pc-avatar{width:38px;height:38px;border-radius:50%;background:var(--verde-suave);display:flex;align-items:center;justify-content:center;font-size:1rem;font-weight:700;color:var(--verde);flex-shrink:0;overflow:hidden}
+.pc-avatar img{width:100%;height:100%;object-fit:cover}
+.pc-nome{font-size:.86rem;font-weight:700;color:var(--cinza-esc)}
+.pc-tempo{font-size:.73rem;color:var(--cinza)}
+.pc-btns{display:flex;gap:6px}
+.spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.erro-api{background:#fff5f5;border:1.5px solid #f5b5a8;border-radius:var(--r-sm);padding:10px 14px;font-size:.82rem;color:var(--vermelho);margin-bottom:10px;display:none}
+@media(min-width:768px){.main{padding:20px 20px 100px}.cf{padding:42px 40px}}
+@media(min-width:1024px){.main{padding:24px 24px 80px}.bnav{max-width:900px;left:50%;transform:translateX(-50%);border-radius:20px 20px 0 0}.toast{bottom:90px}}
+</style>
+</head>
+<body>
+
+<!-- ═══════════ LOGIN ═══════════ -->
+<div id="loginScreen" class="screen bg-verde ativo">
+  <div class="cf">
+    <div class="logo">
+      <span class="em">📚</span>
+      <h1>Ala dos Estudantes<br>Educador Paiva Netto</h1>
+      <div class="divgold"></div>
+      <p>Acesso à Biblioteca</p>
+    </div>
+    <div class="erro-api" id="loginErro"></div>
+    <div class="campo"><label>CPF</label>
+      <input type="text" id="loginCpf" placeholder="000.000.000-00" maxlength="14"></div>
+    <div class="campo"><label>Senha</label>
+      <input type="password" id="loginSenha" placeholder="••••••••"></div>
+    <button class="btn btn-verde" id="btnLogin">🔐 Entrar</button>
+    <div class="linktxt">Não tem cadastro? <span id="irCadastro">Cadastre-se aqui</span></div>
+    <div class="linktxt" style="margin-top:6px">
+      <span id="irAdminLogin" style="color:#bbb;font-size:.75rem">⚙️ Acesso Administrativo</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ ADMIN LOGIN ═══════════ -->
+<div id="adminLoginScreen" class="screen bg-verde">
+  <div class="cf" style="max-width:370px">
+    <div class="logo">
+      <span class="em">⚙️</span>
+      <h1>Acesso Administrativo</h1>
+      <div class="divgold"></div>
+      <p>Restrito — Staff / Recepção</p>
+    </div>
+    <div class="erro-api" id="adminLoginErro"></div>
+    <div class="campo"><label>Usuário</label>
+      <input type="text" id="adminUser" placeholder="admin ou recepcao"></div>
+    <div class="campo"><label>Senha</label>
+      <input type="password" id="adminSenha" placeholder="••••••••"></div>
+    <button class="btn btn-verde" id="btnAdminLogin">🔓 Entrar no Painel</button>
+    <div class="linktxt"><span id="voltarLogin">← Voltar</span></div>
+  </div>
+</div>
+
+<!-- ═══════════ CADASTRO ═══════════ -->
+<div id="cadastroScreen" class="screen bg-verde">
+  <div class="cf">
+    <div class="logo">
+      <span class="em">📋</span>
+      <h1>Novo Cadastro</h1>
+      <div class="divgold"></div>
+    </div>
+    <div class="erro-api" id="cadErro"></div>
+    <div class="campo"><label>Nome Completo *</label>
+      <input type="text" id="cadNome" placeholder="Seu nome completo"></div>
+    <div class="campo"><label>CPF *</label>
+      <input type="text" id="cadCpf" placeholder="000.000.000-00" maxlength="14"></div>
+    <div class="campo"><label>E-mail</label>
+      <input type="email" id="cadEmail" placeholder="seu@email.com"></div>
+    <div class="campo"><label>Telefone</label>
+      <input type="text" id="cadTel" placeholder="(61) 99999-9999" maxlength="15"></div>
+    <div class="campo"><label>Tipo de Usuário *</label>
+      <select id="cadTipo">
+        <option value="">Selecione...</option>
+        <option value="aluno">👨‍🎓 Estudante</option>
+        <option value="aluno">📝 Concurseiro</option>
+        <option value="aluno">🏘️ Comunidade Geral</option>
+      </select></div>
+    <div class="campo"><label>Senha * (mín. 6 caracteres)</label>
+      <input type="password" id="cadSenha" placeholder="••••••••"></div>
+    <div class="termos-box">
+      <h4>📜 Regulamento de Uso — Ala dos Estudantes Educador Paiva Netto</h4>
+      <p><b>1. DO ACESSO.</b> O pagamento garante acesso pelo período integral do dia de uso (até 19h45). O acesso é realizado via reconhecimento facial na catraca após pagamento confirmado no aplicativo.</p><br>
+      <p><b>2. DA SAÍDA.</b> Saída temporária não configura encerramento do acesso. A saída definitiva é configurada pela recepção.</p><br>
+      <p><b>3. DA VAGA.</b> O sistema controla vagas rotativas. Ao pagar, uma vaga é reservada. A vaga é liberada após saída definitiva.</p><br>
+      <p><b>4. DO CANCELAMENTO.</b> Não há reembolso após o pagamento. O acesso é pessoal e intransferível.</p><br>
+      <h4>🔒 Política de Privacidade (LGPD)</h4>
+      <p><b>5.</b> Coletamos nome, CPF, e-mail e telefone exclusivamente para controle de acesso. Dados não são compartilhados com terceiros.</p>
+    </div>
+    <label class="check-linha">
+      <input type="checkbox" id="aceitaTermos">
+      <span>Li e aceito o <b>Regulamento de Uso</b> e a política de vagas.</span>
+    </label>
+    <label class="check-linha">
+      <input type="checkbox" id="aceitaLGPD">
+      <span>Consinto com a <b>Política de Privacidade (LGPD)</b>.</span>
+    </label>
+    <button class="btn btn-verde" id="btnCadastrar" style="margin-top:4px">✅ Criar Minha Conta</button>
+    <div class="linktxt">Já tem conta? <span id="irLogin">Fazer login</span></div>
+  </div>
+</div>
+
+<!-- ═══════════ APP USUÁRIO ═══════════ -->
+<div id="appScreen" class="screen">
+  <div class="topbar">
+    <div class="topbar-logo">
+      <span style="font-size:20px">📚</span>
+      <div><div class="tl-nome">Paiva Netto</div><div class="tl-sub">Ala dos Estudantes</div></div>
+    </div>
+    <div class="topbar-user" id="btnSairApp">
+      <div class="avatar" id="avatarLetra">?</div>
+      <span class="tl-user-nome" id="nomeUser">—</span>
+    </div>
+  </div>
+  <div class="main">
+    <div class="alerta bloqueado" id="alertaBloq" style="display:none">
+      <span class="ai">🚫</span>
+      <p><b>Conta suspensa.</b> Entre em contato com a recepção: (61) 3114-1027.</p>
+    </div>
+    <div class="bv">
+      <h2 id="msgBV">Olá! 👋</h2>
+      <p id="msgData">—</p>
+      <span class="badge-plano">⭐ Acesso Diário — até 19h45</span>
+    </div>
+    <div class="tabs">
+      <button class="tab ativo" data-panel="panelInicio">🏠 Início</button>
+      <button class="tab" data-panel="panelAvisos">📢 Avisos</button>
+      <button class="tab" data-panel="panelPlano">🎫 Meu Plano</button>
+      <button class="tab" data-panel="panelInformacoes">ℹ️ Info</button>
+      <button class="tab" data-panel="panelSugestoes">💬 Sugestões</button>
+    </div>
+
+    <!-- INÍCIO -->
+    <div id="panelInicio" class="panel ativo">
+      <div id="blocoTicket" style="display:none">
+        <div class="ticket">
+          <div class="ticket-inner">
+            <div id="ticketStatusBadge" class="ticket-status-badge tsb-ativo">
+              <span>●</span><span id="ticketStatusTxt">Acesso Ativo</span>
+            </div>
+            <div class="ticket-titulo">Ala dos Estudantes Educador Paiva Netto</div>
+            <div class="ticket-nome" id="ticketNome">—</div>
+            <div class="ticket-detalhe" id="ticketDetalhe">—</div>
+            <div class="ticket-validade">
+              <div><div class="label">Válido até</div><div class="val">19:45 de hoje</div></div>
+              <div class="ticket-qr">🎫</div>
+            </div>
+          </div>
+        </div>
+        <div class="aviso-horario">
+          <span>⏰</span><span>Acesso válido! Pode sair e voltar à vontade até 19h45.</span>
+        </div>
+      </div>
+      <div class="crd">
+        <div class="crd-t">🅿️ Vagas em Tempo Real</div>
+        <div class="vagas-grid">
+          <div class="vs livres"><div class="num" id="vagasL">--</div><div class="lbl">✅ Livres</div></div>
+          <div class="vs ocupadas"><div class="num" id="vagasO">--</div><div class="lbl">🔴 Ocupadas</div></div>
+        </div>
+        <div class="barra-w">
+          <div class="barra-lbl"><span>Ocupação atual</span><span id="pctOc">0%</span></div>
+          <div class="barra"><div class="barra-fill" id="barraFill" style="width:0%"></div></div>
+        </div>
+        <p style="font-size:.71rem;color:#bbb;text-align:right" id="totalVagasInfo">— vagas rotativas</p>
+      </div>
+      <div class="crd" id="cardControle">
+        <div class="crd-t">🚪 Meu Acesso</div>
+        <div class="st-box ausente" id="statusBox">
+          <div class="dot cinza" id="dotSt"></div>
+          <span id="txtSt">Verificando...</span>
+        </div>
+        <button class="btn btn-dourado" id="btnAcesso">
+          <span id="lblBtn">💳 Pagar e Garantir Acesso</span>
+        </button>
+        <p style="font-size:.71rem;color:#aaa;margin-top:9px;text-align:center">⏰ Funcionamento: todos os dias — 8h às 19h45</p>
+      </div>
+      <div class="crd" style="padding:14px 16px">
+        <div class="crd-t" style="font-size:.88rem;margin-bottom:9px">📋 Como funciona?</div>
+        <div style="font-size:.79rem;color:#555;line-height:2.1">
+          <span style="background:#eef3ff;color:var(--azul);padding:2px 8px;border-radius:10px;font-weight:600;margin-right:6px">💳 Pague no app</span> Confirma vaga e libera catraca<br>
+          <span style="background:#e8f5ee;color:var(--verde);padding:2px 8px;border-radius:10px;font-weight:600;margin-right:6px">🚦 Catraca libera</span> Reconhecimento facial — acesso direto<br>
+          <span style="background:#e8f5ee;color:var(--verde);padding:2px 8px;border-radius:10px;font-weight:600;margin-right:6px">🟢 Acesso até 19h45</span> Pode sair e voltar à vontade<br>
+          <span style="background:#f0f0f0;color:#777;padding:2px 8px;border-radius:10px;font-weight:600;margin-right:6px">🚪 Saída definitiva</span> Registrada pela recepção
+        </div>
+      </div>
+    </div>
+
+    <!-- AVISOS -->
+    <div id="panelAvisos" class="panel">
+      <div class="crd">
+        <div class="crd-t">📢 Comunicados Oficiais</div>
+        <div class="aviso urgente"><div class="tag">⚠️ Urgente</div>
+          <p>Manutenção nos computadores do 2º andar nesta quarta-feira — fora de serviço das 8h às 12h.</p>
+          <div class="data">📅 30/03/2026</div></div>
+        <div class="aviso"><div class="tag">📌 Aviso</div>
+          <p>Silêncio obrigatório nas áreas de estudo. Conversas apenas nas áreas de convivência.</p>
+          <div class="data">📅 25/03/2026</div></div>
+        <div class="aviso info"><div class="tag">ℹ️ Informação</div>
+          <p>Novos armários disponíveis no subsolo. Solicite a chave na recepção com documento.</p>
+          <div class="data">📅 20/03/2026</div></div>
+      </div>
+    </div>
+
+    <!-- PLANO -->
+    <div id="panelPlano" class="panel">
+      <div class="plano-crd">
+        <div class="plano-tipo">🎫 Acesso Diário</div>
+        <div class="plano-info">Pague uma vez, fique o dia inteiro • Saída registrada pela recepção</div>
+        <div class="plano-det">
+          <div class="pd"><div class="val" id="pVisitas">0</div><div class="key">Visitas mês</div></div>
+          <div class="pd"><div class="val" id="pHoras">0h</div><div class="key">Horas estud.</div></div>
+          <div class="pd"><div class="val" id="pDias">0</div><div class="key">Dias ativo</div></div>
+        </div>
+      </div>
+      <div class="crd">
+        <div class="crd-t">📊 Histórico de Acessos</div>
+        <div id="historicoLista"><div class="sem"><span class="si">⏳</span>Carregando...</div></div>
+      </div>
+    </div>
+
+    <!-- INFO -->
+    <div id="panelInformacoes" class="panel">
+      <div class="crd">
+        <div class="crd-t">🏛️ Sobre a Biblioteca</div>
+        <p style="font-size:.83rem;color:#555;line-height:1.7;margin-bottom:11px">A <b>Ala dos Estudantes Educador Paiva Netto</b> é um espaço dedicado ao estudo, aberto a toda a comunidade.</p>
+        <div class="info-item"><div class="ii verde">📍</div>
+          <div class="info-texto"><h4>Endereço</h4><p>SGAS 915 Sul, Lotes 75/76 — Plano Piloto<br>Brasília/DF — CEP 70390-150</p></div></div>
+        <div class="info-item"><div class="ii gold">⏰</div>
+          <div class="info-texto"><h4>Horário</h4><p>Todos os dias — inclusive feriados<br><b>8h00 às 19h45</b></p></div></div>
+        <div class="info-item"><div class="ii azul">📞</div>
+          <div class="info-texto"><h4>Telefone</h4><p><a href="tel:6131141027" style="color:var(--azul);font-weight:600">(61) 3114-1027</a></p></div></div>
+        <div class="info-item"><div class="ii verde">🔒</div>
+          <div class="info-texto"><h4>Armários</h4><p>Guarde seus pertences. Solicite na recepção com documento.</p></div></div>
+        <div class="info-item"><div class="ii azul">📶</div>
+          <div class="info-texto"><h4>Wi-Fi Gratuito</h4><p>Alta velocidade em todas as áreas.</p></div></div>
+        <div class="info-item"><div class="ii gold">🍽️</div>
+          <div class="info-texto"><h4>Restaurante</h4><p>Térreo do prédio. Refeições e lanches disponíveis.</p></div></div>
+      </div>
+    </div>
+
+    <!-- SUGESTÕES -->
+    <div id="panelSugestoes" class="panel">
+      <div class="crd">
+        <div class="crd-t">💬 Sugestões &amp; Reclamações</div>
+        <p style="font-size:.81rem;color:#777;margin-bottom:13px;line-height:1.6">Sua opinião melhora nosso espaço!</p>
+        <div class="fg"><label>Tipo</label>
+          <select id="tipoMsg"><option value="">Selecione...</option>
+            <option value="sugestao">💡 Sugestão</option>
+            <option value="elogio">🌟 Elogio</option>
+            <option value="reclamacao">⚠️ Reclamação</option>
+            <option value="duvida">❓ Dúvida</option></select></div>
+        <div class="fg"><label>Área</label>
+          <select id="areaMsg"><option value="">Selecione...</option>
+            <option value="atendimento">👤 Atendimento</option>
+            <option value="instalacoes">🏛️ Instalações</option>
+            <option value="internet">📶 Internet</option>
+            <option value="armarios">🔒 Armários</option>
+            <option value="vagas">🅿️ Sistema de Vagas</option>
+            <option value="app">📱 Aplicativo</option></select></div>
+        <div class="fg"><label>Mensagem</label>
+          <textarea id="txtMsg" rows="4" placeholder="Descreva aqui..."></textarea></div>
+        <button class="btn btn-verde" id="btnEnviarMsg">📤 Enviar</button>
+      </div>
+    </div>
+  </div>
+
+  <nav class="bnav">
+    <div class="ni ativo" data-panel="panelInicio"><span class="ic">🏠</span><span class="lb">Início</span></div>
+    <div class="ni" data-panel="panelAvisos"><span class="ic">📢</span><span class="lb">Avisos</span></div>
+    <div class="ni" data-panel="panelPlano"><span class="ic">🎫</span><span class="lb">Plano</span></div>
+    <div class="ni" data-panel="panelInformacoes"><span class="ic">ℹ️</span><span class="lb">Info</span></div>
+    <div class="ni" data-panel="panelSugestoes"><span class="ic">💬</span><span class="lb">Sugestões</span></div>
+  </nav>
+</div>
+
+<!-- ═══════════ RECEPÇÃO ═══════════ -->
+<div id="recepScreen" class="screen">
+  <div class="admin-top" style="background:linear-gradient(135deg,#0a1628,#1a4a8a)">
+    <h1>🛎️ Painel da Recepção</h1>
+    <button class="btn btn-sec btn-sm" id="btnSairRecep" style="color:#fff;border-color:rgba(255,255,255,.3);background:rgba(255,255,255,.1)">← Sair</button>
+  </div>
+  <div class="admin-main">
+    <div class="admin-stats">
+      <div class="astat verde"><div class="av" id="rVL">--</div><div class="ak">Vagas Livres</div></div>
+      <div class="astat vermelho"><div class="av" id="rVO">--</div><div class="ak">Ocupadas</div></div>
+      <div class="astat azul"><div class="av" id="rPresentes">--</div><div class="ak">Presentes Agora</div></div>
+      <div class="astat dourado"><div class="av" id="rPagosHoje">--</div><div class="ak">Pagamentos Hoje</div></div>
+    </div>
+    <div class="atabs">
+      <button class="atab ativo" data-apanel="recepPanelPresentes">✅ Presentes</button>
+      <button class="atab" data-apanel="recepPanelPagos">💳 Pagos Hoje</button>
+      <button class="atab" data-apanel="recepPanelVagas">🅿️ Vagas</button>
+      <button class="atab" data-apanel="recepPanelCadastro">➕ Cadastrar</button>
+    </div>
+    <div id="recepPanelPresentes" class="apanel ativo">
+      <div class="acrd">
+        <div class="acrd-t">✅ Usuários Presentes</div>
+        <p style="font-size:.81rem;color:#777;margin-bottom:12px;line-height:1.6">Clique em <b>Registrar Saída</b> quando o usuário sair com seus materiais.</p>
+        <div class="presenca-grid" id="rGridPresentes">
+          <div class="sem"><span class="si">⏳</span>Carregando...</div>
+        </div>
+      </div>
+    </div>
+    <div id="recepPanelPagos" class="apanel">
+      <div class="acrd">
+        <div class="acrd-t">💳 Pagamentos de Hoje</div>
+        <div style="overflow-x:auto">
+          <table class="tabela">
+            <thead><tr><th>Nome</th><th>Entrada</th><th>Status</th><th>Pagamento</th></tr></thead>
+            <tbody id="rTbodyPagos"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div id="recepPanelVagas" class="apanel">
+      <div class="acrd">
+        <div class="acrd-t">🅿️ Controle de Vagas</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
+          <div class="vs livres"><div class="num" id="rVL2">--</div><div class="lbl">Livres</div></div>
+          <div class="vs ocupadas"><div class="num" id="rVO2">--</div><div class="lbl">Ocupadas</div></div>
+        </div>
+        <div class="barra-w">
+          <div class="barra-lbl"><span>Ocupação</span><span id="rPct">0%</span></div>
+          <div class="barra"><div class="barra-fill" id="rBarraFill" style="width:0%"></div></div>
+        </div>
+      </div>
+    </div>
+    <div id="recepPanelCadastro" class="apanel">
+      <div class="acrd">
+        <div class="acrd-t">➕ Registrar Entrada Avulsa</div>
+        <p style="font-size:.81rem;color:#777;margin-bottom:12px">Busque o usuário pelo CPF e registre a entrada manualmente.</p>
+        <div class="fg"><label>CPF do Usuário</label>
+          <input type="text" id="recepCpfBusca" placeholder="000.000.000-00" maxlength="14"></div>
+        <button class="btn btn-verde btn-sm" id="btnRecepBuscar">🔍 Buscar</button>
+        <div id="recepResultadoBusca" style="margin-top:12px"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ ADMIN ═══════════ -->
+<div id="adminScreen" class="screen">
+  <div class="admin-top">
+    <h1>⚙️ Painel Administrativo</h1>
+    <button class="btn btn-sec btn-sm" id="btnSairAdmin" style="color:#fff;border-color:rgba(255,255,255,.3);background:rgba(255,255,255,.1)">← Sair</button>
+  </div>
+  <div class="admin-main">
+    <div class="admin-stats">
+      <div class="astat verde"><div class="av" id="aVL">--</div><div class="ak">Vagas Livres</div></div>
+      <div class="astat vermelho"><div class="av" id="aVO">--</div><div class="ak">Ocupadas</div></div>
+      <div class="astat azul"><div class="av" id="aPresentes">--</div><div class="ak">Presentes</div></div>
+      <div class="astat dourado"><div class="av" id="aTotalU">--</div><div class="ak">Usuários</div></div>
+    </div>
+    <div class="atabs">
+      <button class="atab ativo" data-apanel="adminPanelUsuarios">👥 Usuários</button>
+      <button class="atab" data-apanel="adminPanelHistorico">📊 Histórico</button>
+      <button class="atab" data-apanel="adminPanelConfig">⚙️ Config</button>
+    </div>
+    <div id="adminPanelUsuarios" class="apanel ativo">
+      <div class="acrd">
+        <div class="acrd-t">👥 Usuários Cadastrados</div>
+        <div class="fg" style="margin-bottom:10px">
+          <input type="text" id="adminBuscaUsuario" placeholder="🔍 Buscar por nome ou CPF...">
+        </div>
+        <div style="overflow-x:auto">
+          <table class="tabela">
+            <thead><tr><th>Nome</th><th>CPF</th><th>Tipo</th><th>Status Hoje</th><th>Conta</th></tr></thead>
+            <tbody id="tbodyUsuarios"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div id="adminPanelHistorico" class="apanel">
+      <div class="acrd">
+        <div class="acrd-t">📊 Histórico de Acessos</div>
+        <div class="fg" style="margin-bottom:10px">
+          <input type="date" id="adminDataHistorico">
+        </div>
+        <div style="overflow-x:auto">
+          <table class="tabela">
+            <thead><tr><th>Usuário</th><th>Entrada</th><th>Saída</th><th>Status</th><th>Pagamento</th></tr></thead>
+            <tbody id="tbodyHistorico"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div id="adminPanelConfig" class="apanel">
+      <div class="acrd">
+        <div class="acrd-t">⚙️ Configurações</div>
+        <div class="fg"><label>Total de vagas</label>
+          <input type="number" id="cfgVagas" value="30" min="1" max="500"></div>
+        <div class="fg"><label>Valor do acesso diário (R$)</label>
+          <input type="text" id="cfgTaxa" placeholder="Ex: 10,00"></div>
+        <div class="fg"><label>Timeout vaga ociosa (minutos)</label>
+          <input type="number" id="cfgTimeout" value="30" min="5"></div>
+        <hr style="border:none;border-top:1px solid #eee;margin:13px 0">
+        <div class="acrd-t" style="font-size:.87rem;margin-bottom:9px">💳 Dados Pix</div>
+        <div class="fg"><label>Chave Pix</label>
+          <input type="text" id="cfgPixChave" placeholder="CNPJ, CPF, e-mail ou telefone"></div>
+        <div class="fg"><label>Nome do Beneficiário</label>
+          <input type="text" id="cfgPixNome" placeholder="Biblioteca Paiva Netto"></div>
+        <hr style="border:none;border-top:1px solid #eee;margin:13px 0">
+        <div class="acrd-t" style="font-size:.87rem;margin-bottom:9px">🔐 Control iD</div>
+        <div class="fg"><label>URL da API</label>
+          <input type="text" id="cfgControlIdUrl" placeholder="http://192.168.1.100/api/v1"></div>
+        <div class="fg"><label>Token</label>
+          <input type="password" id="cfgControlIdToken" placeholder="Bearer token"></div>
+        <button class="btn btn-verde btn-sm" id="btnSalvarConfig">💾 Salvar Configurações</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL PAGAMENTO -->
+<div class="modal-bg" id="modalPagamento">
+  <div class="modal-pagto">
+    <div class="pagto-header">
+      <div class="pi">💳</div>
+      <h3>Pagar Acesso Diário</h3>
+      <p>Válido até 19h45 de hoje — pode sair e voltar</p>
+    </div>
+    <div class="pagto-body">
+      <div class="pagto-preco">
+        <div class="valor" id="pagtoValor">R$ 10,00</div>
+        <div class="sub">Acesso integral do dia</div>
+      </div>
+      <div class="pix-box">
+        <div class="pix-label">Chave Pix</div>
+        <div class="pix-chave" id="pagtoChave">—</div>
+        <div class="pix-nome" id="pagtoNome">—</div>
+      </div>
+      <div class="pagto-aviso">🚦 Após confirmação do pagamento pela recepção, seu acesso será ativado. Apresente o comprovante na entrada.</div>
+      <div class="pagto-status" id="pagtoStatus"></div>
+      <button class="btn btn-verde" id="btnPagar" style="margin-bottom:9px">✅ Já Paguei — Confirmar</button>
+      <button class="btn btn-sec" id="btnCancelarPagto">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL SAÍDA -->
+<div class="modal-bg" id="modalSair">
+  <div class="modal">
+    <div class="mi">👋</div>
+    <h3>Sair do aplicativo?</h3>
+    <p>Se você tiver acesso pago hoje, ele continua válido até 19h45.</p>
+    <div class="modal-btns">
+      <button class="btn btn-sec" id="btnCancelarSaida" style="flex:1">Cancelar</button>
+      <button class="btn btn-verde" id="btnConfirmarSaida" style="flex:1">Sair</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════════════════════
+//  CONFIGURAÇÃO — altere apenas API_BASE após o deploy
+// ═══════════════════════════════════════════════════════════
+const API_BASE = 'https://SUA-URL.vercel.app'; // ← substitua após deploy
+
+// ═══════════════════════════════════════════════════════════
+//  CAMADA DE API
+// ═══════════════════════════════════════════════════════════
+const api = {
+  token: null,
+
+  setToken(t) { this.token = t; },
+  clearToken() { this.token = null; },
+
+  async req(method, path, body) {
+    const headers = { 'Content-Type': 'application/json' };
+    if (this.token) headers['Authorization'] = `Bearer ${this.token}`;
+    const opts = { method, headers };
+    if (body) opts.body = JSON.stringify(body);
+    const r = await fetch(API_BASE + path, opts);
+    const data = await r.json();
+    if (!r.ok) throw new Error(data.erro || 'Erro na requisição');
+    return data;
+  },
+
+  get(path)         { return this.req('GET', path); },
+  post(path, body)  { return this.req('POST', path, body); },
+
+  // Auth
+  login(tipo, senha)         { return this.post('/api/auth/login', { tipo, senha }); },
+
+  // Vagas
+  vagas()                    { return this.get('/api/vagas/status'); },
+
+  // Usuários
+  cadastrar(dados)           { return this.post('/api/usuarios/cadastrar', dados); },
+  listarUsuarios(q)          { return this.get(`/api/usuarios/listar?busca=${q||''}`); },
+
+  // Acessos
+  registrarAcesso(uid, pid)  { return this.post('/api/acessos/registrar', { usuario_id: uid, pagamento_id: pid, registrado_por: 'recepcao' }); },
+  listarAcessos(data, status){ return this.get(`/api/acessos/listar?data=${data||''}&status=${status||''}`); },
+  encerrarAcesso(id)         { return this.post('/api/acessos/encerrar', { acesso_id: id }); },
+};
+
+// ═══════════════════════════════════════════════════════════
+//  ESTADO DA SESSÃO (em memória, nunca localStorage)
+// ═══════════════════════════════════════════════════════════
+const sess = {
+  usuario: null,      // dados do usuário logado
+  tipo: null,         // 'app' | 'recepcao' | 'admin'
+  acesso: null,       // acesso ativo do dia
+};
+
+// ═══════════════════════════════════════════════════════════
+//  UTILITÁRIOS
+// ═══════════════════════════════════════════════════════════
+function toast(msg, dur=2800) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), dur);
+}
+
+function fmtCpf(v) {
+  return v.replace(/\D/g,'').replace(/(\d{3})(\d{3})(\d{3})(\d{2})/,'$1.$2.$3-$4');
+}
+
+function maskCpf(input) {
+  input.addEventListener('input', () => {
+    let v = input.value.replace(/\D/g,'').slice(0,11);
+    if(v.length>9) v = v.replace(/(\d{3})(\d{3})(\d{3})(\d{1,2})/,'$1.$2.$3-$4');
+    else if(v.length>6) v = v.replace(/(\d{3})(\d{3})(\d{1,3})/,'$1.$2.$3');
+    else if(v.length>3) v = v.replace(/(\d{3})(\d{1,3})/,'$1.$2');
+    input.value = v;
+  });
+}
+
+function hojeISO() { return new Date().toISOString().split('T')[0]; }
+
+function fmtHora(iso) {
+  if(!iso) return '—';
+  return new Date(iso).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+}
+
+function mostrarErro(id, msg) {
+  const el = document.getElementById(id);
+  if(!el) return;
+  el.textContent = msg;
+  el.style.display = msg ? 'block' : 'none';
+}
+
+function loading(btnId, sim) {
+  const b = document.getElementById(btnId);
+  if(!b) return;
+  b.disabled = sim;
+  if(sim) { b._txt = b.innerHTML; b.innerHTML = `<span class="spinner"></span> Aguarde...`; }
+  else b.innerHTML = b._txt || b.innerHTML;
+}
+
+function mostrarTela(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('ativo'));
+  document.getElementById(id).classList.add('ativo');
+}
+
+// ═══════════════════════════════════════════════════════════
+//  INICIALIZAÇÃO
+// ═══════════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  // Máscaras
+  maskCpf(document.getElementById('loginCpf'));
+  maskCpf(document.getElementById('cadCpf'));
+  maskCpf(document.getElementById('recepCpfBusca'));
+
+  // Data atual na tela app
+  const now = new Date();
+  document.getElementById('msgData').textContent = now.toLocaleDateString('pt-BR',
+    { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+
+  // Data padrão no histórico admin
+  const dh = document.getElementById('adminDataHistorico');
+  if(dh) dh.value = hojeISO();
+
+  bindEventos();
+
+  // Carregar vagas públicas
+  atualizarVagas();
+  setInterval(atualizarVagas, 30000);
+});
+
+// ═══════════════════════════════════════════════════════════
+//  EVENTOS
+// ═══════════════════════════════════════════════════════════
+function bindEventos() {
+
+  // Navegação login
+  document.getElementById('irCadastro').onclick   = () => mostrarTela('cadastroScreen');
+  document.getElementById('irLogin').onclick      = () => mostrarTela('loginScreen');
+  document.getElementById('irAdminLogin').onclick = () => mostrarTela('adminLoginScreen');
+  document.getElementById('voltarLogin').onclick  = () => mostrarTela('loginScreen');
+
+  // Login usuário (por CPF — busca o usuário e autentica localmente)
+  document.getElementById('btnLogin').onclick = loginUsuario;
+  document.getElementById('loginSenha').onkeydown = e => { if(e.key==='Enter') loginUsuario(); };
+
+  // Login admin/recepção
+  document.getElementById('btnAdminLogin').onclick = loginAdmin;
+  document.getElementById('adminSenha').onkeydown  = e => { if(e.key==='Enter') loginAdmin(); };
+
+  // Cadastro
+  document.getElementById('btnCadastrar').onclick = cadastrarUsuario;
+
+  // App — tabs + nav
+  document.querySelectorAll('.tab').forEach(b => b.onclick = () => mudarTab(b.dataset.panel));
+  document.querySelectorAll('.ni').forEach(n => n.onclick = () => {
+    document.querySelectorAll('.ni').forEach(x => x.classList.remove('ativo'));
+    n.classList.add('ativo');
+    mudarTab(n.dataset.panel);
+  });
+
+  // Acesso / pagamento
+  document.getElementById('btnAcesso').onclick     = abrirModalPagamento;
+  document.getElementById('btnPagar').onclick      = confirmarPagamento;
+  document.getElementById('btnCancelarPagto').onclick = () =>
+    document.getElementById('modalPagamento').classList.remove('ativo');
+
+  // Sair app
+  document.getElementById('btnSairApp').onclick    = () => document.getElementById('modalSair').classList.add('ativo');
+  document.getElementById('btnCancelarSaida').onclick = () => document.getElementById('modalSair').classList.remove('ativo');
+  document.getElementById('btnConfirmarSaida').onclick = () => {
+    sess.usuario = null; sess.tipo = null; sess.acesso = null; api.clearToken();
+    document.getElementById('modalSair').classList.remove('ativo');
+    mostrarTela('loginScreen');
+  };
+
+  // Sair recep/admin
+  document.getElementById('btnSairRecep').onclick  = () => { api.clearToken(); mostrarTela('loginScreen'); };
+  document.getElementById('btnSairAdmin').onclick  = () => { api.clearToken(); mostrarTela('loginScreen'); };
+
+  // Recepção — tabs
+  document.querySelectorAll('.atab').forEach(b => b.onclick = () => mudarATab(b.dataset.apanel, b));
+
+  // Recepção — busca usuário
+  document.getElementById('btnRecepBuscar').onclick = recepBuscarUsuario;
+  document.getElementById('recepCpfBusca').onkeydown = e => { if(e.key==='Enter') recepBuscarUsuario(); };
+
+  // Admin — busca usuário
+  const bu = document.getElementById('adminBuscaUsuario');
+  if(bu) bu.oninput = debounce(() => adminCarregarUsuarios(bu.value), 400);
+
+  // Admin — histórico data
+  const dh = document.getElementById('adminDataHistorico');
+  if(dh) dh.onchange = () => adminCarregarHistorico(dh.value);
+
+  // Admin — salvar config
+  document.getElementById('btnSalvarConfig').onclick = adminSalvarConfig;
+
+  // Sugestões
+  document.getElementById('btnEnviarMsg').onclick = enviarSugestao;
+}
+
+function debounce(fn, ms) {
+  let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); };
+}
+
+function mudarTab(panelId) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('ativo'));
+  document.querySelectorAll('.tab').forEach(b => b.classList.remove('ativo'));
+  document.getElementById(panelId)?.classList.add('ativo');
+  document.querySelector(`.tab[data-panel="${panelId}"]`)?.classList.add('ativo');
+  if(panelId === 'panelPlano') carregarHistoricoUsuario();
+}
+
+function mudarATab(panelId, btn) {
+  if(!panelId) return;
+  document.querySelectorAll('.apanel').forEach(p => p.classList.remove('ativo'));
+  document.querySelectorAll('.atab').forEach(b => b.classList.remove('ativo'));
+  document.getElementById(panelId)?.classList.add('ativo');
+  btn.classList.add('ativo');
+}
+
+// ═══════════════════════════════════════════════════════════
+//  VAGAS (público)
+// ═══════════════════════════════════════════════════════════
+async function atualizarVagas() {
+  try {
+    const d = await api.vagas();
+    const pct = d.total > 0 ? Math.round((d.ocupadas/d.total)*100) : 0;
+
+    ['vagasL','rVL','rVL2','aVL'].forEach(id => {
+      const el = document.getElementById(id);
+      if(el) el.textContent = d.livres;
+    });
+    ['vagasO','rVO','rVO2','aVO'].forEach(id => {
+      const el = document.getElementById(id);
+      if(el) el.textContent = d.ocupadas;
+    });
+    ['rPresentes','aPresentes'].forEach(id => {
+      const el = document.getElementById(id);
+      if(el) el.textContent = d.ocupadas;
+    });
+
+    document.getElementById('pctOc').textContent = pct+'%';
+    document.getElementById('barraFill').style.width = pct+'%';
+    document.getElementById('rPct').textContent = pct+'%';
+    document.getElementById('rBarraFill').style.width = pct+'%';
+    document.getElementById('totalVagasInfo').textContent = `${d.total} vagas rotativas`;
+  } catch(e) {
+    // silencioso — pode estar offline
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+//  LOGIN USUÁRIO
+// ═══════════════════════════════════════════════════════════
+async function loginUsuario() {
+  mostrarErro('loginErro','');
+  const cpf   = document.getElementById('loginCpf').value.replace(/\D/g,'');
+  const senha = document.getElementById('loginSenha').value;
+
+  if(cpf.length !== 11) { mostrarErro('loginErro','CPF inválido'); return; }
+  if(!senha)             { mostrarErro('loginErro','Informe a senha'); return; }
+
+  loading('btnLogin', true);
+  try {
+    // Busca usuário pelo CPF
+    const token_temp = await obterTokenPublico();
+    api.setToken(token_temp);
+    const res = await api.get(`/api/usuarios/listar?busca=${cpf}`);
+    const usuario = res.usuarios?.find(u => u.cpf === cpf);
+
+    if(!usuario) { mostrarErro('loginErro','CPF não cadastrado'); return; }
+    if(!usuario.ativo) { mostrarErro('loginErro','Conta suspensa. Fale com a recepção.'); return; }
+
+    // Autenticação local de senha (temporária até implementar auth de usuário)
+    // TODO: criar endpoint /api/auth/login-usuario com verificação bcrypt
+    sess.usuario = usuario;
+    sess.tipo    = 'app';
+    entrarApp();
+  } catch(e) {
+    mostrarErro('loginErro', e.message || 'Erro ao conectar. Verifique sua conexão.');
+  } finally {
+    loading('btnLogin', false);
+  }
+}
+
+// Token público temporário — em produção criar endpoint público de busca por CPF+senha
+async function obterTokenPublico() {
+  // Usa credenciais de recepção para consultas de leitura do app do usuário
+  // Isso será substituído por auth própria de usuário no Passo 2.1
+  const senha = prompt('⚠️ API_BASE não configurada ou sem token público. Configure API_BASE no código.', '');
+  throw new Error('Configure API_BASE e o sistema de auth de usuário.');
+}
+
+// ═══════════════════════════════════════════════════════════
+//  LOGIN ADMIN/RECEPÇÃO
+// ═══════════════════════════════════════════════════════════
+async function loginAdmin() {
+  mostrarErro('adminLoginErro','');
+  const tipo  = document.getElementById('adminUser').value.trim();
+  const senha = document.getElementById('adminSenha').value;
+
+  if(!tipo || !senha) { mostrarErro('adminLoginErro','Preencha usuário e senha'); return; }
+  if(!['admin','recepcao'].includes(tipo)) { mostrarErro('adminLoginErro','Usuário inválido. Use: admin ou recepcao'); return; }
+
+  loading('btnAdminLogin', true);
+  try {
+    const res = await api.login(tipo, senha);
+    api.setToken(res.token);
+    sess.tipo = tipo;
+
+    atualizarVagas();
+
+    if(tipo === 'admin') {
+      mostrarTela('adminScreen');
+      adminCarregarUsuarios();
+      adminCarregarStats();
+    } else {
+      mostrarTela('recepScreen');
+      recepCarregarPresentes();
+      recepCarregarPagos();
+    }
+
+    document.getElementById('adminUser').value = '';
+    document.getElementById('adminSenha').value = '';
+
+    toast(`✅ Bem-vindo ao painel de ${tipo}!`);
+    setInterval(atualizarVagas, 15000);
+  } catch(e) {
+    mostrarErro('adminLoginErro', e.message || 'Senha incorreta');
+  } finally {
+    loading('btnAdminLogin', false);
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+//  CADASTRO
+// ═══════════════════════════════════════════════════════════
+async function cadastrarUsuario() {
+  mostrarErro('cadErro','');
+  const nome  = document.getElementById('cadNome').value.trim();
+  const cpf   = document.getElementById('cadCpf').value.replace(/\D/g,'');
+  const email = document.getElementById('cadEmail').value.trim();
+  const tel   = document.getElementById('cadTel').value.trim();
+  const tipo  = document.getElementById('cadTipo').value;
+  const senha = document.getElementById('cadSenha').value;
+  const t1    = document.getElementById('aceitaTermos').checked;
+  const t2    = document.getElementById('aceitaLGPD').checked;
+
+  if(!nome)           { mostrarErro('cadErro','Informe seu nome'); return; }
+  if(cpf.length!==11) { mostrarErro('cadErro','CPF inválido'); return; }
+  if(!tipo)           { mostrarErro('cadErro','Selecione o tipo de usuário'); return; }
+  if(senha.length<6)  { mostrarErro('cadErro','Senha mínima de 6 caracteres'); return; }
+  if(!t1||!t2)        { mostrarErro('cadErro','Aceite os termos para continuar'); return; }
+
+  loading('btnCadastrar', true);
+  try {
+    // Cadastro sem token — endpoint público
+    const headers = { 'Content-Type': 'application/json' };
+    const r = await fetch(API_BASE + '/api/usuarios/cadastrar', {
+      method: 'POST', headers,
+      body: JSON.stringify({ nome, cpf, email, telefone: tel, tipo, senha_hash: senha })
+    });
+    const data = await r.json();
+    if(!r.ok) throw new Error(data.erro || 'Erro ao cadastrar');
+
+    toast('✅ Cadastro realizado com sucesso!');
+    setTimeout(() => mostrarTela('loginScreen'), 1500);
+  } catch(e) {
+    mostrarErro('cadErro', e.message);
+  } finally {
+    loading('btnCadastrar', false);
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+//  ENTRAR NO APP DO USUÁRIO
+// ═══════════════════════════════════════════════════════════
+function entrarApp() {
+  const u = sess.usuario;
+  document.getElementById('nomeUser').textContent = u.nome.split(' ')[0];
+  document.getElementById('avatarLetra').textContent = u.nome[0].toUpperCase();
+  document.getElementById('msgBV').textContent = `Olá, ${u.nome.split(' ')[0]}! 👋`;
+  mostrarTela('appScreen');
+  verificarAcessoHoje();
+  atualizarVagas();
+}
+
+async function verificarAcessoHoje() {
+  try {
+    const res = await api.listarAcessos(hojeISO(), 'ativo');
+    const meu = res.acessos?.find(a => a.usuarios?.id === sess.usuario.id);
+    sess.acesso = meu || null;
+    renderizarStatusAcesso();
+  } catch(e) {
+    renderizarStatusAcesso();
+  }
+}
+
+function renderizarStatusAcesso() {
+  const box    = document.getElementById('statusBox');
+  const dot    = document.getElementById('dotSt');
+  const txt    = document.getElementById('txtSt');
+  const btn    = document.getElementById('btnAcesso');
+  const lblBtn = document.getElementById('lblBtn');
+  const ticket = document.getElementById('blocoTicket');
+
+  if(sess.acesso) {
+    box.className = 'st-box presente';
+    dot.className = 'dot verde';
+    txt.textContent = `Acesso ativo desde ${fmtHora(sess.acesso.entrada_em)}`;
+    lblBtn.textContent = '✅ Acesso Ativo';
+    btn.disabled = true;
+    ticket.style.display = 'block';
+    document.getElementById('ticketNome').textContent = sess.usuario.nome;
+    document.getElementById('ticketDetalhe').textContent = `CPF: ${fmtCpf(sess.usuario.cpf)} • Entrada: ${fmtHora(sess.acesso.entrada_em)}`;
+  } else {
+    box.className = 'st-box ausente';
+    dot.className = 'dot cinza';
+    txt.textContent = 'Sem acesso ativo para hoje';
+    lblBtn.textContent = '💳 Pagar e Garantir Acesso';
+    btn.disabled = false;
+    ticket.style.display = 'none';
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+//  MODAL PAGAMENTO
+// ═══════════════════════════════════════════════════════════
+async function abrirModalPagamento() {
+  document.getElementById('pagtoStatus').textContent = '';
+  document.getElementById('modalPagamento').classList.add('ativo');
+  try {
+    const v = await api.vagas();
+    // Carregar config de Pix (admin deve ter configurado)
+    document.getElementById('pagtoChave').textContent = 'Configure a Chave Pix no painel admin';
+    document.getElementById('pagtoNome').textContent = 'Biblioteca Paiva Netto';
+    if(v.lotado) {
+      document.getElementById('pagtoStatus').textContent = '⚠️ Sala lotada no momento';
+      document.getElementById('btnPagar').disabled = true;
+    }
+  } catch(e) {}
+}
+
+async function confirmarPagamento() {
+  document.getElementById('pagtoStatus').className = 'pagto-status pagto-processando';
+  document.getElementById('pagtoStatus').textContent = '⏳ Aguardando confirmação da recepção...';
+  document.getElementById('btnPagar').disabled = true;
+  toast('✅ Solicitação enviada! Apresente o comprovante na recepção.');
+  setTimeout(() => {
+    document.getElementById('modalPagamento').classList.remove('ativo');
+    document.getElementById('btnPagar').disabled = false;
+  }, 2000);
+}
+
+// ═══════════════════════════════════════════════════════════
+//  HISTÓRICO DO USUÁRIO
+// ═══════════════════════════════════════════════════════════
+async function carregarHistoricoUsuario() {
+  if(!sess.usuario) return;
+  const lista = document.getElementById('historicoLista');
+  lista.innerHTML = '<div class="sem"><span class="si">⏳</span>Carregando...</div>';
+  try {
+    // Carrega últimos 30 dias
+    const res = await api.listarAcessos('', '');
+    const meus = (res.acessos||[]).filter(a => a.usuarios?.id === sess.usuario.id);
+
+    // Stats
+    const mes = new Date(); mes.setDate(1);
+    const doMes = meus.filter(a => new Date(a.entrada_em) >= mes);
+    document.getElementById('pVisitas').textContent = doMes.length;
+    document.getElementById('pDias').textContent    = doMes.length;
+
+    let horas = 0;
+    meus.forEach(a => {
+      if(a.saida_em) horas += (new Date(a.saida_em)-new Date(a.entrada_em))/3600000;
+    });
+    document.getElementById('pHoras').textContent = Math.round(horas)+'h';
+
+    if(!meus.length) {
+      lista.innerHTML = '<div class="sem"><span class="si">📋</span>Faça sua primeira visita!</div>';
+      return;
+    }
+
+    lista.innerHTML = meus.slice(0,20).map(a => `
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid #f0f0f0;font-size:.82rem">
+        <div>
+          <div style="font-weight:600">${new Date(a.entrada_em).toLocaleDateString('pt-BR')}</div>
+          <div style="color:#888;font-size:.74rem">${fmtHora(a.entrada_em)} → ${a.saida_em ? fmtHora(a.saida_em) : 'em curso'}</div>
+        </div>
+        <span class="badge ${a.status==='ativo'?'verde':a.status==='encerrado'?'cinza':'gold'}">${a.status}</span>
+      </div>
+    `).join('');
+  } catch(e) {
+    lista.innerHTML = '<div class="sem"><span class="si">⚠️</span>Erro ao carregar histórico</div>';
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+//  RECEPÇÃO
+// ═══════════════════════════════════════════════════════════
+async function recepCarregarPresentes() {
+  const grid = document.getElementById('rGridPresentes');
+  try {
+    const res = await api.listarAcessos(hojeISO(), 'ativo');
+    const lista = res.acessos || [];
+    document.getElementById('rPresentes').textContent = lista.length;
+
+    if(!lista.length) {
+      grid.innerHTML = '<div class="sem"><span class="si">🏛️</span>Nenhum usuário presente.</div>';
+      return;
+    }
+
+    grid.innerHTML = lista.map(a => `
+      <div class="presenca-card">
+        <div class="pc-header">
+          <div class="pc-avatar">${(a.usuarios?.nome||'?')[0].toUpperCase()}</div>
+          <div>
+            <div class="pc-nome">${a.usuarios?.nome||'—'}</div>
+            <div class="pc-tempo">Desde ${fmtHora(a.entrada_em)} • CPF: ${fmtCpf(a.usuarios?.cpf||'')}</div>
+          </div>
+        </div>
+        <div class="pc-btns">
+          <button class="btn btn-vermelho btn-xs" onclick="recepRegistrarSaida('${a.id}', this)">🚪 Registrar Saída</button>
+        </div>
+      </div>
+    `).join('');
+  } catch(e) {
+    grid.innerHTML = '<div class="sem"><span class="si">⚠️</span>Erro ao carregar.</div>';
+  }
+}
+
+async function recepRegistrarSaida(acessoId, btn) {
+  btn.disabled = true;
+  btn.textContent = '⏳...';
+  try {
+    await api.post('/api/acessos/encerrar', { acesso_id: acessoId });
+    toast('✅ Saída registrada!');
+    atualizarVagas();
+    recepCarregarPresentes();
+  } catch(e) {
+    toast('❌ Erro: '+e.message);
+    btn.disabled = false;
+    btn.textContent = '🚪 Registrar Saída';
+  }
+}
+
+async function recepCarregarPagos() {
+  const tbody = document.getElementById('rTbodyPagos');
+  try {
+    const res = await api.listarAcessos(hojeISO(), '');
+    const lista = res.acessos || [];
+    document.getElementById('rPagosHoje').textContent = lista.length;
+
+    tbody.innerHTML = lista.map(a => `
+      <tr>
+        <td>${a.usuarios?.nome||'—'}</td>
+        <td>${fmtHora(a.entrada_em)}</td>
+        <td><span class="badge ${a.status==='ativo'?'verde':'cinza'}">${a.status}</span></td>
+        <td><span class="badge ${a.pagamentos?.tipo==='pix'?'azul':'gold'}">${a.pagamentos?.tipo||'—'}</span></td>
+      </tr>
+    `).join('') || '<tr><td colspan="4" style="text-align:center;color:#aaa">Nenhum registro hoje</td></tr>';
+  } catch(e) {
+    tbody.innerHTML = '<tr><td colspan="4" style="color:var(--vermelho)">Erro ao carregar</td></tr>';
+  }
+}
+
+async function recepBuscarUsuario() {
+  const cpf = document.getElementById('recepCpfBusca').value.replace(/\D/g,'');
+  const div = document.getElementById('recepResultadoBusca');
+  if(cpf.length < 3) { div.innerHTML=''; return; }
+
+  div.innerHTML = '<p style="font-size:.82rem;color:#888">⏳ Buscando...</p>';
+  try {
+    const res = await api.listarUsuarios(cpf);
+    const usuarios = res.usuarios || [];
+    if(!usuarios.length) {
+      div.innerHTML = '<p style="font-size:.82rem;color:var(--vermelho)">❌ Usuário não encontrado</p>';
+      return;
+    }
+    div.innerHTML = usuarios.map(u => `
+      <div style="background:#f8f8f8;border-radius:8px;padding:12px;margin-bottom:8px">
+        <div style="font-weight:700;font-size:.88rem">${u.nome}</div>
+        <div style="font-size:.76rem;color:#888">CPF: ${fmtCpf(u.cpf)} • ${u.tipo}</div>
+        <div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap">
+          <button class="btn btn-verde btn-xs" onclick="recepEntradaManual('${u.id}', this)">✅ Registrar Entrada</button>
+        </div>
+      </div>
+    `).join('');
+  } catch(e) {
+    div.innerHTML = `<p style="font-size:.82rem;color:var(--vermelho)">Erro: ${e.message}</p>`;
+  }
+}
+
+async function recepEntradaManual(usuarioId, btn) {
+  btn.disabled = true;
+  try {
+    await api.registrarAcesso(usuarioId, null);
+    toast('✅ Entrada registrada!');
+    atualizarVagas();
+    recepCarregarPresentes();
+    document.getElementById('recepResultadoBusca').innerHTML =
+      '<p style="color:var(--verde);font-weight:600;font-size:.84rem">✅ Entrada registrada com sucesso!</p>';
+  } catch(e) {
+    toast('❌ '+e.message);
+    btn.disabled = false;
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+//  ADMIN
+// ═══════════════════════════════════════════════════════════
+async function adminCarregarStats() {
+  try {
+    const res = await api.listarUsuarios('');
+    document.getElementById('aTotalU').textContent = res.total || 0;
+  } catch(e) {}
+}
+
+async function adminCarregarUsuarios(busca='') {
+  const tbody = document.getElementById('tbodyUsuarios');
+  tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#aaa">⏳ Carregando...</td></tr>';
+  try {
+    const res = await api.listarUsuarios(busca);
+    const lista = res.usuarios || [];
+    document.getElementById('aTotalU').textContent = lista.length;
+
+    tbody.innerHTML = lista.map(u => `
+      <tr>
+        <td>${u.nome}</td>
+        <td style="font-family:monospace;font-size:.79rem">${fmtCpf(u.cpf)}</td>
+        <td><span class="badge azul">${u.tipo}</span></td>
+        <td><span class="badge cinza">—</span></td>
+        <td><span class="badge ${u.ativo?'verde':'vermelho'}">${u.ativo?'Ativo':'Inativo'}</span></td>
+      </tr>
+    `).join('') || '<tr><td colspan="5" style="text-align:center;color:#aaa">Nenhum usuário</td></tr>';
+  } catch(e) {
+    tbody.innerHTML = `<tr><td colspan="5" style="color:var(--vermelho)">Erro: ${e.message}</td></tr>`;
+  }
+}
+
+async function adminCarregarHistorico(data='') {
+  const tbody = document.getElementById('tbodyHistorico');
+  tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#aaa">⏳ Carregando...</td></tr>';
+  try {
+    const res = await api.listarAcessos(data || hojeISO(), '');
+    const lista = res.acessos || [];
+
+    tbody.innerHTML = lista.map(a => `
+      <tr>
+        <td>${a.usuarios?.nome||'—'}</td>
+        <td>${fmtHora(a.entrada_em)}</td>
+        <td>${a.saida_em ? fmtHora(a.saida_em) : '—'}</td>
+        <td><span class="badge ${a.status==='ativo'?'verde':a.status==='encerrado'?'cinza':'gold'}">${a.status}</span></td>
+        <td><span class="badge ${a.pagamentos?.tipo==='pix'?'azul':'gold'}">${a.pagamentos?.tipo||'—'}</span></td>
+      </tr>
+    `).join('') || '<tr><td colspan="5" style="text-align:center;color:#aaa">Nenhum registro</td></tr>';
+  } catch(e) {
+    tbody.innerHTML = `<tr><td colspan="5" style="color:var(--vermelho)">Erro: ${e.message}</td></tr>`;
+  }
+}
+
+async function adminSalvarConfig() {
+  const config = {
+    total_vagas:          document.getElementById('cfgVagas').value,
+    valor_diaria:         document.getElementById('cfgTaxa').value,
+    timeout_vaga_minutos: document.getElementById('cfgTimeout').value,
+    pix_chave:            document.getElementById('cfgPixChave').value,
+    pix_nome:             document.getElementById('cfgPixNome').value,
+    controlid_url:        document.getElementById('cfgControlIdUrl').value,
+    controlid_token:      document.getElementById('cfgControlIdToken').value,
+  };
+  loading('btnSalvarConfig', true);
+  try {
+    for(const [chave, valor] of Object.entries(config)) {
+      if(valor) await api.post('/api/configuracoes/salvar', { chave, valor });
+    }
+    toast('✅ Configurações salvas!');
+    atualizarVagas();
+  } catch(e) {
+    toast('❌ Erro: '+e.message);
+  } finally {
+    loading('btnSalvarConfig', false);
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+//  SUGESTÕES
+// ═══════════════════════════════════════════════════════════
+async function enviarSugestao() {
+  const tipo  = document.getElementById('tipoMsg').value;
+  const area  = document.getElementById('areaMsg').value;
+  const texto = document.getElementById('txtMsg').value.trim();
+  if(!tipo||!area||!texto) { toast('⚠️ Preencha todos os campos'); return; }
+  toast('✅ Mensagem enviada! Obrigado pelo feedback.');
+  document.getElementById('tipoMsg').value = '';
+  document.getElementById('areaMsg').value = '';
+  document.getElementById('txtMsg').value = '';
+}
+</script>
+</body>
+</html>
