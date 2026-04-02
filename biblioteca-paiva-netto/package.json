@@ -1,0 +1,22 @@
+{
+  "name": "biblioteca-paiva-netto-api",
+  "version": "1.0.0",
+  "description": "Backend da Ala dos Estudantes — Paiva Netto",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vercel dev",
+    "deploy": "vercel --prod",
+    "gerar-hash": "node -e \"const b=require('bcryptjs');const s=process.argv[2];if(!s){console.log('Uso: npm run gerar-hash -- suasenha');process.exit(1);}console.log(b.hashSync(s,10));\""
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.39.0",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.2"
+  },
+  "devDependencies": {
+    "vercel": "^33.0.0"
+  },
+  "engines": {
+    "node": ">=18.x"
+  }
+}
