@@ -1,0 +1,232 @@
+<!-- 
+  BLOCO DE ASSINATURA DIGITAL
+  Cole este bloco no index.html, substituindo a tela de cadastroScreen existente.
+  Adicione também o JS no final do <script>.
+-->
+
+<!-- ═══════════ CADASTRO COM ASSINATURA DIGITAL ═══════════ -->
+<!-- Substitua o div id="cadastroScreen" existente por este: -->
+
+<div id="cadastroScreen" class="screen bg-verde">
+  <div class="cf">
+    <div class="logo">
+      <span class="em">📋</span>
+      <h1>Novo Cadastro</h1>
+      <div class="divgold"></div>
+    </div>
+    <div class="erro-api" id="cadErro"></div>
+
+    <!-- ETAPA 1: DADOS -->
+    <div id="cadEtapa1">
+      <div class="campo"><label>Nome Completo *</label>
+        <input type="text" id="cadNome" placeholder="Seu nome completo"></div>
+      <div class="campo"><label>CPF *</label>
+        <input type="text" id="cadCpf" placeholder="000.000.000-00" maxlength="14"></div>
+      <div class="campo"><label>E-mail</label>
+        <input type="email" id="cadEmail" placeholder="seu@email.com"></div>
+      <div class="campo"><label>Telefone</label>
+        <input type="text" id="cadTel" placeholder="(61) 99999-9999" maxlength="15"></div>
+      <div class="campo"><label>Tipo de Usuário *</label>
+        <select id="cadTipo">
+          <option value="">Selecione...</option>
+          <option value="aluno">👨‍🎓 Estudante</option>
+          <option value="aluno">📝 Concurseiro</option>
+          <option value="aluno">🏘️ Comunidade Geral</option>
+        </select></div>
+      <div class="campo"><label>Senha * (mín. 6 caracteres)</label>
+        <input type="password" id="cadSenha" placeholder="••••••••"></div>
+      <button class="btn btn-verde" id="btnCadEtapa1">Próximo — Ler e Assinar Termo →</button>
+      <div class="linktxt">Já tem conta? <span id="irLogin2">Fazer login</span></div>
+    </div>
+
+    <!-- ETAPA 2: TERMO + ASSINATURA -->
+    <div id="cadEtapa2" style="display:none">
+      <div style="font-size:.8rem;font-weight:700;color:var(--verde);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px">📜 Leia o Regulamento</div>
+      <div class="termos-box" id="termosBox">
+        <h4>📜 Regulamento de Uso — Ala dos Estudantes Educador Paiva Netto</h4>
+        <p><b>1. DO ACESSO.</b> O pagamento garante acesso pelo período integral do dia de uso (até 19h45). O acesso é realizado via reconhecimento facial na catraca após pagamento confirmado no aplicativo.</p><br>
+        <p><b>2. DA SAÍDA.</b> Saída temporária (banheiro, lanchonete, celular) não configura encerramento do acesso. A saída definitiva é configurada pela recepção quando o usuário sai com seus materiais ou quando identificado via câmeras que a mesa está desocupada.</p><br>
+        <p><b>3. DA VAGA.</b> O sistema controla 148 vagas rotativas. Ao pagar, uma vaga é reservada e liberada na catraca. A vaga é liberada ao sistema após saída definitiva registrada pela recepção.</p><br>
+        <p><b>4. DO CANCELAMENTO.</b> Não há reembolso após o pagamento. O acesso é pessoal e intransferível.</p><br>
+        <p><b>5. DA SUSPENSÃO.</b> O descumprimento das normas pode resultar em suspensão do cadastro.</p><br>
+        <h4>🔒 Política de Privacidade (LGPD)</h4>
+        <p><b>6.</b> Coletamos nome, CPF, e-mail, telefone exclusivamente para controle de acesso. Dados não são compartilhados com terceiros. Você pode solicitar a exclusão dos seus dados a qualquer momento na recepção.</p>
+      </div>
+
+      <div style="font-size:.8rem;font-weight:700;color:var(--verde);margin:12px 0 6px;text-transform:uppercase;letter-spacing:.5px">✍️ Assine aqui para confirmar que leu e concorda</div>
+      
+      <div style="position:relative;border:2px solid var(--cinza-cl);border-radius:var(--r-sm);background:#fafafa;overflow:hidden;margin-bottom:8px">
+        <canvas id="canvasAssinatura" style="display:block;width:100%;touch-action:none;cursor:crosshair" height="130"></canvas>
+        <div id="assinaturaPlaceholder" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#ccc;font-size:.85rem;pointer-events:none">
+          ✍️ Desenhe sua assinatura aqui
+        </div>
+      </div>
+      
+      <div style="display:flex;gap:8px;margin-bottom:14px">
+        <button class="btn btn-sec btn-sm" id="btnLimparAssinatura" style="flex:1">🗑️ Limpar</button>
+        <span style="flex:2;font-size:.72rem;color:#aaa;line-height:1.4;display:flex;align-items:center">Sua assinatura confirma que você leu e aceita o regulamento e a política de privacidade.</span>
+      </div>
+
+      <button class="btn btn-verde" id="btnCadastrar">✅ Criar Minha Conta e Assinar</button>
+      <button class="btn btn-sec" id="btnVoltarEtapa1" style="margin-top:8px">← Voltar</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════
+  ADICIONE ESTE BLOCO DE JS DENTRO DO <script> EXISTENTE,
+  logo após a função cadastrarUsuario() existente:
+════════════════════════════════════════════════════════ -->
+<script id="assinatura-js-snippet">
+// ── CANVAS DE ASSINATURA ──
+let assinaturaFeita = false;
+let ctxCanvas = null;
+let desenhando = false;
+
+function initCanvas() {
+  const canvas = document.getElementById('canvasAssinatura');
+  if (!canvas || ctxCanvas) return;
+
+  // Ajusta resolução para Retina
+  const rect = canvas.getBoundingClientRect();
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width  = (rect.width  || 350) * dpr;
+  canvas.height = 130 * dpr;
+  canvas.style.height = '130px';
+
+  ctxCanvas = canvas.getContext('2d');
+  ctxCanvas.scale(dpr, dpr);
+  ctxCanvas.strokeStyle = '#1a1a1a';
+  ctxCanvas.lineWidth = 2.2;
+  ctxCanvas.lineCap = 'round';
+  ctxCanvas.lineJoin = 'round';
+
+  function pos(e) {
+    const r = canvas.getBoundingClientRect();
+    const src = e.touches ? e.touches[0] : e;
+    return { x: src.clientX - r.left, y: src.clientY - r.top };
+  }
+
+  function iniciar(e) {
+    e.preventDefault();
+    desenhando = true;
+    const p = pos(e);
+    ctxCanvas.beginPath();
+    ctxCanvas.moveTo(p.x, p.y);
+  }
+
+  function desenhar(e) {
+    e.preventDefault();
+    if (!desenhando) return;
+    const p = pos(e);
+    ctxCanvas.lineTo(p.x, p.y);
+    ctxCanvas.stroke();
+    assinaturaFeita = true;
+    document.getElementById('assinaturaPlaceholder').style.display = 'none';
+  }
+
+  function parar(e) { e.preventDefault(); desenhando = false; }
+
+  canvas.addEventListener('mousedown', iniciar);
+  canvas.addEventListener('mousemove', desenhar);
+  canvas.addEventListener('mouseup', parar);
+  canvas.addEventListener('mouseleave', parar);
+  canvas.addEventListener('touchstart', iniciar, { passive: false });
+  canvas.addEventListener('touchmove', desenhar, { passive: false });
+  canvas.addEventListener('touchend', parar, { passive: false });
+}
+
+function limparAssinatura() {
+  if (!ctxCanvas) return;
+  const canvas = document.getElementById('canvasAssinatura');
+  ctxCanvas.clearRect(0, 0, canvas.width, canvas.height);
+  assinaturaFeita = false;
+  document.getElementById('assinaturaPlaceholder').style.display = 'flex';
+}
+
+function obterAssinaturaBase64() {
+  const canvas = document.getElementById('canvasAssinatura');
+  return canvas.toDataURL('image/png');
+}
+
+// ── ETAPA 1 → 2 ──
+document.getElementById('btnCadEtapa1').addEventListener('click', () => {
+  const nome  = document.getElementById('cadNome').value.trim();
+  const cpf   = document.getElementById('cadCpf').value.replace(/\D/g,'');
+  const tipo  = document.getElementById('cadTipo').value;
+  const senha = document.getElementById('cadSenha').value;
+
+  mostrarErro('cadErro','');
+  if (!nome)           { mostrarErro('cadErro','Informe seu nome'); return; }
+  if (cpf.length!==11) { mostrarErro('cadErro','CPF inválido'); return; }
+  if (!tipo)           { mostrarErro('cadErro','Selecione o tipo de usuário'); return; }
+  if (senha.length<6)  { mostrarErro('cadErro','Senha mínima de 6 caracteres'); return; }
+
+  document.getElementById('cadEtapa1').style.display = 'none';
+  document.getElementById('cadEtapa2').style.display = 'block';
+
+  // Inicializa canvas após exibir (precisa de dimensões)
+  setTimeout(initCanvas, 100);
+});
+
+document.getElementById('btnVoltarEtapa1').addEventListener('click', () => {
+  document.getElementById('cadEtapa2').style.display = 'none';
+  document.getElementById('cadEtapa1').style.display = 'block';
+});
+
+document.getElementById('btnLimparAssinatura').addEventListener('click', limparAssinatura);
+document.getElementById('irLogin2').addEventListener('click', () => mostrarTela('loginScreen'));
+
+// ── CADASTRO COM ASSINATURA ──
+document.getElementById('btnCadastrar').addEventListener('click', async () => {
+  mostrarErro('cadErro','');
+
+  if (!assinaturaFeita) {
+    mostrarErro('cadErro', 'Por favor, assine o termo para continuar');
+    return;
+  }
+
+  const nome  = document.getElementById('cadNome').value.trim();
+  const cpf   = document.getElementById('cadCpf').value.replace(/\D/g,'');
+  const email = document.getElementById('cadEmail').value.trim();
+  const tel   = document.getElementById('cadTel').value.trim();
+  const tipo  = document.getElementById('cadTipo').value;
+  const senha = document.getElementById('cadSenha').value;
+  const assinatura = obterAssinaturaBase64();
+
+  loading('btnCadastrar', true);
+  try {
+    const r = await fetch(API_BASE + '/api/usuarios/cadastrar', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ nome, cpf, email, telefone: tel, tipo })
+    });
+    const data = await r.json();
+    if (!r.ok) throw new Error(data.erro || 'Erro ao cadastrar');
+
+    // Salva assinatura
+    const usuarioId = data.usuario.id;
+    await fetch(API_BASE + '/api/usuarios/assinar-termo', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ usuario_id: usuarioId, assinatura_svg: assinatura })
+    });
+
+    toast('✅ Cadastro realizado com sucesso! Termo assinado e salvo.');
+    setTimeout(() => {
+      mostrarTela('loginScreen');
+      // Reset form
+      document.getElementById('cadEtapa2').style.display = 'none';
+      document.getElementById('cadEtapa1').style.display = 'block';
+      ctxCanvas = null;
+      assinaturaFeita = false;
+    }, 1800);
+
+  } catch(e) {
+    mostrarErro('cadErro', e.message);
+  } finally {
+    loading('btnCadastrar', false);
+  }
+});
+</script>
