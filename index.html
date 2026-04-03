@@ -224,7 +224,7 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
 </head>
 <body>
 
-<!-- ═══════════ LOGIN ═══════════ -->
+<!-- LOGIN -->
 <div id="loginScreen" class="screen bg-verde ativo">
   <div class="cf">
     <div class="logo">
@@ -246,7 +246,7 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
   </div>
 </div>
 
-<!-- ═══════════ ADMIN LOGIN ═══════════ -->
+<!-- ADMIN LOGIN -->
 <div id="adminLoginScreen" class="screen bg-verde">
   <div class="cf" style="max-width:370px">
     <div class="logo">
@@ -265,7 +265,7 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
   </div>
 </div>
 
-<!-- ═══════════ CADASTRO COM ASSINATURA DIGITAL ═══════════ -->
+<!-- CADASTRO -->
 <div id="cadastroScreen" class="screen bg-verde">
   <div class="cf">
     <div class="logo">
@@ -274,15 +274,11 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
       <div class="divgold"></div>
     </div>
     <div class="erro-api" id="cadErro"></div>
-
-    <!-- Indicador de etapas -->
     <div style="display:flex;gap:6px;margin-bottom:18px;align-items:center">
       <div id="etapaInd1" style="flex:1;height:4px;border-radius:2px;background:var(--verde);transition:.3s"></div>
       <div id="etapaInd2" style="flex:1;height:4px;border-radius:2px;background:var(--cinza-cl);transition:.3s"></div>
       <span id="etapaTxt" style="font-size:.7rem;color:var(--cinza);white-space:nowrap">Etapa 1 de 2</span>
     </div>
-
-    <!-- ETAPA 1: DADOS PESSOAIS -->
     <div id="cadEtapa1">
       <div class="campo"><label>Nome Completo *</label>
         <input type="text" id="cadNome" placeholder="Seu nome completo"></div>
@@ -304,8 +300,6 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
       <button class="btn btn-verde" id="btnCadEtapa1">Próximo — Ler e Assinar Termo →</button>
       <div class="linktxt">Já tem conta? <span id="irLogin">Fazer login</span></div>
     </div>
-
-    <!-- ETAPA 2: TERMO + ASSINATURA DIGITAL -->
     <div id="cadEtapa2" style="display:none">
       <div style="font-size:.73rem;font-weight:700;color:var(--verde);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">📜 Leia o Regulamento completo</div>
       <div class="termos-box">
@@ -318,28 +312,24 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
         <h4>🔒 Política de Privacidade (LGPD)</h4>
         <p><b>6.</b> Coletamos nome, CPF, e-mail e telefone exclusivamente para controle de acesso. Dados não são compartilhados com terceiros. Você pode solicitar a exclusão dos seus dados a qualquer momento na recepção.</p>
       </div>
-
       <div style="font-size:.73rem;font-weight:700;color:var(--verde);margin:12px 0 6px;text-transform:uppercase;letter-spacing:.5px">✍️ Assine abaixo para confirmar que leu e concorda</div>
-
       <div style="position:relative;border:2px solid var(--cinza-cl);border-radius:var(--r-sm);background:#fafafa;overflow:hidden;margin-bottom:8px" id="canvasWrap">
         <canvas id="canvasAssinatura" style="display:block;width:100%;touch-action:none;cursor:crosshair" height="130"></canvas>
         <div id="assinaturaPlaceholder" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#ccc;font-size:.85rem;pointer-events:none;gap:6px">
           ✍️ Desenhe sua assinatura aqui
         </div>
       </div>
-
       <div style="display:flex;gap:8px;margin-bottom:14px;align-items:center">
         <button class="btn btn-sec btn-sm" id="btnLimparAssinatura" style="flex:0 0 auto">🗑️ Limpar</button>
         <span style="font-size:.71rem;color:#aaa;line-height:1.4">Sua assinatura confirma que você leu e aceita o regulamento e a política de privacidade (LGPD).</span>
       </div>
-
       <button class="btn btn-verde" id="btnCadastrar">✅ Criar Conta e Assinar Termo</button>
       <button class="btn btn-sec" id="btnVoltarEtapa1" style="margin-top:8px">← Voltar e editar dados</button>
     </div>
   </div>
 </div>
 
-<!-- ═══════════ APP USUÁRIO ═══════════ -->
+<!-- APP USUÁRIO -->
 <div id="appScreen" class="screen">
   <div class="topbar">
     <div class="topbar-logo">
@@ -368,15 +358,11 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
       <button class="tab" data-panel="panelInformacoes">ℹ️ Info</button>
       <button class="tab" data-panel="panelSugestoes">💬 Sugestões</button>
     </div>
-
-    <!-- INÍCIO -->
     <div id="panelInicio" class="panel ativo">
       <div id="blocoTicket" style="display:none">
         <div class="ticket">
           <div class="ticket-inner">
-            <div id="ticketStatusBadge" class="ticket-status-badge tsb-ativo">
-              <span>●</span><span id="ticketStatusTxt">Acesso Ativo</span>
-            </div>
+            <div id="ticketStatusBadge" class="ticket-status-badge tsb-ativo"><span>●</span><span id="ticketStatusTxt">Acesso Ativo</span></div>
             <div class="ticket-titulo">Ala dos Estudantes Educador Paiva Netto</div>
             <div class="ticket-nome" id="ticketNome">—</div>
             <div class="ticket-detalhe" id="ticketDetalhe">—</div>
@@ -386,9 +372,7 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
             </div>
           </div>
         </div>
-        <div class="aviso-horario">
-          <span>⏰</span><span>Acesso válido! Pode sair e voltar à vontade até 19h45.</span>
-        </div>
+        <div class="aviso-horario"><span>⏰</span><span>Acesso válido! Pode sair e voltar à vontade até 19h45.</span></div>
       </div>
       <div class="crd">
         <div class="crd-t">🅿️ Vagas em Tempo Real</div>
@@ -408,39 +392,18 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
           <div class="dot cinza" id="dotSt"></div>
           <span id="txtSt">Verificando...</span>
         </div>
-        <button class="btn btn-dourado" id="btnAcesso">
-          <span id="lblBtn">💳 Pagar e Garantir Acesso</span>
-        </button>
+        <button class="btn btn-dourado" id="btnAcesso"><span id="lblBtn">💳 Pagar e Garantir Acesso</span></button>
         <p style="font-size:.71rem;color:#aaa;margin-top:9px;text-align:center">⏰ Funcionamento: todos os dias — 8h às 19h45</p>
       </div>
-      <div class="crd" style="padding:14px 16px">
-        <div class="crd-t" style="font-size:.88rem;margin-bottom:9px">📋 Como funciona?</div>
-        <div style="font-size:.79rem;color:#555;line-height:2.1">
-          <span style="background:#eef3ff;color:var(--azul);padding:2px 8px;border-radius:10px;font-weight:600;margin-right:6px">💳 Pague no app</span> Confirma vaga e libera catraca<br>
-          <span style="background:#e8f5ee;color:var(--verde);padding:2px 8px;border-radius:10px;font-weight:600;margin-right:6px">🚦 Catraca libera</span> Reconhecimento facial — acesso direto<br>
-          <span style="background:#e8f5ee;color:var(--verde);padding:2px 8px;border-radius:10px;font-weight:600;margin-right:6px">🟢 Acesso até 19h45</span> Pode sair e voltar à vontade<br>
-          <span style="background:#f0f0f0;color:#777;padding:2px 8px;border-radius:10px;font-weight:600;margin-right:6px">🚪 Saída definitiva</span> Registrada pela recepção
-        </div>
-      </div>
     </div>
-
-    <!-- AVISOS -->
     <div id="panelAvisos" class="panel">
       <div class="crd">
         <div class="crd-t">📢 Comunicados Oficiais</div>
-        <div class="aviso urgente"><div class="tag">⚠️ Urgente</div>
-          <p>Manutenção nos computadores do 2º andar nesta quarta-feira — fora de serviço das 8h às 12h.</p>
-          <div class="data">📅 30/03/2026</div></div>
-        <div class="aviso"><div class="tag">📌 Aviso</div>
-          <p>Silêncio obrigatório nas áreas de estudo. Conversas apenas nas áreas de convivência.</p>
-          <div class="data">📅 25/03/2026</div></div>
-        <div class="aviso info"><div class="tag">ℹ️ Informação</div>
-          <p>Novos armários disponíveis no subsolo. Solicite a chave na recepção com documento.</p>
-          <div class="data">📅 20/03/2026</div></div>
+        <div class="aviso urgente"><div class="tag">⚠️ Urgente</div><p>Manutenção nos computadores do 2º andar nesta quarta-feira — fora de serviço das 8h às 12h.</p><div class="data">📅 30/03/2026</div></div>
+        <div class="aviso"><div class="tag">📌 Aviso</div><p>Silêncio obrigatório nas áreas de estudo. Conversas apenas nas áreas de convivência.</p><div class="data">📅 25/03/2026</div></div>
+        <div class="aviso info"><div class="tag">ℹ️ Informação</div><p>Novos armários disponíveis no subsolo. Solicite a chave na recepção com documento.</p><div class="data">📅 20/03/2026</div></div>
       </div>
     </div>
-
-    <!-- PLANO -->
     <div id="panelPlano" class="panel">
       <div class="plano-crd">
         <div class="plano-tipo">🎫 Acesso Diário</div>
@@ -456,28 +419,18 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
         <div id="historicoLista"><div class="sem"><span class="si">⏳</span>Carregando...</div></div>
       </div>
     </div>
-
-    <!-- INFO -->
     <div id="panelInformacoes" class="panel">
       <div class="crd">
         <div class="crd-t">🏛️ Sobre a Biblioteca</div>
         <p style="font-size:.83rem;color:#555;line-height:1.7;margin-bottom:11px">A <b>Ala dos Estudantes Educador Paiva Netto</b> é um espaço dedicado ao estudo, aberto a toda a comunidade.</p>
-        <div class="info-item"><div class="ii verde">📍</div>
-          <div class="info-texto"><h4>Endereço</h4><p>SGAS 915 Sul, Lotes 75/76 — Plano Piloto<br>Brasília/DF — CEP 70390-150</p></div></div>
-        <div class="info-item"><div class="ii gold">⏰</div>
-          <div class="info-texto"><h4>Horário</h4><p>Todos os dias — inclusive feriados<br><b>8h00 às 19h45</b></p></div></div>
-        <div class="info-item"><div class="ii azul">📞</div>
-          <div class="info-texto"><h4>Telefone</h4><p><a href="tel:6131141027" style="color:var(--azul);font-weight:600">(61) 3114-1027</a></p></div></div>
-        <div class="info-item"><div class="ii verde">🔒</div>
-          <div class="info-texto"><h4>Armários</h4><p>Guarde seus pertences. Solicite na recepção com documento.</p></div></div>
-        <div class="info-item"><div class="ii azul">📶</div>
-          <div class="info-texto"><h4>Wi-Fi Gratuito</h4><p>Alta velocidade em todas as áreas.</p></div></div>
-        <div class="info-item"><div class="ii gold">🍽️</div>
-          <div class="info-texto"><h4>Restaurante</h4><p>Térreo do prédio. Refeições e lanches disponíveis.</p></div></div>
+        <div class="info-item"><div class="ii verde">📍</div><div class="info-texto"><h4>Endereço</h4><p>SGAS 915 Sul, Lotes 75/76 — Plano Piloto<br>Brasília/DF — CEP 70390-150</p></div></div>
+        <div class="info-item"><div class="ii gold">⏰</div><div class="info-texto"><h4>Horário</h4><p>Todos os dias — inclusive feriados<br><b>8h00 às 19h45</b></p></div></div>
+        <div class="info-item"><div class="ii azul">📞</div><div class="info-texto"><h4>Telefone</h4><p><a href="tel:6131141027" style="color:var(--azul);font-weight:600">(61) 3114-1027</a></p></div></div>
+        <div class="info-item"><div class="ii verde">🔒</div><div class="info-texto"><h4>Armários</h4><p>Guarde seus pertences. Solicite na recepção com documento.</p></div></div>
+        <div class="info-item"><div class="ii azul">📶</div><div class="info-texto"><h4>Wi-Fi Gratuito</h4><p>Alta velocidade em todas as áreas.</p></div></div>
+        <div class="info-item"><div class="ii gold">🍽️</div><div class="info-texto"><h4>Restaurante</h4><p>Térreo do prédio. Refeições e lanches disponíveis.</p></div></div>
       </div>
     </div>
-
-    <!-- SUGESTÕES -->
     <div id="panelSugestoes" class="panel">
       <div class="crd">
         <div class="crd-t">💬 Sugestões &amp; Reclamações</div>
@@ -502,7 +455,6 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
       </div>
     </div>
   </div>
-
   <nav class="bnav">
     <div class="ni ativo" data-panel="panelInicio"><span class="ic">🏠</span><span class="lb">Início</span></div>
     <div class="ni" data-panel="panelAvisos"><span class="ic">📢</span><span class="lb">Avisos</span></div>
@@ -512,7 +464,7 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
   </nav>
 </div>
 
-<!-- ═══════════ RECEPÇÃO ═══════════ -->
+<!-- RECEPÇÃO -->
 <div id="recepScreen" class="screen">
   <div class="admin-top" style="background:linear-gradient(135deg,#0a1628,#1a4a8a)">
     <h1>🛎️ Painel da Recepção</h1>
@@ -535,9 +487,7 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
       <div class="acrd">
         <div class="acrd-t">✅ Usuários Presentes</div>
         <p style="font-size:.81rem;color:#777;margin-bottom:12px;line-height:1.6">Clique em <b>Registrar Saída</b> quando o usuário sair com seus materiais.</p>
-        <div class="presenca-grid" id="rGridPresentes">
-          <div class="sem"><span class="si">⏳</span>Carregando...</div>
-        </div>
+        <div class="presenca-grid" id="rGridPresentes"><div class="sem"><span class="si">⏳</span>Carregando...</div></div>
       </div>
     </div>
     <div id="recepPanelPagos" class="apanel">
@@ -577,7 +527,7 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
   </div>
 </div>
 
-<!-- ═══════════ ADMIN ═══════════ -->
+<!-- ADMIN -->
 <div id="adminScreen" class="screen">
   <div class="admin-top">
     <h1>⚙️ Painel Administrativo</h1>
@@ -612,9 +562,7 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
     <div id="adminPanelHistorico" class="apanel">
       <div class="acrd">
         <div class="acrd-t">📊 Histórico de Acessos</div>
-        <div class="fg" style="margin-bottom:10px">
-          <input type="date" id="adminDataHistorico">
-        </div>
+        <div class="fg" style="margin-bottom:10px"><input type="date" id="adminDataHistorico"></div>
         <div style="overflow-x:auto">
           <table class="tabela">
             <thead><tr><th>Usuário</th><th>Entrada</th><th>Saída</th><th>Status</th><th>Pagamento</th></tr></thead>
@@ -626,24 +574,17 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
     <div id="adminPanelConfig" class="apanel">
       <div class="acrd">
         <div class="acrd-t">⚙️ Configurações</div>
-        <div class="fg"><label>Total de vagas</label>
-          <input type="number" id="cfgVagas" value="30" min="1" max="500"></div>
-        <div class="fg"><label>Valor do acesso diário (R$)</label>
-          <input type="text" id="cfgTaxa" placeholder="Ex: 10,00"></div>
-        <div class="fg"><label>Timeout vaga ociosa (minutos)</label>
-          <input type="number" id="cfgTimeout" value="30" min="5"></div>
+        <div class="fg"><label>Total de vagas</label><input type="number" id="cfgVagas" value="30" min="1" max="500"></div>
+        <div class="fg"><label>Valor do acesso diário (R$)</label><input type="text" id="cfgTaxa" placeholder="Ex: 10,00"></div>
+        <div class="fg"><label>Timeout vaga ociosa (minutos)</label><input type="number" id="cfgTimeout" value="30" min="5"></div>
         <hr style="border:none;border-top:1px solid #eee;margin:13px 0">
         <div class="acrd-t" style="font-size:.87rem;margin-bottom:9px">💳 Dados Pix</div>
-        <div class="fg"><label>Chave Pix</label>
-          <input type="text" id="cfgPixChave" placeholder="CNPJ, CPF, e-mail ou telefone"></div>
-        <div class="fg"><label>Nome do Beneficiário</label>
-          <input type="text" id="cfgPixNome" placeholder="Biblioteca Paiva Netto"></div>
+        <div class="fg"><label>Chave Pix</label><input type="text" id="cfgPixChave" placeholder="CNPJ, CPF, e-mail ou telefone"></div>
+        <div class="fg"><label>Nome do Beneficiário</label><input type="text" id="cfgPixNome" placeholder="Biblioteca Paiva Netto"></div>
         <hr style="border:none;border-top:1px solid #eee;margin:13px 0">
         <div class="acrd-t" style="font-size:.87rem;margin-bottom:9px">🔐 Control iD</div>
-        <div class="fg"><label>URL da API</label>
-          <input type="text" id="cfgControlIdUrl" placeholder="http://192.168.1.100/api/v1"></div>
-        <div class="fg"><label>Token</label>
-          <input type="password" id="cfgControlIdToken" placeholder="Bearer token"></div>
+        <div class="fg"><label>URL da API</label><input type="text" id="cfgControlIdUrl" placeholder="http://192.168.1.100/api/v1"></div>
+        <div class="fg"><label>Token</label><input type="password" id="cfgControlIdToken" placeholder="Bearer token"></div>
         <button class="btn btn-verde btn-sm" id="btnSalvarConfig">💾 Salvar Configurações</button>
       </div>
     </div>
@@ -693,19 +634,14 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
 
 <script>
 // ═══════════════════════════════════════════════════════════
-//  CONFIGURAÇÃO — altere apenas API_BASE após o deploy
+//  CONFIGURAÇÃO
 // ═══════════════════════════════════════════════════════════
-const API_BASE = 'https://biblioteca-backend-v2-0.vercel.app/api'; // ← substitua após deploy
+const API_BASE = 'https://biblioteca-backend-v2-0-8je5.vercel.app';
 
-// ═══════════════════════════════════════════════════════════
-//  CAMADA DE API
-// ═══════════════════════════════════════════════════════════
 const api = {
   token: null,
-
   setToken(t) { this.token = t; },
   clearToken() { this.token = null; },
-
   async req(method, path, body) {
     const headers = { 'Content-Type': 'application/json' };
     if (this.token) headers['Authorization'] = `Bearer ${this.token}`;
@@ -716,42 +652,22 @@ const api = {
     if (!r.ok) throw new Error(data.erro || 'Erro na requisição');
     return data;
   },
-
-  get(path)         { return this.req('GET', path); },
-  post(path, body)  { return this.req('POST', path, body); },
-
-  // Auth
-  login(tipo, senha)         { return this.post('/auth/login', { tipo, senha }); },
-
-  // Vagas
-  vagas()                    { return this.get('/vagas/status'); },
-
-  // Usuários
-  cadastrar(dados)           { return this.post('/usuarios/cadastrar', dados); },
-  listarUsuarios(q)          { return this.get(`/usuarios/listar?busca=${q||''}`); },
-
-  // Acessos
-  registrarAcesso(uid, pid)  { return this.post('/acessos/registrar', { usuario_id: uid, pagamento_id: pid, registrado_por: 'recepcao' }); },
-  listarAcessos(data, status){ return this.get(`/acessos/listar?data=${data||''}&status=${status||''}`); },
-  encerrarAcesso(id)         { return this.post('/acessos/encerrar', { acesso_id: id }); },
+  get(path)        { return this.req('GET', path); },
+  post(path, body) { return this.req('POST', path, body); },
+  login(tipo, senha)          { return this.post('/api/auth/login', { tipo, senha }); },
+  vagas()                     { return this.get('/api/vagas/status'); },
+  cadastrar(dados)            { return this.post('/api/usuarios/cadastrar', dados); },
+  listarUsuarios(q)           { return this.get(`/api/usuarios/listar?busca=${q||''}`); },
+  registrarAcesso(uid, pid)   { return this.post('/api/acessos/registrar', { usuario_id: uid, pagamento_id: pid, registrado_por: 'recepcao' }); },
+  listarAcessos(data, status) { return this.get(`/api/acessos/listar?data=${data||''}&status=${status||''}`); },
+  encerrarAcesso(id)          { return this.post('/api/acessos/encerrar', { acesso_id: id }); },
 };
 
-// ═══════════════════════════════════════════════════════════
-//  ESTADO DA SESSÃO (em memória, nunca localStorage)
-// ═══════════════════════════════════════════════════════════
-const sess = {
-  usuario: null,      // dados do usuário logado
-  tipo: null,         // 'app' | 'recepcao' | 'admin'
-  acesso: null,       // acesso ativo do dia
-};
+const sess = { usuario: null, tipo: null, acesso: null };
 
-// ═══════════════════════════════════════════════════════════
-//  UTILITÁRIOS
-// ═══════════════════════════════════════════════════════════
 function toast(msg, dur=2800) {
   const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
+  t.textContent = msg; t.classList.add('show');
   setTimeout(() => t.classList.remove('show'), dur);
 }
 
@@ -770,11 +686,7 @@ function maskCpf(input) {
 }
 
 function hojeISO() { return new Date().toISOString().split('T')[0]; }
-
-function fmtHora(iso) {
-  if(!iso) return '—';
-  return new Date(iso).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
-}
+function fmtHora(iso) { if(!iso) return '—'; return new Date(iso).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}); }
 
 function mostrarErro(id, msg) {
   const el = document.getElementById(id);
@@ -796,106 +708,60 @@ function mostrarTela(id) {
   document.getElementById(id).classList.add('ativo');
 }
 
-// ═══════════════════════════════════════════════════════════
-//  INICIALIZAÇÃO
-// ═══════════════════════════════════════════════════════════
 document.addEventListener('DOMContentLoaded', () => {
-  // Máscaras
   maskCpf(document.getElementById('loginCpf'));
   maskCpf(document.getElementById('cadCpf'));
   maskCpf(document.getElementById('recepCpfBusca'));
-
-  // Data atual na tela app
   const now = new Date();
   document.getElementById('msgData').textContent = now.toLocaleDateString('pt-BR',
     { weekday:'long', year:'numeric', month:'long', day:'numeric' });
-
-  // Data padrão no histórico admin
   const dh = document.getElementById('adminDataHistorico');
   if(dh) dh.value = hojeISO();
-
   bindEventos();
-
-  // Carregar vagas públicas
   atualizarVagas();
   setInterval(atualizarVagas, 30000);
 });
 
-// ═══════════════════════════════════════════════════════════
-//  EVENTOS
-// ═══════════════════════════════════════════════════════════
 function bindEventos() {
-
-  // Navegação login
   document.getElementById('irCadastro').onclick   = () => mostrarTela('cadastroScreen');
   document.getElementById('irLogin').onclick      = () => mostrarTela('loginScreen');
   document.getElementById('irAdminLogin').onclick = () => mostrarTela('adminLoginScreen');
   document.getElementById('voltarLogin').onclick  = () => mostrarTela('loginScreen');
-
-  // Login usuário (por CPF — busca o usuário e autentica localmente)
   document.getElementById('btnLogin').onclick = loginUsuario;
   document.getElementById('loginSenha').onkeydown = e => { if(e.key==='Enter') loginUsuario(); };
-
-  // Login admin/recepção
   document.getElementById('btnAdminLogin').onclick = loginAdmin;
   document.getElementById('adminSenha').onkeydown  = e => { if(e.key==='Enter') loginAdmin(); };
-
-  // Cadastro
   document.getElementById('btnCadastrar').onclick = cadastrarUsuario;
-  // irLogin2 é o link na etapa 1 do cadastro (mesmo id já coberto acima)
-
-  // App — tabs + nav
   document.querySelectorAll('.tab').forEach(b => b.onclick = () => mudarTab(b.dataset.panel));
   document.querySelectorAll('.ni').forEach(n => n.onclick = () => {
     document.querySelectorAll('.ni').forEach(x => x.classList.remove('ativo'));
     n.classList.add('ativo');
     mudarTab(n.dataset.panel);
   });
-
-  // Acesso / pagamento
-  document.getElementById('btnAcesso').onclick     = abrirModalPagamento;
-  document.getElementById('btnPagar').onclick      = confirmarPagamento;
-  document.getElementById('btnCancelarPagto').onclick = () =>
-    document.getElementById('modalPagamento').classList.remove('ativo');
-
-  // Sair app
-  document.getElementById('btnSairApp').onclick    = () => document.getElementById('modalSair').classList.add('ativo');
+  document.getElementById('btnAcesso').onclick        = abrirModalPagamento;
+  document.getElementById('btnPagar').onclick         = confirmarPagamento;
+  document.getElementById('btnCancelarPagto').onclick = () => document.getElementById('modalPagamento').classList.remove('ativo');
+  document.getElementById('btnSairApp').onclick       = () => document.getElementById('modalSair').classList.add('ativo');
   document.getElementById('btnCancelarSaida').onclick = () => document.getElementById('modalSair').classList.remove('ativo');
   document.getElementById('btnConfirmarSaida').onclick = () => {
     sess.usuario = null; sess.tipo = null; sess.acesso = null; api.clearToken();
     document.getElementById('modalSair').classList.remove('ativo');
     mostrarTela('loginScreen');
   };
-
-  // Sair recep/admin
-  document.getElementById('btnSairRecep').onclick  = () => { api.clearToken(); mostrarTela('loginScreen'); };
-  document.getElementById('btnSairAdmin').onclick  = () => { api.clearToken(); mostrarTela('loginScreen'); };
-
-  // Recepção — tabs
+  document.getElementById('btnSairRecep').onclick = () => { api.clearToken(); mostrarTela('loginScreen'); };
+  document.getElementById('btnSairAdmin').onclick = () => { api.clearToken(); mostrarTela('loginScreen'); };
   document.querySelectorAll('.atab').forEach(b => b.onclick = () => mudarATab(b.dataset.apanel, b));
-
-  // Recepção — busca usuário
   document.getElementById('btnRecepBuscar').onclick = recepBuscarUsuario;
   document.getElementById('recepCpfBusca').onkeydown = e => { if(e.key==='Enter') recepBuscarUsuario(); };
-
-  // Admin — busca usuário
   const bu = document.getElementById('adminBuscaUsuario');
   if(bu) bu.oninput = debounce(() => adminCarregarUsuarios(bu.value), 400);
-
-  // Admin — histórico data
   const dh = document.getElementById('adminDataHistorico');
   if(dh) dh.onchange = () => adminCarregarHistorico(dh.value);
-
-  // Admin — salvar config
   document.getElementById('btnSalvarConfig').onclick = adminSalvarConfig;
-
-  // Sugestões
   document.getElementById('btnEnviarMsg').onclick = enviarSugestao;
 }
 
-function debounce(fn, ms) {
-  let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); };
-}
+function debounce(fn, ms) { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; }
 
 function mudarTab(panelId) {
   document.querySelectorAll('.panel').forEach(p => p.classList.remove('ativo'));
@@ -913,113 +779,62 @@ function mudarATab(panelId, btn) {
   btn.classList.add('ativo');
 }
 
-// ═══════════════════════════════════════════════════════════
-//  VAGAS (público)
-// ═══════════════════════════════════════════════════════════
 async function atualizarVagas() {
   try {
     const d = await api.vagas();
     const pct = d.total > 0 ? Math.round((d.ocupadas/d.total)*100) : 0;
-
-    ['vagasL','rVL','rVL2','aVL'].forEach(id => {
-      const el = document.getElementById(id);
-      if(el) el.textContent = d.livres;
-    });
-    ['vagasO','rVO','rVO2','aVO'].forEach(id => {
-      const el = document.getElementById(id);
-      if(el) el.textContent = d.ocupadas;
-    });
-    ['rPresentes','aPresentes'].forEach(id => {
-      const el = document.getElementById(id);
-      if(el) el.textContent = d.ocupadas;
-    });
-
+    ['vagasL','rVL','rVL2','aVL'].forEach(id => { const el = document.getElementById(id); if(el) el.textContent = d.livres; });
+    ['vagasO','rVO','rVO2','aVO'].forEach(id => { const el = document.getElementById(id); if(el) el.textContent = d.ocupadas; });
+    ['rPresentes','aPresentes'].forEach(id => { const el = document.getElementById(id); if(el) el.textContent = d.ocupadas; });
     document.getElementById('pctOc').textContent = pct+'%';
     document.getElementById('barraFill').style.width = pct+'%';
     document.getElementById('rPct').textContent = pct+'%';
     document.getElementById('rBarraFill').style.width = pct+'%';
     document.getElementById('totalVagasInfo').textContent = `${d.total} vagas rotativas`;
-  } catch(e) {
-    // silencioso — pode estar offline
-  }
+  } catch(e) {}
 }
 
-// ═══════════════════════════════════════════════════════════
-//  LOGIN USUÁRIO
-// ═══════════════════════════════════════════════════════════
 async function loginUsuario() {
   mostrarErro('loginErro','');
   const cpf   = document.getElementById('loginCpf').value.replace(/\D/g,'');
   const senha = document.getElementById('loginSenha').value;
-
   if(cpf.length !== 11) { mostrarErro('loginErro','CPF inválido'); return; }
   if(!senha)             { mostrarErro('loginErro','Informe a senha'); return; }
-
   loading('btnLogin', true);
   try {
-    const res = await api.post('/usuarios/login', { cpf });
-    const usuario = res.usuario;
-
-    if(!usuario) { mostrarErro('loginErro','CPF não cadastrado'); return; }
-    if(!usuario.ativo) { mostrarErro('loginErro','Conta suspensa. Fale com a recepção.'); return; }
-
-    sess.usuario = usuario;
-    sess.tipo    = 'app';
+    const res = await api.post('/api/auth/login-usuario', { cpf, senha });
+    api.setToken(res.token);
+    sess.usuario = res.usuario;
+    sess.tipo = 'app';
     entrarApp();
   } catch(e) {
-    mostrarErro('loginErro', e.message || 'Erro ao conectar. Verifique sua conexão.');
-  } finally {
-    loading('btnLogin', false);
-  }
+    mostrarErro('loginErro', e.message || 'Erro ao conectar.');
+  } finally { loading('btnLogin', false); }
 }
 
-// ═══════════════════════════════════════════════════════════
-//  LOGIN ADMIN/RECEPÇÃO
-// ═══════════════════════════════════════════════════════════
 async function loginAdmin() {
   mostrarErro('adminLoginErro','');
   const tipo  = document.getElementById('adminUser').value.trim();
   const senha = document.getElementById('adminSenha').value;
-
   if(!tipo || !senha) { mostrarErro('adminLoginErro','Preencha usuário e senha'); return; }
   if(!['admin','recepcao'].includes(tipo)) { mostrarErro('adminLoginErro','Usuário inválido. Use: admin ou recepcao'); return; }
-
   loading('btnAdminLogin', true);
   try {
     const res = await api.login(tipo, senha);
-    api.setToken(res.token);
-    sess.tipo = tipo;
-
+    api.setToken(res.token); sess.tipo = tipo;
     atualizarVagas();
-
-    if(tipo === 'admin') {
-      mostrarTela('adminScreen');
-      adminCarregarUsuarios();
-      adminCarregarStats();
-    } else {
-      mostrarTela('recepScreen');
-      recepCarregarPresentes();
-      recepCarregarPagos();
-    }
-
+    if(tipo === 'admin') { mostrarTela('adminScreen'); adminCarregarUsuarios(); adminCarregarStats(); }
+    else { mostrarTela('recepScreen'); recepCarregarPresentes(); recepCarregarPagos(); }
     document.getElementById('adminUser').value = '';
     document.getElementById('adminSenha').value = '';
-
     toast(`✅ Bem-vindo ao painel de ${tipo}!`);
     setInterval(atualizarVagas, 15000);
   } catch(e) {
     mostrarErro('adminLoginErro', e.message || 'Senha incorreta');
-  } finally {
-    loading('btnAdminLogin', false);
-  }
+  } finally { loading('btnAdminLogin', false); }
 }
 
-// ═══════════════════════════════════════════════════════════
-//  CADASTRO COM ASSINATURA DIGITAL
-// ═══════════════════════════════════════════════════════════
-let _assinaturaFeita = false;
-let _ctx = null;
-let _desenhando = false;
+let _assinaturaFeita = false, _ctx = null, _desenhando = false;
 
 function initCanvas() {
   const canvas = document.getElementById('canvasAssinatura');
@@ -1027,43 +842,28 @@ function initCanvas() {
   const wrap = document.getElementById('canvasWrap');
   const dpr = window.devicePixelRatio || 1;
   const w = wrap.offsetWidth || 350;
-  canvas.width  = w * dpr;
-  canvas.height = 130 * dpr;
-  canvas.style.width  = w + 'px';
-  canvas.style.height = '130px';
+  canvas.width = w * dpr; canvas.height = 130 * dpr;
+  canvas.style.width = w + 'px'; canvas.style.height = '130px';
   _ctx = canvas.getContext('2d');
   _ctx.scale(dpr, dpr);
-  _ctx.strokeStyle = '#1a1a1a';
-  _ctx.lineWidth = 2.2;
-  _ctx.lineCap = 'round';
-  _ctx.lineJoin = 'round';
-
+  _ctx.strokeStyle = '#1a1a1a'; _ctx.lineWidth = 2.2; _ctx.lineCap = 'round'; _ctx.lineJoin = 'round';
   function getPos(e) {
     const r = canvas.getBoundingClientRect();
     const s = e.touches ? e.touches[0] : e;
     return { x: s.clientX - r.left, y: s.clientY - r.top };
   }
-  canvas.addEventListener('mousedown', e => {
-    _desenhando = true;
-    const p = getPos(e);
-    _ctx.beginPath(); _ctx.moveTo(p.x, p.y);
-  });
+  canvas.addEventListener('mousedown', e => { _desenhando = true; const p = getPos(e); _ctx.beginPath(); _ctx.moveTo(p.x, p.y); });
   canvas.addEventListener('mousemove', e => {
     if (!_desenhando) return;
-    const p = getPos(e);
-    _ctx.lineTo(p.x, p.y); _ctx.stroke();
+    const p = getPos(e); _ctx.lineTo(p.x, p.y); _ctx.stroke();
     _assinaturaFeita = true;
     document.getElementById('assinaturaPlaceholder').style.display = 'none';
   });
-  canvas.addEventListener('mouseup',    () => _desenhando = false);
+  canvas.addEventListener('mouseup', () => _desenhando = false);
   canvas.addEventListener('mouseleave', () => _desenhando = false);
-  canvas.addEventListener('touchstart', e => {
-    e.preventDefault(); _desenhando = true;
-    const p = getPos(e); _ctx.beginPath(); _ctx.moveTo(p.x, p.y);
-  }, { passive: false });
+  canvas.addEventListener('touchstart', e => { e.preventDefault(); _desenhando = true; const p = getPos(e); _ctx.beginPath(); _ctx.moveTo(p.x, p.y); }, { passive: false });
   canvas.addEventListener('touchmove', e => {
-    e.preventDefault();
-    if (!_desenhando) return;
+    e.preventDefault(); if (!_desenhando) return;
     const p = getPos(e); _ctx.lineTo(p.x, p.y); _ctx.stroke();
     _assinaturaFeita = true;
     document.getElementById('assinaturaPlaceholder').style.display = 'none';
@@ -1079,7 +879,6 @@ function limparCanvas() {
   document.getElementById('assinaturaPlaceholder').style.display = 'flex';
 }
 
-// Etapa 1 → 2
 document.getElementById('btnCadEtapa1').addEventListener('click', () => {
   mostrarErro('cadErro','');
   const nome  = document.getElementById('cadNome').value.trim();
@@ -1094,8 +893,7 @@ document.getElementById('btnCadEtapa1').addEventListener('click', () => {
   document.getElementById('cadEtapa2').style.display = 'block';
   document.getElementById('etapaInd2').style.background = 'var(--verde)';
   document.getElementById('etapaTxt').textContent = 'Etapa 2 de 2';
-  _ctx = null; // reset canvas para reinicializar
-  setTimeout(initCanvas, 120);
+  _ctx = null; setTimeout(initCanvas, 120);
 });
 
 document.getElementById('btnVoltarEtapa1').addEventListener('click', () => {
@@ -1109,36 +907,18 @@ document.getElementById('btnLimparAssinatura').addEventListener('click', limparC
 
 async function cadastrarUsuario() {
   mostrarErro('cadErro','');
-  if (!_assinaturaFeita) {
-    mostrarErro('cadErro','Por favor, assine o termo para continuar');
-    return;
-  }
-  const nome  = document.getElementById('cadNome').value.trim();
-  const cpf   = document.getElementById('cadCpf').value.replace(/\D/g,'');
-  const email = document.getElementById('cadEmail').value.trim();
-  const tel   = document.getElementById('cadTel').value.trim();
-  const tipo  = document.getElementById('cadTipo').value;
+  if (!_assinaturaFeita) { mostrarErro('cadErro','Por favor, assine o termo para continuar'); return; }
+  const nome       = document.getElementById('cadNome').value.trim();
+  const cpf        = document.getElementById('cadCpf').value.replace(/\D/g,'');
+  const email      = document.getElementById('cadEmail').value.trim();
+  const tel        = document.getElementById('cadTel').value.trim();
+  const tipo       = document.getElementById('cadTipo').value;
+  const senha      = document.getElementById('cadSenha').value;
   const assinatura = document.getElementById('canvasAssinatura').toDataURL('image/png');
-
   loading('btnCadastrar', true);
   try {
-    const r = await fetch(API_BASE + '/usuarios/cadastrar', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ nome, cpf, email, telefone: tel, tipo, assinatura_svg: assinatura })
-    });
-    const data = await r.json();
-    if (!r.ok) throw new Error(data.erro || 'Erro ao cadastrar');
-
-    // Salva assinatura digital
-    await fetch(API_BASE + '/usuarios/assinar-termo', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ usuario_id: data.usuario.id, assinatura_svg: assinatura })
-    });
-
+    const data = await api.cadastrar({ nome, cpf, email, telefone: tel, tipo, senha, assinatura_svg: assinatura });
     toast('✅ Cadastro e assinatura realizados com sucesso!');
-    // Reset
     _ctx = null; _assinaturaFeita = false;
     document.getElementById('cadEtapa2').style.display = 'none';
     document.getElementById('cadEtapa1').style.display = 'block';
@@ -1147,14 +927,9 @@ async function cadastrarUsuario() {
     setTimeout(() => mostrarTela('loginScreen'), 1600);
   } catch(e) {
     mostrarErro('cadErro', e.message);
-  } finally {
-    loading('btnCadastrar', false);
-  }
+  } finally { loading('btnCadastrar', false); }
 }
 
-// ═══════════════════════════════════════════════════════════
-//  ENTRAR NO APP DO USUÁRIO
-// ═══════════════════════════════════════════════════════════
 function entrarApp() {
   const u = sess.usuario;
   document.getElementById('nomeUser').textContent = u.nome.split(' ')[0];
@@ -1171,53 +946,39 @@ async function verificarAcessoHoje() {
     const meu = res.acessos?.find(a => a.usuarios?.id === sess.usuario.id);
     sess.acesso = meu || null;
     renderizarStatusAcesso();
-  } catch(e) {
-    renderizarStatusAcesso();
-  }
+  } catch(e) { renderizarStatusAcesso(); }
 }
 
 function renderizarStatusAcesso() {
-  const box    = document.getElementById('statusBox');
-  const dot    = document.getElementById('dotSt');
-  const txt    = document.getElementById('txtSt');
-  const btn    = document.getElementById('btnAcesso');
+  const box = document.getElementById('statusBox');
+  const dot = document.getElementById('dotSt');
+  const txt = document.getElementById('txtSt');
+  const btn = document.getElementById('btnAcesso');
   const lblBtn = document.getElementById('lblBtn');
   const ticket = document.getElementById('blocoTicket');
-
   if(sess.acesso) {
-    box.className = 'st-box presente';
-    dot.className = 'dot verde';
+    box.className = 'st-box presente'; dot.className = 'dot verde';
     txt.textContent = `Acesso ativo desde ${fmtHora(sess.acesso.entrada_em)}`;
-    lblBtn.textContent = '✅ Acesso Ativo';
-    btn.disabled = true;
+    lblBtn.textContent = '✅ Acesso Ativo'; btn.disabled = true;
     ticket.style.display = 'block';
     document.getElementById('ticketNome').textContent = sess.usuario.nome;
     document.getElementById('ticketDetalhe').textContent = `CPF: ${fmtCpf(sess.usuario.cpf)} • Entrada: ${fmtHora(sess.acesso.entrada_em)}`;
   } else {
-    box.className = 'st-box ausente';
-    dot.className = 'dot cinza';
+    box.className = 'st-box ausente'; dot.className = 'dot cinza';
     txt.textContent = 'Sem acesso ativo para hoje';
-    lblBtn.textContent = '💳 Pagar e Garantir Acesso';
-    btn.disabled = false;
+    lblBtn.textContent = '💳 Pagar e Garantir Acesso'; btn.disabled = false;
     ticket.style.display = 'none';
   }
 }
 
-// ═══════════════════════════════════════════════════════════
-//  MODAL PAGAMENTO
-// ═══════════════════════════════════════════════════════════
 async function abrirModalPagamento() {
   document.getElementById('pagtoStatus').textContent = '';
   document.getElementById('modalPagamento').classList.add('ativo');
   try {
     const v = await api.vagas();
-    // Carregar config de Pix (admin deve ter configurado)
     document.getElementById('pagtoChave').textContent = 'Configure a Chave Pix no painel admin';
     document.getElementById('pagtoNome').textContent = 'Biblioteca Paiva Netto';
-    if(v.lotado) {
-      document.getElementById('pagtoStatus').textContent = '⚠️ Sala lotada no momento';
-      document.getElementById('btnPagar').disabled = true;
-    }
+    if(v.lotado) { document.getElementById('pagtoStatus').textContent = '⚠️ Sala lotada no momento'; document.getElementById('btnPagar').disabled = true; }
   } catch(e) {}
 }
 
@@ -1226,41 +987,24 @@ async function confirmarPagamento() {
   document.getElementById('pagtoStatus').textContent = '⏳ Aguardando confirmação da recepção...';
   document.getElementById('btnPagar').disabled = true;
   toast('✅ Solicitação enviada! Apresente o comprovante na recepção.');
-  setTimeout(() => {
-    document.getElementById('modalPagamento').classList.remove('ativo');
-    document.getElementById('btnPagar').disabled = false;
-  }, 2000);
+  setTimeout(() => { document.getElementById('modalPagamento').classList.remove('ativo'); document.getElementById('btnPagar').disabled = false; }, 2000);
 }
 
-// ═══════════════════════════════════════════════════════════
-//  HISTÓRICO DO USUÁRIO
-// ═══════════════════════════════════════════════════════════
 async function carregarHistoricoUsuario() {
   if(!sess.usuario) return;
   const lista = document.getElementById('historicoLista');
   lista.innerHTML = '<div class="sem"><span class="si">⏳</span>Carregando...</div>';
   try {
-    // Carrega últimos 30 dias
     const res = await api.listarAcessos('', '');
     const meus = (res.acessos||[]).filter(a => a.usuarios?.id === sess.usuario.id);
-
-    // Stats
     const mes = new Date(); mes.setDate(1);
     const doMes = meus.filter(a => new Date(a.entrada_em) >= mes);
     document.getElementById('pVisitas').textContent = doMes.length;
     document.getElementById('pDias').textContent    = doMes.length;
-
     let horas = 0;
-    meus.forEach(a => {
-      if(a.saida_em) horas += (new Date(a.saida_em)-new Date(a.entrada_em))/3600000;
-    });
+    meus.forEach(a => { if(a.saida_em) horas += (new Date(a.saida_em)-new Date(a.entrada_em))/3600000; });
     document.getElementById('pHoras').textContent = Math.round(horas)+'h';
-
-    if(!meus.length) {
-      lista.innerHTML = '<div class="sem"><span class="si">📋</span>Faça sua primeira visita!</div>';
-      return;
-    }
-
+    if(!meus.length) { lista.innerHTML = '<div class="sem"><span class="si">📋</span>Faça sua primeira visita!</div>'; return; }
     lista.innerHTML = meus.slice(0,20).map(a => `
       <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid #f0f0f0;font-size:.82rem">
         <div>
@@ -1268,28 +1012,17 @@ async function carregarHistoricoUsuario() {
           <div style="color:#888;font-size:.74rem">${fmtHora(a.entrada_em)} → ${a.saida_em ? fmtHora(a.saida_em) : 'em curso'}</div>
         </div>
         <span class="badge ${a.status==='ativo'?'verde':a.status==='encerrado'?'cinza':'gold'}">${a.status}</span>
-      </div>
-    `).join('');
-  } catch(e) {
-    lista.innerHTML = '<div class="sem"><span class="si">⚠️</span>Erro ao carregar histórico</div>';
-  }
+      </div>`).join('');
+  } catch(e) { lista.innerHTML = '<div class="sem"><span class="si">⚠️</span>Erro ao carregar histórico</div>'; }
 }
 
-// ═══════════════════════════════════════════════════════════
-//  RECEPÇÃO
-// ═══════════════════════════════════════════════════════════
 async function recepCarregarPresentes() {
   const grid = document.getElementById('rGridPresentes');
   try {
     const res = await api.listarAcessos(hojeISO(), 'ativo');
     const lista = res.acessos || [];
     document.getElementById('rPresentes').textContent = lista.length;
-
-    if(!lista.length) {
-      grid.innerHTML = '<div class="sem"><span class="si">🏛️</span>Nenhum usuário presente.</div>';
-      return;
-    }
-
+    if(!lista.length) { grid.innerHTML = '<div class="sem"><span class="si">🏛️</span>Nenhum usuário presente.</div>'; return; }
     grid.innerHTML = lista.map(a => `
       <div class="presenca-card">
         <div class="pc-header">
@@ -1302,26 +1035,16 @@ async function recepCarregarPresentes() {
         <div class="pc-btns">
           <button class="btn btn-vermelho btn-xs" onclick="recepRegistrarSaida('${a.id}', this)">🚪 Registrar Saída</button>
         </div>
-      </div>
-    `).join('');
-  } catch(e) {
-    grid.innerHTML = '<div class="sem"><span class="si">⚠️</span>Erro ao carregar.</div>';
-  }
+      </div>`).join('');
+  } catch(e) { grid.innerHTML = '<div class="sem"><span class="si">⚠️</span>Erro ao carregar.</div>'; }
 }
 
 async function recepRegistrarSaida(acessoId, btn) {
-  btn.disabled = true;
-  btn.textContent = '⏳...';
+  btn.disabled = true; btn.textContent = '⏳...';
   try {
-    await api.post('/acessos/encerrar', { acesso_id: acessoId });
-    toast('✅ Saída registrada!');
-    atualizarVagas();
-    recepCarregarPresentes();
-  } catch(e) {
-    toast('❌ Erro: '+e.message);
-    btn.disabled = false;
-    btn.textContent = '🚪 Registrar Saída';
-  }
+    await api.post('/api/acessos/encerrar', { acesso_id: acessoId });
+    toast('✅ Saída registrada!'); atualizarVagas(); recepCarregarPresentes();
+  } catch(e) { toast('❌ Erro: '+e.message); btn.disabled = false; btn.textContent = '🚪 Registrar Saída'; }
 }
 
 async function recepCarregarPagos() {
@@ -1330,33 +1053,25 @@ async function recepCarregarPagos() {
     const res = await api.listarAcessos(hojeISO(), '');
     const lista = res.acessos || [];
     document.getElementById('rPagosHoje').textContent = lista.length;
-
     tbody.innerHTML = lista.map(a => `
       <tr>
         <td>${a.usuarios?.nome||'—'}</td>
         <td>${fmtHora(a.entrada_em)}</td>
         <td><span class="badge ${a.status==='ativo'?'verde':'cinza'}">${a.status}</span></td>
         <td><span class="badge ${a.pagamentos?.tipo==='pix'?'azul':'gold'}">${a.pagamentos?.tipo||'—'}</span></td>
-      </tr>
-    `).join('') || '<tr><td colspan="4" style="text-align:center;color:#aaa">Nenhum registro hoje</td></tr>';
-  } catch(e) {
-    tbody.innerHTML = '<tr><td colspan="4" style="color:var(--vermelho)">Erro ao carregar</td></tr>';
-  }
+      </tr>`).join('') || '<tr><td colspan="4" style="text-align:center;color:#aaa">Nenhum registro hoje</td></tr>';
+  } catch(e) { tbody.innerHTML = '<tr><td colspan="4" style="color:var(--vermelho)">Erro ao carregar</td></tr>'; }
 }
 
 async function recepBuscarUsuario() {
   const cpf = document.getElementById('recepCpfBusca').value.replace(/\D/g,'');
   const div = document.getElementById('recepResultadoBusca');
   if(cpf.length < 3) { div.innerHTML=''; return; }
-
   div.innerHTML = '<p style="font-size:.82rem;color:#888">⏳ Buscando...</p>';
   try {
     const res = await api.listarUsuarios(cpf);
     const usuarios = res.usuarios || [];
-    if(!usuarios.length) {
-      div.innerHTML = '<p style="font-size:.82rem;color:var(--vermelho)">❌ Usuário não encontrado</p>';
-      return;
-    }
+    if(!usuarios.length) { div.innerHTML = '<p style="font-size:.82rem;color:var(--vermelho)">❌ Usuário não encontrado</p>'; return; }
     div.innerHTML = usuarios.map(u => `
       <div style="background:#f8f8f8;border-radius:8px;padding:12px;margin-bottom:8px">
         <div style="font-weight:700;font-size:.88rem">${u.nome}</div>
@@ -1364,36 +1079,21 @@ async function recepBuscarUsuario() {
         <div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap">
           <button class="btn btn-verde btn-xs" onclick="recepEntradaManual('${u.id}', this)">✅ Registrar Entrada</button>
         </div>
-      </div>
-    `).join('');
-  } catch(e) {
-    div.innerHTML = `<p style="font-size:.82rem;color:var(--vermelho)">Erro: ${e.message}</p>`;
-  }
+      </div>`).join('');
+  } catch(e) { div.innerHTML = `<p style="font-size:.82rem;color:var(--vermelho)">Erro: ${e.message}</p>`; }
 }
 
 async function recepEntradaManual(usuarioId, btn) {
   btn.disabled = true;
   try {
     await api.registrarAcesso(usuarioId, null);
-    toast('✅ Entrada registrada!');
-    atualizarVagas();
-    recepCarregarPresentes();
-    document.getElementById('recepResultadoBusca').innerHTML =
-      '<p style="color:var(--verde);font-weight:600;font-size:.84rem">✅ Entrada registrada com sucesso!</p>';
-  } catch(e) {
-    toast('❌ '+e.message);
-    btn.disabled = false;
-  }
+    toast('✅ Entrada registrada!'); atualizarVagas(); recepCarregarPresentes();
+    document.getElementById('recepResultadoBusca').innerHTML = '<p style="color:var(--verde);font-weight:600;font-size:.84rem">✅ Entrada registrada com sucesso!</p>';
+  } catch(e) { toast('❌ '+e.message); btn.disabled = false; }
 }
 
-// ═══════════════════════════════════════════════════════════
-//  ADMIN
-// ═══════════════════════════════════════════════════════════
 async function adminCarregarStats() {
-  try {
-    const res = await api.listarUsuarios('');
-    document.getElementById('aTotalU').textContent = res.total || 0;
-  } catch(e) {}
+  try { const res = await api.listarUsuarios(''); document.getElementById('aTotalU').textContent = res.total || 0; } catch(e) {}
 }
 
 async function adminCarregarUsuarios(busca='') {
@@ -1403,7 +1103,6 @@ async function adminCarregarUsuarios(busca='') {
     const res = await api.listarUsuarios(busca);
     const lista = res.usuarios || [];
     document.getElementById('aTotalU').textContent = lista.length;
-
     tbody.innerHTML = lista.map(u => `
       <tr>
         <td>${u.nome}</td>
@@ -1411,11 +1110,8 @@ async function adminCarregarUsuarios(busca='') {
         <td><span class="badge azul">${u.tipo}</span></td>
         <td><span class="badge cinza">—</span></td>
         <td><span class="badge ${u.ativo?'verde':'vermelho'}">${u.ativo?'Ativo':'Inativo'}</span></td>
-      </tr>
-    `).join('') || '<tr><td colspan="5" style="text-align:center;color:#aaa">Nenhum usuário</td></tr>';
-  } catch(e) {
-    tbody.innerHTML = `<tr><td colspan="5" style="color:var(--vermelho)">Erro: ${e.message}</td></tr>`;
-  }
+      </tr>`).join('') || '<tr><td colspan="5" style="text-align:center;color:#aaa">Nenhum usuário</td></tr>';
+  } catch(e) { tbody.innerHTML = `<tr><td colspan="5" style="color:var(--vermelho)">Erro: ${e.message}</td></tr>`; }
 }
 
 async function adminCarregarHistorico(data='') {
@@ -1424,7 +1120,6 @@ async function adminCarregarHistorico(data='') {
   try {
     const res = await api.listarAcessos(data || hojeISO(), '');
     const lista = res.acessos || [];
-
     tbody.innerHTML = lista.map(a => `
       <tr>
         <td>${a.usuarios?.nome||'—'}</td>
@@ -1432,40 +1127,30 @@ async function adminCarregarHistorico(data='') {
         <td>${a.saida_em ? fmtHora(a.saida_em) : '—'}</td>
         <td><span class="badge ${a.status==='ativo'?'verde':a.status==='encerrado'?'cinza':'gold'}">${a.status}</span></td>
         <td><span class="badge ${a.pagamentos?.tipo==='pix'?'azul':'gold'}">${a.pagamentos?.tipo||'—'}</span></td>
-      </tr>
-    `).join('') || '<tr><td colspan="5" style="text-align:center;color:#aaa">Nenhum registro</td></tr>';
-  } catch(e) {
-    tbody.innerHTML = `<tr><td colspan="5" style="color:var(--vermelho)">Erro: ${e.message}</td></tr>`;
-  }
+      </tr>`).join('') || '<tr><td colspan="5" style="text-align:center;color:#aaa">Nenhum registro</td></tr>';
+  } catch(e) { tbody.innerHTML = `<tr><td colspan="5" style="color:var(--vermelho)">Erro: ${e.message}</td></tr>`; }
 }
 
 async function adminSalvarConfig() {
   const config = {
-    total_vagas:          document.getElementById('cfgVagas').value,
-    valor_diaria:         document.getElementById('cfgTaxa').value,
+    total_vagas: document.getElementById('cfgVagas').value,
+    valor_diaria: document.getElementById('cfgTaxa').value,
     timeout_vaga_minutos: document.getElementById('cfgTimeout').value,
-    pix_chave:            document.getElementById('cfgPixChave').value,
-    pix_nome:             document.getElementById('cfgPixNome').value,
-    controlid_url:        document.getElementById('cfgControlIdUrl').value,
-    controlid_token:      document.getElementById('cfgControlIdToken').value,
+    pix_chave: document.getElementById('cfgPixChave').value,
+    pix_nome: document.getElementById('cfgPixNome').value,
+    controlid_url: document.getElementById('cfgControlIdUrl').value,
+    controlid_token: document.getElementById('cfgControlIdToken').value,
   };
   loading('btnSalvarConfig', true);
   try {
     for(const [chave, valor] of Object.entries(config)) {
-      if(valor) await api.post('/configuracoes/salvar', { chave, valor });
+      if(valor) await api.post('/api/configuracoes/salvar', { chave, valor });
     }
-    toast('✅ Configurações salvas!');
-    atualizarVagas();
-  } catch(e) {
-    toast('❌ Erro: '+e.message);
-  } finally {
-    loading('btnSalvarConfig', false);
-  }
+    toast('✅ Configurações salvas!'); atualizarVagas();
+  } catch(e) { toast('❌ Erro: '+e.message); }
+  finally { loading('btnSalvarConfig', false); }
 }
 
-// ═══════════════════════════════════════════════════════════
-//  SUGESTÕES
-// ═══════════════════════════════════════════════════════════
 async function enviarSugestao() {
   const tipo  = document.getElementById('tipoMsg').value;
   const area  = document.getElementById('areaMsg').value;
