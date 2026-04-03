@@ -777,9 +777,9 @@ function mudarATab(panelId, btn) {
   document.querySelectorAll('.atab').forEach(b => b.classList.remove('ativo'));
   document.getElementById(panelId)?.classList.add('ativo');
   btn.classList.add('ativo');
-}
+}async function loginUsuario()
 
-async function loginUsuario() {
+ {
   mostrarErro('loginErro','');
 
   const cpf   = document.getElementById('loginCpf').value.replace(/\D/g,'');
@@ -816,8 +816,7 @@ async function loginUsuario() {
     loading('btnLogin', false);
   }
 }
-  }
-async function loginUsuario() {
+ async function loginUsuario() {
   mostrarErro('loginErro','');
 
   const cpf   = document.getElementById('loginCpf').value.replace(/\D/g,'');
@@ -836,13 +835,9 @@ async function loginUsuario() {
   loading('btnLogin', true);
 
   try {
-    // ✅ ENDPOINT CORRETO
     const res = await api.post('/api/login-usuario', { cpf, senha });
 
-    // 🔑 salva token
     api.setToken(res.token);
-
-    // 👤 salva sessão
     sess.usuario = res.usuario;
     sess.tipo = 'app';
 
