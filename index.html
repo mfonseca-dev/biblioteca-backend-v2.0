@@ -1359,6 +1359,7 @@ async function recepBuscarUsuario() {
         <div style="font-size:.76rem;color:#888">CPF: ${fmtCpf(u.cpf)} • ${u.tipo}</div>
         <div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap">
           <button class="btn btn-verde btn-xs" onclick="recepEntradaManual('${u.id}', this)">✅ Registrar Entrada</button>
+          <button class="btn btn-laranja btn-xs" onclick="recepRedefinirSenha('${u.id}', '${u.nome.split(' ')[0]}', this)">🔑 Redefinir Senha</button>
         </div>
       </div>
     `).join('');
@@ -1378,6 +1379,23 @@ async function recepEntradaManual(usuarioId, btn) {
       '<p style="color:var(--verde);font-weight:600;font-size:.84rem">✅ Entrada registrada com sucesso!</p>';
   } catch(e) {
     toast('❌ '+e.message);
+    btn.disabled = false;
+  }
+}
+
+async function recepRedefinirSenha(usuarioId, nomeUsuario, btn) {
+  const novaSenha = prompt(`Definir nova senha para ${nomeUsuario}:
+(mínimo 6 caracteres)`);
+  if (!novaSenha) return;
+  if (novaSenha.length < 6) { toast("⚠️ Senha mínima de 6 caracteres"); return; }
+  btn.disabled = true;
+  try {
+    await api.post("/api/usuarios/redefinir-senha", { usuario_id: usuarioId, nova_senha: novaSenha });
+    toast(`✅ Senha de ${nomeUsuario} redefinida!`);
+    document.getElementById("recepResultadoBusca").innerHTML =
+      `<p style="color:var(--verde);font-weight:600;font-size:.84rem">✅ Senha redefinida! O usuário pode logar com a nova senha.</p>`;
+  } catch(e) {
+    toast("❌ "+e.message);
     btn.disabled = false;
   }
 }
