@@ -636,7 +636,7 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
 // ═══════════════════════════════════════════════════════════
 //  CONFIGURAÇÃO
 // ═══════════════════════════════════════════════════════════
-const API_BASE = 'https://biblioteca-backend-v2-0-8je5.vercel.app';
+const API_BASE = '';
 
 const api = {
   token: null,
@@ -777,34 +777,29 @@ function mudarATab(panelId, btn) {
   document.querySelectorAll('.atab').forEach(b => b.classList.remove('ativo'));
   document.getElementById(panelId)?.classList.add('ativo');
   btn.classList.add('ativo');
-}async function loginUsuario()
-
- {
+}async function loginUsuario() {
   mostrarErro('loginErro','');
 
   const cpf   = document.getElementById('loginCpf').value.replace(/\D/g,'');
   const senha = document.getElementById('loginSenha').value;
 
-  if(cpf.length !== 11) { 
-    mostrarErro('loginErro','CPF inválido'); 
-    return; 
+  if (cpf.length !== 11) {
+    mostrarErro('loginErro','CPF inválido');
+    return;
   }
 
-  if(!senha) { 
-    mostrarErro('loginErro','Informe a senha'); 
-    return; 
+  if (!senha) {
+    mostrarErro('loginErro','Informe a senha');
+    return;
   }
 
   loading('btnLogin', true);
 
   try {
-    // ✅ ENDPOINT CORRETO
+    // 👇 É AQUI
     const res = await api.post('/api/login-usuario', { cpf, senha });
 
-    // 🔑 salva token
     api.setToken(res.token);
-
-    // 👤 salva sessão
     sess.usuario = res.usuario;
     sess.tipo = 'app';
 
