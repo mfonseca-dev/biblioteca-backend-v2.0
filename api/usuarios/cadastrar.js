@@ -11,14 +11,10 @@ module.exports = async function handler(req, res) {
 
   const { nome, cpf, email, telefone, foto_url, tipo = 'aluno', assinatura_svg } = req.body || {};
 
-  if (!nome || !cpf) {
-    return res.status(400).json({ erro: 'Campos obrigatórios: nome, cpf' });
-  }
+  if (!nome || !cpf) return res.status(400).json({ erro: 'Campos obrigatórios: nome, cpf' });
 
   const cpfLimpo = cpf.replace(/\D/g, '');
-  if (cpfLimpo.length !== 11) {
-    return res.status(400).json({ erro: 'CPF inválido' });
-  }
+  if (cpfLimpo.length !== 11) return res.status(400).json({ erro: 'CPF inválido' });
 
   const { data: existe } = await supabase
     .from('usuarios')
@@ -26,30 +22,21 @@ module.exports = async function handler(req, res) {
     .eq('cpf', cpfLimpo)
     .maybeSingle();
 
-  if (existe) {
-    return res.status(409).json({ erro: 'CPF já cadastrado', usuario: existe });
-  }
+  if (existe) return res.status(409).json({ erro: 'CPF já cadastrado', usuario: existe });
 
   const { data, error } = await supabase
     .from('usuarios')
-    .insert({ nome, cpf: cpfLimpo, email, telefone, foto_url, tipo })
+    .insert({
+      nome, cpf: cpfLimpo, email, telefone, foto_url, tipo,
+      assinatura_svg: assinatura_svg || null,
+      termo_aceito_em: assinatura_svg ? new Date().toISOString() : null
+    })
     .select()
     .single();
 
   if (error) {
-    console.error('Erro ao cadastrar usuário:', error);
+    console.error('Erro ao cadastrar:', error);
     return res.status(500).json({ erro: 'Erro interno ao cadastrar' });
-  }
-
-  // Salva assinatura junto com o cadastro
-  if (assinatura_svg && data?.id) {
-    await supabase
-      .from('termos_assinados')
-      .insert({
-        usuario_id: data.id,
-        assinatura_svg,
-        assinado_em: new Date().toISOString()
-      });
   }
 
   return res.status(201).json({ mensagem: 'Usuário cadastrado com sucesso', usuario: data });
