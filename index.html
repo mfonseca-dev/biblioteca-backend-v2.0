@@ -957,8 +957,8 @@ async function loginUsuario() {
 
   loading('btnLogin', true);
   try {
-    const res = await api.get(`/usuarios/listar?busca=${cpf}`);
-    const usuario = res.usuarios?.find(u => u.cpf === cpf);
+    const res = await api.post('/usuarios/login', { cpf });
+    const usuario = res.usuario;
 
     if(!usuario) { mostrarErro('loginErro','CPF não cadastrado'); return; }
     if(!usuario.ativo) { mostrarErro('loginErro','Conta suspensa. Fale com a recepção.'); return; }
