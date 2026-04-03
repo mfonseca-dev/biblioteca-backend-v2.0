@@ -1125,7 +1125,7 @@ async function cadastrarUsuario() {
     const r = await fetch(API_BASE + '/usuarios/cadastrar', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ nome, cpf, email, telefone: tel, tipo })
+      body: JSON.stringify({ nome, cpf, email, telefone: tel, tipo, assinatura_svg: assinatura })
     });
     const data = await r.json();
     if (!r.ok) throw new Error(data.erro || 'Erro ao cadastrar');
