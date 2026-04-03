@@ -779,37 +779,80 @@ function mudarATab(panelId, btn) {
   btn.classList.add('ativo');
 }
 
-async function atualizarVagas() {
-  try {
-    const d = await api.vagas();
-    const pct = d.total > 0 ? Math.round((d.ocupadas/d.total)*100) : 0;
-    ['vagasL','rVL','rVL2','aVL'].forEach(id => { const el = document.getElementById(id); if(el) el.textContent = d.livres; });
-    ['vagasO','rVO','rVO2','aVO'].forEach(id => { const el = document.getElementById(id); if(el) el.textContent = d.ocupadas; });
-    ['rPresentes','aPresentes'].forEach(id => { const el = document.getElementById(id); if(el) el.textContent = d.ocupadas; });
-    document.getElementById('pctOc').textContent = pct+'%';
-    document.getElementById('barraFill').style.width = pct+'%';
-    document.getElementById('rPct').textContent = pct+'%';
-    document.getElementById('rBarraFill').style.width = pct+'%';
-    document.getElementById('totalVagasInfo').textContent = `${d.total} vagas rotativas`;
-  } catch(e) {}
-}
-
 async function loginUsuario() {
   mostrarErro('loginErro','');
+
   const cpf   = document.getElementById('loginCpf').value.replace(/\D/g,'');
   const senha = document.getElementById('loginSenha').value;
-  if(cpf.length !== 11) { mostrarErro('loginErro','CPF inválido'); return; }
-  if(!senha)             { mostrarErro('loginErro','Informe a senha'); return; }
+
+  if(cpf.length !== 11) { 
+    mostrarErro('loginErro','CPF inválido'); 
+    return; 
+  }
+
+  if(!senha) { 
+    mostrarErro('loginErro','Informe a senha'); 
+    return; 
+  }
+
   loading('btnLogin', true);
+
   try {
-    const res = await api.post('/api/auth/login-usuario', { cpf, senha });
+    // ✅ ENDPOINT CORRETO
+    const res = await api.post('/api/login-usuario', { cpf, senha });
+
+    // 🔑 salva token
     api.setToken(res.token);
+
+    // 👤 salva sessão
     sess.usuario = res.usuario;
     sess.tipo = 'app';
+
     entrarApp();
+
   } catch(e) {
     mostrarErro('loginErro', e.message || 'Erro ao conectar.');
-  } finally { loading('btnLogin', false); }
+  } finally {
+    loading('btnLogin', false);
+  }
+}
+  }
+async function loginUsuario() {
+  mostrarErro('loginErro','');
+
+  const cpf   = document.getElementById('loginCpf').value.replace(/\D/g,'');
+  const senha = document.getElementById('loginSenha').value;
+
+  if(cpf.length !== 11) { 
+    mostrarErro('loginErro','CPF inválido'); 
+    return; 
+  }
+
+  if(!senha) { 
+    mostrarErro('loginErro','Informe a senha'); 
+    return; 
+  }
+
+  loading('btnLogin', true);
+
+  try {
+    // ✅ ENDPOINT CORRETO
+    const res = await api.post('/api/login-usuario', { cpf, senha });
+
+    // 🔑 salva token
+    api.setToken(res.token);
+
+    // 👤 salva sessão
+    sess.usuario = res.usuario;
+    sess.tipo = 'app';
+
+    entrarApp();
+
+  } catch(e) {
+    mostrarErro('loginErro', e.message || 'Erro ao conectar.');
+  } finally {
+    loading('btnLogin', false);
+  }
 }
 
 async function loginAdmin() {
