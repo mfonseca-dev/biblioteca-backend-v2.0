@@ -435,15 +435,7 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
     <div id="panelAvisos" class="panel">
       <div class="crd">
         <div class="crd-t">📢 Comunicados Oficiais</div>
-        <div class="aviso urgente"><div class="tag">⚠️ Urgente</div>
-          <p>Manutenção nos computadores do 2º andar nesta quarta-feira — fora de serviço das 8h às 12h.</p>
-          <div class="data">📅 30/03/2026</div></div>
-        <div class="aviso"><div class="tag">📌 Aviso</div>
-          <p>Silêncio obrigatório nas áreas de estudo. Conversas apenas nas áreas de convivência.</p>
-          <div class="data">📅 25/03/2026</div></div>
-        <div class="aviso info"><div class="tag">ℹ️ Informação</div>
-          <p>Novos armários disponíveis no subsolo. Solicite a chave na recepção com documento.</p>
-          <div class="data">📅 20/03/2026</div></div>
+        <div id="avisosLista"><div class="sem"><span class="si">⏳</span>Carregando...</div></div>
       </div>
     </div>
 
@@ -600,6 +592,8 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
     <div class="atabs">
       <button class="atab ativo" data-apanel="adminPanelUsuarios">👥 Usuários</button>
       <button class="atab" data-apanel="adminPanelHistorico">📊 Histórico</button>
+      <button class="atab" data-apanel="adminPanelAvisos">📢 Avisos</button>
+      <button class="atab" data-apanel="adminPanelSugestoes">💬 Sugestões</button>
       <button class="atab" data-apanel="adminPanelConfig">⚙️ Config</button>
     </div>
     <div id="adminPanelUsuarios" class="apanel ativo">
@@ -630,6 +624,34 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
         </div>
       </div>
     </div>
+    <div id="adminPanelAvisos" class="apanel">
+      <div class="acrd">
+        <div class="acrd-t">📢 Gerenciar Avisos</div>
+        <div class="fg"><label>Tipo</label>
+          <select id="adminAvisoTipo">
+            <option value="aviso">📌 Aviso</option>
+            <option value="urgente">⚠️ Urgente</option>
+            <option value="info">ℹ️ Informação</option>
+          </select></div>
+        <div class="fg"><label>Título</label>
+          <input type="text" id="adminAvisoTitulo" placeholder="Ex: Manutenção programada"></div>
+        <div class="fg"><label>Conteúdo</label>
+          <textarea id="adminAvisoConteudo" rows="3" placeholder="Descreva o comunicado..."></textarea></div>
+        <button class="btn btn-verde btn-sm" id="btnPublicarAviso">📢 Publicar Aviso</button>
+      </div>
+      <div class="acrd">
+        <div class="acrd-t">📋 Avisos Publicados</div>
+        <div id="adminAvisosLista"><div class="sem"><span class="si">⏳</span>Carregando...</div></div>
+      </div>
+    </div>
+
+    <div id="adminPanelSugestoes" class="apanel">
+      <div class="acrd">
+        <div class="acrd-t">💬 Sugestões &amp; Reclamações</div>
+        <div id="adminSugestoesLista"><div class="sem"><span class="si">⏳</span>Carregando...</div></div>
+      </div>
+    </div>
+
     <div id="adminPanelConfig" class="apanel">
       <div class="acrd">
         <div class="acrd-t">⚙️ Configurações</div>
@@ -741,6 +763,13 @@ const api = {
   registrarAcesso(uid, pid)  { return this.post('/api/acessos/registrar', { usuario_id: uid, pagamento_id: pid, registrado_por: 'recepcao' }); },
   listarAcessos(data, status){ return this.get(`/api/acessos/listar?data=${data||''}&status=${status||''}`); },
   encerrarAcesso(id)         { return this.post('/api/acessos/encerrar', { acesso_id: id }); },
+  // Avisos e Sugestoes
+  listarAvisos()             { return this.get('/api/avisos'); },
+  criarAviso(dados)          { return this.post('/api/avisos', dados); },
+  deletarAviso(id)           { return this.req('DELETE', '/api/avisos', { id }); },
+  enviarSugestao(dados)      { return this.post('/api/sugestoes', dados); },
+  listarSugestoes()          { return this.get('/api/sugestoes'); },
+  marcarSugestaoLida(id)     { return this.req('PUT', '/api/sugestoes', { id }); },
 };
 
 // ═══════════════════════════════════════════════════════════
@@ -895,6 +924,7 @@ function bindEventos() {
 
   // Admin — salvar config
   document.getElementById('btnSalvarConfig').onclick = adminSalvarConfig;
+  document.getElementById('btnPublicarAviso').onclick = adminPublicarAviso;
 
   // Sugestões
   document.getElementById('btnEnviarMsg').onclick = enviarSugestao;
@@ -910,6 +940,7 @@ function mudarTab(panelId) {
   document.getElementById(panelId)?.classList.add('ativo');
   document.querySelector(`.tab[data-panel="${panelId}"]`)?.classList.add('ativo');
   if(panelId === 'panelPlano') carregarHistoricoUsuario();
+  if(panelId === 'panelAvisos') carregarAvisos();
 }
 
 function mudarATab(panelId, btn) {
@@ -918,6 +949,8 @@ function mudarATab(panelId, btn) {
   document.querySelectorAll('.atab').forEach(b => b.classList.remove('ativo'));
   document.getElementById(panelId)?.classList.add('ativo');
   btn.classList.add('ativo');
+  if(panelId === 'adminPanelAvisos') { adminCarregarAvisos(); }
+  if(panelId === 'adminPanelSugestoes') { adminCarregarSugestoes(); }
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -1167,6 +1200,7 @@ function entrarApp() {
   mostrarTela('appScreen');
   verificarAcessoHoje();
   atualizarVagas();
+  carregarAvisos();
 }
 
 async function verificarAcessoHoje() {
@@ -1493,13 +1527,154 @@ async function enviarSugestao() {
   const area  = document.getElementById('areaMsg').value;
   const texto = document.getElementById('txtMsg').value.trim();
   if(!tipo||!area||!texto) { toast('⚠️ Preencha todos os campos'); return; }
-  toast('✅ Mensagem enviada! Obrigado pelo feedback.');
-  document.getElementById('tipoMsg').value = '';
-  document.getElementById('areaMsg').value = '';
-  document.getElementById('txtMsg').value = '';
+  const btn = document.getElementById('btnEnviarMsg');
+  loading('btnEnviarMsg', true);
+  try {
+    await api.enviarSugestao({
+      tipo, area, mensagem: texto,
+      usuario_id: sess.usuario?.id || null
+    });
+    toast('✅ Mensagem enviada! Obrigado pelo feedback.');
+    document.getElementById('tipoMsg').value = '';
+    document.getElementById('areaMsg').value = '';
+    document.getElementById('txtMsg').value = '';
+  } catch(e) {
+    toast('❌ Erro ao enviar: ' + e.message);
+  } finally {
+    loading('btnEnviarMsg', false);
+  }
+}
+
+async function carregarAvisos() {
+  const lista = document.getElementById('avisosLista');
+  if (!lista) return;
+  try {
+    const res = await api.listarAvisos();
+    const avisos = res.avisos || [];
+    if (!avisos.length) {
+      lista.innerHTML = '<div class="sem"><span class="si">📢</span>Nenhum comunicado no momento.</div>';
+      return;
+    }
+    const icones = { urgente: '⚠️ Urgente', aviso: '📌 Aviso', info: 'ℹ️ Informação' };
+    lista.innerHTML = avisos.map(a => `
+      <div class="aviso ${a.tipo}">
+        <div class="tag">${icones[a.tipo] || '📌 Aviso'}</div>
+        <p>${a.conteudo}</p>
+        <div class="data">📅 ${new Date(a.created_at).toLocaleDateString('pt-BR')}</div>
+      </div>
+    `).join('');
+  } catch(e) {
+    lista.innerHTML = '<div class="sem"><span class="si">⚠️</span>Erro ao carregar avisos.</div>';
+  }
 }
 </script>
 <script>
+
+// ═══════════════════════════════════════════════════════════
+//  ADMIN — AVISOS
+// ═══════════════════════════════════════════════════════════
+async function adminCarregarAvisos() {
+  const lista = document.getElementById('adminAvisosLista');
+  lista.innerHTML = '<div class="sem"><span class="si">⏳</span>Carregando...</div>';
+  try {
+    const res = await api.listarAvisos();
+    const avisos = res.avisos || [];
+    if (!avisos.length) {
+      lista.innerHTML = '<div class="sem"><span class="si">📢</span>Nenhum aviso publicado.</div>';
+      return;
+    }
+    const icones = { urgente: '⚠️', aviso: '📌', info: 'ℹ️' };
+    lista.innerHTML = avisos.map(a => `
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;padding:10px 0;border-bottom:1px solid #f0f0f0;gap:10px">
+        <div style="flex:1">
+          <div style="font-size:.82rem;font-weight:700;color:#333">${icones[a.tipo]||'📌'} ${a.titulo}</div>
+          <div style="font-size:.78rem;color:#777;margin-top:2px">${a.conteudo}</div>
+          <div style="font-size:.7rem;color:#aaa;margin-top:3px">📅 ${new Date(a.created_at).toLocaleDateString('pt-BR')}</div>
+        </div>
+        <button class="btn btn-vermelho btn-xs" onclick="adminDeletarAviso('${a.id}', this)">🗑️</button>
+      </div>
+    `).join('');
+  } catch(e) {
+    lista.innerHTML = '<div class="sem"><span class="si">⚠️</span>Erro ao carregar.</div>';
+  }
+}
+
+async function adminPublicarAviso() {
+  const tipo     = document.getElementById('adminAvisoTipo').value;
+  const titulo   = document.getElementById('adminAvisoTitulo').value.trim();
+  const conteudo = document.getElementById('adminAvisoConteudo').value.trim();
+  if (!titulo || !conteudo) { toast('⚠️ Preencha título e conteúdo'); return; }
+  loading('btnPublicarAviso', true);
+  try {
+    await api.criarAviso({ tipo, titulo, conteudo });
+    toast('✅ Aviso publicado!');
+    document.getElementById('adminAvisoTitulo').value = '';
+    document.getElementById('adminAvisoConteudo').value = '';
+    adminCarregarAvisos();
+  } catch(e) {
+    toast('❌ Erro: ' + e.message);
+  } finally {
+    loading('btnPublicarAviso', false);
+  }
+}
+
+async function adminDeletarAviso(id, btn) {
+  if (!confirm('Remover este aviso?')) return;
+  btn.disabled = true;
+  try {
+    await api.deletarAviso(id);
+    toast('✅ Aviso removido!');
+    adminCarregarAvisos();
+  } catch(e) {
+    toast('❌ Erro: ' + e.message);
+    btn.disabled = false;
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+//  ADMIN — SUGESTÕES
+// ═══════════════════════════════════════════════════════════
+async function adminCarregarSugestoes() {
+  const lista = document.getElementById('adminSugestoesLista');
+  lista.innerHTML = '<div class="sem"><span class="si">⏳</span>Carregando...</div>';
+  try {
+    const res = await api.listarSugestoes();
+    const sugestoes = res.sugestoes || [];
+    if (!sugestoes.length) {
+      lista.innerHTML = '<div class="sem"><span class="si">📭</span>Nenhuma mensagem.</div>';
+      return;
+    }
+    const icons = { sugestao: '💡', elogio: '🌟', reclamacao: '⚠️', duvida: '❓' };
+    lista.innerHTML = sugestoes.map(s => `
+      <div style="background:${s.lida?'#fafafa':'#fffbea'};border-radius:8px;padding:12px;margin-bottom:8px;border:1px solid ${s.lida?'#eee':'#f0d97a'}">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px">
+          <span style="font-size:.78rem;font-weight:700;color:#333">${icons[s.tipo]||'💬'} ${s.tipo||'Mensagem'} — ${s.area||'Geral'}</span>
+          <div style="display:flex;gap:5px;align-items:center">
+            ${!s.lida ? `<button class="btn btn-verde btn-xs" onclick="adminMarcarLida('${s.id}',this)">✓ Lida</button>` : '<span style="font-size:.7rem;color:#aaa">✓ Lida</span>'}
+          </div>
+        </div>
+        <div style="font-size:.82rem;color:#444;line-height:1.5">${s.mensagem}</div>
+        <div style="font-size:.7rem;color:#aaa;margin-top:4px">
+          ${s.usuarios?.nome || 'Usuário anônimo'} • 📅 ${new Date(s.created_at).toLocaleDateString('pt-BR')}
+        </div>
+      </div>
+    `).join('');
+  } catch(e) {
+    lista.innerHTML = '<div class="sem"><span class="si">⚠️</span>Erro ao carregar.</div>';
+  }
+}
+
+async function adminMarcarLida(id, btn) {
+  btn.disabled = true;
+  try {
+    await api.marcarSugestaoLida(id);
+    toast('✅ Marcada como lida');
+    adminCarregarSugestoes();
+  } catch(e) {
+    toast('❌ Erro: ' + e.message);
+  }
+}
+
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker.register("/sw.js")
