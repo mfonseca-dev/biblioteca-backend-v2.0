@@ -1,10 +1,10 @@
-// api/sugestoes/index.js
-// POST /api/sugestoes        — público, envia sugestão
-// GET  /api/sugestoes        — admin/recepcao, lista sugestões
-// PUT  /api/sugestoes        — admin, marca como lida (body: { id })
+// api/sugestoes.js
+// POST /api/sugestoes      → envia sugestão (público)
+// GET  /api/sugestoes      → lista sugestões (auth recepcao/admin)
+// PUT  /api/sugestoes      → marca como lida (auth)   body: { id }
 
-const supabase = require('../../lib/supabase');
-const { autenticado, verificarToken } = require('../../middleware/auth');
+const supabase = require('../lib/supabase');
+const { autenticado } = require('../middleware/auth');
 
 module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -12,15 +12,16 @@ module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   if (req.method === 'OPTIONS') return res.status(200).end();
 
-  // POST — público (usuário envia sugestão)
+  // POST — público
   if (req.method === 'POST') {
     const { tipo, area, mensagem, usuario_id } = req.body || {};
-    if (!mensagem) return res.status(400).json({ erro: 'mensagem obrigatoria' });
-    const { data, error } = await supabase.from('sugestoes')
-      .insert({ tipo, area, mensagem, usuario_id: usuario_id || null })
-      .select().single();
-    if (error) return res.status(500).json({ erro: 'Erro ao enviar sugestao' });
-    return res.status(201).json({ mensagem: 'Sugestao enviada com sucesso!' });
+    if (!mensagem) return res.status(400).json({ erro: 'mensagem é obrigatória' });
+
+    const { error } = await supabase
+      .from('sugestoes')
+      .insert({ tipo, area, mensagem, usuario_id: usuario_id || null });
+    if (error) return res.status(500).json({ erro: 'Erro ao enviar sugestão' });
+    return res.status(201).json({ mensagem: 'Sugestão enviada com sucesso!' });
   }
 
   // GET e PUT — requer auth
@@ -39,10 +40,10 @@ module.exports = async function handler(req, res) {
 
   if (req.method === 'PUT') {
     const { id } = req.body || {};
-    if (!id) return res.status(400).json({ erro: 'id obrigatorio' });
+    if (!id) return res.status(400).json({ erro: 'id é obrigatório' });
     await supabase.from('sugestoes').update({ lida: true }).eq('id', id);
     return res.status(200).json({ mensagem: 'Marcada como lida' });
   }
 
-  return res.status(405).json({ erro: 'Metodo nao permitido' });
+  return res.status(405).json({ erro: 'Método não permitido' });
 };

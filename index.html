@@ -750,19 +750,19 @@ const api = {
   post(path, body)  { return this.req('POST', path, body); },
 
   // Auth
-  login(tipo, senha)         { return this.post('/api/auth/login', { tipo, senha }); },
+  login(tipo, senha)         { return this.post('/api/auth?acao=login-staff', { tipo, senha }); },
 
   // Vagas
-  vagas()                    { return this.get('/api/vagas/status'); },
+  vagas()                    { return this.get('/api/vagas?acao=status'); },
 
   // Usuários
-  cadastrar(dados)           { return this.post('/api/usuarios/cadastrar', dados); },
-  listarUsuarios(q)          { return this.get(`/api/usuarios/listar?busca=${q||''}`); },
+  cadastrar(dados)           { return this.post('/api/usuarios?acao=cadastrar', dados); },
+  listarUsuarios(q)          { return this.get(`/api/usuarios?acao=listar&busca=${q||''}`); },
 
   // Acessos
-  registrarAcesso(uid, pid)  { return this.post('/api/acessos/registrar', { usuario_id: uid, pagamento_id: pid, registrado_por: 'recepcao' }); },
-  listarAcessos(data, status){ return this.get(`/api/acessos/listar?data=${data||''}&status=${status||''}`); },
-  encerrarAcesso(id)         { return this.post('/api/acessos/encerrar', { acesso_id: id }); },
+  registrarAcesso(uid, pid)  { return this.post('/api/acessos?acao=registrar', { usuario_id: uid, pagamento_id: pid, registrado_por: 'recepcao' }); },
+  listarAcessos(data, status){ return this.get(`/api/acessos?acao=listar&data=${data||''}&status=${status||''}`); },
+  encerrarAcesso(id)         { return this.post('/api/acessos?acao=encerrar', { acesso_id: id }); },
   // Avisos e Sugestoes
   listarAvisos()             { return this.get('/api/avisos'); },
   criarAviso(dados)          { return this.post('/api/avisos', dados); },
@@ -997,7 +997,7 @@ async function loginUsuario() {
 
   loading('btnLogin', true);
   try {
-    const res = await api.post('/api/auth/login-usuario', { cpf, senha });
+    const res = await api.post('/api/auth?acao=login-usuario', { cpf, senha });
     api.setToken(res.token);
     sess.usuario = res.usuario;
     sess.tipo    = 'app';
@@ -1159,7 +1159,7 @@ async function cadastrarUsuario() {
 
   loading('btnCadastrar', true);
   try {
-    const r = await fetch(API_BASE + '/api/usuarios/cadastrar', {
+    const r = await fetch(API_BASE + '/api/usuarios?acao=cadastrar', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ nome, cpf, email, telefone: tel, tipo, senha })
@@ -1168,7 +1168,7 @@ async function cadastrarUsuario() {
     if (!r.ok) throw new Error(data.erro || 'Erro ao cadastrar');
 
     // Salva assinatura digital
-    await fetch(API_BASE + '/api/usuarios/assinar-termo', {
+    await fetch(API_BASE + '/api/usuarios?acao=assinar-termo', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ usuario_id: data.usuario.id, assinatura_svg: assinatura })
@@ -1351,7 +1351,7 @@ async function recepRegistrarSaida(acessoId, btn) {
   btn.disabled = true;
   btn.textContent = '⏳...';
   try {
-    await api.post('/api/acessos/encerrar', { acesso_id: acessoId });
+    await api.post('/api/acessos?acao=encerrar', { acesso_id: acessoId });
     toast('✅ Saída registrada!');
     atualizarVagas();
     recepCarregarPresentes();
@@ -1432,7 +1432,7 @@ async function recepRedefinirSenha(usuarioId, nomeUsuario, btn) {
   if (novaSenha.length < 6) { toast("⚠️ Senha mínima de 6 caracteres"); return; }
   btn.disabled = true;
   try {
-    await api.post("/api/usuarios/redefinir-senha", { usuario_id: usuarioId, nova_senha: novaSenha });
+    await api.post("/api/usuarios?acao=redefinir-senha", { usuario_id: usuarioId, nova_senha: novaSenha });
     toast(`✅ Senha de ${nomeUsuario} redefinida!`);
     document.getElementById("recepResultadoBusca").innerHTML =
       `<p style="color:var(--verde);font-weight:600;font-size:.84rem">✅ Senha redefinida! O usuário pode logar com a nova senha.</p>`;
@@ -1508,7 +1508,7 @@ async function adminSalvarConfig() {
   loading('btnSalvarConfig', true);
   try {
     for(const [chave, valor] of Object.entries(config)) {
-      if(valor) await api.post('/api/configuracoes/salvar', { chave, valor });
+      if(valor) await api.post('/api/configuracoes?acao=salvar', { chave, valor });
     }
     toast('✅ Configurações salvas!');
     atualizarVagas();

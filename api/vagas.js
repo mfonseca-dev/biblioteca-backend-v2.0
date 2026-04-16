@@ -1,7 +1,7 @@
-// api/vagas/status.js
-// GET /api/vagas/status  — público (usado pela tela de entrada e pelo totem)
+// api/vagas.js
+// GET /api/vagas  — público (tela de entrada e totem)
 
-const supabase = require('../../lib/supabase');
+const supabase = require('../lib/supabase');
 
 module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -10,37 +10,32 @@ module.exports = async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'GET') return res.status(405).json({ erro: 'Método não permitido' });
 
-  // Total de vagas configurado
   const { data: config } = await supabase
     .from('configuracoes')
     .select('chave, valor')
     .in('chave', ['total_vagas', 'horario_abertura', 'horario_encerramento']);
 
-  const cfg = Object.fromEntries((config || []).map(c => [c.chave, c.valor]));
+  const cfg        = Object.fromEntries((config || []).map(c => [c.chave, c.valor]));
   const totalVagas = parseInt(cfg.total_vagas || '30', 10);
 
-  // Acessos ativos
   const { count, error } = await supabase
-    .from('acessos')
-    .select('*', { count: 'exact', head: true })
-    .eq('status', 'ativo');
+    .from('acessos').select('*', { count: 'exact', head: true }).eq('status', 'ativo');
 
   if (error) {
     console.error('Erro ao contar acessos:', error);
     return res.status(500).json({ erro: 'Erro interno' });
   }
 
-  const ocupadas  = count || 0;
-  const livres    = Math.max(0, totalVagas - ocupadas);
-  const lotado    = livres === 0;
+  const ocupadas = count || 0;
+  const livres   = Math.max(0, totalVagas - ocupadas);
 
   return res.status(200).json({
-    total:    totalVagas,
+    total: totalVagas,
     ocupadas,
     livres,
-    lotado,
+    lotado: livres === 0,
     horario_abertura:     cfg.horario_abertura     || '07:00',
     horario_encerramento: cfg.horario_encerramento || '19:45',
     timestamp: new Date().toISOString()
   });
-}
+};

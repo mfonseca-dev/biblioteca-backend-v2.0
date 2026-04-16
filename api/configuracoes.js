@@ -1,18 +1,16 @@
-// api/configuracoes/salvar.js
-// POST /api/configuracoes/salvar
-// Body: { chave, valor }
-// Requer: admin token
+// api/configuracoes.js
+// GET  /api/configuracoes           → lista configs públicas
+// POST /api/configuracoes           → salva config (admin)
 
-const supabase = require('../../lib/supabase');
-const { soAdmin } = require('../../middleware/auth');
+const supabase = require('../lib/supabase');
+const { soAdmin } = require('../middleware/auth');
 
 module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   if (req.method === 'OPTIONS') return res.status(200).end();
 
-  // GET — público, retorna todas as configs (sem valores sensíveis)
   if (req.method === 'GET') {
     const { data } = await supabase
       .from('configuracoes')
@@ -27,15 +25,12 @@ module.exports = async function handler(req, res) {
   if (!auth.ok) return;
 
   const { chave, valor } = req.body || {};
-  if (!chave || valor === undefined) {
-    return res.status(400).json({ erro: 'chave e valor são obrigatórios' });
-  }
+  if (!chave || valor === undefined) return res.status(400).json({ erro: 'chave e valor são obrigatórios' });
 
   const { data, error } = await supabase
     .from('configuracoes')
     .upsert({ chave, valor, updated_at: new Date().toISOString() })
-    .select()
-    .single();
+    .select().single();
 
   if (error) {
     console.error('Erro ao salvar config:', error);
