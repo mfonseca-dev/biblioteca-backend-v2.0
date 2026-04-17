@@ -604,7 +604,7 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
         </div>
         <div style="overflow-x:auto">
           <table class="tabela">
-            <thead><tr><th>Nome</th><th>CPF</th><th>Tipo</th><th>Status Hoje</th><th>Conta</th></tr></thead>
+            <thead><tr><th>Nome</th><th>CPF</th><th>Tipo</th><th>Status Hoje</th><th>Conta</th><th>Ações</th></tr></thead>
             <tbody id="tbodyUsuarios"></tbody>
           </table>
         </div>
@@ -758,6 +758,8 @@ const api = {
   // Usuários
   cadastrar(dados)           { return this.post('/api/usuarios?acao=cadastrar', dados); },
   listarUsuarios(q)          { return this.get(`/api/usuarios?acao=listar&busca=${q||''}`); },
+  desativarUsuario(uid)      { return this.post('/api/usuarios?acao=desativar', { usuario_id: uid }); },
+  reativarUsuario(uid)       { return this.post('/api/usuarios?acao=reativar', { usuario_id: uid }); },
 
   // Acessos
   registrarAcesso(uid, pid)  { return this.post('/api/acessos?acao=registrar', { usuario_id: uid, pagamento_id: pid, registrado_por: 'recepcao' }); },
@@ -1396,12 +1398,20 @@ async function recepBuscarUsuario() {
       return;
     }
     div.innerHTML = usuarios.map(u => `
-      <div style="background:#f8f8f8;border-radius:8px;padding:12px;margin-bottom:8px">
-        <div style="font-weight:700;font-size:.88rem">${u.nome}</div>
+      <div style="background:#f8f8f8;border-radius:8px;padding:12px;margin-bottom:8px;border:1.5px solid ${u.ativo ? '#e8e8e8' : '#f5b5a8'}">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+          <div style="font-weight:700;font-size:.88rem">${u.nome}</div>
+          ${!u.ativo ? '<span style="background:#fff5f5;color:var(--vermelho);border:1px solid #f5b5a8;border-radius:10px;padding:2px 8px;font-size:.68rem;font-weight:700">🚫 BLOQUEADO</span>' : ''}
+        </div>
         <div style="font-size:.76rem;color:#888">CPF: ${fmtCpf(u.cpf)} • ${u.tipo}</div>
         <div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap">
-          <button class="btn btn-verde btn-xs" onclick="recepEntradaManual('${u.id}', this)">✅ Registrar Entrada</button>
-          <button class="btn btn-laranja btn-xs" onclick="recepRedefinirSenha('${u.id}', '${u.nome.split(' ')[0]}', this)">🔑 Redefinir Senha</button>
+          ${u.ativo ? `
+            <button class="btn btn-verde btn-xs" onclick="recepEntradaManual('${u.id}', this)">✅ Registrar Entrada</button>
+            <button class="btn btn-laranja btn-xs" onclick="recepRedefinirSenha('${u.id}', '${u.nome.split(' ')[0]}', this)">🔑 Redefinir Senha</button>
+            <button class="btn btn-vermelho btn-xs" onclick="recepBloquearUsuario('${u.id}', '${u.nome.split(' ')[0]}', this)">🚫 Bloquear</button>
+          ` : `
+            <button class="btn btn-verde btn-xs" onclick="recepReativarUsuario('${u.id}', '${u.nome.split(' ')[0]}', this)">✅ Reativar</button>
+          `}
         </div>
       </div>
     `).join('');
@@ -1442,6 +1452,37 @@ async function recepRedefinirSenha(usuarioId, nomeUsuario, btn) {
   }
 }
 
+async function recepBloquearUsuario(usuarioId, nomeUsuario, btn) {
+  if (!confirm(`⚠️ Bloquear ${nomeUsuario}?\n\nO usuário perderá o acesso ao aplicativo e não poderá entrar na biblioteca.\n\nDeseja continuar?`)) return;
+  btn.disabled = true;
+  btn.textContent = '⏳...';
+  try {
+    await api.desativarUsuario(usuarioId);
+    toast(`🚫 ${nomeUsuario} foi bloqueado.`);
+    // Recarrega a busca para refletir o novo status
+    recepBuscarUsuario();
+  } catch(e) {
+    toast('❌ Erro: ' + e.message);
+    btn.disabled = false;
+    btn.textContent = '🚫 Bloquear';
+  }
+}
+
+async function recepReativarUsuario(usuarioId, nomeUsuario, btn) {
+  if (!confirm(`✅ Reativar ${nomeUsuario}?\n\nO usuário voltará a ter acesso ao aplicativo e à biblioteca.`)) return;
+  btn.disabled = true;
+  btn.textContent = '⏳...';
+  try {
+    await api.reativarUsuario(usuarioId);
+    toast(`✅ ${nomeUsuario} foi reativado!`);
+    recepBuscarUsuario();
+  } catch(e) {
+    toast('❌ Erro: ' + e.message);
+    btn.disabled = false;
+    btn.textContent = '✅ Reativar';
+  }
+}
+
 // ═══════════════════════════════════════════════════════════
 //  ADMIN
 // ═══════════════════════════════════════════════════════════
@@ -1461,16 +1502,52 @@ async function adminCarregarUsuarios(busca='') {
     document.getElementById('aTotalU').textContent = lista.length;
 
     tbody.innerHTML = lista.map(u => `
-      <tr>
+      <tr style="${!u.ativo ? 'opacity:.6;background:#fff8f8' : ''}">
         <td>${u.nome}</td>
         <td style="font-family:monospace;font-size:.79rem">${fmtCpf(u.cpf)}</td>
         <td><span class="badge azul">${u.tipo}</span></td>
         <td><span class="badge cinza">—</span></td>
-        <td><span class="badge ${u.ativo?'verde':'vermelho'}">${u.ativo?'Ativo':'Inativo'}</span></td>
+        <td><span class="badge ${u.ativo?'verde':'vermelho'}">${u.ativo?'✅ Ativo':'🚫 Bloqueado'}</span></td>
+        <td>
+          ${u.ativo
+            ? `<button class="btn btn-vermelho btn-xs" onclick="adminBloquearUsuario('${u.id}','${u.nome.split(' ')[0]}',this)">🚫 Bloquear</button>`
+            : `<button class="btn btn-verde btn-xs" onclick="adminReativarUsuario('${u.id}','${u.nome.split(' ')[0]}',this)">✅ Reativar</button>`
+          }
+        </td>
       </tr>
-    `).join('') || '<tr><td colspan="5" style="text-align:center;color:#aaa">Nenhum usuário</td></tr>';
+    `).join('') || '<tr><td colspan="6" style="text-align:center;color:#aaa">Nenhum usuário</td></tr>';
   } catch(e) {
     tbody.innerHTML = `<tr><td colspan="5" style="color:var(--vermelho)">Erro: ${e.message}</td></tr>`;
+  }
+}
+
+async function adminBloquearUsuario(usuarioId, nomeUsuario, btn) {
+  if (!confirm(`⚠️ Bloquear ${nomeUsuario}?\n\nO usuário perderá acesso ao app e à biblioteca.`)) return;
+  btn.disabled = true;
+  btn.textContent = '⏳...';
+  try {
+    await api.desativarUsuario(usuarioId);
+    toast(`🚫 ${nomeUsuario} bloqueado com sucesso.`);
+    adminCarregarUsuarios(document.getElementById('adminBuscaUsuario').value);
+  } catch(e) {
+    toast('❌ Erro: ' + e.message);
+    btn.disabled = false;
+    btn.textContent = '🚫 Bloquear';
+  }
+}
+
+async function adminReativarUsuario(usuarioId, nomeUsuario, btn) {
+  if (!confirm(`✅ Reativar ${nomeUsuario}?\n\nO usuário voltará a ter acesso ao app e à biblioteca.`)) return;
+  btn.disabled = true;
+  btn.textContent = '⏳...';
+  try {
+    await api.reativarUsuario(usuarioId);
+    toast(`✅ ${nomeUsuario} reativado com sucesso!`);
+    adminCarregarUsuarios(document.getElementById('adminBuscaUsuario').value);
+  } catch(e) {
+    toast('❌ Erro: ' + e.message);
+    btn.disabled = false;
+    btn.textContent = '✅ Reativar';
   }
 }
 
