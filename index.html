@@ -617,7 +617,7 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
         </div>
         <div style="overflow-x:auto">
           <table class="tabela">
-            <thead><tr><th>Nome</th><th>CPF</th><th>Tipo</th><th>Status</th><th>Ações</th></tr></thead>
+            <thead><tr><th>Nome</th><th>CPF</th><th>Tipo</th><th>Termo</th><th>Status</th><th>Ação</th></tr></thead>
             <tbody id="tbodyUsuarios"></tbody>
           </table>
         </div>
@@ -681,11 +681,26 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
         <div class="fg"><label for="cfgPixNome">Nome do Beneficiário</label>
           <input type="text" id="cfgPixNome" placeholder="Biblioteca Paiva Netto"></div>
         <hr style="border:none;border-top:1px solid #eee;margin:13px 0">
-        <div class="acrd-t" style="font-size:.87rem;margin-bottom:9px">🔐 Control iD</div>
-        <div class="fg"><label for="cfgControlIdUrl">URL da API</label>
+        <div class="acrd-t" style="font-size:.87rem;margin-bottom:9px">🔐 Control iD — Integração</div>
+        <div class="fg"><label for="cfgControlIdUrl">URL da API Control iD</label>
           <input type="text" id="cfgControlIdUrl" placeholder="http://192.168.1.100/api/v1"></div>
-        <div class="fg"><label for="cfgControlIdToken">Token</label>
+        <div class="fg"><label for="cfgControlIdToken">Token de Autenticação</label>
           <input type="password" id="cfgControlIdToken" placeholder="Bearer token"></div>
+        <hr style="border:none;border-top:1px solid #eee;margin:13px 0">
+        <div class="acrd-t" style="font-size:.87rem;margin-bottom:9px">🗄️ Control iD — Banco de Dados</div>
+        <div style="background:#fff8e0;border:1px solid var(--dourado-cl);border-radius:8px;padding:10px 12px;font-size:.77rem;color:#a07a00;margin-bottom:12px;line-height:1.6">
+          ⚠️ Preencha apenas se o Control iD estiver na mesma rede e com acesso direto ao banco.
+        </div>
+        <div class="fg"><label for="cfgCidDbHost">Host / IP do Banco</label>
+          <input type="text" id="cfgCidDbHost" placeholder="Ex: 192.168.1.100 ou localhost"></div>
+        <div class="fg"><label for="cfgCidDbPort">Porta</label>
+          <input type="text" id="cfgCidDbPort" placeholder="Ex: 5432 (PostgreSQL) ou 3306 (MySQL)"></div>
+        <div class="fg"><label for="cfgCidDbName">Nome do Banco</label>
+          <input type="text" id="cfgCidDbName" placeholder="Ex: controlid"></div>
+        <div class="fg"><label for="cfgCidDbUser">Usuário do Banco</label>
+          <input type="text" id="cfgCidDbUser" placeholder="Ex: admin"></div>
+        <div class="fg"><label for="cfgCidDbPass">Senha do Banco</label>
+          <input type="password" id="cfgCidDbPass" placeholder="••••••••"></div>
         <button class="btn btn-verde btn-sm" id="btnSalvarConfig">💾 Salvar Configurações</button>
       </div>
     </div>
@@ -705,11 +720,49 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
         <div class="valor" id="pagtoValor">R$ 10,00</div>
         <div class="sub">Acesso integral do dia</div>
       </div>
-      <div class="pix-box">
+
+      <!-- SELETOR DE FORMA DE PAGAMENTO -->
+      <div style="margin-bottom:14px">
+        <div style="font-size:.71rem;font-weight:700;color:var(--cinza);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Forma de pagamento</div>
+        <div style="display:flex;gap:8px">
+          <label for="pagtoPix" style="flex:1;cursor:pointer">
+            <input type="radio" id="pagtoPix" name="pagtoTipo" value="pix" checked style="display:none">
+            <div class="pagto-tipo-btn" data-tipo="pix" style="border:2px solid var(--verde);border-radius:10px;padding:10px 8px;text-align:center;background:#f0f7f0;transition:.2s">
+              <div style="font-size:1.3rem">💠</div>
+              <div style="font-size:.75rem;font-weight:700;color:var(--verde)">Pix</div>
+            </div>
+          </label>
+          <label for="pagtoCredito" style="flex:1;cursor:pointer">
+            <input type="radio" id="pagtoCredito" name="pagtoTipo" value="credito" style="display:none">
+            <div class="pagto-tipo-btn" data-tipo="credito" style="border:2px solid var(--cinza-cl);border-radius:10px;padding:10px 8px;text-align:center;background:#fff;transition:.2s">
+              <div style="font-size:1.3rem">💳</div>
+              <div style="font-size:.75rem;font-weight:700;color:var(--cinza)">Crédito</div>
+            </div>
+          </label>
+          <label for="pagtoDebito" style="flex:1;cursor:pointer">
+            <input type="radio" id="pagtoDebito" name="pagtoTipo" value="debito" style="display:none">
+            <div class="pagto-tipo-btn" data-tipo="debito" style="border:2px solid var(--cinza-cl);border-radius:10px;padding:10px 8px;text-align:center;background:#fff;transition:.2s">
+              <div style="font-size:1.3rem">🏦</div>
+              <div style="font-size:.75rem;font-weight:700;color:var(--cinza)">Débito</div>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <!-- DADOS PIX (só aparece quando Pix selecionado) -->
+      <div id="pixSection" class="pix-box">
         <div class="pix-label">Chave Pix</div>
         <div class="pix-chave" id="pagtoChave">—</div>
         <div class="pix-nome" id="pagtoNome">—</div>
       </div>
+
+      <!-- INFO CARTÃO (só aparece quando Crédito/Débito selecionado) -->
+      <div id="cartaoSection" style="display:none;background:#f5f5f5;border:1.5px solid var(--cinza-cl);border-radius:var(--r-sm);padding:13px;text-align:center;margin-bottom:14px">
+        <div style="font-size:1.5rem;margin-bottom:4px">💳</div>
+        <div style="font-size:.84rem;font-weight:700;color:var(--cinza-esc);margin-bottom:3px">Pague na maquininha</div>
+        <div style="font-size:.77rem;color:#888;line-height:1.5">Apresente-se na recepção para realizar o pagamento no cartão. A recepção confirmará o acesso.</div>
+      </div>
+
       <div class="pagto-aviso">🚦 Após confirmação do pagamento pela recepção, seu acesso será ativado. Apresente o comprovante na entrada.</div>
       <div class="pagto-status" id="pagtoStatus"></div>
       <button class="btn btn-verde" id="btnPagar" style="margin-bottom:9px">✅ Já Paguei — Confirmar</button>
@@ -937,6 +990,18 @@ function bindEventos() {
   document.getElementById('btnCancelarPagto').onclick = () =>
     document.getElementById('modalPagamento').classList.remove('ativo');
 
+  // Troca visual ao mudar tipo de pagamento
+  document.querySelectorAll('input[name="pagtoTipo"]').forEach(radio => {
+    radio.addEventListener('change', () => _atualizarUIPagamento(radio.value));
+  });
+  document.querySelectorAll('.pagto-tipo-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const tipo = btn.dataset.tipo;
+      document.getElementById(`pagto${tipo.charAt(0).toUpperCase()+tipo.slice(1)}`).checked = true;
+      _atualizarUIPagamento(tipo);
+    });
+  });
+
   // Sair app
   document.getElementById('btnSairApp').onclick    = () => document.getElementById('modalSair').classList.add('ativo');
   document.getElementById('btnCancelarSaida').onclick = () => document.getElementById('modalSair').classList.remove('ativo');
@@ -994,6 +1059,8 @@ function mudarATab(panelId, btn) {
   btn.classList.add('ativo');
   if(panelId === 'adminPanelAvisos') { adminCarregarAvisos(); }
   if(panelId === 'recepPanelPendentes') { recepCarregarPendentes(); }
+  if(panelId === 'recepPanelPagos') { recepCarregarPagos(); }
+  if(panelId === 'adminPanelHistorico') { adminCarregarHistorico(); }
   if(panelId === 'adminPanelSugestoes') { adminCarregarSugestoes(); }
 }
 
@@ -1291,10 +1358,13 @@ function renderizarStatusAcesso() {
 // ═══════════════════════════════════════════════════════════
 async function abrirModalPagamento() {
   document.getElementById('pagtoStatus').textContent = '';
+  document.getElementById('btnPagar').disabled = false;
+  // Reset seleção para Pix
+  document.getElementById('pagtoPix').checked = true;
+  _atualizarUIPagamento('pix');
   document.getElementById('modalPagamento').classList.add('ativo');
   try {
     const v = await api.vagas();
-    // Carregar config de Pix (admin deve ter configurado)
     document.getElementById('pagtoChave').textContent = 'Configure a Chave Pix no painel admin';
     document.getElementById('pagtoNome').textContent = 'Biblioteca Paiva Netto';
     if(v.lotado) {
@@ -1304,8 +1374,32 @@ async function abrirModalPagamento() {
   } catch(e) {}
 }
 
+function _atualizarUIPagamento(tipo) {
+  // Atualiza visual dos botões de tipo
+  document.querySelectorAll('.pagto-tipo-btn').forEach(el => {
+    const t = el.dataset.tipo;
+    if (t === tipo) {
+      el.style.borderColor = 'var(--verde)';
+      el.style.background = '#f0f7f0';
+      el.querySelector('div:last-child').style.color = 'var(--verde)';
+    } else {
+      el.style.borderColor = 'var(--cinza-cl)';
+      el.style.background = '#fff';
+      el.querySelector('div:last-child').style.color = 'var(--cinza)';
+    }
+  });
+  // Mostra seção correta
+  const isPix = tipo === 'pix';
+  document.getElementById('pixSection').style.display   = isPix ? 'block' : 'none';
+  document.getElementById('cartaoSection').style.display = isPix ? 'none'  : 'block';
+  // Ajusta texto do botão
+  document.getElementById('btnPagar').innerHTML =
+    isPix ? '✅ Já Paguei — Confirmar' : '📲 Solicitar Acesso (Pagar na Recepção)';
+}
+
 async function confirmarPagamento() {
   if (!sess.usuario) { toast('⚠️ Faça login primeiro'); return; }
+  const tipo = document.querySelector('input[name="pagtoTipo"]:checked')?.value || 'pix';
   document.getElementById('pagtoStatus').className = 'pagto-status pagto-processando';
   document.getElementById('pagtoStatus').textContent = '⏳ Enviando solicitação...';
   document.getElementById('btnPagar').disabled = true;
@@ -1313,11 +1407,14 @@ async function confirmarPagamento() {
     await fetch(API_BASE + '/api/pagamentos?acao=solicitar', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ usuario_id: sess.usuario.id })
+      body: JSON.stringify({ usuario_id: sess.usuario.id, tipo })
     });
     document.getElementById('pagtoStatus').className = 'pagto-status pagto-ok';
     document.getElementById('pagtoStatus').textContent = '✅ Solicitação enviada!';
-    toast('✅ Apresente o comprovante Pix na recepção para confirmar.');
+    const msg = tipo === 'pix'
+      ? '✅ Apresente o comprovante Pix na recepção para confirmar.'
+      : '✅ Dirija-se à recepção para pagar no cartão e confirmar o acesso.';
+    toast(msg, 3500);
     setTimeout(() => {
       document.getElementById('modalPagamento').classList.remove('ativo');
       document.getElementById('btnPagar').disabled = false;
@@ -1491,20 +1588,44 @@ async function recepRegistrarSaida(acessoId, btn) {
 async function recepCarregarPagos() {
   const tbody = document.getElementById('rTbodyPagos');
   try {
-    const res = await api.listarAcessos(hojeISO(), '');
-    const lista = res.acessos || [];
+    const res = await api.get('/api/pagamentos?acao=pagos-hoje');
+    const lista = res.pagamentos || res.confirmados || [];
     document.getElementById('rPagosHoje').textContent = lista.length;
 
-    tbody.innerHTML = lista.map(a => `
+    if (!lista.length) {
+      tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#aaa">Nenhum pagamento confirmado hoje</td></tr>';
+      return;
+    }
+
+    tbody.innerHTML = lista.map(p => `
       <tr>
-        <td>${a.usuarios?.nome||'—'}</td>
-        <td>${fmtHora(a.entrada_em)}</td>
-        <td><span class="badge ${a.status==='ativo'?'verde':'cinza'}">${a.status}</span></td>
-        <td><span class="badge ${a.pagamentos?.tipo==='pix'?'azul':'gold'}">${a.pagamentos?.tipo||'—'}</span></td>
+        <td>${p.usuarios?.nome || p.nome || '—'}</td>
+        <td>${fmtHora(p.confirmado_em || p.created_at)}</td>
+        <td><span class="badge verde">confirmado</span></td>
+        <td>
+          <span class="badge ${p.tipo==='pix'?'azul':p.tipo==='credito'?'gold':p.tipo==='debito'?'verde':'cinza'}">
+            ${p.tipo==='pix'?'💠 Pix':p.tipo==='credito'?'💳 Crédito':p.tipo==='debito'?'🏦 Débito':p.tipo||'—'}
+          </span>
+        </td>
       </tr>
-    `).join('') || '<tr><td colspan="4" style="text-align:center;color:#aaa">Nenhum registro hoje</td></tr>';
+    `).join('');
   } catch(e) {
-    tbody.innerHTML = '<tr><td colspan="4" style="color:var(--vermelho)">Erro ao carregar</td></tr>';
+    // fallback: tenta carregar via acessos
+    try {
+      const res2 = await api.listarAcessos(hojeISO(), '');
+      const lista2 = res2.acessos || [];
+      document.getElementById('rPagosHoje').textContent = lista2.length;
+      tbody.innerHTML = lista2.map(a => `
+        <tr>
+          <td>${a.usuarios?.nome||'—'}</td>
+          <td>${fmtHora(a.entrada_em)}</td>
+          <td><span class="badge ${a.status==='ativo'?'verde':'cinza'}">${a.status}</span></td>
+          <td><span class="badge ${a.pagamentos?.tipo==='pix'?'azul':'gold'}">${a.pagamentos?.tipo||'—'}</span></td>
+        </tr>
+      `).join('') || '<tr><td colspan="4" style="text-align:center;color:#aaa">Nenhum registro hoje</td></tr>';
+    } catch(e2) {
+      tbody.innerHTML = '<tr><td colspan="4" style="color:var(--vermelho)">Erro ao carregar</td></tr>';
+    }
   }
 }
 
@@ -1580,23 +1701,42 @@ async function adminCarregarStats() {
 
 async function adminCarregarUsuarios(busca='') {
   const tbody = document.getElementById('tbodyUsuarios');
-  tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#aaa">⏳ Carregando...</td></tr>';
+  tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#aaa">⏳ Carregando...</td></tr>';
   try {
     const res = await api.listarUsuarios(busca);
     const lista = res.usuarios || [];
     document.getElementById('aTotalU').textContent = lista.length;
 
+    if (!lista.length) {
+      tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#aaa">Nenhum usuário</td></tr>';
+      return;
+    }
+
     tbody.innerHTML = lista.map(u => `
       <tr>
-        <td>${u.nome}</td>
+        <td>
+          <div style="font-weight:600;font-size:.83rem">${u.nome}</div>
+          <div style="font-size:.71rem;color:#aaa">${u.email||'—'}</div>
+        </td>
         <td style="font-family:monospace;font-size:.79rem">${fmtCpf(u.cpf)}</td>
         <td><span class="badge azul">${u.tipo}</span></td>
-        <td><span class="badge cinza">—</span></td>
-        <td><span class="badge ${u.ativo?'verde':'vermelho'}">${u.ativo?'Ativo':'Inativo'}</span></td>
+        <td>
+          ${u.assinatura_svg
+            ? `<button class="btn btn-sec btn-xs" onclick="adminVerAssinatura('${u.id}','${u.nome.replace(/'/g,"\\'")}')">✍️ Ver Termo</button>`
+            : '<span style="font-size:.71rem;color:#bbb">Sem assinatura</span>'
+          }
+        </td>
+        <td><span class="badge ${u.ativo?'verde':'vermelho'}">${u.ativo?'Ativo':'Bloqueado'}</span></td>
+        <td>
+          <button class="btn btn-xs ${u.ativo?'btn-vermelho':'btn-verde'}"
+            onclick="adminBloquearUsuario('${u.id}','${u.nome.replace(/'/g,"\\'")}',${!u.ativo},this)">
+            ${u.ativo?'🚫 Bloquear':'✅ Ativar'}
+          </button>
+        </td>
       </tr>
-    `).join('') || '<tr><td colspan="5" style="text-align:center;color:#aaa">Nenhum usuário</td></tr>';
+    `).join('');
   } catch(e) {
-    tbody.innerHTML = `<tr><td colspan="5" style="color:var(--vermelho)">Erro: ${e.message}</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="6" style="color:var(--vermelho)">Erro: ${e.message}</td></tr>`;
   }
 }
 
@@ -1630,6 +1770,11 @@ async function adminSalvarConfig() {
     pix_nome:             document.getElementById('cfgPixNome').value,
     controlid_url:        document.getElementById('cfgControlIdUrl').value,
     controlid_token:      document.getElementById('cfgControlIdToken').value,
+    controlid_db_host:    document.getElementById('cfgCidDbHost').value,
+    controlid_db_port:    document.getElementById('cfgCidDbPort').value,
+    controlid_db_name:    document.getElementById('cfgCidDbName').value,
+    controlid_db_user:    document.getElementById('cfgCidDbUser').value,
+    controlid_db_pass:    document.getElementById('cfgCidDbPass').value,
   };
   loading('btnSalvarConfig', true);
   try {
