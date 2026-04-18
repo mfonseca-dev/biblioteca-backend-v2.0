@@ -1867,9 +1867,6 @@ if ("serviceWorker" in navigator) {
       .then(() => console.log("PWA: Service Worker registrado"))
       .catch(e => console.log("PWA: erro", e));
   });
-}
-
-// 🔽 AGORA FORA DO BLOCO (CORRETO)
 function verTermo(img, nome, data, ip) {
   if (!img) {
     toast('⚠️ Usuário não possui assinatura');
@@ -1883,6 +1880,10 @@ function verTermo(img, nome, data, ip) {
   document.getElementById('termoIP').textContent = ip || '—';
 
   document.getElementById('modalTermo').classList.add('ativo');
+}
+
+function fecharTermo() {
+  document.getElementById('modalTermo').classList.remove('ativo');
 }
 
 function fecharTermo() {
