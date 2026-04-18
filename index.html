@@ -1836,7 +1836,7 @@ async function adminBloquearUsuario(usuarioId, nome, ativar, btn) {
     toast('❌ Erro: ' + e.message);
     btn.disabled = false;
   }
-}
+<script>
 
 // ═══════════════════════════════════════════════════════════
 //  VER ASSINATURA DIGITAL (ADMIN)
@@ -1845,28 +1845,29 @@ async function adminVerAssinatura(usuarioId, nome) {
   try {
     const res = await api.get(`/api/usuarios?acao=buscar&id=${usuarioId}`);
     const u = res.usuario;
+
     if (!u || !u.assinatura_svg) {
       toast('⚠️ Este usuário não tem assinatura registrada');
       return;
     }
+
     document.getElementById('modalAssinaturaNome').textContent = nome;
     document.getElementById('modalAssinaturaData').textContent =
       u.termo_aceito_em
         ? `Assinado em ${new Date(u.termo_aceito_em).toLocaleString('pt-BR')} • IP: ${u.termo_ip || '—'}`
         : 'Data não registrada';
+
     document.getElementById('modalAssinaturaImg').src = u.assinatura_svg;
     document.getElementById('modalAssinatura').classList.add('ativo');
+
   } catch(e) {
     toast('❌ Erro ao carregar assinatura');
   }
 }
 
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register("/sw.js")
-      .then(() => console.log("PWA: Service Worker registrado"))
-      .catch(e => console.log("PWA: erro", e));
-  });
+// ═══════════════════════════════════════════════════════════
+//  VER TERMO (APP)
+// ═══════════════════════════════════════════════════════════
 function verTermo(img, nome, data, ip) {
   if (!img) {
     toast('⚠️ Usuário não possui assinatura');
@@ -1886,27 +1887,16 @@ function fecharTermo() {
   document.getElementById('modalTermo').classList.remove('ativo');
 }
 
-function fecharTermo() {
-  document.getElementById('modalTermo').classList.remove('ativo');
-function verTermo(img, nome, data, ip) {
-  if (!img) {
-    toast('⚠️ Usuário não possui assinatura');
-    return;
-  }
-
-  document.getElementById('termoImg').src = img;
-  document.getElementById('termoNome').textContent = nome;
-  document.getElementById('termoData').textContent =
-    data ? new Date(data).toLocaleString('pt-BR') : '—';
-  document.getElementById('termoIP').textContent = ip || '—';
-
-  document.getElementById('modalTermo').classList.add('ativo');
+// ═══════════════════════════════════════════════════════════
+//  FUNÇÃO QUE ESTAVA FALTANDO (ERRO DO BOTÃO)
+// ═══════════════════════════════════════════════════════════
+function adminPublicarAviso() {
+  toast('📢 Aviso enviado (simulação)');
 }
 
-function fecharTermo() {
-  document.getElementById('modalTermo').classList.remove('ativo');
-}
-
+// ═══════════════════════════════════════════════════════════
+//  SERVICE WORKER (CORRETO)
+// ═══════════════════════════════════════════════════════════
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker.register("/sw.js")
@@ -1914,9 +1904,10 @@ if ("serviceWorker" in navigator) {
       .catch(e => console.log("PWA: erro", e));
   });
 }
+
 </script>
 
-<!-- MODAL FORA DO SCRIPT -->
+<!-- MODAL -->
 <div class="modal-bg" id="modalTermo">
   <div class="modal" style="max-width:500px">
 
