@@ -1867,7 +1867,53 @@ if ("serviceWorker" in navigator) {
       .then(() => console.log("PWA: Service Worker registrado"))
       .catch(e => console.log("PWA: erro", e));
   });
+function verTermo(img, nome, data, ip) {
+  if (!img) {
+    toast('⚠️ Usuário não possui assinatura');
+    return;
+  }
+
+  document.getElementById('termoImg').src = img;
+  document.getElementById('termoNome').textContent = nome;
+  document.getElementById('termoData').textContent =
+    data ? new Date(data).toLocaleString('pt-BR') : '—';
+  document.getElementById('termoIP').textContent = ip || '—';
+
+  document.getElementById('modalTermo').classList.add('ativo');
+}
+
+function fecharTermo() {
+  document.getElementById('modalTermo').classList.remove('ativo');
+}
+
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("/sw.js")
+      .then(() => console.log("PWA: Service Worker registrado"))
+      .catch(e => console.log("PWA: erro", e));
+  });
 }
 </script>
+
+<!-- MODAL FORA DO SCRIPT -->
+<div class="modal-bg" id="modalTermo">
+  <div class="modal" style="max-width:500px">
+
+    <h3>✍️ Termo Assinado</h3>
+
+    <p><b>Usuário:</b> <span id="termoNome"></span></p>
+    <p><b>Data:</b> <span id="termoData"></span></p>
+    <p><b>IP:</b> <span id="termoIP"></span></p>
+
+    <img id="termoImg"
+         style="width:100%;border:1px solid #ddd;border-radius:8px;margin-top:10px" />
+
+    <div style="margin-top:15px">
+      <button class="btn btn-sec" onclick="fecharTermo()">Fechar</button>
+    </div>
+
+  </div>
+</div>
+
 </body>
 </html>
