@@ -241,9 +241,9 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
       <p>Acesso à Biblioteca</p>
     </div>
     <div class="erro-api" id="loginErro"></div>
-    <div class="campo"><label>CPF</label>
+    <div class="campo"><label for="loginCpf">CPF</label>
       <input type="text" id="loginCpf" placeholder="000.000.000-00" maxlength="14"></div>
-    <div class="campo"><label>Senha</label>
+    <div class="campo"><label for="loginSenha">Senha</label>
       <input type="password" id="loginSenha" placeholder="••••••••"></div>
     <button class="btn btn-verde" id="btnLogin">🔐 Entrar</button>
     <div class="linktxt">Não tem cadastro? <span id="irCadastro">Cadastre-se aqui</span></div>
@@ -263,9 +263,9 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
       <p>Restrito — Staff / Recepção</p>
     </div>
     <div class="erro-api" id="adminLoginErro"></div>
-    <div class="campo"><label>Usuário</label>
+    <div class="campo"><label for="adminUser">Usuário</label>
       <input type="text" id="adminUser" placeholder="admin ou recepcao"></div>
-    <div class="campo"><label>Senha</label>
+    <div class="campo"><label for="adminSenha">Senha</label>
       <input type="password" id="adminSenha" placeholder="••••••••"></div>
     <button class="btn btn-verde" id="btnAdminLogin">🔓 Entrar no Painel</button>
     <div class="linktxt"><span id="voltarLogin">← Voltar</span></div>
@@ -291,22 +291,22 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
 
     <!-- ETAPA 1: DADOS PESSOAIS -->
     <div id="cadEtapa1">
-      <div class="campo"><label>Nome Completo *</label>
+      <div class="campo"><label for="cadNome">Nome Completo *</label>
         <input type="text" id="cadNome" placeholder="Seu nome completo"></div>
-      <div class="campo"><label>CPF *</label>
+      <div class="campo"><label for="cadCpf">CPF *</label>
         <input type="text" id="cadCpf" placeholder="000.000.000-00" maxlength="14"></div>
-      <div class="campo"><label>E-mail</label>
+      <div class="campo"><label for="cadEmail">E-mail</label>
         <input type="email" id="cadEmail" placeholder="seu@email.com"></div>
-      <div class="campo"><label>Telefone</label>
+      <div class="campo"><label for="cadTel">Telefone</label>
         <input type="text" id="cadTel" placeholder="(61) 99999-9999" maxlength="15"></div>
-      <div class="campo"><label>Tipo de Usuário *</label>
+      <div class="campo"><label for="cadTipo">Tipo de Usuário *</label>
         <select id="cadTipo">
           <option value="">Selecione...</option>
           <option value="aluno">👨‍🎓 Estudante</option>
           <option value="aluno">📝 Concurseiro</option>
           <option value="aluno">🏘️ Comunidade Geral</option>
         </select></div>
-      <div class="campo"><label>Senha * (mín. 6 caracteres)</label>
+      <div class="campo"><label for="cadSenha">Senha * (mín. 6 caracteres)</label>
         <input type="password" id="cadSenha" placeholder="••••••••"></div>
       <button class="btn btn-verde" id="btnCadEtapa1">Próximo — Ler e Assinar Termo →</button>
       <div class="linktxt">Já tem conta? <span id="irLogin">Fazer login</span></div>
@@ -481,13 +481,13 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
       <div class="crd">
         <div class="crd-t">💬 Sugestões &amp; Reclamações</div>
         <p style="font-size:.81rem;color:#777;margin-bottom:13px;line-height:1.6">Sua opinião melhora nosso espaço!</p>
-        <div class="fg"><label>Tipo</label>
+        <div class="fg"><label for="tipoMsg">Tipo</label>
           <select id="tipoMsg"><option value="">Selecione...</option>
             <option value="sugestao">💡 Sugestão</option>
             <option value="elogio">🌟 Elogio</option>
             <option value="reclamacao">⚠️ Reclamação</option>
             <option value="duvida">❓ Dúvida</option></select></div>
-        <div class="fg"><label>Área</label>
+        <div class="fg"><label for="areaMsg">Área</label>
           <select id="areaMsg"><option value="">Selecione...</option>
             <option value="atendimento">👤 Atendimento</option>
             <option value="instalacoes">🏛️ Instalações</option>
@@ -495,7 +495,7 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
             <option value="armarios">🔒 Armários</option>
             <option value="vagas">🅿️ Sistema de Vagas</option>
             <option value="app">📱 Aplicativo</option></select></div>
-        <div class="fg"><label>Mensagem</label>
+        <div class="fg"><label for="txtMsg">Mensagem</label>
           <textarea id="txtMsg" rows="4" placeholder="Descreva aqui..."></textarea></div>
         <button class="btn btn-verde" id="btnEnviarMsg">📤 Enviar</button>
       </div>
@@ -580,7 +580,7 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
       <div class="acrd">
         <div class="acrd-t">➕ Registrar Entrada Avulsa</div>
         <p style="font-size:.81rem;color:#777;margin-bottom:12px">Busque o usuário pelo CPF e registre a entrada manualmente.</p>
-        <div class="fg"><label>CPF do Usuário</label>
+        <div class="fg"><label for="recepCpfBusca">CPF do Usuário</label>
           <input type="text" id="recepCpfBusca" placeholder="000.000.000-00" maxlength="14"></div>
         <button class="btn btn-verde btn-sm" id="btnRecepBuscar">🔍 Buscar</button>
         <div id="recepResultadoBusca" style="margin-top:12px"></div>
@@ -640,15 +640,15 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
     <div id="adminPanelAvisos" class="apanel">
       <div class="acrd">
         <div class="acrd-t">📢 Gerenciar Avisos</div>
-        <div class="fg"><label>Tipo</label>
+        <div class="fg"><label for="adminAvisoTipo">Tipo</label>
           <select id="adminAvisoTipo">
             <option value="aviso">📌 Aviso</option>
             <option value="urgente">⚠️ Urgente</option>
             <option value="info">ℹ️ Informação</option>
           </select></div>
-        <div class="fg"><label>Título</label>
+        <div class="fg"><label for="adminAvisoTitulo">Título</label>
           <input type="text" id="adminAvisoTitulo" placeholder="Ex: Manutenção programada"></div>
-        <div class="fg"><label>Conteúdo</label>
+        <div class="fg"><label for="adminAvisoConteudo">Conteúdo</label>
           <textarea id="adminAvisoConteudo" rows="3" placeholder="Descreva o comunicado..."></textarea></div>
         <button class="btn btn-verde btn-sm" id="btnPublicarAviso">📢 Publicar Aviso</button>
       </div>
@@ -668,23 +668,23 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
     <div id="adminPanelConfig" class="apanel">
       <div class="acrd">
         <div class="acrd-t">⚙️ Configurações</div>
-        <div class="fg"><label>Total de vagas</label>
+        <div class="fg"><label for="cfgVagas">Total de vagas</label>
           <input type="number" id="cfgVagas" value="30" min="1" max="500"></div>
-        <div class="fg"><label>Valor do acesso diário (R$)</label>
+        <div class="fg"><label for="cfgTaxa">Valor do acesso diário (R$)</label>
           <input type="text" id="cfgTaxa" placeholder="Ex: 10,00"></div>
-        <div class="fg"><label>Timeout vaga ociosa (minutos)</label>
+        <div class="fg"><label for="cfgTimeout">Timeout vaga ociosa (minutos)</label>
           <input type="number" id="cfgTimeout" value="30" min="5"></div>
         <hr style="border:none;border-top:1px solid #eee;margin:13px 0">
         <div class="acrd-t" style="font-size:.87rem;margin-bottom:9px">💳 Dados Pix</div>
-        <div class="fg"><label>Chave Pix</label>
+        <div class="fg"><label for="cfgPixChave">Chave Pix</label>
           <input type="text" id="cfgPixChave" placeholder="CNPJ, CPF, e-mail ou telefone"></div>
-        <div class="fg"><label>Nome do Beneficiário</label>
+        <div class="fg"><label for="cfgPixNome">Nome do Beneficiário</label>
           <input type="text" id="cfgPixNome" placeholder="Biblioteca Paiva Netto"></div>
         <hr style="border:none;border-top:1px solid #eee;margin:13px 0">
         <div class="acrd-t" style="font-size:.87rem;margin-bottom:9px">🔐 Control iD</div>
-        <div class="fg"><label>URL da API</label>
+        <div class="fg"><label for="cfgControlIdUrl">URL da API</label>
           <input type="text" id="cfgControlIdUrl" placeholder="http://192.168.1.100/api/v1"></div>
-        <div class="fg"><label>Token</label>
+        <div class="fg"><label for="cfgControlIdToken">Token</label>
           <input type="password" id="cfgControlIdToken" placeholder="Bearer token"></div>
         <button class="btn btn-verde btn-sm" id="btnSalvarConfig">💾 Salvar Configurações</button>
       </div>
@@ -1816,11 +1816,9 @@ async function verificarAvisosUrgentes() {
     document.getElementById('modalAvisoUrgente').classList.add('ativo');
   } catch(e) { /* silencioso */ }
 }
-
 document.getElementById('btnFecharAvisoUrgente').addEventListener('click', () => {
   document.getElementById('modalAvisoUrgente').classList.remove('ativo');
 });
-<script>
 
 // ═══════════════════════════════════════════════════════════
 //  BLOQUEAR / ATIVAR USUÁRIO (ADMIN)
@@ -1847,6 +1845,7 @@ async function adminBloquearUsuario(usuarioId, nome, ativar, btn) {
     btn.disabled = false;
   }
 }
+</script>
 
 // ═══════════════════════════════════════════════════════════
 //  VER ASSINATURA DIGITAL (ADMIN)
