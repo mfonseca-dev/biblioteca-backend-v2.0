@@ -1888,7 +1888,11 @@ function fecharTermo() {
 
 function fecharTermo() {
   document.getElementById('modalTermo').classList.remove('ativo');
-}
+function verTermo(img, nome, data, ip) {
+  if (!img) {
+    toast('⚠️ Usuário não possui assinatura');
+    return;
+  }
 
   document.getElementById('termoImg').src = img;
   document.getElementById('termoNome').textContent = nome;
