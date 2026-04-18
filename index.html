@@ -1820,23 +1820,33 @@ async function verificarAvisosUrgentes() {
 document.getElementById('btnFecharAvisoUrgente').addEventListener('click', () => {
   document.getElementById('modalAvisoUrgente').classList.remove('ativo');
 });
+<script>
 
 // ═══════════════════════════════════════════════════════════
 //  BLOQUEAR / ATIVAR USUÁRIO (ADMIN)
 // ═══════════════════════════════════════════════════════════
 async function adminBloquearUsuario(usuarioId, nome, ativar, btn) {
-  const acao = ativar ? 'ativar' : 'bloquear';
   if (!confirm(`${ativar ? 'Ativar' : 'Bloquear'} o usuário ${nome}?`)) return;
+
   btn.disabled = true;
+
   try {
-    await api.post('/api/usuarios?acao=bloquear', { usuario_id: usuarioId, ativo: ativar });
+    await api.post('/api/usuarios?acao=bloquear', {
+      usuario_id: usuarioId,
+      ativo: ativar
+    });
+
     toast(`✅ Usuário ${nome} ${ativar ? 'ativado' : 'bloqueado'}!`);
-    adminCarregarUsuarios(document.getElementById('adminBuscaUsuario')?.value || '');
+
+    adminCarregarUsuarios(
+      document.getElementById('adminBuscaUsuario')?.value || ''
+    );
+
   } catch(e) {
     toast('❌ Erro: ' + e.message);
     btn.disabled = false;
   }
-<script>
+}
 
 // ═══════════════════════════════════════════════════════════
 //  VER ASSINATURA DIGITAL (ADMIN)
@@ -1852,6 +1862,7 @@ async function adminVerAssinatura(usuarioId, nome) {
     }
 
     document.getElementById('modalAssinaturaNome').textContent = nome;
+
     document.getElementById('modalAssinaturaData').textContent =
       u.termo_aceito_em
         ? `Assinado em ${new Date(u.termo_aceito_em).toLocaleString('pt-BR')} • IP: ${u.termo_ip || '—'}`
@@ -1895,7 +1906,7 @@ function adminPublicarAviso() {
 }
 
 // ═══════════════════════════════════════════════════════════
-//  SERVICE WORKER (CORRETO)
+//  SERVICE WORKER
 // ═══════════════════════════════════════════════════════════
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
@@ -1907,7 +1918,7 @@ if ("serviceWorker" in navigator) {
 
 </script>
 
-<!-- MODAL -->
+<!-- MODAL (FORA DO SCRIPT) -->
 <div class="modal-bg" id="modalTermo">
   <div class="modal" style="max-width:500px">
 
