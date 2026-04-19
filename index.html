@@ -283,11 +283,12 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
     <div class="erro-api" id="cadErro"></div>
 
     <!-- Indicador de etapas -->
-    <div style="display:flex;gap:6px;margin-bottom:18px;align-items:center">
+    <div style="display:flex;gap:5px;margin-bottom:6px;align-items:center">
       <div id="etapaInd1" style="flex:1;height:4px;border-radius:2px;background:var(--verde);transition:.3s"></div>
       <div id="etapaInd2" style="flex:1;height:4px;border-radius:2px;background:var(--cinza-cl);transition:.3s"></div>
-      <span id="etapaTxt" style="font-size:.7rem;color:var(--cinza);white-space:nowrap">Etapa 1 de 2</span>
+      <div id="etapaInd3" style="flex:1;height:4px;border-radius:2px;background:var(--cinza-cl);transition:.3s"></div>
     </div>
+    <div style="text-align:right;font-size:.68rem;color:var(--cinza);margin-bottom:14px" id="etapaTxt">Etapa 1 de 3</div>
 
     <!-- ETAPA 1: DADOS PESSOAIS -->
     <div id="cadEtapa1">
@@ -308,12 +309,53 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
         </select></div>
       <div class="campo"><label for="cadSenha">Senha * (mín. 6 caracteres)</label>
         <input type="password" id="cadSenha" placeholder="••••••••"></div>
-      <button class="btn btn-verde" id="btnCadEtapa1">Próximo — Ler e Assinar Termo →</button>
-      <div class="linktxt">Já tem conta? <span id="irLogin">Fazer login</span></div>
+      <button class="btn btn-verde" id="btnCadEtapa1">Próximo — Tirar Foto →</button>
+      <div class="linktxt" style="margin-top:10px">Já tem conta? <span id="irLogin">Fazer login</span></div>
+      <div class="linktxt" style="margin-top:6px">
+        <span id="irMigracao" style="color:var(--dourado);font-size:.82rem;cursor:pointer;text-decoration:underline">
+          📲 Já sou cadastrado — só preciso criar senha e foto
+        </span>
+      </div>
     </div>
 
-    <!-- ETAPA 2: TERMO + ASSINATURA DIGITAL -->
+    <!-- ETAPA 2: FOTO OBRIGATÓRIA -->
     <div id="cadEtapa2" style="display:none">
+      <div style="background:#eef3ff;border:1.5px solid #b0c4ef;border-radius:var(--r-sm);padding:11px 13px;margin-bottom:13px;font-size:.8rem;color:var(--azul);line-height:1.5">
+        📸 <b>Foto obrigatória</b> para reconhecimento facial na catraca. Posicione seu rosto com boa iluminação.
+      </div>
+
+      <div style="position:relative;border-radius:var(--r-sm);overflow:hidden;background:#000;margin-bottom:10px;min-height:160px" id="cadCameraWrap">
+        <video id="cadVideo" style="display:none;width:100%;max-height:220px;object-fit:cover;display:none" autoplay playsinline></video>
+        <canvas id="cadCanvas" style="display:none"></canvas>
+        <img id="cadFotoPreview" src="" style="display:none;width:100%;max-height:220px;object-fit:cover;border-radius:var(--r-sm)" alt="Foto capturada">
+        <div id="cadFotoPlaceholder" style="min-height:160px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;background:#f5f5f5;border-radius:var(--r-sm)">
+          <span style="font-size:3rem">📷</span>
+          <p style="font-size:.78rem;color:#888;text-align:center">Câmera não iniciada</p>
+        </div>
+      </div>
+
+      <div id="cadCameraControles" style="display:none;margin-bottom:10px">
+        <button type="button" class="btn btn-verde btn-sm" id="btnCapturarFoto" style="margin-bottom:6px">📸 Capturar Foto</button>
+        <button type="button" class="btn btn-sec btn-sm" id="btnFecharCamera">✕ Cancelar câmera</button>
+      </div>
+      <div id="cadFotoFeitaControles" style="display:none;margin-bottom:10px">
+        <button type="button" class="btn btn-sec btn-sm" id="btnRefazerFoto">🔄 Refazer foto</button>
+      </div>
+
+      <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+        <button type="button" class="btn btn-verde btn-sm" id="btnAbrirCamera" style="flex:1">📷 Abrir câmera</button>
+        <label style="flex:1;cursor:pointer">
+          <span class="btn btn-sec btn-sm" style="display:block;text-align:center">📁 Enviar arquivo</span>
+          <input type="file" id="cadFotoFile" accept="image/*" style="display:none">
+        </label>
+      </div>
+
+      <button class="btn btn-verde" id="btnCadEtapa2" disabled style="opacity:.5">Próximo — Assinar Termo →</button>
+      <button class="btn btn-sec" id="btnVoltarEtapa1" style="margin-top:8px">← Voltar</button>
+    </div>
+
+    <!-- ETAPA 3: TERMO + ASSINATURA DIGITAL -->
+    <div id="cadEtapa3" style="display:none">
       <div style="font-size:.73rem;font-weight:700;color:var(--verde);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">📜 Leia o Regulamento completo</div>
       <div class="termos-box">
         <h4>📜 Regulamento de Uso — Ala dos Estudantes Educador Paiva Netto</h4>
@@ -323,25 +365,94 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
         <p><b>4. DO CANCELAMENTO.</b> Não há reembolso após o pagamento. O acesso é pessoal e intransferível.</p><br>
         <p><b>5. DA SUSPENSÃO.</b> O descumprimento das normas pode resultar em suspensão do cadastro.</p><br>
         <h4>🔒 Política de Privacidade (LGPD)</h4>
-        <p><b>6.</b> Coletamos nome, CPF, e-mail e telefone exclusivamente para controle de acesso. Dados não são compartilhados com terceiros. Você pode solicitar a exclusão dos seus dados a qualquer momento na recepção.</p>
+        <p><b>6.</b> Coletamos nome, CPF, foto, e-mail e telefone exclusivamente para controle de acesso e reconhecimento facial. Dados não são compartilhados com terceiros. Você pode solicitar a exclusão dos seus dados a qualquer momento na recepção.</p>
       </div>
-
       <div style="font-size:.73rem;font-weight:700;color:var(--verde);margin:12px 0 6px;text-transform:uppercase;letter-spacing:.5px">✍️ Assine abaixo para confirmar que leu e concorda</div>
-
       <div style="position:relative;border:2px solid var(--cinza-cl);border-radius:var(--r-sm);background:#fafafa;overflow:hidden;margin-bottom:8px" id="canvasWrap">
         <canvas id="canvasAssinatura" style="display:block;width:100%;touch-action:none;cursor:crosshair" height="130"></canvas>
         <div id="assinaturaPlaceholder" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#ccc;font-size:.85rem;pointer-events:none;gap:6px">
           ✍️ Desenhe sua assinatura aqui
         </div>
       </div>
-
       <div style="display:flex;gap:8px;margin-bottom:14px;align-items:center">
         <button class="btn btn-sec btn-sm" id="btnLimparAssinatura" style="flex:0 0 auto">🗑️ Limpar</button>
         <span style="font-size:.71rem;color:#aaa;line-height:1.4">Sua assinatura confirma que você leu e aceita o regulamento e a política de privacidade (LGPD).</span>
       </div>
-
       <button class="btn btn-verde" id="btnCadastrar">✅ Criar Conta e Assinar Termo</button>
-      <button class="btn btn-sec" id="btnVoltarEtapa1" style="margin-top:8px">← Voltar e editar dados</button>
+      <button class="btn btn-sec" id="btnVoltarEtapa2" style="margin-top:8px">← Voltar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ MIGRAÇÃO — JÁ CADASTRADO SEM SENHA/FOTO ═══════════ -->
+<div id="migracaoScreen" class="screen bg-verde">
+  <div class="cf">
+    <div class="logo">
+      <span class="em">📲</span>
+      <h1>Já sou Cadastrado</h1>
+      <div class="divgold"></div>
+      <p>Complete seus dados de acesso</p>
+    </div>
+    <div class="erro-api" id="migErro"></div>
+
+    <!-- PASSO 1: CPF -->
+    <div id="migPasso1">
+      <p style="font-size:.82rem;color:var(--cinza);margin-bottom:14px;line-height:1.6">
+        Se você já frequentava a biblioteca mas ainda não tem senha ou foto no sistema, informe seu CPF para continuarmos.
+      </p>
+      <div class="campo"><label for="migCpf">CPF cadastrado</label>
+        <input type="text" id="migCpf" placeholder="000.000.000-00" maxlength="14"></div>
+      <button class="btn btn-dourado" id="btnMigBuscarCpf">🔍 Localizar meu cadastro</button>
+      <div class="linktxt" style="margin-top:12px"><span id="migVoltarLogin">← Voltar ao login</span></div>
+    </div>
+
+    <!-- PASSO 2: CONFIRMAÇÃO + SENHA + FOTO -->
+    <div id="migPasso2" style="display:none">
+      <!-- Card de confirmação do usuário encontrado -->
+      <div style="background:var(--verde-suave);border:1.5px solid #a8d5b5;border-radius:var(--r-sm);padding:13px;margin-bottom:14px;display:flex;align-items:center;gap:12px">
+        <div style="width:46px;height:46px;border-radius:50%;background:var(--verde);display:flex;align-items:center;justify-content:center;font-size:1.2rem;font-weight:700;color:#fff;flex-shrink:0" id="migAvatar">?</div>
+        <div>
+          <div style="font-weight:700;font-size:.92rem;color:var(--verde-esc)" id="migNomeConfirm">—</div>
+          <div style="font-size:.75rem;color:var(--cinza)" id="migCpfConfirm">—</div>
+          <div style="font-size:.72rem;color:var(--verde);margin-top:2px">✅ Cadastro localizado!</div>
+        </div>
+      </div>
+
+      <!-- Senha -->
+      <div style="background:#fffbe0;border:1px solid var(--dourado-cl);border-radius:var(--r-sm);padding:10px 12px;font-size:.78rem;color:#a07a00;margin-bottom:12px;line-height:1.5">
+        ⚠️ Crie uma <b>senha de acesso</b> e adicione sua <b>foto</b> para ativar o reconhecimento facial na catraca.
+      </div>
+
+      <div class="campo"><label for="migSenha">Nova senha * (mín. 6 caracteres)</label>
+        <input type="password" id="migSenha" placeholder="Crie uma senha segura"></div>
+      <div class="campo"><label for="migSenhaConfirm">Confirmar senha *</label>
+        <input type="password" id="migSenhaConfirm" placeholder="Repita a senha"></div>
+
+      <!-- Foto -->
+      <div style="font-size:.73rem;font-weight:700;color:var(--cinza);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px">📸 Foto para reconhecimento facial *</div>
+      <div style="border:2px dashed var(--cinza-cl);border-radius:var(--r-sm);background:#fafafa;margin-bottom:12px;overflow:hidden">
+        <video id="migVideo" style="display:none;width:100%;max-height:180px;object-fit:cover" autoplay playsinline></video>
+        <canvas id="migCanvas" style="display:none"></canvas>
+        <img id="migFotoPreview" src="" style="display:none;width:100%;max-height:180px;object-fit:cover" alt="Foto">
+        <div id="migFotoPlaceholder" style="padding:16px;text-align:center">
+          <div style="font-size:2rem;margin-bottom:6px">📷</div>
+          <p style="font-size:.76rem;color:#888;margin-bottom:10px">Necessária para o reconhecimento facial</p>
+          <button type="button" class="btn btn-verde btn-sm" id="btnMigAbrirCamera" style="margin-bottom:6px">📷 Abrir Câmera</button><br>
+          <label style="cursor:pointer;font-size:.73rem;color:var(--verde);text-decoration:underline;margin-top:4px;display:inline-block">
+            📁 Enviar arquivo <input type="file" id="migFotoFile" accept="image/*" style="display:none">
+          </label>
+        </div>
+        <div id="migCameraControles" style="display:none;padding:8px;text-align:center">
+          <button type="button" class="btn btn-verde btn-sm" id="btnMigCapturar" style="margin-bottom:6px">📸 Capturar</button>
+          <button type="button" class="btn btn-sec btn-sm" id="btnMigFecharCamera">✕ Cancelar</button>
+        </div>
+        <div id="migFotoFeitaControles" style="display:none;padding:8px;text-align:center">
+          <button type="button" class="btn btn-sec btn-sm" id="btnMigRefazerFoto">🔄 Refazer foto</button>
+        </div>
+      </div>
+
+      <button class="btn btn-dourado" id="btnMigFinalizar">✅ Ativar meu acesso completo</button>
+      <button class="btn btn-sec" id="btnMigVoltar" style="margin-top:8px">← Voltar</button>
     </div>
   </div>
 </div>
@@ -945,6 +1056,7 @@ document.addEventListener('DOMContentLoaded', () => {
   maskCpf(document.getElementById('loginCpf'));
   maskCpf(document.getElementById('cadCpf'));
   maskCpf(document.getElementById('recepCpfBusca'));
+  maskCpf(document.getElementById('migCpf'));
 
   // Data atual na tela app
   const now = new Date();
@@ -1235,17 +1347,36 @@ function limparCanvas() {
   document.getElementById('assinaturaPlaceholder').style.display = 'flex';
 }
 
-// ─── CÂMERA CADASTRO APP ────────────────────────────────────
+// ─── CÂMERA CADASTRO APP (3 ETAPAS) ──────────────────────────
 let _cadFotoDataUrl = null;
 let _cadStream = null;
+
+function _irEtapaCad(n) {
+  [1,2,3].forEach(i => {
+    const el = document.getElementById('cadEtapa'+i);
+    if(el) el.style.display = i===n ? 'block' : 'none';
+    const bar = document.getElementById('etapaInd'+i);
+    if(bar) bar.style.background = i<=n ? 'var(--verde)' : 'var(--cinza-cl)';
+  });
+  document.getElementById('etapaTxt').textContent = 'Etapa '+n+' de 3';
+  if(n===3){ _ctx=null; setTimeout(initCanvas,120); }
+}
+
+function _atualizarBotaoEtapa2() {
+  const btn = document.getElementById('btnCadEtapa2');
+  if(!btn) return;
+  btn.disabled = !_cadFotoDataUrl;
+  btn.style.opacity = _cadFotoDataUrl ? '1' : '.5';
+}
 
 document.getElementById('btnAbrirCamera').addEventListener('click', async () => {
   try {
     _cadStream = await navigator.mediaDevices.getUserMedia({video:{facingMode:'user'},audio:false});
     const v = document.getElementById('cadVideo');
     v.srcObject = _cadStream; v.style.display = 'block';
-    document.getElementById('fotoPlaceholder').style.display = 'none';
-    document.getElementById('fotoCapturaControles').style.display = 'block';
+    document.getElementById('cadFotoPlaceholder').style.display = 'none';
+    document.getElementById('cadCameraControles').style.display = 'block';
+    document.querySelector('#cadEtapa2 .cam-btns')?.style.setProperty('display','none');
   } catch(e) { toast('⚠️ Câmera indisponível. Use a opção de arquivo.'); }
 });
 document.getElementById('btnCapturarFoto').addEventListener('click', () => {
@@ -1257,34 +1388,38 @@ document.getElementById('btnCapturarFoto').addEventListener('click', () => {
   document.getElementById('cadFotoPreview').src = _cadFotoDataUrl;
   document.getElementById('cadFotoPreview').style.display = 'block';
   v.style.display = 'none';
-  document.getElementById('fotoCapturaControles').style.display = 'none';
-  document.getElementById('fotoFeitaControles').style.display = 'block';
-  _cadStream?.getTracks().forEach(t=>t.stop()); _cadStream = null;
+  document.getElementById('cadCameraControles').style.display = 'none';
+  document.getElementById('cadFotoFeitaControles').style.display = 'block';
+  _cadStream?.getTracks().forEach(t=>t.stop()); _cadStream=null;
+  _atualizarBotaoEtapa2();
 });
 document.getElementById('btnFecharCamera').addEventListener('click', () => {
-  _cadStream?.getTracks().forEach(t=>t.stop()); _cadStream = null;
+  _cadStream?.getTracks().forEach(t=>t.stop()); _cadStream=null;
   document.getElementById('cadVideo').style.display = 'none';
-  document.getElementById('fotoCapturaControles').style.display = 'none';
-  document.getElementById('fotoPlaceholder').style.display = 'block';
+  document.getElementById('cadCameraControles').style.display = 'none';
+  document.getElementById('cadFotoPlaceholder').style.display = 'flex';
 });
 document.getElementById('btnRefazerFoto').addEventListener('click', () => {
   _cadFotoDataUrl = null;
   document.getElementById('cadFotoPreview').style.display = 'none';
-  document.getElementById('fotoFeitaControles').style.display = 'none';
-  document.getElementById('fotoPlaceholder').style.display = 'block';
+  document.getElementById('cadFotoFeitaControles').style.display = 'none';
+  document.getElementById('cadFotoPlaceholder').style.display = 'flex';
+  _atualizarBotaoEtapa2();
 });
 document.getElementById('cadFotoFile').addEventListener('change', e => {
-  const f = e.target.files[0]; if(!f) return;
-  const r = new FileReader();
+  const f=e.target.files[0]; if(!f) return;
+  const r=new FileReader();
   r.onload = ev => {
     _cadFotoDataUrl = ev.target.result;
     document.getElementById('cadFotoPreview').src = _cadFotoDataUrl;
     document.getElementById('cadFotoPreview').style.display = 'block';
-    document.getElementById('fotoPlaceholder').style.display = 'none';
-    document.getElementById('fotoFeitaControles').style.display = 'block';
+    document.getElementById('cadFotoPlaceholder').style.display = 'none';
+    document.getElementById('cadFotoFeitaControles').style.display = 'block';
+    _atualizarBotaoEtapa2();
   };
   r.readAsDataURL(f);
 });
+
 // Etapa 1 → 2
 document.getElementById('btnCadEtapa1').addEventListener('click', () => {
   mostrarErro('cadErro','');
@@ -1296,30 +1431,28 @@ document.getElementById('btnCadEtapa1').addEventListener('click', () => {
   if (cpf.length!==11) { mostrarErro('cadErro','CPF inválido'); return; }
   if (!tipo)           { mostrarErro('cadErro','Selecione o tipo de usuário'); return; }
   if (senha.length<6)  { mostrarErro('cadErro','Senha mínima de 6 caracteres'); return; }
-  if (!_cadFotoDataUrl){ mostrarErro('cadErro','Foto obrigatória para reconhecimento facial'); return; }
-  document.getElementById('cadEtapa1').style.display = 'none';
-  document.getElementById('cadEtapa2').style.display = 'block';
-  document.getElementById('etapaInd2').style.background = 'var(--verde)';
-  document.getElementById('etapaTxt').textContent = 'Etapa 2 de 2';
-  _ctx = null; // reset canvas para reinicializar
-  setTimeout(initCanvas, 120);
+  _irEtapaCad(2);
 });
-
+// Etapa 2 → 3
+document.getElementById('btnCadEtapa2').addEventListener('click', () => {
+  if (!_cadFotoDataUrl) { mostrarErro('cadErro','Tire ou envie sua foto antes de continuar'); return; }
+  mostrarErro('cadErro','');
+  _irEtapaCad(3);
+});
+// Voltar 2→1
 document.getElementById('btnVoltarEtapa1').addEventListener('click', () => {
-  document.getElementById('cadEtapa2').style.display = 'none';
-  document.getElementById('cadEtapa1').style.display = 'block';
-  document.getElementById('etapaInd2').style.background = 'var(--cinza-cl)';
-  document.getElementById('etapaTxt').textContent = 'Etapa 1 de 2';
+  _cadStream?.getTracks().forEach(t=>t.stop()); _cadStream=null;
+  _irEtapaCad(1);
 });
+// Voltar 3→2
+document.getElementById('btnVoltarEtapa2').addEventListener('click', () => _irEtapaCad(2));
 
 document.getElementById('btnLimparAssinatura').addEventListener('click', limparCanvas);
 
 async function cadastrarUsuario() {
   mostrarErro('cadErro','');
-  if (!_assinaturaFeita) {
-    mostrarErro('cadErro','Por favor, assine o termo para continuar');
-    return;
-  }
+  if (!_assinaturaFeita) { mostrarErro('cadErro','Por favor, assine o termo para continuar'); return; }
+  if (!_cadFotoDataUrl)  { mostrarErro('cadErro','Foto obrigatória — volte e tire a foto'); return; }
   const nome  = document.getElementById('cadNome').value.trim();
   const cpf   = document.getElementById('cadCpf').value.replace(/\D/g,'');
   const email = document.getElementById('cadEmail').value.trim();
@@ -1333,34 +1466,140 @@ async function cadastrarUsuario() {
     const r = await fetch(API_BASE + '/api/usuarios?acao=cadastrar', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ nome, cpf, email, telefone: tel, tipo, senha, assinatura_svg: assinatura, foto_base64: _cadFotoDataUrl||null })
+      body: JSON.stringify({ nome, cpf, email, telefone:tel, tipo, senha,
+        assinatura_svg: assinatura, foto_base64: _cadFotoDataUrl })
     });
     const data = await r.json();
     if (!r.ok) throw new Error(data.erro || 'Erro ao cadastrar');
-
-    // Salva assinatura digital
-    await fetch(API_BASE + '/api/usuarios?acao=assinar-termo', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ usuario_id: data.usuario.id, assinatura_svg: assinatura })
-    });
-
-    toast('✅ Cadastro e assinatura realizados com sucesso!');
-    // Reset
-    _ctx = null; _assinaturaFeita = false; _cadFotoDataUrl = null;
+    toast('✅ Cadastro realizado! Foto enviada ao Control iD.');
+    _ctx=null; _assinaturaFeita=false; _cadFotoDataUrl=null;
     document.getElementById('cadFotoPreview').style.display='none';
-    document.getElementById('fotoPlaceholder').style.display='block';
-    document.getElementById('fotoFeitaControles').style.display='none';
-    document.getElementById('cadEtapa2').style.display = 'none';
-    document.getElementById('cadEtapa1').style.display = 'block';
-    document.getElementById('etapaInd2').style.background = 'var(--cinza-cl)';
-    document.getElementById('etapaTxt').textContent = 'Etapa 1 de 2';
-    setTimeout(() => mostrarTela('loginScreen'), 1600);
+    document.getElementById('cadFotoPlaceholder').style.display='flex';
+    document.getElementById('cadFotoFeitaControles').style.display='none';
+    _irEtapaCad(1);
+    setTimeout(()=>mostrarTela('loginScreen'),1600);
   } catch(e) {
     mostrarErro('cadErro', e.message);
   } finally {
     loading('btnCadastrar', false);
   }
+}
+
+// ─── MIGRAÇÃO — USUÁRIOS JÁ CADASTRADOS ──────────────────────
+let _migUsuario=null, _migFotoDataUrl=null, _migStream=null;
+
+document.getElementById('irMigracao').addEventListener('click',()=>mostrarTela('migracaoScreen'));
+document.getElementById('migVoltarLogin').addEventListener('click',()=>mostrarTela('loginScreen'));
+document.getElementById('btnMigBuscarCpf').addEventListener('click', migBuscarCpf);
+document.getElementById('migCpf').addEventListener('keydown',e=>{if(e.key==='Enter')migBuscarCpf();});
+
+async function migBuscarCpf() {
+  mostrarErro('migErro','');
+  const cpf = document.getElementById('migCpf').value.replace(/\D/g,'');
+  if(cpf.length!==11){mostrarErro('migErro','CPF inválido');return;}
+  loading('btnMigBuscarCpf',true);
+  try {
+    const res = await api.get('/api/usuarios?acao=listar&busca='+cpf);
+    const u = (res.usuarios||[]).find(x=>x.cpf===cpf);
+    if(!u){mostrarErro('migErro','CPF não encontrado. Realize um novo cadastro.');return;}
+    if(!u.ativo){mostrarErro('migErro','Cadastro suspenso. Procure a recepção.');return;}
+    _migUsuario=u;
+    document.getElementById('migNomeConfirm').textContent=u.nome;
+    document.getElementById('migCpfConfirm').textContent='CPF: '+fmtCpf(u.cpf);
+    document.getElementById('migAvatar').textContent=u.nome[0].toUpperCase();
+    document.getElementById('migPasso1').style.display='none';
+    document.getElementById('migPasso2').style.display='block';
+  } catch(e){mostrarErro('migErro',e.message||'Erro de conexão');}
+  finally{loading('btnMigBuscarCpf',false);}
+}
+
+document.getElementById('btnMigAbrirCamera').addEventListener('click', async()=>{
+  try{
+    _migStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user'},audio:false});
+    const v=document.getElementById('migVideo');
+    v.srcObject=_migStream; v.style.display='block';
+    document.getElementById('migFotoPlaceholder').style.display='none';
+    document.getElementById('migCameraControles').style.display='block';
+  }catch(e){toast('⚠️ Câmera indisponível. Use a opção de arquivo.');}
+});
+document.getElementById('btnMigCapturar').addEventListener('click',()=>{
+  const v=document.getElementById('migVideo'),c=document.getElementById('migCanvas');
+  c.width=v.videoWidth; c.height=v.videoHeight;
+  c.getContext('2d').drawImage(v,0,0);
+  _migFotoDataUrl=c.toDataURL('image/jpeg',0.85);
+  document.getElementById('migFotoPreview').src=_migFotoDataUrl;
+  document.getElementById('migFotoPreview').style.display='block';
+  v.style.display='none';
+  document.getElementById('migCameraControles').style.display='none';
+  document.getElementById('migFotoFeitaControles').style.display='block';
+  _migStream?.getTracks().forEach(t=>t.stop()); _migStream=null;
+});
+document.getElementById('btnMigFecharCamera').addEventListener('click',()=>{
+  _migStream?.getTracks().forEach(t=>t.stop()); _migStream=null;
+  document.getElementById('migVideo').style.display='none';
+  document.getElementById('migCameraControles').style.display='none';
+  document.getElementById('migFotoPlaceholder').style.display='block';
+});
+document.getElementById('btnMigRefazerFoto').addEventListener('click',()=>{
+  _migFotoDataUrl=null;
+  document.getElementById('migFotoPreview').style.display='none';
+  document.getElementById('migFotoFeitaControles').style.display='none';
+  document.getElementById('migFotoPlaceholder').style.display='block';
+});
+document.getElementById('migFotoFile').addEventListener('change',e=>{
+  const f=e.target.files[0]; if(!f) return;
+  const r=new FileReader();
+  r.onload=ev=>{
+    _migFotoDataUrl=ev.target.result;
+    document.getElementById('migFotoPreview').src=_migFotoDataUrl;
+    document.getElementById('migFotoPreview').style.display='block';
+    document.getElementById('migFotoPlaceholder').style.display='none';
+    document.getElementById('migFotoFeitaControles').style.display='block';
+  };
+  r.readAsDataURL(f);
+});
+document.getElementById('btnMigVoltar').addEventListener('click',()=>{
+  _migStream?.getTracks().forEach(t=>t.stop()); _migStream=null;
+  _migUsuario=null; _migFotoDataUrl=null;
+  document.getElementById('migPasso1').style.display='block';
+  document.getElementById('migPasso2').style.display='none';
+});
+document.getElementById('btnMigFinalizar').addEventListener('click', migFinalizar);
+
+async function migFinalizar() {
+  mostrarErro('migErro','');
+  const senha  = document.getElementById('migSenha').value;
+  const senhaC = document.getElementById('migSenhaConfirm').value;
+  if(senha.length<6){mostrarErro('migErro','Senha mínima de 6 caracteres');return;}
+  if(senha!==senhaC){mostrarErro('migErro','As senhas não coincidem');return;}
+  if(!_migFotoDataUrl){mostrarErro('migErro','Foto obrigatória para o reconhecimento facial');return;}
+  loading('btnMigFinalizar',true);
+  try {
+    // 1. Define senha
+    await fetch(API_BASE+'/api/usuarios?acao=redefinir-senha',{
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({usuario_id:_migUsuario.id, nova_senha:senha})
+    });
+    // 2. Envia foto ao Control iD
+    const rF=await fetch(API_BASE+'/api/totem?acao=enviar-foto',{
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({usuario_id:_migUsuario.id, foto_base64:_migFotoDataUrl})
+    });
+    const dF=await rF.json();
+    toast(dF.ok?'✅ Senha criada e foto enviada! Acesso facial ativo.':'✅ Senha criada! Foto salva para processamento.');
+    // Reset
+    _migUsuario=null; _migFotoDataUrl=null;
+    document.getElementById('migSenha').value='';
+    document.getElementById('migSenhaConfirm').value='';
+    document.getElementById('migFotoPreview').style.display='none';
+    document.getElementById('migFotoPlaceholder').style.display='block';
+    document.getElementById('migFotoFeitaControles').style.display='none';
+    document.getElementById('migPasso1').style.display='block';
+    document.getElementById('migPasso2').style.display='none';
+    document.getElementById('migCpf').value='';
+    setTimeout(()=>mostrarTela('loginScreen'),1800);
+  } catch(e){mostrarErro('migErro',e.message||'Erro ao salvar');}
+  finally{loading('btnMigFinalizar',false);}
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -1674,11 +1913,26 @@ async function recepBuscarUsuario() {
     }
     div.innerHTML = usuarios.map(u => `
       <div style="background:#f8f8f8;border-radius:8px;padding:12px;margin-bottom:8px">
-        <div style="font-weight:700;font-size:.88rem">${u.nome}</div>
-        <div style="font-size:.76rem;color:#888">CPF: ${fmtCpf(u.cpf)} • ${u.tipo}</div>
-        <div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+          <div style="width:40px;height:40px;border-radius:50%;background:${u.foto_url?'transparent':'var(--verde-suave)'};border:2px solid var(--cinza-cl);overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center">
+            ${u.foto_url
+              ? `<img src="${u.foto_url}" style="width:100%;height:100%;object-fit:cover">`
+              : `<span style="font-size:.9rem;font-weight:700;color:var(--verde)">${u.nome[0].toUpperCase()}</span>`
+            }
+          </div>
+          <div>
+            <div style="font-weight:700;font-size:.88rem">${u.nome}</div>
+            <div style="font-size:.76rem;color:#888">CPF: ${fmtCpf(u.cpf)} • ${u.tipo}</div>
+            ${!u.foto_url ? '<div style="font-size:.7rem;color:var(--laranja);margin-top:2px">⚠️ Sem foto — catraca facial não disponível</div>' : '<div style="font-size:.7rem;color:var(--verde);margin-top:2px">✅ Foto cadastrada — acesso facial ativo</div>'}
+          </div>
+        </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
           <button class="btn btn-verde btn-xs" onclick="recepEntradaManual('${u.id}', this)">✅ Registrar Entrada</button>
           <button class="btn btn-laranja btn-xs" onclick="recepRedefinirSenha('${u.id}', '${u.nome.split(' ')[0]}', this)">🔑 Redefinir Senha</button>
+          <label class="btn btn-azul btn-xs" style="cursor:pointer;display:inline-flex;align-items:center;gap:4px">
+            📸 ${u.foto_url ? 'Atualizar Foto' : 'Adicionar Foto'}
+            <input type="file" accept="image/*" style="display:none" onchange="recepEnviarFoto('${u.id}','${u.nome.split(' ')[0]}',this)">
+          </label>
         </div>
       </div>
     `).join('');
@@ -1703,8 +1957,7 @@ async function recepEntradaManual(usuarioId, btn) {
 }
 
 async function recepRedefinirSenha(usuarioId, nomeUsuario, btn) {
-  const novaSenha = prompt(`Definir nova senha para ${nomeUsuario}:
-(mínimo 6 caracteres)`);
+  const novaSenha = prompt(`Definir nova senha para ${nomeUsuario}:\n(mínimo 6 caracteres)`);
   if (!novaSenha) return;
   if (novaSenha.length < 6) { toast("⚠️ Senha mínima de 6 caracteres"); return; }
   btn.disabled = true;
@@ -1716,6 +1969,52 @@ async function recepRedefinirSenha(usuarioId, nomeUsuario, btn) {
   } catch(e) {
     toast("❌ "+e.message);
     btn.disabled = false;
+  }
+}
+
+// ── ENVIAR FOTO PARA CONTROL ID (RECEPÇÃO) ──────────────────
+async function recepEnviarFoto(usuarioId, nomeUsuario, input) {
+  const file = input.files[0];
+  if (!file) return;
+
+  const label = input.closest('label');
+  const textoOriginal = label.textContent.trim();
+  label.style.opacity = '.6';
+  label.style.pointerEvents = 'none';
+
+  try {
+    // Converte para base64
+    const fotoBase64 = await new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = e => resolve(e.target.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+
+    // Salva foto no usuário e envia ao Control iD
+    const r = await fetch(API_BASE + '/api/totem?acao=enviar-foto', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${api.token}`
+      },
+      body: JSON.stringify({ usuario_id: usuarioId, foto_base64: fotoBase64 })
+    });
+    const data = await r.json();
+
+    if (data.ok) {
+      toast(`✅ Foto de ${nomeUsuario} enviada ao Control iD!`);
+      // Recarrega resultado da busca
+      recepBuscarUsuario();
+    } else {
+      toast(`⚠️ Foto salva, mas falha no Control iD: ${data.motivo || 'erro desconhecido'}`);
+    }
+  } catch(e) {
+    toast('❌ Erro ao enviar foto: ' + e.message);
+  } finally {
+    label.style.opacity = '1';
+    label.style.pointerEvents = 'auto';
+    input.value = '';
   }
 }
 
@@ -1742,7 +2041,7 @@ async function adminCarregarUsuarios(busca='') {
         <td><div style="font-weight:600;font-size:.83rem">${u.nome}</div><div style="font-size:.69rem;color:#aaa">${u.email||''}</div></td>
         <td style="font-family:monospace;font-size:.79rem">${fmtCpf(u.cpf)}</td>
         <td><span class="badge azul">${u.tipo}</span></td>
-        <td>${u.assinatura_svg?`<button class="btn btn-sec btn-xs" onclick="adminVerAssinatura('${u.id}','${u.nome.replace(/'/g,"\\'")}')" >✍️ Ver Termo</button>`:'<span style="font-size:.7rem;color:#bbb">Sem assinatura</span>'}</td>
+        <td><button class="btn btn-sec btn-xs" onclick="adminVerAssinatura('${u.id}','${u.nome.replace(/'/g,"\\'")}')">✍️ Ver Termo</button></td>
         <td><span class="badge ${u.ativo?'verde':'vermelho'}">${u.ativo?'Ativo':'Bloqueado'}</span></td>
         <td><button class="btn btn-xs ${u.ativo?'btn-vermelho':'btn-verde'}" onclick="adminBloquearUsuario('${u.id}','${u.nome.replace(/'/g,"\\'")}',${ !u.ativo},this)">${u.ativo?'🚫 Bloquear':'✅ Ativar'}</button></td>
       </tr>
@@ -2006,29 +2305,157 @@ async function adminBloquearUsuario(usuarioId, nome, ativar, btn) {
 // ═══════════════════════════════════════════════════════════
 //  AUDITORIA DE TERMO DIGITAL (ADMIN)
 // ═══════════════════════════════════════════════════════════
-async function adminVerAssinatura(usuarioId, nome) {
+let _auditDados = null;
+
+async function adminVerAssinatura(usuarioId) {
+  // Mostra modal com loading
+  document.getElementById('modalAssinatura').classList.add('ativo');
+  document.getElementById('modalAssinaturaNome').textContent = '⏳ Carregando...';
+  document.getElementById('auditNome').textContent  = '—';
+  document.getElementById('auditCpf').textContent   = '—';
+  document.getElementById('auditId').textContent    = '—';
+  document.getElementById('auditIp').textContent    = '—';
+  document.getElementById('auditData').textContent  = '—';
+  document.getElementById('auditHash').textContent  = '—';
+  document.getElementById('modalAssinaturaImg').src = '';
+  document.getElementById('auditFotoWrap').style.display = 'none';
+
   try {
     const res = await api.get(`/api/usuarios?acao=buscar&id=${usuarioId}`);
     const u = res.usuario;
 
-    if (!u || !u.assinatura_svg) {
-      toast('⚠️ Este usuário não tem assinatura registrada');
+    if (!u) {
+      document.getElementById('modalAssinaturaNome').textContent = '❌ Usuário não encontrado';
       return;
     }
 
-    document.getElementById('modalAssinaturaNome').textContent = nome;
+    _auditDados = u;
 
-    document.getElementById('modalAssinaturaData').textContent =
-      u.termo_aceito_em
-        ? `Assinado em ${new Date(u.termo_aceito_em).toLocaleString('pt-BR')} • IP: ${u.termo_ip || '—'}`
-        : 'Data não registrada';
+    // Cabeçalho
+    document.getElementById('modalAssinaturaNome').textContent = `${u.nome} — Termo de Aceite`;
 
-    document.getElementById('modalAssinaturaImg').src = u.assinatura_svg;
-    document.getElementById('modalAssinatura').classList.add('ativo');
+    // Metadados
+    document.getElementById('auditNome').textContent  = u.nome;
+    document.getElementById('auditCpf').textContent   = fmtCpf(u.cpf);
+    document.getElementById('auditId').textContent    = u.id;
+    document.getElementById('auditIp').textContent    = u.termo_ip || 'Não registrado';
+    document.getElementById('auditData').textContent  = u.termo_aceito_em
+      ? new Date(u.termo_aceito_em).toLocaleString('pt-BR', { dateStyle:'full', timeStyle:'medium' })
+      : 'Não registrada';
+
+    // Hash de integridade
+    const hashIn = `${u.id}|${u.cpf}|${u.termo_aceito_em}|${u.termo_ip}`;
+    document.getElementById('auditHash').textContent =
+      btoa(unescape(encodeURIComponent(hashIn))).slice(0, 48) + '...';
+
+    // Assinatura
+    if (u.assinatura_svg) {
+      document.getElementById('modalAssinaturaImg').src = u.assinatura_svg;
+    } else {
+      document.getElementById('modalAssinaturaImg').alt = 'Sem assinatura registrada';
+      // Mostra mensagem inline
+      document.getElementById('modalAssinaturaImg').src = '';
+    }
+
+    // Foto de cadastro
+    if (u.foto_url) {
+      document.getElementById('auditFoto').src = u.foto_url;
+      document.getElementById('auditFotoWrap').style.display = 'block';
+    }
 
   } catch(e) {
-    toast('❌ Erro ao carregar assinatura');
+    document.getElementById('modalAssinaturaNome').textContent = '❌ Erro ao carregar dados';
+    toast('❌ Erro ao carregar dados de auditoria: ' + e.message);
   }
+}
+
+function auditBaixarHTML() {
+  const u = _auditDados;
+  if (!u) { toast('⚠️ Nenhum dado carregado'); return; }
+
+  const html = `<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Termo de Aceite — ${u.nome}</title>
+<style>
+  body{font-family:Arial,sans-serif;max-width:700px;margin:40px auto;color:#222;line-height:1.6;padding:0 20px}
+  h1{color:#1a6b3a;border-bottom:3px solid #1a6b3a;padding-bottom:8px;font-size:1.3rem}
+  h2{color:#0d3d20;font-size:1rem;margin:20px 0 8px}
+  .meta{background:#f5fdf7;border:1px solid #a8d5b5;border-radius:8px;padding:16px;margin:16px 0;display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:.9rem}
+  .meta b{color:#0d3d20}
+  .reg{background:#fafafa;border:1px solid #ddd;border-radius:8px;padding:16px;margin:16px 0;font-size:.88rem;line-height:1.8}
+  .ass{text-align:center;border:1px dashed #ccc;border-radius:8px;padding:16px;margin:16px 0;background:#fff}
+  .ass img{max-width:100%;max-height:160px}
+  .ass-vazia{color:#aaa;font-style:italic;padding:20px}
+  .hash{background:#f0f0f0;border-radius:6px;padding:10px;font-size:.72rem;font-family:monospace;word-break:break-all;color:#555}
+  .rodape{text-align:center;color:#888;font-size:.72rem;margin-top:32px;border-top:1px solid #eee;padding-top:12px}
+  @media print{body{margin:20px}}
+</style>
+</head>
+<body>
+<h1>📋 Documento de Auditoria — Termo de Aceite</h1>
+<p style="color:#888;font-size:.82rem">Ala dos Estudantes Educador Paiva Netto — Gerado em ${new Date().toLocaleString('pt-BR')}</p>
+
+<h2>📊 Dados do Usuário</h2>
+<div class="meta">
+  <div><b>Nome completo:</b><br>${u.nome}</div>
+  <div><b>CPF:</b><br>${fmtCpf(u.cpf)}</div>
+  <div><b>E-mail:</b><br>${u.email || '—'}</div>
+  <div><b>Telefone:</b><br>${u.telefone || '—'}</div>
+  <div><b>ID do sistema:</b><br><code style="font-size:.8rem">${u.id}</code></div>
+  <div><b>IP do aceite:</b><br>${u.termo_ip || 'Não registrado'}</div>
+  <div><b>Data/Hora do aceite:</b><br>${u.termo_aceito_em ? new Date(u.termo_aceito_em).toLocaleString('pt-BR', {dateStyle:'full', timeStyle:'medium'}) : 'Não registrada'}</div>
+  <div><b>Status do aceite:</b><br>${u.termo_aceito_em ? '✅ Aceite registrado' : '⚠️ Sem aceite registrado'}</div>
+</div>
+
+<h2>📜 Regulamento Aceito</h2>
+<div class="reg">
+  <p><b>1. DO ACESSO.</b> O pagamento garante acesso pelo período integral do dia de uso (até 19h45). O acesso é realizado via reconhecimento facial na catraca após pagamento confirmado.</p>
+  <p><b>2. DA SAÍDA.</b> Saída temporária não configura encerramento do acesso. A saída definitiva é registrada pela recepção ao sair com os materiais.</p>
+  <p><b>3. DA VAGA.</b> O sistema controla vagas rotativas. Ao pagar, uma vaga é reservada e liberada na catraca. A vaga é liberada após saída definitiva.</p>
+  <p><b>4. DO CANCELAMENTO.</b> Não há reembolso após o pagamento. O acesso é pessoal e intransferível.</p>
+  <p><b>5. DA SUSPENSÃO.</b> O descumprimento das normas pode resultar em suspensão do cadastro.</p>
+  <p><b>6. LGPD.</b> Coletamos nome, CPF, e-mail, foto e telefone exclusivamente para controle de acesso. Dados não são compartilhados com terceiros. Você pode solicitar exclusão a qualquer momento na recepção.</p>
+</div>
+
+<h2>✍️ Assinatura Manuscrita Digital</h2>
+<div class="ass">
+  ${u.assinatura_svg
+    ? `<img src="${u.assinatura_svg}" alt="Assinatura digital">
+       <p style="font-size:.75rem;color:#888;margin-top:8px">
+         Assinatura capturada digitalmente em ${u.termo_aceito_em ? new Date(u.termo_aceito_em).toLocaleString('pt-BR') : '—'}
+       </p>`
+    : '<div class="ass-vazia">⚠️ Nenhuma assinatura registrada para este usuário</div>'
+  }
+</div>
+
+${u.foto_url ? `
+<h2>📸 Foto de Cadastro</h2>
+<div style="text-align:center;margin:16px 0">
+  <img src="${u.foto_url}" style="width:120px;height:120px;object-fit:cover;border-radius:50%;border:3px solid #1a6b3a">
+  <p style="font-size:.75rem;color:#888;margin-top:6px">Foto para reconhecimento facial no Control iD</p>
+</div>` : ''}
+
+<h2>🔒 Hash de Integridade</h2>
+<div class="hash">${btoa(unescape(encodeURIComponent(`${u.id}|${u.cpf}|${u.termo_aceito_em}|${u.termo_ip}`)))}</div>
+<p style="font-size:.72rem;color:#aaa;margin-top:6px">Para verificar autenticidade, consulte o banco de dados com o ID do usuário acima.</p>
+
+<div class="rodape">
+  <p>Ala dos Estudantes Educador Paiva Netto — SGAS 915 Sul, Brasília/DF</p>
+  <p>Documento sigiloso gerado automaticamente. Uso restrito à instituição.</p>
+  <p>© ${new Date().getFullYear()}</p>
+</div>
+</body>
+</html>`;
+
+  const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `termo-${u.cpf}-${new Date().toISOString().split('T')[0]}.html`;
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+  toast('📄 Documento exportado com sucesso!');
 }
 
 // ═══════════════════════════════════════════════════════════
