@@ -681,26 +681,11 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
         <div class="fg"><label for="cfgPixNome">Nome do Beneficiário</label>
           <input type="text" id="cfgPixNome" placeholder="Biblioteca Paiva Netto"></div>
         <hr style="border:none;border-top:1px solid #eee;margin:13px 0">
-        <div class="acrd-t" style="font-size:.87rem;margin-bottom:9px">🔐 Control iD — Integração</div>
-        <div class="fg"><label for="cfgControlIdUrl">URL da API Control iD</label>
+        <div class="acrd-t" style="font-size:.87rem;margin-bottom:9px">🔐 Control iD</div>
+        <div class="fg"><label for="cfgControlIdUrl">URL da API</label>
           <input type="text" id="cfgControlIdUrl" placeholder="http://192.168.1.100/api/v1"></div>
-        <div class="fg"><label for="cfgControlIdToken">Token de Autenticação</label>
+        <div class="fg"><label for="cfgControlIdToken">Token</label>
           <input type="password" id="cfgControlIdToken" placeholder="Bearer token"></div>
-        <hr style="border:none;border-top:1px solid #eee;margin:13px 0">
-        <div class="acrd-t" style="font-size:.87rem;margin-bottom:9px">🗄️ Control iD — Banco de Dados</div>
-        <div style="background:#fff8e0;border:1px solid var(--dourado-cl);border-radius:8px;padding:10px 12px;font-size:.77rem;color:#a07a00;margin-bottom:12px;line-height:1.6">
-          ⚠️ Preencha apenas se o Control iD estiver na mesma rede e com acesso direto ao banco.
-        </div>
-        <div class="fg"><label for="cfgCidDbHost">Host / IP do Banco</label>
-          <input type="text" id="cfgCidDbHost" placeholder="Ex: 192.168.1.100 ou localhost"></div>
-        <div class="fg"><label for="cfgCidDbPort">Porta</label>
-          <input type="text" id="cfgCidDbPort" placeholder="Ex: 5432 (PostgreSQL) ou 3306 (MySQL)"></div>
-        <div class="fg"><label for="cfgCidDbName">Nome do Banco</label>
-          <input type="text" id="cfgCidDbName" placeholder="Ex: controlid"></div>
-        <div class="fg"><label for="cfgCidDbUser">Usuário do Banco</label>
-          <input type="text" id="cfgCidDbUser" placeholder="Ex: admin"></div>
-        <div class="fg"><label for="cfgCidDbPass">Senha do Banco</label>
-          <input type="password" id="cfgCidDbPass" placeholder="••••••••"></div>
         <button class="btn btn-verde btn-sm" id="btnSalvarConfig">💾 Salvar Configurações</button>
       </div>
     </div>
@@ -720,50 +705,41 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
         <div class="valor" id="pagtoValor">R$ 10,00</div>
         <div class="sub">Acesso integral do dia</div>
       </div>
-
-      <!-- SELETOR DE FORMA DE PAGAMENTO -->
+      <!-- SELETOR FORMA DE PAGAMENTO -->
       <div style="margin-bottom:14px">
         <div style="font-size:.71rem;font-weight:700;color:var(--cinza);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Forma de pagamento</div>
         <div style="display:flex;gap:8px">
           <label for="pagtoPix" style="flex:1;cursor:pointer">
             <input type="radio" id="pagtoPix" name="pagtoTipo" value="pix" checked style="display:none">
-            <div class="pagto-tipo-btn" data-tipo="pix" style="border:2px solid var(--verde);border-radius:10px;padding:10px 8px;text-align:center;background:#f0f7f0;transition:.2s">
-              <div style="font-size:1.3rem">💠</div>
-              <div style="font-size:.75rem;font-weight:700;color:var(--verde)">Pix</div>
+            <div class="pagto-tipo-btn" data-tipo="pix" style="border:2px solid var(--verde);border-radius:10px;padding:10px 6px;text-align:center;background:#f0f7f0;transition:.2s">
+              <div style="font-size:1.2rem">💠</div><div style="font-size:.72rem;font-weight:700;color:var(--verde)">Pix</div>
             </div>
           </label>
           <label for="pagtoCredito" style="flex:1;cursor:pointer">
             <input type="radio" id="pagtoCredito" name="pagtoTipo" value="credito" style="display:none">
-            <div class="pagto-tipo-btn" data-tipo="credito" style="border:2px solid var(--cinza-cl);border-radius:10px;padding:10px 8px;text-align:center;background:#fff;transition:.2s">
-              <div style="font-size:1.3rem">💳</div>
-              <div style="font-size:.75rem;font-weight:700;color:var(--cinza)">Crédito</div>
+            <div class="pagto-tipo-btn" data-tipo="credito" style="border:2px solid var(--cinza-cl);border-radius:10px;padding:10px 6px;text-align:center;background:#fff;transition:.2s">
+              <div style="font-size:1.2rem">💳</div><div style="font-size:.72rem;font-weight:700;color:var(--cinza)">Crédito</div>
             </div>
           </label>
           <label for="pagtoDebito" style="flex:1;cursor:pointer">
             <input type="radio" id="pagtoDebito" name="pagtoTipo" value="debito" style="display:none">
-            <div class="pagto-tipo-btn" data-tipo="debito" style="border:2px solid var(--cinza-cl);border-radius:10px;padding:10px 8px;text-align:center;background:#fff;transition:.2s">
-              <div style="font-size:1.3rem">🏦</div>
-              <div style="font-size:.75rem;font-weight:700;color:var(--cinza)">Débito</div>
+            <div class="pagto-tipo-btn" data-tipo="debito" style="border:2px solid var(--cinza-cl);border-radius:10px;padding:10px 6px;text-align:center;background:#fff;transition:.2s">
+              <div style="font-size:1.2rem">🏦</div><div style="font-size:.72rem;font-weight:700;color:var(--cinza)">Débito</div>
             </div>
           </label>
         </div>
       </div>
-
-      <!-- DADOS PIX (só aparece quando Pix selecionado) -->
       <div id="pixSection" class="pix-box">
         <div class="pix-label">Chave Pix</div>
         <div class="pix-chave" id="pagtoChave">—</div>
         <div class="pix-nome" id="pagtoNome">—</div>
       </div>
-
-      <!-- INFO CARTÃO (só aparece quando Crédito/Débito selecionado) -->
       <div id="cartaoSection" style="display:none;background:#f5f5f5;border:1.5px solid var(--cinza-cl);border-radius:var(--r-sm);padding:13px;text-align:center;margin-bottom:14px">
-        <div style="font-size:1.5rem;margin-bottom:4px">💳</div>
-        <div style="font-size:.84rem;font-weight:700;color:var(--cinza-esc);margin-bottom:3px">Pague na maquininha</div>
-        <div style="font-size:.77rem;color:#888;line-height:1.5">Apresente-se na recepção para realizar o pagamento no cartão. A recepção confirmará o acesso.</div>
+        <div style="font-size:1.4rem;margin-bottom:4px">💳</div>
+        <div style="font-size:.84rem;font-weight:700;margin-bottom:3px">Pague na maquininha da recepção</div>
+        <div style="font-size:.77rem;color:#888;line-height:1.5">Apresente-se na recepção. O acesso é confirmado após o pagamento.</div>
       </div>
-
-      <div class="pagto-aviso">🚦 Após confirmação do pagamento pela recepção, seu acesso será ativado. Apresente o comprovante na entrada.</div>
+      <div class="pagto-aviso">🚦 Após confirmação do pagamento pela recepção, seu acesso será ativado.</div>
       <div class="pagto-status" id="pagtoStatus"></div>
       <button class="btn btn-verde" id="btnPagar" style="margin-bottom:9px">✅ Já Paguei — Confirmar</button>
       <button class="btn btn-sec" id="btnCancelarPagto">Cancelar</button>
@@ -786,16 +762,49 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
 
 <div class="toast" id="toast"></div>
 
-<!-- MODAL ASSINATURA DIGITAL -->
-<div class="modal-bg" id="modalAssinatura">
-  <div class="modal" style="max-width:480px">
-    <div class="mi">✍️</div>
-    <h3 id="modalAssinaturaNome">Assinatura Digital</h3>
-    <p style="font-size:.78rem;color:#888;margin-bottom:8px" id="modalAssinaturaData">—</p>
-    <div style="border:1px solid #eee;border-radius:8px;padding:8px;background:#fafafa;margin-bottom:14px">
-      <img id="modalAssinaturaImg" src="" style="width:100%;max-height:150px;object-fit:contain" alt="Assinatura">
+<!-- MODAL AUDITORIA DE TERMO -->
+<div class="modal-bg" id="modalAssinatura" style="align-items:flex-start;padding:16px;overflow-y:auto">
+  <div style="background:#fff;border-radius:20px;width:100%;max-width:620px;margin:auto;overflow:hidden;animation:fadeUp .3s ease">
+    <div style="background:linear-gradient(135deg,var(--verde-esc),var(--verde));color:#fff;padding:20px 24px">
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <div>
+          <div style="font-size:.68rem;text-transform:uppercase;letter-spacing:.8px;opacity:.75;margin-bottom:3px">Documento de Auditoria LGPD</div>
+          <div style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700" id="modalAssinaturaNome">—</div>
+        </div>
+        <div style="background:rgba(255,255,255,.15);border-radius:8px;padding:6px 12px;font-size:.72rem;font-weight:700">📋 LGPD</div>
+      </div>
     </div>
-    <button class="btn btn-sec" onclick="document.getElementById('modalAssinatura').classList.remove('ativo')">Fechar</button>
+    <div style="padding:22px 24px">
+      <div style="background:#f8fdf9;border:1.5px solid #a8d5b5;border-radius:10px;padding:14px;margin-bottom:16px">
+        <div style="font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--verde);margin-bottom:10px">📊 Dados de Auditoria</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:.8rem">
+          <div><span style="color:#888">Usuário:</span><br><b id="auditNome">—</b></div>
+          <div><span style="color:#888">CPF:</span><br><b id="auditCpf">—</b></div>
+          <div><span style="color:#888">Data/Hora:</span><br><b id="auditData">—</b></div>
+          <div><span style="color:#888">IP do dispositivo:</span><br><b id="auditIp">—</b></div>
+          <div><span style="color:#888">ID do registro:</span><br><b id="auditId" style="font-family:monospace;font-size:.7rem">—</b></div>
+          <div><span style="color:#888">Validade:</span><br><b style="color:var(--verde)">✅ Válido</b></div>
+        </div>
+      </div>
+      <div style="font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--cinza);margin-bottom:8px">✍️ Assinatura Manuscrita Digital</div>
+      <div style="border:1.5px solid #ddd;border-radius:8px;padding:10px;background:#fff;margin-bottom:14px">
+        <img id="modalAssinaturaImg" src="" style="width:100%;max-height:130px;object-fit:contain;display:block" alt="Assinatura digital">
+      </div>
+      <div id="auditFotoWrap" style="display:none;margin-bottom:14px">
+        <div style="font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--cinza);margin-bottom:8px">📸 Foto de Cadastro</div>
+        <div style="display:flex;align-items:center;gap:12px">
+          <img id="auditFoto" src="" style="width:72px;height:72px;object-fit:cover;border-radius:50%;border:3px solid var(--verde-suave)">
+          <div style="font-size:.77rem;color:#666">Foto para reconhecimento facial via Control iD.</div>
+        </div>
+      </div>
+      <div style="background:#f0f0f0;border-radius:8px;padding:10px 12px;font-size:.69rem;color:#888;margin-bottom:16px">
+        🔒 <b>Hash:</b> <span id="auditHash" style="font-family:monospace">—</span>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn btn-verde btn-sm" style="flex:1;min-width:130px" onclick="auditBaixarHTML()">⬇️ Baixar Documento</button>
+        <button class="btn btn-sec btn-sm" style="flex:1;min-width:100px" onclick="document.getElementById('modalAssinatura').classList.remove('ativo')">Fechar</button>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -990,15 +999,15 @@ function bindEventos() {
   document.getElementById('btnCancelarPagto').onclick = () =>
     document.getElementById('modalPagamento').classList.remove('ativo');
 
-  // Troca visual ao mudar tipo de pagamento
-  document.querySelectorAll('input[name="pagtoTipo"]').forEach(radio => {
-    radio.addEventListener('change', () => _atualizarUIPagamento(radio.value));
+  // Seletor tipo pagamento
+  document.querySelectorAll('input[name="pagtoTipo"]').forEach(r => {
+    r.addEventListener('change', () => _atualizarUIPagto(r.value));
   });
   document.querySelectorAll('.pagto-tipo-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-      const tipo = btn.dataset.tipo;
-      document.getElementById(`pagto${tipo.charAt(0).toUpperCase()+tipo.slice(1)}`).checked = true;
-      _atualizarUIPagamento(tipo);
+      const t = btn.dataset.tipo;
+      document.getElementById(`pagto${t.charAt(0).toUpperCase()+t.slice(1)}`).checked = true;
+      _atualizarUIPagto(t);
     });
   });
 
@@ -1057,9 +1066,9 @@ function mudarATab(panelId, btn) {
   document.querySelectorAll('.atab').forEach(b => b.classList.remove('ativo'));
   document.getElementById(panelId)?.classList.add('ativo');
   btn.classList.add('ativo');
-  if(panelId === 'adminPanelAvisos') { adminCarregarAvisos(); }
+  if(panelId === 'adminPanelAvisos')    { adminCarregarAvisos(); }
   if(panelId === 'recepPanelPendentes') { recepCarregarPendentes(); }
-  if(panelId === 'recepPanelPagos') { recepCarregarPagos(); }
+  if(panelId === 'recepPanelPagos')     { recepCarregarPagos(); }
   if(panelId === 'adminPanelHistorico') { adminCarregarHistorico(); }
   if(panelId === 'adminPanelSugestoes') { adminCarregarSugestoes(); }
 }
@@ -1226,6 +1235,56 @@ function limparCanvas() {
   document.getElementById('assinaturaPlaceholder').style.display = 'flex';
 }
 
+// ─── CÂMERA CADASTRO APP ────────────────────────────────────
+let _cadFotoDataUrl = null;
+let _cadStream = null;
+
+document.getElementById('btnAbrirCamera').addEventListener('click', async () => {
+  try {
+    _cadStream = await navigator.mediaDevices.getUserMedia({video:{facingMode:'user'},audio:false});
+    const v = document.getElementById('cadVideo');
+    v.srcObject = _cadStream; v.style.display = 'block';
+    document.getElementById('fotoPlaceholder').style.display = 'none';
+    document.getElementById('fotoCapturaControles').style.display = 'block';
+  } catch(e) { toast('⚠️ Câmera indisponível. Use a opção de arquivo.'); }
+});
+document.getElementById('btnCapturarFoto').addEventListener('click', () => {
+  const v = document.getElementById('cadVideo');
+  const c = document.getElementById('cadCanvas');
+  c.width = v.videoWidth; c.height = v.videoHeight;
+  c.getContext('2d').drawImage(v,0,0);
+  _cadFotoDataUrl = c.toDataURL('image/jpeg',0.85);
+  document.getElementById('cadFotoPreview').src = _cadFotoDataUrl;
+  document.getElementById('cadFotoPreview').style.display = 'block';
+  v.style.display = 'none';
+  document.getElementById('fotoCapturaControles').style.display = 'none';
+  document.getElementById('fotoFeitaControles').style.display = 'block';
+  _cadStream?.getTracks().forEach(t=>t.stop()); _cadStream = null;
+});
+document.getElementById('btnFecharCamera').addEventListener('click', () => {
+  _cadStream?.getTracks().forEach(t=>t.stop()); _cadStream = null;
+  document.getElementById('cadVideo').style.display = 'none';
+  document.getElementById('fotoCapturaControles').style.display = 'none';
+  document.getElementById('fotoPlaceholder').style.display = 'block';
+});
+document.getElementById('btnRefazerFoto').addEventListener('click', () => {
+  _cadFotoDataUrl = null;
+  document.getElementById('cadFotoPreview').style.display = 'none';
+  document.getElementById('fotoFeitaControles').style.display = 'none';
+  document.getElementById('fotoPlaceholder').style.display = 'block';
+});
+document.getElementById('cadFotoFile').addEventListener('change', e => {
+  const f = e.target.files[0]; if(!f) return;
+  const r = new FileReader();
+  r.onload = ev => {
+    _cadFotoDataUrl = ev.target.result;
+    document.getElementById('cadFotoPreview').src = _cadFotoDataUrl;
+    document.getElementById('cadFotoPreview').style.display = 'block';
+    document.getElementById('fotoPlaceholder').style.display = 'none';
+    document.getElementById('fotoFeitaControles').style.display = 'block';
+  };
+  r.readAsDataURL(f);
+});
 // Etapa 1 → 2
 document.getElementById('btnCadEtapa1').addEventListener('click', () => {
   mostrarErro('cadErro','');
@@ -1237,6 +1296,7 @@ document.getElementById('btnCadEtapa1').addEventListener('click', () => {
   if (cpf.length!==11) { mostrarErro('cadErro','CPF inválido'); return; }
   if (!tipo)           { mostrarErro('cadErro','Selecione o tipo de usuário'); return; }
   if (senha.length<6)  { mostrarErro('cadErro','Senha mínima de 6 caracteres'); return; }
+  if (!_cadFotoDataUrl){ mostrarErro('cadErro','Foto obrigatória para reconhecimento facial'); return; }
   document.getElementById('cadEtapa1').style.display = 'none';
   document.getElementById('cadEtapa2').style.display = 'block';
   document.getElementById('etapaInd2').style.background = 'var(--verde)';
@@ -1273,7 +1333,7 @@ async function cadastrarUsuario() {
     const r = await fetch(API_BASE + '/api/usuarios?acao=cadastrar', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ nome, cpf, email, telefone: tel, tipo, senha })
+      body: JSON.stringify({ nome, cpf, email, telefone: tel, tipo, senha, assinatura_svg: assinatura, foto_base64: _cadFotoDataUrl||null })
     });
     const data = await r.json();
     if (!r.ok) throw new Error(data.erro || 'Erro ao cadastrar');
@@ -1287,7 +1347,10 @@ async function cadastrarUsuario() {
 
     toast('✅ Cadastro e assinatura realizados com sucesso!');
     // Reset
-    _ctx = null; _assinaturaFeita = false;
+    _ctx = null; _assinaturaFeita = false; _cadFotoDataUrl = null;
+    document.getElementById('cadFotoPreview').style.display='none';
+    document.getElementById('fotoPlaceholder').style.display='block';
+    document.getElementById('fotoFeitaControles').style.display='none';
     document.getElementById('cadEtapa2').style.display = 'none';
     document.getElementById('cadEtapa1').style.display = 'block';
     document.getElementById('etapaInd2').style.background = 'var(--cinza-cl)';
@@ -1359,9 +1422,8 @@ function renderizarStatusAcesso() {
 async function abrirModalPagamento() {
   document.getElementById('pagtoStatus').textContent = '';
   document.getElementById('btnPagar').disabled = false;
-  // Reset seleção para Pix
   document.getElementById('pagtoPix').checked = true;
-  _atualizarUIPagamento('pix');
+  _atualizarUIPagto('pix');
   document.getElementById('modalPagamento').classList.add('ativo');
   try {
     const v = await api.vagas();
@@ -1374,26 +1436,18 @@ async function abrirModalPagamento() {
   } catch(e) {}
 }
 
-function _atualizarUIPagamento(tipo) {
-  // Atualiza visual dos botões de tipo
+function _atualizarUIPagto(tipo) {
   document.querySelectorAll('.pagto-tipo-btn').forEach(el => {
     const t = el.dataset.tipo;
-    if (t === tipo) {
-      el.style.borderColor = 'var(--verde)';
-      el.style.background = '#f0f7f0';
-      el.querySelector('div:last-child').style.color = 'var(--verde)';
-    } else {
-      el.style.borderColor = 'var(--cinza-cl)';
-      el.style.background = '#fff';
-      el.querySelector('div:last-child').style.color = 'var(--cinza)';
-    }
+    const sel = t === tipo;
+    el.style.borderColor = sel ? 'var(--verde)' : 'var(--cinza-cl)';
+    el.style.background  = sel ? '#f0f7f0' : '#fff';
+    el.querySelector('div:last-child').style.color = sel ? 'var(--verde)' : 'var(--cinza)';
   });
-  // Mostra seção correta
   const isPix = tipo === 'pix';
   document.getElementById('pixSection').style.display   = isPix ? 'block' : 'none';
   document.getElementById('cartaoSection').style.display = isPix ? 'none'  : 'block';
-  // Ajusta texto do botão
-  document.getElementById('btnPagar').innerHTML =
+  document.getElementById('btnPagar').textContent =
     isPix ? '✅ Já Paguei — Confirmar' : '📲 Solicitar Acesso (Pagar na Recepção)';
 }
 
@@ -1411,10 +1465,7 @@ async function confirmarPagamento() {
     });
     document.getElementById('pagtoStatus').className = 'pagto-status pagto-ok';
     document.getElementById('pagtoStatus').textContent = '✅ Solicitação enviada!';
-    const msg = tipo === 'pix'
-      ? '✅ Apresente o comprovante Pix na recepção para confirmar.'
-      : '✅ Dirija-se à recepção para pagar no cartão e confirmar o acesso.';
-    toast(msg, 3500);
+    toast(tipo === 'pix' ? '✅ Apresente o comprovante Pix na recepção.' : '✅ Dirija-se à recepção para pagar no cartão.');
     setTimeout(() => {
       document.getElementById('modalPagamento').classList.remove('ativo');
       document.getElementById('btnPagar').disabled = false;
@@ -1591,41 +1642,20 @@ async function recepCarregarPagos() {
     const res = await api.get('/api/pagamentos?acao=pagos-hoje');
     const lista = res.pagamentos || res.confirmados || [];
     document.getElementById('rPagosHoje').textContent = lista.length;
-
     if (!lista.length) {
       tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#aaa">Nenhum pagamento confirmado hoje</td></tr>';
       return;
     }
-
     tbody.innerHTML = lista.map(p => `
       <tr>
-        <td>${p.usuarios?.nome || p.nome || '—'}</td>
-        <td>${fmtHora(p.confirmado_em || p.created_at)}</td>
+        <td>${p.usuarios?.nome||p.nome||'—'}</td>
+        <td>${fmtHora(p.confirmado_em||p.created_at)}</td>
         <td><span class="badge verde">confirmado</span></td>
-        <td>
-          <span class="badge ${p.tipo==='pix'?'azul':p.tipo==='credito'?'gold':p.tipo==='debito'?'verde':'cinza'}">
-            ${p.tipo==='pix'?'💠 Pix':p.tipo==='credito'?'💳 Crédito':p.tipo==='debito'?'🏦 Débito':p.tipo||'—'}
-          </span>
-        </td>
+        <td><span class="badge ${p.tipo==='pix'?'azul':p.tipo==='credito'?'gold':'verde'}">${p.tipo==='pix'?'💠 Pix':p.tipo==='credito'?'💳 Crédito':p.tipo==='debito'?'🏦 Débito':p.tipo||'—'}</span></td>
       </tr>
     `).join('');
   } catch(e) {
-    // fallback: tenta carregar via acessos
-    try {
-      const res2 = await api.listarAcessos(hojeISO(), '');
-      const lista2 = res2.acessos || [];
-      document.getElementById('rPagosHoje').textContent = lista2.length;
-      tbody.innerHTML = lista2.map(a => `
-        <tr>
-          <td>${a.usuarios?.nome||'—'}</td>
-          <td>${fmtHora(a.entrada_em)}</td>
-          <td><span class="badge ${a.status==='ativo'?'verde':'cinza'}">${a.status}</span></td>
-          <td><span class="badge ${a.pagamentos?.tipo==='pix'?'azul':'gold'}">${a.pagamentos?.tipo||'—'}</span></td>
-        </tr>
-      `).join('') || '<tr><td colspan="4" style="text-align:center;color:#aaa">Nenhum registro hoje</td></tr>';
-    } catch(e2) {
-      tbody.innerHTML = '<tr><td colspan="4" style="color:var(--vermelho)">Erro ao carregar</td></tr>';
-    }
+    tbody.innerHTML = '<tr><td colspan="4" style="color:var(--vermelho)">Erro ao carregar</td></tr>';
   }
 }
 
@@ -1707,42 +1737,24 @@ async function adminCarregarUsuarios(busca='') {
     const lista = res.usuarios || [];
     document.getElementById('aTotalU').textContent = lista.length;
 
-    if (!lista.length) {
-      tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#aaa">Nenhum usuário</td></tr>';
-      return;
-    }
-
     tbody.innerHTML = lista.map(u => `
       <tr>
-        <td>
-          <div style="font-weight:600;font-size:.83rem">${u.nome}</div>
-          <div style="font-size:.71rem;color:#aaa">${u.email||'—'}</div>
-        </td>
+        <td><div style="font-weight:600;font-size:.83rem">${u.nome}</div><div style="font-size:.69rem;color:#aaa">${u.email||''}</div></td>
         <td style="font-family:monospace;font-size:.79rem">${fmtCpf(u.cpf)}</td>
         <td><span class="badge azul">${u.tipo}</span></td>
-        <td>
-          ${u.assinatura_svg
-            ? `<button class="btn btn-sec btn-xs" onclick="adminVerAssinatura('${u.id}','${u.nome.replace(/'/g,"\\'")}')">✍️ Ver Termo</button>`
-            : '<span style="font-size:.71rem;color:#bbb">Sem assinatura</span>'
-          }
-        </td>
+        <td>${u.assinatura_svg?`<button class="btn btn-sec btn-xs" onclick="adminVerAssinatura('${u.id}','${u.nome.replace(/'/g,"\\'")}')" >✍️ Ver Termo</button>`:'<span style="font-size:.7rem;color:#bbb">Sem assinatura</span>'}</td>
         <td><span class="badge ${u.ativo?'verde':'vermelho'}">${u.ativo?'Ativo':'Bloqueado'}</span></td>
-        <td>
-          <button class="btn btn-xs ${u.ativo?'btn-vermelho':'btn-verde'}"
-            onclick="adminBloquearUsuario('${u.id}','${u.nome.replace(/'/g,"\\'")}',${!u.ativo},this)">
-            ${u.ativo?'🚫 Bloquear':'✅ Ativar'}
-          </button>
-        </td>
+        <td><button class="btn btn-xs ${u.ativo?'btn-vermelho':'btn-verde'}" onclick="adminBloquearUsuario('${u.id}','${u.nome.replace(/'/g,"\\'")}',${ !u.ativo},this)">${u.ativo?'🚫 Bloquear':'✅ Ativar'}</button></td>
       </tr>
-    `).join('');
+    `).join('') || '<tr><td colspan="6" style="text-align:center;color:#aaa">Nenhum usuário</td></tr>';
   } catch(e) {
-    tbody.innerHTML = `<tr><td colspan="6" style="color:var(--vermelho)">Erro: ${e.message}</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="5" style="color:var(--vermelho)">Erro: ${e.message}</td></tr>`;
   }
 }
 
 async function adminCarregarHistorico(data='') {
   const tbody = document.getElementById('tbodyHistorico');
-  tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#aaa">⏳ Carregando...</td></tr>';
+  tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#aaa">⏳ Carregando...</td></tr>';
   try {
     const res = await api.listarAcessos(data || hojeISO(), '');
     const lista = res.acessos || [];
@@ -1770,11 +1782,11 @@ async function adminSalvarConfig() {
     pix_nome:             document.getElementById('cfgPixNome').value,
     controlid_url:        document.getElementById('cfgControlIdUrl').value,
     controlid_token:      document.getElementById('cfgControlIdToken').value,
-    controlid_db_host:    document.getElementById('cfgCidDbHost').value,
-    controlid_db_port:    document.getElementById('cfgCidDbPort').value,
-    controlid_db_name:    document.getElementById('cfgCidDbName').value,
-    controlid_db_user:    document.getElementById('cfgCidDbUser').value,
-    controlid_db_pass:    document.getElementById('cfgCidDbPass').value,
+    controlid_db_host:    document.getElementById('cfgCidDbHost')?.value||'',
+    controlid_db_port:    document.getElementById('cfgCidDbPort')?.value||'',
+    controlid_db_name:    document.getElementById('cfgCidDbName')?.value||'',
+    controlid_db_user:    document.getElementById('cfgCidDbUser')?.value||'',
+    controlid_db_pass:    document.getElementById('cfgCidDbPass')?.value||'',
   };
   loading('btnSalvarConfig', true);
   try {
@@ -1992,7 +2004,7 @@ async function adminBloquearUsuario(usuarioId, nome, ativar, btn) {
 }
 
 // ═══════════════════════════════════════════════════════════
-//  VER ASSINATURA DIGITAL (ADMIN)
+//  AUDITORIA DE TERMO DIGITAL (ADMIN)
 // ═══════════════════════════════════════════════════════════
 async function adminVerAssinatura(usuarioId, nome) {
   try {
@@ -2039,13 +2051,6 @@ function verTermo(img, nome, data, ip) {
 
 function fecharTermo() {
   document.getElementById('modalTermo').classList.remove('ativo');
-}
-
-// ═══════════════════════════════════════════════════════════
-//  FUNÇÃO QUE ESTAVA FALTANDO (ERRO DO BOTÃO)
-// ═══════════════════════════════════════════════════════════
-function adminPublicarAviso() {
-  toast('📢 Aviso enviado (simulação)');
 }
 
 // ═══════════════════════════════════════════════════════════
