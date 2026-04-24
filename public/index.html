@@ -1,0 +1,3347 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#1a6b3a">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Ala Estudantes">
+<link rel="manifest" href="/manifest.json">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<title>Ala dos Estudantes — Paiva Netto</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--verde:#1a6b3a;--verde-esc:#0d3d20;--verde-cl:#2d9155;--verde-suave:#e8f5ee;--dourado:#c9a227;--dourado-cl:#f0d97a;--creme:#faf8f2;--cinza-esc:#1e1e1e;--cinza:#555;--cinza-cl:#e8e8e8;--vermelho:#c0392b;--azul:#1a4a8a;--laranja:#e67e22;--shadow:0 4px 24px rgba(0,0,0,.10);--shadow-lg:0 12px 48px rgba(0,0,0,.18);--r:16px;--r-sm:10px}
+*,::before,::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-esc);min-height:100vh}
+.screen{display:none;min-height:100vh}
+.screen.ativo{display:flex}
+#appScreen.ativo,#adminScreen.ativo,#recepScreen.ativo{display:block}
+.bg-verde{background:linear-gradient(145deg,#07221400,#0d3d20 40%,#1a6b3a 70%,#0d3d20 100%);align-items:center;justify-content:center;padding:20px;position:relative;overflow:hidden}
+.bg-verde::before{content:"";position:absolute;width:700px;height:700px;border-radius:50%;background:radial-gradient(circle,rgba(201,162,39,.12) 0%,transparent 70%);top:-150px;right:-150px;pointer-events:none}
+.cf{background:rgba(255,255,255,.98);border-radius:24px;padding:36px 32px;width:100%;max-width:460px;box-shadow:0 32px 96px rgba(0,0,0,.45);position:relative;z-index:1;animation:fadeUp .5s ease;max-height:94vh;overflow-y:auto}
+@keyframes fadeUp{0%{opacity:0;transform:translateY(28px)}100%{opacity:1;transform:translateY(0)}}
+.logo{text-align:center;margin-bottom:22px}
+.logo .em{font-size:48px;display:block;margin-bottom:8px}
+.logo h1{font-family:"Playfair Display",serif;font-size:1.18rem;color:var(--verde);line-height:1.3;font-weight:700}
+.logo p{font-size:.74rem;color:var(--cinza);margin-top:4px;text-transform:uppercase;letter-spacing:.6px}
+.divgold{width:50px;height:3px;background:linear-gradient(90deg,var(--dourado),var(--dourado-cl));border-radius:2px;margin:8px auto}
+.campo{margin-bottom:13px}
+.campo label{display:block;font-size:.73rem;font-weight:600;color:var(--cinza);margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px}
+.campo input,.campo select,.campo textarea{width:100%;padding:12px 14px;border:2px solid var(--cinza-cl);border-radius:var(--r-sm);font-family:"DM Sans",sans-serif;font-size:.9rem;color:var(--cinza-esc);background:#fff;transition:border-color .2s,box-shadow .2s;outline:none}
+.campo input:focus,.campo select:focus,.campo textarea:focus{border-color:var(--verde);box-shadow:0 0 0 3px rgba(26,107,58,.12)}
+.termos-box{background:#f8f8f8;border:1.5px solid var(--cinza-cl);border-radius:var(--r-sm);padding:13px;max-height:140px;overflow-y:auto;font-size:.77rem;color:#555;line-height:1.6;margin-bottom:10px}
+.termos-box h4{font-size:.79rem;color:var(--verde);margin-bottom:6px;font-weight:700}
+.check-linha{display:flex;align-items:flex-start;gap:9px;margin-bottom:9px;cursor:pointer}
+.check-linha input[type=checkbox]{width:17px;height:17px;margin-top:2px;accent-color:var(--verde);flex-shrink:0;cursor:pointer}
+.check-linha span{font-size:.79rem;color:#444;line-height:1.5}
+.check-linha span b{color:var(--verde)}
+.btn{width:100%;padding:13px;border:none;border-radius:var(--r-sm);font-family:"DM Sans",sans-serif;font-size:.92rem;font-weight:600;cursor:pointer;transition:.2s;letter-spacing:.3px}
+.btn-verde{background:linear-gradient(135deg,var(--verde-esc),var(--verde-cl));color:#fff}
+.btn-verde:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(26,107,58,.4)}
+.btn-dourado{background:linear-gradient(135deg,var(--dourado),#e8b930);color:#1a1a1a}
+.btn-dourado:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(201,162,39,.4)}
+.btn-vermelho{background:linear-gradient(135deg,#e74c3c,var(--vermelho));color:#fff}
+.btn-vermelho:hover{box-shadow:0 6px 20px rgba(192,57,43,.4)}
+.btn-laranja{background:linear-gradient(135deg,#f39c12,var(--laranja));color:#fff}
+.btn-azul{background:linear-gradient(135deg,#2563eb,var(--azul));color:#fff}
+.btn-sec{background:#fff;border:2px solid var(--cinza-cl);color:var(--cinza)}
+.btn-sec:hover{border-color:var(--cinza)}
+.btn-sm{padding:8px 15px;font-size:.79rem;width:auto}
+.btn-xs{padding:5px 11px;font-size:.72rem;width:auto;border-radius:6px}
+.btn:disabled{opacity:.55;cursor:not-allowed;transform:none!important}
+.linktxt{text-align:center;margin-top:12px;font-size:.84rem;color:var(--cinza)}
+.linktxt span{color:var(--verde);font-weight:600;cursor:pointer;text-decoration:underline}
+.topbar{background:linear-gradient(135deg,var(--verde-esc),var(--verde));color:#fff;padding:0 17px;display:flex;align-items:center;justify-content:space-between;height:60px;position:sticky;top:0;z-index:100;box-shadow:0 2px 16px rgba(0,0,0,.25)}
+.topbar-logo{display:flex;align-items:center;gap:9px}
+.tl-nome{font-family:"Playfair Display",serif;font-size:.88rem;font-weight:700;line-height:1.2}
+.tl-sub{font-size:.62rem;opacity:.75;text-transform:uppercase;letter-spacing:.5px}
+.topbar-user{display:flex;align-items:center;gap:7px;cursor:pointer}
+.avatar{width:33px;height:33px;background:var(--dourado);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.88rem;color:#fff;flex-shrink:0;overflow:hidden}
+.avatar img{width:100%;height:100%;object-fit:cover}
+.tl-user-nome{font-size:.79rem;font-weight:500;max-width:90px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.main{max-width:900px;margin:0 auto;padding:16px 13px 100px}
+.bv{background:linear-gradient(135deg,var(--verde) 0%,var(--verde-cl) 100%);color:#fff;border-radius:var(--r);padding:18px 20px 15px;margin-bottom:14px;position:relative;overflow:hidden;box-shadow:var(--shadow)}
+.bv::after{content:"📚";position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:46px;opacity:.13}
+.bv h2{font-family:"Playfair Display",serif;font-size:1.25rem;font-weight:700;margin-bottom:2px}
+.bv p{font-size:.81rem;opacity:.82;margin-bottom:8px}
+.badge-plano{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.35);border-radius:20px;padding:5px 12px;font-size:.77rem;font-weight:600}
+.alerta{border-radius:var(--r-sm);padding:12px 14px;margin-bottom:13px;display:flex;align-items:flex-start;gap:10px}
+.alerta.bloqueado{background:#fff5f5;border:2px solid #f5b5a8}
+.alerta.bloqueado p{font-size:.83rem;color:var(--vermelho);line-height:1.5}
+.alerta .ai{font-size:19px;flex-shrink:0}
+.tabs{display:flex;gap:7px;margin-bottom:15px;overflow-x:auto;padding-bottom:3px;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex-shrink:0;padding:8px 15px;border-radius:22px;border:2px solid var(--cinza-cl);background:#fff;font-family:"DM Sans",sans-serif;font-size:.8rem;font-weight:600;color:var(--cinza);cursor:pointer;transition:.2s;white-space:nowrap}
+.tab.ativo{background:var(--verde);border-color:var(--verde);color:#fff;box-shadow:0 3px 12px rgba(26,107,58,.3)}
+.tab:hover:not(.ativo){border-color:var(--verde);color:var(--verde)}
+.panel{display:none}
+.panel.ativo{display:block;animation:fadeIn .3s ease}
+@keyframes fadeIn{0%{opacity:0;transform:translateY(6px)}100%{opacity:1;transform:translateY(0)}}
+.crd{background:#fff;border-radius:var(--r);padding:16px;margin-bottom:12px;box-shadow:var(--shadow);border:1px solid rgba(0,0,0,.04)}
+.crd-t{font-family:"Playfair Display",serif;font-size:1rem;font-weight:700;color:var(--verde);margin-bottom:11px;display:flex;align-items:center;gap:7px}
+.vagas-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.vs{border-radius:var(--r-sm);padding:13px;text-align:center}
+.vs.livres{background:linear-gradient(135deg,#e8f5ee,#d0edda);border:2px solid #a8d5b5}
+.vs.ocupadas{background:linear-gradient(135deg,#fee0e0,#fdd0d0);border:2px solid #f5b5a8}
+.vs .num{font-family:"Playfair Display",serif;font-size:1.85rem;font-weight:900;line-height:1;margin-bottom:3px}
+.vs.livres .num{color:var(--verde)}
+.vs.ocupadas .num{color:var(--vermelho)}
+.vs .lbl{font-size:.69rem;font-weight:600;text-transform:uppercase;letter-spacing:.5px;opacity:.75}
+.barra-w{margin-bottom:10px}
+.barra-lbl{display:flex;justify-content:space-between;font-size:.75rem;color:var(--cinza);margin-bottom:4px;font-weight:500}
+.barra{height:10px;background:#e0e0e0;border-radius:5px;overflow:hidden}
+.barra-fill{height:100%;border-radius:5px;background:linear-gradient(90deg,var(--verde),var(--verde-cl));transition:width .8s cubic-bezier(.4,0,.2,1)}
+.st-box{display:flex;align-items:center;gap:9px;padding:11px 14px;border-radius:var(--r-sm);margin-bottom:11px;font-size:.85rem;font-weight:600}
+.st-box.presente{background:#e8f5ee;color:var(--verde);border:1.5px solid #a8d5b5}
+.st-box.ausente{background:#f5f5f5;color:var(--cinza);border:1.5px solid var(--cinza-cl)}
+.st-box.pago{background:#eef3ff;color:var(--azul);border:1.5px solid #b0c4ef}
+.dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.dot.verde{background:var(--verde);box-shadow:0 0 0 3px rgba(26,107,58,.2);animation:pulso 2s ease infinite}
+.dot.cinza{background:#aaa}
+.dot.azul{background:var(--azul);animation:pulso-azul 2s ease infinite}
+@keyframes pulso{0%,100%{box-shadow:0 0 0 3px rgba(26,107,58,.2)}50%{box-shadow:0 0 0 6px rgba(26,107,58,.07)}}
+@keyframes pulso-azul{0%,100%{box-shadow:0 0 0 3px rgba(26,74,138,.2)}50%{box-shadow:0 0 0 6px rgba(26,74,138,.07)}}
+.ticket{background:linear-gradient(135deg,var(--verde-esc) 0%,#1a6b3a 100%);border-radius:16px;padding:20px;color:#fff;margin-bottom:12px;position:relative;overflow:hidden}
+.ticket::before{content:"";position:absolute;left:-1px;top:50%;transform:translateY(-50%);width:20px;height:20px;background:var(--creme);border-radius:50%}
+.ticket::after{content:"";position:absolute;right:-1px;top:50%;transform:translateY(-50%);width:20px;height:20px;background:var(--creme);border-radius:50%}
+.ticket-inner{border:1.5px dashed rgba(255,255,255,.3);border-radius:10px;padding:14px}
+.ticket-titulo{font-size:.68rem;text-transform:uppercase;letter-spacing:1px;opacity:.7;margin-bottom:6px}
+.ticket-nome{font-family:"Playfair Display",serif;font-size:1.2rem;font-weight:700;margin-bottom:4px}
+.ticket-detalhe{font-size:.78rem;opacity:.8;margin-bottom:12px}
+.ticket-validade{display:flex;justify-content:space-between;align-items:center}
+.ticket-validade .label{font-size:.66rem;text-transform:uppercase;letter-spacing:.5px;opacity:.6}
+.ticket-validade .val{font-family:"JetBrains Mono",monospace;font-size:.95rem;font-weight:600;color:var(--dourado-cl)}
+.ticket-qr{width:54px;height:54px;background:rgba(255,255,255,.15);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:28px}
+.ticket-status-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:20px;font-size:.75rem;font-weight:700;margin-bottom:10px}
+.tsb-ativo{background:rgba(45,145,85,.3);border:1px solid rgba(45,145,85,.5);color:#7dffb3}
+.tsb-pago{background:rgba(37,99,235,.3);border:1px solid rgba(37,99,235,.5);color:#93c5fd}
+.aviso-horario{background:linear-gradient(135deg,#fff8e0,#fffbef);border:1.5px solid var(--dourado-cl);border-radius:var(--r-sm);padding:11px 14px;display:flex;align-items:center;gap:10px;font-size:.82rem;color:#a07a00;font-weight:600;margin-bottom:12px}
+.info-item{display:flex;align-items:flex-start;gap:11px;padding:10px 0;border-bottom:1px solid var(--cinza-cl)}
+.info-item:last-child{border-bottom:none}
+.ii{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.ii.verde{background:var(--verde-suave)}
+.ii.gold{background:#fff8e0}
+.ii.azul{background:#eef3ff}
+.info-texto h4{font-size:.85rem;font-weight:700;color:var(--cinza-esc);margin-bottom:2px}
+.info-texto p{font-size:.79rem;color:var(--cinza);line-height:1.5}
+.plano-crd{border-radius:var(--r);padding:18px;background:linear-gradient(135deg,var(--verde-esc),var(--verde));color:#fff;margin-bottom:12px}
+.plano-tipo{font-family:"Playfair Display",serif;font-size:1.2rem;font-weight:700;display:flex;align-items:center;gap:7px;margin-bottom:2px}
+.plano-info{font-size:.79rem;opacity:.82;margin-bottom:12px}
+.plano-det{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:12px}
+.pd{background:rgba(255,255,255,.12);border-radius:8px;padding:9px;text-align:center}
+.pd .val{font-size:1rem;font-weight:700;font-family:"Playfair Display",serif}
+.pd .key{font-size:.62rem;opacity:.75;text-transform:uppercase;letter-spacing:.5px}
+.fg{margin-bottom:12px}
+.fg label{display:block;font-size:.73rem;font-weight:600;color:var(--cinza);margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px}
+.fg select,.fg textarea,.fg input{width:100%;padding:11px 13px;border:2px solid var(--cinza-cl);border-radius:var(--r-sm);font-family:"DM Sans",sans-serif;font-size:.86rem;color:var(--cinza-esc);transition:border-color .2s;outline:none;resize:vertical}
+.fg select:focus,.fg textarea:focus,.fg input:focus{border-color:var(--verde);box-shadow:0 0 0 3px rgba(26,107,58,.1)}
+.bnav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--cinza-cl);display:flex;box-shadow:0 -4px 20px rgba(0,0,0,.08);z-index:50}
+.ni{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:9px 4px;cursor:pointer;transition:.2s;position:relative;gap:2px}
+.ni .ic{font-size:18px}
+.ni .lb{font-size:.57rem;font-weight:600;color:#999;text-transform:uppercase;letter-spacing:.3px}
+.ni.ativo .lb{color:var(--verde)}
+.ni.ativo::after{content:"";position:absolute;top:0;left:20%;right:20%;height:3px;background:var(--verde);border-radius:0 0 3px 3px}
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:200;align-items:center;justify-content:center;padding:16px}
+.modal-bg.ativo{display:flex}
+.modal{background:#fff;border-radius:20px;padding:26px 22px;width:100%;max-width:400px;text-align:center;animation:fadeUp .3s ease;max-height:90vh;overflow-y:auto}
+.modal .mi{font-size:44px;margin-bottom:8px}
+.modal h3{font-family:"Playfair Display",serif;font-size:1.12rem;color:var(--verde);margin-bottom:6px}
+.modal p{font-size:.84rem;color:var(--cinza);line-height:1.6;margin-bottom:15px}
+.modal-btns{display:flex;gap:8px}
+.modal-pagto{background:#fff;border-radius:20px;width:100%;max-width:420px;animation:fadeUp .3s ease;max-height:92vh;overflow-y:auto}
+.pagto-header{background:linear-gradient(135deg,var(--verde-esc),var(--verde-cl));color:#fff;padding:22px 22px 18px;border-radius:20px 20px 0 0;text-align:center}
+.pagto-header .pi{font-size:36px;margin-bottom:6px}
+.pagto-header h3{font-family:"Playfair Display",serif;font-size:1.1rem;margin-bottom:2px}
+.pagto-header p{font-size:.77rem;opacity:.82}
+.pagto-body{padding:20px 22px}
+.pagto-preco{text-align:center;margin-bottom:16px}
+.pagto-preco .valor{font-family:"Playfair Display",serif;font-size:2.4rem;font-weight:900;color:var(--verde)}
+.pagto-preco .sub{font-size:.73rem;color:#888;text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
+.pix-box{background:#f0f7f0;border:2px dashed var(--verde);border-radius:var(--r-sm);padding:14px;text-align:center;margin-bottom:14px}
+.pix-label{font-size:.68rem;text-transform:uppercase;letter-spacing:.5px;color:#888;margin-bottom:4px}
+.pix-chave{font-family:"JetBrains Mono",monospace;font-size:.92rem;font-weight:600;color:var(--verde);word-break:break-all;margin-bottom:3px}
+.pix-nome{font-size:.74rem;color:#777}
+.pagto-aviso{background:#fff8e0;border:1.5px solid var(--dourado-cl);border-radius:var(--r-sm);padding:11px 13px;font-size:.79rem;color:#a07a00;line-height:1.6;margin-bottom:14px}
+.pagto-status{text-align:center;font-size:.88rem;font-weight:600;min-height:22px;margin-bottom:10px;transition:.3s}
+.pagto-processando{color:var(--laranja)}
+.pagto-ok{color:var(--verde)}
+.toast{position:fixed;bottom:83px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--cinza-esc);color:#fff;padding:10px 22px;border-radius:28px;font-size:.82rem;font-weight:600;opacity:0;transition:.3s;z-index:1000;white-space:nowrap;pointer-events:none;max-width:90vw;text-align:center}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.sem{text-align:center;padding:22px;color:#aaa;font-size:.85rem}
+.sem .si{font-size:32px;display:block;margin-bottom:6px}
+.aviso{border-left:4px solid var(--dourado);background:#fffdf0;border-radius:0 var(--r-sm) var(--r-sm) 0;padding:11px 13px;margin-bottom:9px}
+.aviso.urgente{border-color:var(--vermelho);background:#fff5f5}
+.aviso.info{border-color:var(--azul);background:#f0f4ff}
+.aviso .tag{font-size:.66rem;font-weight:700;text-transform:uppercase;letter-spacing:.8px;margin-bottom:3px;color:#a07a00}
+.aviso.urgente .tag{color:var(--vermelho)}
+.aviso.info .tag{color:var(--azul)}
+.aviso p{font-size:.84rem;color:var(--cinza-esc);line-height:1.5}
+.aviso .data{font-size:.7rem;color:var(--cinza);margin-top:4px}
+#adminScreen,#recepScreen{background:#f0f2f5}
+.admin-top{background:linear-gradient(135deg,#060f0a,var(--verde-esc));color:#fff;padding:0 18px;display:flex;align-items:center;justify-content:space-between;height:60px;position:sticky;top:0;z-index:100;box-shadow:0 2px 16px rgba(0,0,0,.3)}
+.admin-top h1{font-family:"Playfair Display",serif;font-size:1rem;display:flex;align-items:center;gap:7px}
+.admin-main{max-width:1100px;margin:0 auto;padding:18px 14px 40px}
+.admin-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:16px}
+@media(min-width:600px){.admin-stats{grid-template-columns:repeat(4,1fr)}}
+.astat{background:#fff;border-radius:var(--r-sm);padding:14px;text-align:center;box-shadow:var(--shadow)}
+.astat .av{font-family:"Playfair Display",serif;font-size:1.65rem;font-weight:900}
+.astat .ak{font-size:.68rem;text-transform:uppercase;letter-spacing:.5px;color:var(--cinza);margin-top:3px}
+.astat.verde .av{color:var(--verde)}
+.astat.vermelho .av{color:var(--vermelho)}
+.astat.dourado .av{color:var(--dourado)}
+.astat.azul .av{color:var(--azul)}
+.atabs{display:flex;gap:7px;margin-bottom:15px;overflow-x:auto;scrollbar-width:none}
+.atabs::-webkit-scrollbar{display:none}
+.atab{flex-shrink:0;padding:8px 14px;border-radius:22px;border:2px solid var(--cinza-cl);background:#fff;font-family:"DM Sans",sans-serif;font-size:.79rem;font-weight:600;color:var(--cinza);cursor:pointer;transition:.2s;white-space:nowrap}
+.atab.ativo{background:var(--verde-esc);border-color:var(--verde-esc);color:#fff}
+.apanel{display:none}
+.apanel.ativo{display:block;animation:fadeIn .3s ease}
+.acrd{background:#fff;border-radius:var(--r);padding:17px;margin-bottom:12px;box-shadow:var(--shadow)}
+.acrd-t{font-family:"Playfair Display",serif;font-size:.97rem;font-weight:700;color:var(--verde-esc);margin-bottom:12px;display:flex;align-items:center;gap:7px}
+.tabela{width:100%;border-collapse:collapse;font-size:.8rem}
+.tabela th{background:#f5f5f5;padding:9px 11px;text-align:left;font-weight:700;font-size:.69rem;text-transform:uppercase;letter-spacing:.5px;color:var(--cinza);border-bottom:2px solid var(--cinza-cl)}
+.tabela td{padding:9px 11px;border-bottom:1px solid #f0f0f0;vertical-align:middle}
+.tabela tr:last-child td{border-bottom:none}
+.tabela tr:hover td{background:#fafafa}
+.badge{display:inline-flex;align-items:center;gap:3px;padding:3px 9px;border-radius:12px;font-size:.69rem;font-weight:700}
+.badge.verde{background:var(--verde-suave);color:var(--verde)}
+.badge.vermelho{background:#fff5f5;color:var(--vermelho)}
+.badge.gold{background:#fff8e0;color:#a07a00}
+.badge.azul{background:#eef3ff;color:var(--azul)}
+.badge.cinza{background:#f0f0f0;color:#777}
+.presenca-grid{display:grid;grid-template-columns:1fr;gap:10px}
+@media(min-width:500px){.presenca-grid{grid-template-columns:1fr 1fr}}
+@media(min-width:800px){.presenca-grid{grid-template-columns:1fr 1fr 1fr}}
+.presenca-card{background:#fff;border-radius:var(--r-sm);padding:13px;box-shadow:var(--shadow);border:1.5px solid #f0f0f0;display:flex;flex-direction:column;gap:8px}
+.pc-header{display:flex;align-items:center;gap:9px}
+.pc-avatar{width:38px;height:38px;border-radius:50%;background:var(--verde-suave);display:flex;align-items:center;justify-content:center;font-size:1rem;font-weight:700;color:var(--verde);flex-shrink:0;overflow:hidden}
+.pc-avatar img{width:100%;height:100%;object-fit:cover}
+.pc-nome{font-size:.86rem;font-weight:700;color:var(--cinza-esc)}
+.pc-tempo{font-size:.73rem;color:var(--cinza)}
+.pc-btns{display:flex;gap:6px}
+.spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.erro-api{background:#fff5f5;border:1.5px solid #f5b5a8;border-radius:var(--r-sm);padding:10px 14px;font-size:.82rem;color:var(--vermelho);margin-bottom:10px;display:none}
+@media(min-width:768px){.main{padding:20px 20px 100px}.cf{padding:42px 40px}}
+@media(min-width:1024px){.main{padding:24px 24px 80px}.bnav{max-width:900px;left:50%;transform:translateX(-50%);border-radius:20px 20px 0 0}.toast{bottom:90px}}
+</style>
+</head>
+<body>
+
+<!-- ═══════════ LOGIN ═══════════ -->
+<div id="loginScreen" class="screen bg-verde ativo">
+  <div class="cf">
+    <div class="logo">
+      <span class="em">📚</span>
+      <h1>Ala dos Estudantes<br>Educador Paiva Netto</h1>
+      <div class="divgold"></div>
+      <p>Acesso à Biblioteca</p>
+    </div>
+    <div class="erro-api" id="loginErro"></div>
+    <div class="campo"><label for="loginCpf">CPF</label>
+      <input type="text" id="loginCpf" placeholder="000.000.000-00" maxlength="14"></div>
+    <div class="campo"><label for="loginSenha">Senha</label>
+      <input type="password" id="loginSenha" placeholder="••••••••"></div>
+    <button class="btn btn-verde" id="btnLogin">🔐 Entrar</button>
+    <div class="linktxt">Não tem cadastro? <span id="irCadastro">Cadastre-se aqui</span></div>
+    <div class="linktxt" style="margin-top:6px">
+      <span id="irAdminLogin" style="color:#bbb;font-size:.75rem">⚙️ Acesso Administrativo</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ ADMIN LOGIN ═══════════ -->
+<div id="adminLoginScreen" class="screen bg-verde">
+  <div class="cf" style="max-width:370px">
+    <div class="logo">
+      <span class="em">⚙️</span>
+      <h1>Acesso Administrativo</h1>
+      <div class="divgold"></div>
+      <p>Restrito — Staff / Recepção</p>
+    </div>
+    <div class="erro-api" id="adminLoginErro"></div>
+    <div class="campo"><label for="adminUser">Usuário</label>
+      <input type="text" id="adminUser" placeholder="admin ou recepcao"></div>
+    <div class="campo"><label for="adminSenha">Senha</label>
+      <input type="password" id="adminSenha" placeholder="••••••••"></div>
+    <button class="btn btn-verde" id="btnAdminLogin">🔓 Entrar no Painel</button>
+    <div class="linktxt"><span id="voltarLogin">← Voltar</span></div>
+  </div>
+</div>
+
+<!-- ═══════════ CADASTRO COM ASSINATURA DIGITAL ═══════════ -->
+<div id="cadastroScreen" class="screen bg-verde">
+  <div class="cf">
+    <div class="logo">
+      <span class="em">📋</span>
+      <h1>Novo Cadastro</h1>
+      <div class="divgold"></div>
+    </div>
+    <div class="erro-api" id="cadErro"></div>
+
+    <!-- Indicador de etapas -->
+    <div style="display:flex;gap:5px;margin-bottom:6px;align-items:center">
+      <div id="etapaInd1" style="flex:1;height:4px;border-radius:2px;background:var(--verde);transition:.3s"></div>
+      <div id="etapaInd2" style="flex:1;height:4px;border-radius:2px;background:var(--cinza-cl);transition:.3s"></div>
+      <div id="etapaInd3" style="flex:1;height:4px;border-radius:2px;background:var(--cinza-cl);transition:.3s"></div>
+    </div>
+    <div style="text-align:right;font-size:.68rem;color:var(--cinza);margin-bottom:14px" id="etapaTxt">Etapa 1 de 3</div>
+
+    <!-- ETAPA 1: DADOS PESSOAIS -->
+    <div id="cadEtapa1">
+      <div class="campo"><label for="cadNome">Nome Completo *</label>
+        <input type="text" id="cadNome" placeholder="Seu nome completo"></div>
+      <div class="campo"><label for="cadCpf">CPF *</label>
+        <input type="text" id="cadCpf" placeholder="000.000.000-00" maxlength="14"></div>
+      <div class="campo"><label for="cadEmail">E-mail</label>
+        <input type="email" id="cadEmail" placeholder="seu@email.com"></div>
+      <div class="campo"><label for="cadTel">Telefone</label>
+        <input type="text" id="cadTel" placeholder="(61) 99999-9999" maxlength="15"></div>
+      <div class="campo"><label for="cadTipo">Tipo de Usuário *</label>
+        <select id="cadTipo">
+          <option value="">Selecione...</option>
+          <option value="aluno">👨‍🎓 Estudante</option>
+          <option value="aluno">📝 Concurseiro</option>
+          <option value="aluno">🏘️ Comunidade Geral</option>
+        </select></div>
+      <div class="campo"><label for="cadSenha">Senha * (mín. 8 car. — maiúscula, número e símbolo)</label>
+        <input type="password" id="cadSenha" placeholder="Ex: Estudo@2025">
+        <div id="cadSenhaForca" style="font-size:.71rem;margin-top:4px;min-height:16px"></div>
+      </div>
+      <button class="btn btn-verde" id="btnCadEtapa1">Próximo — Tirar Foto →</button>
+      <div class="linktxt" style="margin-top:10px">Já tem conta? <span id="irLogin">Fazer login</span></div>
+      <div class="linktxt" style="margin-top:6px">
+        <span id="irMigracao" style="color:var(--dourado);font-size:.82rem;cursor:pointer;text-decoration:underline">
+          📲 Já sou cadastrado — só preciso criar senha e foto
+        </span>
+      </div>
+    </div>
+
+    <!-- ETAPA 2: FOTO OBRIGATÓRIA -->
+    <div id="cadEtapa2" style="display:none">
+      <div style="background:#eef3ff;border:1.5px solid #b0c4ef;border-radius:var(--r-sm);padding:11px 13px;margin-bottom:13px;font-size:.8rem;color:var(--azul);line-height:1.5">
+        📸 <b>Foto obrigatória</b> para reconhecimento facial na catraca. Posicione seu rosto com boa iluminação.
+      </div>
+
+      <div style="position:relative;border-radius:var(--r-sm);overflow:hidden;background:#000;margin-bottom:10px;min-height:160px" id="cadCameraWrap">
+        <video id="cadVideo" style="display:none;width:100%;max-height:220px;object-fit:cover;display:none" autoplay playsinline></video>
+        <canvas id="cadCanvas" style="display:none"></canvas>
+        <img id="cadFotoPreview" src="" style="display:none;width:100%;max-height:220px;object-fit:cover;border-radius:var(--r-sm)" alt="Foto capturada">
+        <div id="cadFotoPlaceholder" style="min-height:160px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;background:#f5f5f5;border-radius:var(--r-sm)">
+          <span style="font-size:3rem">📷</span>
+          <p style="font-size:.78rem;color:#888;text-align:center">Câmera não iniciada</p>
+        </div>
+      </div>
+
+      <div id="cadCameraControles" style="display:none;margin-bottom:10px">
+        <button type="button" class="btn btn-verde btn-sm" id="btnCapturarFoto" style="margin-bottom:6px">📸 Capturar Foto</button>
+        <button type="button" class="btn btn-sec btn-sm" id="btnFecharCamera">✕ Cancelar câmera</button>
+      </div>
+      <div id="cadFotoFeitaControles" style="display:none;margin-bottom:10px">
+        <button type="button" class="btn btn-sec btn-sm" id="btnRefazerFoto">🔄 Refazer foto</button>
+      </div>
+
+      <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+        <button type="button" class="btn btn-verde btn-sm" id="btnAbrirCamera" style="flex:1">📷 Abrir câmera</button>
+        <label style="flex:1;cursor:pointer">
+          <span class="btn btn-sec btn-sm" style="display:block;text-align:center">📁 Enviar arquivo</span>
+          <input type="file" id="cadFotoFile" accept="image/*" style="display:none">
+        </label>
+      </div>
+
+      <button class="btn btn-verde" id="btnCadEtapa2" disabled style="opacity:.5">Próximo — Assinar Termo →</button>
+      <button class="btn btn-sec" id="btnVoltarEtapa1" style="margin-top:8px">← Voltar</button>
+    </div>
+
+    <!-- ETAPA 3: TERMO + ASSINATURA DIGITAL -->
+    <div id="cadEtapa3" style="display:none">
+      <div style="font-size:.73rem;font-weight:700;color:var(--verde);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">📜 Leia o Regulamento completo</div>
+      <div class="termos-box">
+        <h4>📜 Termo de Conduta — Ala dos Estudantes Educador Paiva Netto</h4>
+        <p><b>Objetivo:</b> Promover um ambiente respeitoso de aprendizado e pesquisa, para o desenvolvimento da Cidadania Ecumênica, de modo seguro e acolhedor para todos os usuários.</p><br>
+        <p><b>RESPEITO:</b> Tratar todos os frequentadores e colaboradores com respeito, sem preconceito ou discriminação. Respeitar o silêncio e a concentração dos demais.</p><br>
+        <p><b>COMPORTAMENTO:</b> É proibido conversas, barulhos excessivos e uso de aparelhos que causem incômodo. É proibido manusear pertences de outros sem autorização. Os computadores são apenas para estudo e pesquisa. Horário: 8h às 19h45.</p><br>
+        <p><b>USO DO ACERVO:</b> Manusear livros com cuidado. Devolver no prazo. Atraso: multa de R$ 2,00/dia. Não danificar materiais.</p><br>
+        <p><b>GUARDA-VOLUMES:</b> Planos: Diário R$ 4,00 · Quinzenal R$ 50,00 · Mensal R$ 90,00. Não devolução da chave: multa R$ 120,00. Não nos responsabilizamos por objetos guardados.</p><br>
+        <p><b>SEGURANÇA:</b> O ambiente possui monitoramento por câmeras. Não é permitido receber visitas. Apenas Órgãos Competentes do Governo podem solicitar imagens.</p><br>
+        <p><b>NÃO É PERMITIDO:</b> Conversar · Reservar lugar · Namorar · Falar ao telefone · Colocar pés sobre mesas/cadeiras · Reproduzir mídias sem fone · Consumir alimentos (exceto café e água).</p><br>
+        <p><b>VESTIMENTAS:</b> Não permitido: roupas que não cubram ombros/barriga, transparentes, com decotes, saias/vestidos acima do joelho, shorts e bermudas.</p><br>
+        <p><b>PENALIDADES:</b> O descumprimento pode resultar em advertência, suspensão temporária (até 90 dias) ou definitiva, e responsabilização por danos ao patrimônio.</p><br>
+        <p><b>DO ACESSO:</b> O pagamento garante acesso pelo dia inteiro (até 19h45). Acesso via reconhecimento facial após pagamento confirmado.</p><br>
+        <p><b>DA VAGA:</b> O sistema controla 148 vagas rotativas. Ao pagar, uma vaga é reservada. A vaga é liberada após saída definitiva registrada pela recepção.</p><br>
+        <p><b>DO CANCELAMENTO:</b> Não há reembolso após o pagamento. O acesso é pessoal e intransferível.</p><br>
+        <h4>🔒 Política de Privacidade (LGPD)</h4>
+        <p>Coletamos nome, CPF, foto, e-mail e telefone exclusivamente para controle de acesso e reconhecimento facial. Dados não são compartilhados com terceiros. Você pode solicitar exclusão na recepção a qualquer momento.</p>
+      </div>
+      <div style="font-size:.73rem;font-weight:700;color:var(--verde);margin:12px 0 6px;text-transform:uppercase;letter-spacing:.5px">✍️ Assine abaixo para confirmar que leu e concorda</div>
+      <div style="position:relative;border:2px solid var(--cinza-cl);border-radius:var(--r-sm);background:#fafafa;overflow:hidden;margin-bottom:8px" id="canvasWrap">
+        <canvas id="canvasAssinatura" style="display:block;width:100%;touch-action:none;cursor:crosshair" height="130"></canvas>
+        <div id="assinaturaPlaceholder" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#ccc;font-size:.85rem;pointer-events:none;gap:6px">
+          ✍️ Desenhe sua assinatura aqui
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;margin-bottom:14px;align-items:center">
+        <button class="btn btn-sec btn-sm" id="btnLimparAssinatura" style="flex:0 0 auto">🗑️ Limpar</button>
+        <span style="font-size:.71rem;color:#aaa;line-height:1.4">Sua assinatura confirma que você leu e aceita o regulamento e a política de privacidade (LGPD).</span>
+      </div>
+      <button class="btn btn-verde" id="btnCadastrar">✅ Criar Conta e Assinar Termo</button>
+      <button class="btn btn-sec" id="btnVoltarEtapa2" style="margin-top:8px">← Voltar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ MIGRAÇÃO — JÁ CADASTRADO SEM SENHA/FOTO ═══════════ -->
+<div id="migracaoScreen" class="screen bg-verde">
+  <div class="cf">
+    <div class="logo">
+      <span class="em">📲</span>
+      <h1>Já sou Cadastrado</h1>
+      <div class="divgold"></div>
+      <p>Complete seus dados de acesso</p>
+    </div>
+    <div class="erro-api" id="migErro"></div>
+
+    <!-- PASSO 1: CPF -->
+    <div id="migPasso1">
+      <p style="font-size:.82rem;color:var(--cinza);margin-bottom:14px;line-height:1.6">
+        Se você já frequentava a biblioteca mas ainda não tem senha ou foto no sistema, informe seu CPF para continuarmos.
+      </p>
+      <div class="campo"><label for="migCpf">CPF cadastrado</label>
+        <input type="text" id="migCpf" placeholder="000.000.000-00" maxlength="14"></div>
+      <button class="btn btn-dourado" id="btnMigBuscarCpf">🔍 Localizar meu cadastro</button>
+      <div class="linktxt" style="margin-top:12px"><span id="migVoltarLogin">← Voltar ao login</span></div>
+    </div>
+
+    <!-- PASSO 2: CONFIRMAÇÃO + SENHA + FOTO -->
+    <div id="migPasso2" style="display:none">
+      <!-- Card de confirmação do usuário encontrado -->
+      <div style="background:var(--verde-suave);border:1.5px solid #a8d5b5;border-radius:var(--r-sm);padding:13px;margin-bottom:14px;display:flex;align-items:center;gap:12px">
+        <div style="width:46px;height:46px;border-radius:50%;background:var(--verde);display:flex;align-items:center;justify-content:center;font-size:1.2rem;font-weight:700;color:#fff;flex-shrink:0" id="migAvatar">?</div>
+        <div>
+          <div style="font-weight:700;font-size:.92rem;color:var(--verde-esc)" id="migNomeConfirm">—</div>
+          <div style="font-size:.75rem;color:var(--cinza)" id="migCpfConfirm">—</div>
+          <div style="font-size:.72rem;color:var(--verde);margin-top:2px">✅ Cadastro localizado!</div>
+        </div>
+      </div>
+
+      <!-- Aviso primeiro acesso (importado do Control iD) -->
+      <div id="migAvisoPrimeiroAcesso" style="display:none;background:#e8f5ee;border:1.5px solid #a8d5b5;border-radius:var(--r-sm);padding:11px 13px;margin-bottom:13px;font-size:.8rem;color:var(--verde-esc);line-height:1.5">
+        👋 <b>Bem-vindo ao novo sistema!</b><br>
+        Seu cadastro foi localizado. Para continuar, crie uma senha e assine o Termo de Conduta.
+      </div>
+
+      <!-- Senha -->
+      <div style="background:#fffbe0;border:1px solid var(--dourado-cl);border-radius:var(--r-sm);padding:10px 12px;font-size:.78rem;color:#a07a00;margin-bottom:12px;line-height:1.5">
+        ⚠️ Crie uma <b>senha de acesso</b> e adicione sua <b>foto</b> para ativar o reconhecimento facial na catraca.
+      </div>
+
+      <div class="campo"><label for="migSenha">Nova senha * (mín. 8 car. — maiúscula, número e símbolo)</label>
+        <input type="password" id="migSenha" placeholder="Ex: Estudo@2025">
+        <div id="migSenhaForca" style="font-size:.71rem;margin-top:4px;min-height:16px"></div>
+      </div>
+      <div class="campo"><label for="migSenhaConfirm">Confirmar senha *</label>
+        <input type="password" id="migSenhaConfirm" placeholder="Repita a senha"></div>
+
+      <!-- Foto -->
+      <div style="font-size:.73rem;font-weight:700;color:var(--cinza);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px">📸 Foto para reconhecimento facial *</div>
+      <div style="border:2px dashed var(--cinza-cl);border-radius:var(--r-sm);background:#fafafa;margin-bottom:12px;overflow:hidden">
+        <video id="migVideo" style="display:none;width:100%;max-height:180px;object-fit:cover" autoplay playsinline></video>
+        <canvas id="migCanvas" style="display:none"></canvas>
+        <img id="migFotoPreview" src="" style="display:none;width:100%;max-height:180px;object-fit:cover" alt="Foto">
+        <div id="migFotoPlaceholder" style="padding:16px;text-align:center">
+          <div style="font-size:2rem;margin-bottom:6px">📷</div>
+          <p style="font-size:.76rem;color:#888;margin-bottom:10px">Necessária para o reconhecimento facial</p>
+          <button type="button" class="btn btn-verde btn-sm" id="btnMigAbrirCamera" style="margin-bottom:6px">📷 Abrir Câmera</button><br>
+          <label style="cursor:pointer;font-size:.73rem;color:var(--verde);text-decoration:underline;margin-top:4px;display:inline-block">
+            📁 Enviar arquivo <input type="file" id="migFotoFile" accept="image/*" style="display:none">
+          </label>
+        </div>
+        <div id="migCameraControles" style="display:none;padding:8px;text-align:center">
+          <button type="button" class="btn btn-verde btn-sm" id="btnMigCapturar" style="margin-bottom:6px">📸 Capturar</button>
+          <button type="button" class="btn btn-sec btn-sm" id="btnMigFecharCamera">✕ Cancelar</button>
+        </div>
+        <div id="migFotoFeitaControles" style="display:none;padding:8px;text-align:center">
+          <button type="button" class="btn btn-sec btn-sm" id="btnMigRefazerFoto">🔄 Refazer foto</button>
+        </div>
+      </div>
+
+      <!-- Termo de Conduta completo -->
+      <div style="font-size:.73rem;font-weight:700;color:var(--verde);margin:14px 0 6px;text-transform:uppercase;letter-spacing:.5px">📜 Leia e assine o Termo de Conduta</div>
+      <div class="termos-box" style="max-height:160px">
+        <h4>📜 Termo de Conduta — Ala dos Estudantes Educador Paiva Netto</h4>
+        <p><b>Objetivo:</b> Promover um ambiente respeitoso de aprendizado e pesquisa, de modo seguro e acolhedor para todos.</p><br>
+        <p><b>RESPEITO:</b> Tratar todos com respeito, sem preconceito ou discriminação. Respeitar o silêncio e a concentração dos demais.</p><br>
+        <p><b>COMPORTAMENTO:</b> Proibido conversas, barulhos, uso de aparelhos que causem incômodo. Computadores apenas para estudo. Horário: 8h às 19h45.</p><br>
+        <p><b>USO DO ACERVO:</b> Manusear livros com cuidado. Devolver no prazo. Atraso: multa R$ 2,00/dia.</p><br>
+        <p><b>GUARDA-VOLUMES:</b> Diário R$ 4,00 · Quinzenal R$ 50,00 · Mensal R$ 90,00. Não devolução da chave: multa R$ 120,00.</p><br>
+        <p><b>SEGURANÇA:</b> Ambiente monitorado por câmeras. Não é permitido receber visitas.</p><br>
+        <p><b>NÃO É PERMITIDO:</b> Conversar · Reservar lugar · Namorar · Falar ao telefone · Pés sobre mesas · Mídias sem fone · Alimentos (exceto café e água).</p><br>
+        <p><b>VESTIMENTAS:</b> Não permitido roupas que não cubram ombros/barriga, transparentes, com decotes, saias acima do joelho, shorts e bermudas.</p><br>
+        <p><b>PENALIDADES:</b> Advertência, suspensão temporária (até 90 dias) ou definitiva, e responsabilização por danos.</p><br>
+        <p><b>DO ACESSO:</b> Pagamento garante acesso pelo dia (até 19h45). Acesso via reconhecimento facial.</p><br>
+        <p><b>DO CANCELAMENTO:</b> Não há reembolso. Acesso pessoal e intransferível.</p><br>
+        <h4>🔒 LGPD</h4>
+        <p>Coletamos nome, CPF, foto, e-mail e telefone exclusivamente para controle de acesso. Dados não são compartilhados com terceiros.</p>
+      </div>
+
+      <!-- Assinatura digital -->
+      <div style="font-size:.73rem;font-weight:700;color:var(--verde);margin:10px 0 6px;text-transform:uppercase;letter-spacing:.5px">✍️ Assine para confirmar que leu e concorda</div>
+      <div style="position:relative;border:2px solid var(--cinza-cl);border-radius:var(--r-sm);background:#fafafa;overflow:hidden;margin-bottom:8px" id="migCanvasWrap">
+        <canvas id="migCanvasAssinatura" style="display:block;width:100%;touch-action:none;cursor:crosshair" height="120"></canvas>
+        <div id="migAssinaturaPlaceholder" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#ccc;font-size:.85rem;pointer-events:none;gap:6px">
+          ✍️ Desenhe sua assinatura aqui
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;margin-bottom:14px;align-items:center">
+        <button class="btn btn-sec btn-sm" id="btnLimparMigAssinatura" style="flex:0 0 auto">🗑️ Limpar</button>
+        <span style="font-size:.71rem;color:#aaa;line-height:1.4">Sua assinatura confirma que leu e aceita o Termo de Conduta e a Política de Privacidade (LGPD).</span>
+      </div>
+
+      <button class="btn btn-dourado" id="btnMigFinalizar">✅ Ativar meu acesso completo</button>
+      <button class="btn btn-sec" id="btnMigVoltar" style="margin-top:8px">← Voltar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ APP USUÁRIO ═══════════ -->
+<div id="appScreen" class="screen">
+  <div class="topbar">
+    <div class="topbar-logo">
+      <span style="font-size:20px">📚</span>
+      <div><div class="tl-nome">Paiva Netto</div><div class="tl-sub">Ala dos Estudantes</div></div>
+    </div>
+    <div class="topbar-user" id="btnSairApp">
+      <div class="avatar" id="avatarLetra">?</div>
+      <span class="tl-user-nome" id="nomeUser">—</span>
+    </div>
+  </div>
+  <div class="main">
+    <div class="alerta bloqueado" id="alertaBloq" style="display:none">
+      <span class="ai">🚫</span>
+      <p><b>Conta suspensa.</b> Entre em contato com a recepção: (61) 3114-1027.</p>
+    </div>
+    <div class="bv">
+      <h2 id="msgBV">Olá! 👋</h2>
+      <p id="msgData">—</p>
+      <span class="badge-plano">⭐ Acesso Diário — até 19h45</span>
+    </div>
+    <div class="tabs">
+      <button class="tab ativo" data-panel="panelInicio">🏠 Início</button>
+      <button class="tab" data-panel="panelAvisos">📢 Avisos</button>
+      <button class="tab" data-panel="panelPlano">🎫 Meu Plano</button>
+      <button class="tab" data-panel="panelInformacoes">ℹ️ Info</button>
+      <button class="tab" data-panel="panelSugestoes">💬 Sugestões</button>
+    </div>
+
+    <!-- INÍCIO -->
+    <div id="panelInicio" class="panel ativo">
+      <div id="blocoTicket" style="display:none">
+        <div class="ticket">
+          <div class="ticket-inner">
+            <div id="ticketStatusBadge" class="ticket-status-badge tsb-ativo">
+              <span>●</span><span id="ticketStatusTxt">Acesso Ativo</span>
+            </div>
+            <div class="ticket-titulo">Ala dos Estudantes Educador Paiva Netto</div>
+            <div class="ticket-nome" id="ticketNome">—</div>
+            <div class="ticket-detalhe" id="ticketDetalhe">—</div>
+            <div class="ticket-validade">
+              <div><div class="label">Válido até</div><div class="val">19:45 de hoje</div></div>
+              <div class="ticket-qr">🎫</div>
+            </div>
+          </div>
+        </div>
+        <div class="aviso-horario">
+          <span>⏰</span><span>Acesso válido! Pode sair e voltar à vontade até 19h45.</span>
+        </div>
+      </div>
+      <div class="crd">
+        <div class="crd-t">🅿️ Vagas em Tempo Real</div>
+        <div class="vagas-grid">
+          <div class="vs livres"><div class="num" id="vagasL">--</div><div class="lbl">✅ Livres</div></div>
+          <div class="vs ocupadas"><div class="num" id="vagasO">--</div><div class="lbl">🔴 Ocupadas</div></div>
+        </div>
+        <div class="barra-w">
+          <div class="barra-lbl"><span>Ocupação atual</span><span id="pctOc">0%</span></div>
+          <div class="barra"><div class="barra-fill" id="barraFill" style="width:0%"></div></div>
+        </div>
+        <p style="font-size:.71rem;color:#bbb;text-align:right" id="totalVagasInfo">— vagas rotativas</p>
+      </div>
+      <div class="crd" id="cardControle">
+        <div class="crd-t">🚪 Meu Acesso</div>
+        <div class="st-box ausente" id="statusBox">
+          <div class="dot cinza" id="dotSt"></div>
+          <span id="txtSt">Verificando...</span>
+        </div>
+        <button class="btn btn-dourado" id="btnAcesso">
+          <span id="lblBtn">💳 Pagar e Garantir Acesso</span>
+        </button>
+        <p style="font-size:.71rem;color:#aaa;margin-top:9px;text-align:center">⏰ Funcionamento: todos os dias — 8h às 19h45</p>
+      </div>
+      <div class="crd" style="padding:14px 16px">
+        <div class="crd-t" style="font-size:.88rem;margin-bottom:9px">📋 Como funciona?</div>
+        <div style="font-size:.79rem;color:#555;line-height:2.1">
+          <span style="background:#eef3ff;color:var(--azul);padding:2px 8px;border-radius:10px;font-weight:600;margin-right:6px">💳 Pague no app</span> Confirma vaga e libera catraca<br>
+          <span style="background:#e8f5ee;color:var(--verde);padding:2px 8px;border-radius:10px;font-weight:600;margin-right:6px">🚦 Catraca libera</span> Reconhecimento facial — acesso direto<br>
+          <span style="background:#e8f5ee;color:var(--verde);padding:2px 8px;border-radius:10px;font-weight:600;margin-right:6px">🟢 Acesso até 19h45</span> Pode sair e voltar à vontade<br>
+          <span style="background:#f0f0f0;color:#777;padding:2px 8px;border-radius:10px;font-weight:600;margin-right:6px">🚪 Saída definitiva</span> Registrada pela recepção
+        </div>
+      </div>
+    </div>
+
+    <!-- AVISOS -->
+    <div id="panelAvisos" class="panel">
+      <div class="crd">
+        <div class="crd-t">📢 Comunicados Oficiais</div>
+        <div id="avisosLista"><div class="sem"><span class="si">⏳</span>Carregando...</div></div>
+      </div>
+    </div>
+
+    <!-- PLANO -->
+    <div id="panelPlano" class="panel">
+      <div class="plano-crd">
+        <div class="plano-tipo">🎫 Acesso Diário</div>
+        <div class="plano-info">Pague uma vez, fique o dia inteiro • Saída registrada pela recepção</div>
+        <div class="plano-det">
+          <div class="pd"><div class="val" id="pVisitas">0</div><div class="key">Visitas mês</div></div>
+          <div class="pd"><div class="val" id="pHoras">0h</div><div class="key">Horas estud.</div></div>
+          <div class="pd"><div class="val" id="pDias">0</div><div class="key">Dias ativo</div></div>
+        </div>
+      </div>
+      <div class="crd">
+        <div class="crd-t">📊 Histórico de Acessos</div>
+        <div id="historicoLista"><div class="sem"><span class="si">⏳</span>Carregando...</div></div>
+      </div>
+      <div class="crd" style="text-align:center">
+        <button class="btn btn-vermelho" id="btnSairPlano" style="max-width:280px;margin:0 auto">
+          🚪 Sair do aplicativo
+        </button>
+        <p style="font-size:.73rem;color:#aaa;margin-top:8px;line-height:1.5">Seu acesso do dia continua válido até 19h45.<br>Você pode fazer login novamente a qualquer momento.</p>
+      </div>
+    </div>
+
+    <!-- INFO -->
+    <div id="panelInformacoes" class="panel">
+      <div class="crd">
+        <div class="crd-t">🏛️ Sobre a Biblioteca</div>
+        <p style="font-size:.83rem;color:#555;line-height:1.7;margin-bottom:11px">A <b>Ala dos Estudantes Educador Paiva Netto</b> é um espaço dedicado ao estudo, aberto a toda a comunidade.</p>
+        <div class="info-item"><div class="ii verde">📍</div>
+          <div class="info-texto"><h4>Endereço</h4><p>SGAS 915 Sul, Lotes 75/76 — Plano Piloto<br>Brasília/DF — CEP 70390-150</p></div></div>
+        <div class="info-item"><div class="ii gold">⏰</div>
+          <div class="info-texto"><h4>Horário</h4><p>Todos os dias — inclusive feriados<br><b>8h00 às 19h45</b></p></div></div>
+        <div class="info-item"><div class="ii azul">📞</div>
+          <div class="info-texto"><h4>Telefone</h4><p><a href="tel:6131141027" style="color:var(--azul);font-weight:600">(61) 3114-1027</a></p></div></div>
+        <div class="info-item"><div class="ii verde">🔒</div>
+          <div class="info-texto"><h4>Armários</h4><p>Guarde seus pertences. Solicite na recepção com documento.</p></div></div>
+        <div class="info-item"><div class="ii azul">📶</div>
+          <div class="info-texto"><h4>Wi-Fi Gratuito</h4><p>Alta velocidade em todas as áreas.</p></div></div>
+        <div class="info-item"><div class="ii gold">🍽️</div>
+          <div class="info-texto"><h4>Restaurante</h4><p>Térreo do prédio. Refeições e lanches disponíveis.</p></div></div>
+      </div>
+    </div>
+
+    <!-- SUGESTÕES -->
+    <div id="panelSugestoes" class="panel">
+      <div class="crd">
+        <div class="crd-t">💬 Sugestões &amp; Reclamações</div>
+        <p style="font-size:.81rem;color:#777;margin-bottom:13px;line-height:1.6">Sua opinião melhora nosso espaço!</p>
+        <div class="fg"><label for="tipoMsg">Tipo</label>
+          <select id="tipoMsg"><option value="">Selecione...</option>
+            <option value="sugestao">💡 Sugestão</option>
+            <option value="elogio">🌟 Elogio</option>
+            <option value="reclamacao">⚠️ Reclamação</option>
+            <option value="duvida">❓ Dúvida</option></select></div>
+        <div class="fg"><label for="areaMsg">Área</label>
+          <select id="areaMsg"><option value="">Selecione...</option>
+            <option value="atendimento">👤 Atendimento</option>
+            <option value="instalacoes">🏛️ Instalações</option>
+            <option value="internet">📶 Internet</option>
+            <option value="armarios">🔒 Armários</option>
+            <option value="vagas">🅿️ Sistema de Vagas</option>
+            <option value="app">📱 Aplicativo</option></select></div>
+        <div class="fg"><label for="txtMsg">Mensagem</label>
+          <textarea id="txtMsg" rows="4" placeholder="Descreva aqui..."></textarea></div>
+        <button class="btn btn-verde" id="btnEnviarMsg">📤 Enviar</button>
+      </div>
+    </div>
+  </div>
+
+  <nav class="bnav">
+    <div class="ni ativo" data-panel="panelInicio"><span class="ic">🏠</span><span class="lb">Início</span></div>
+    <div class="ni" data-panel="panelAvisos"><span class="ic">📢</span><span class="lb">Avisos</span></div>
+    <div class="ni" data-panel="panelPlano"><span class="ic">🎫</span><span class="lb">Plano</span></div>
+    <div class="ni" data-panel="panelInformacoes"><span class="ic">ℹ️</span><span class="lb">Info</span></div>
+    <div class="ni" data-panel="panelSugestoes"><span class="ic">💬</span><span class="lb">Sugestões</span></div>
+  </nav>
+</div>
+
+<!-- ═══════════ RECEPÇÃO ═══════════ -->
+<div id="recepScreen" class="screen">
+  <div class="admin-top" style="background:linear-gradient(135deg,#0a1628,#1a4a8a)">
+    <h1>🛎️ Painel da Recepção</h1>
+    <button class="btn btn-sec btn-sm" id="btnSairRecep" style="color:#fff;border-color:rgba(255,255,255,.3);background:rgba(255,255,255,.1)">← Sair</button>
+  </div>
+  <div class="admin-main">
+    <div class="admin-stats">
+      <div class="astat verde"><div class="av" id="rVL">--</div><div class="ak">Vagas Livres</div></div>
+      <div class="astat vermelho"><div class="av" id="rVO">--</div><div class="ak">Ocupadas</div></div>
+      <div class="astat azul"><div class="av" id="rPresentes">--</div><div class="ak">Presentes Agora</div></div>
+      <div class="astat dourado"><div class="av" id="rPagosHoje">--</div><div class="ak">Pagamentos Hoje</div></div>
+    </div>
+    <div class="atabs">
+      <button class="atab ativo" data-apanel="recepPanelPresentes">✅ Presentes</button>
+      <button class="atab" data-apanel="recepPanelPendentes">⏳ Aguardando <span id="badgePendentes" style="background:var(--vermelho);color:#fff;border-radius:10px;padding:1px 6px;font-size:.65rem;margin-left:3px;display:none">0</span></button>
+      <button class="atab" data-apanel="recepPanelPagos">💳 Pagos Hoje</button>
+      <button class="atab" data-apanel="recepPanelVagas">🅿️ Vagas</button>
+      <button class="atab" data-apanel="recepPanelCadastro">➕ Cadastrar</button>
+    </div>
+    <div id="recepPanelPresentes" class="apanel ativo">
+      <div class="acrd">
+        <div class="acrd-t">✅ Usuários Presentes</div>
+        <p style="font-size:.81rem;color:#777;margin-bottom:12px;line-height:1.6">Clique em <b>Registrar Saída</b> quando o usuário sair com seus materiais.</p>
+        <div class="presenca-grid" id="rGridPresentes">
+          <div class="sem"><span class="si">⏳</span>Carregando...</div>
+        </div>
+      </div>
+    </div>
+    <div id="recepPanelPendentes" class="apanel">
+      <div class="acrd">
+        <div class="acrd-t">⏳ Aguardando Confirmação de Pagamento</div>
+        <p style="font-size:.81rem;color:#777;margin-bottom:12px;line-height:1.6">
+          Usuários que solicitaram acesso e aguardam confirmação do pagamento. Confirme ao receber o comprovante.
+        </p>
+        <div id="rGridPendentes">
+          <div class="sem"><span class="si">⏳</span>Carregando...</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="recepPanelPagos" class="apanel">
+      <div class="acrd">
+        <div class="acrd-t">💳 Pagamentos de Hoje</div>
+        <div style="overflow-x:auto">
+          <table class="tabela">
+            <thead><tr><th>Nome</th><th>Entrada</th><th>Status</th><th>Pagamento</th></tr></thead>
+            <tbody id="rTbodyPagos"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div id="recepPanelVagas" class="apanel">
+      <div class="acrd">
+        <div class="acrd-t">🅿️ Controle de Vagas</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
+          <div class="vs livres"><div class="num" id="rVL2">--</div><div class="lbl">Livres</div></div>
+          <div class="vs ocupadas"><div class="num" id="rVO2">--</div><div class="lbl">Ocupadas</div></div>
+        </div>
+        <div class="barra-w">
+          <div class="barra-lbl"><span>Ocupação</span><span id="rPct">0%</span></div>
+          <div class="barra"><div class="barra-fill" id="rBarraFill" style="width:0%"></div></div>
+        </div>
+      </div>
+    </div>
+    <div id="recepPanelCadastro" class="apanel">
+      <div class="acrd">
+        <div class="acrd-t">➕ Registrar Entrada Avulsa</div>
+        <p style="font-size:.81rem;color:#777;margin-bottom:12px">Busque o usuário pelo CPF e registre a entrada manualmente.</p>
+        <div class="fg"><label for="recepCpfBusca">CPF do Usuário</label>
+          <input type="text" id="recepCpfBusca" placeholder="000.000.000-00" maxlength="14"></div>
+        <button class="btn btn-verde btn-sm" id="btnRecepBuscar">🔍 Buscar</button>
+        <div id="recepResultadoBusca" style="margin-top:12px"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ ADMIN ═══════════ -->
+<div id="adminScreen" class="screen">
+  <div class="admin-top">
+    <h1>⚙️ Painel Administrativo</h1>
+    <button class="btn btn-sec btn-sm" id="btnSairAdmin" style="color:#fff;border-color:rgba(255,255,255,.3);background:rgba(255,255,255,.1)">← Sair</button>
+  </div>
+  <div class="admin-main">
+    <div class="admin-stats">
+      <div class="astat verde"><div class="av" id="aVL">--</div><div class="ak">Vagas Livres</div></div>
+      <div class="astat vermelho"><div class="av" id="aVO">--</div><div class="ak">Ocupadas</div></div>
+      <div class="astat azul"><div class="av" id="aPresentes">--</div><div class="ak">Presentes</div></div>
+      <div class="astat dourado"><div class="av" id="aTotalU">--</div><div class="ak">Usuários</div></div>
+    </div>
+    <div class="atabs">
+      <button class="atab ativo" data-apanel="adminPanelUsuarios">👥 Usuários</button>
+      <button class="atab" data-apanel="adminPanelHistorico">📊 Histórico</button>
+      <button class="atab" data-apanel="adminPanelAvisos">📢 Avisos</button>
+      <button class="atab" data-apanel="adminPanelSugestoes">💬 Sugestões</button>
+      <button class="atab" data-apanel="adminPanelConfig">⚙️ Config</button>
+    </div>
+    <div id="adminPanelUsuarios" class="apanel ativo">
+      <div class="acrd">
+        <div class="acrd-t">👥 Usuários Cadastrados</div>
+        <div class="fg" style="margin-bottom:10px">
+          <input type="text" id="adminBuscaUsuario" placeholder="🔍 Buscar por nome ou CPF...">
+        </div>
+        <div style="overflow-x:auto">
+          <table class="tabela">
+            <thead><tr><th>Nome</th><th>CPF</th><th>Tipo</th><th>Termo</th><th>Status</th><th>Ação</th></tr></thead>
+            <tbody id="tbodyUsuarios"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div id="adminPanelHistorico" class="apanel">
+      <div class="acrd">
+        <div class="acrd-t">📊 Histórico de Acessos</div>
+        <div class="fg" style="margin-bottom:10px">
+          <input type="date" id="adminDataHistorico">
+        </div>
+        <div style="overflow-x:auto">
+          <table class="tabela">
+            <thead><tr><th>Usuário</th><th>Entrada</th><th>Saída</th><th>Status</th><th>Pagamento</th></tr></thead>
+            <tbody id="tbodyHistorico"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div id="adminPanelAvisos" class="apanel">
+      <div class="acrd">
+        <div class="acrd-t">📢 Gerenciar Avisos</div>
+        <div class="fg"><label for="adminAvisoTipo">Tipo</label>
+          <select id="adminAvisoTipo">
+            <option value="aviso">📌 Aviso</option>
+            <option value="urgente">⚠️ Urgente</option>
+            <option value="info">ℹ️ Informação</option>
+          </select></div>
+        <div class="fg"><label for="adminAvisoTitulo">Título</label>
+          <input type="text" id="adminAvisoTitulo" placeholder="Ex: Manutenção programada"></div>
+        <div class="fg"><label for="adminAvisoConteudo">Conteúdo</label>
+          <textarea id="adminAvisoConteudo" rows="3" placeholder="Descreva o comunicado..."></textarea></div>
+        <button class="btn btn-verde btn-sm" id="btnPublicarAviso">📢 Publicar Aviso</button>
+      </div>
+      <div class="acrd">
+        <div class="acrd-t">📋 Avisos Publicados</div>
+        <div id="adminAvisosLista"><div class="sem"><span class="si">⏳</span>Carregando...</div></div>
+      </div>
+    </div>
+
+    <div id="adminPanelSugestoes" class="apanel">
+      <div class="acrd">
+        <div class="acrd-t">💬 Sugestões &amp; Reclamações</div>
+        <div id="adminSugestoesLista"><div class="sem"><span class="si">⏳</span>Carregando...</div></div>
+      </div>
+    </div>
+
+    <div id="adminPanelConfig" class="apanel">
+      <div class="acrd">
+        <div class="acrd-t">⚙️ Configurações</div>
+        <div class="fg"><label for="cfgVagas">Total de vagas</label>
+          <input type="number" id="cfgVagas" value="30" min="1" max="500"></div>
+        <div class="fg"><label for="cfgTaxa">Valor do acesso diário (R$)</label>
+          <input type="text" id="cfgTaxa" placeholder="Ex: 10,00"></div>
+        <div class="fg"><label for="cfgTimeout">Timeout vaga ociosa (minutos)</label>
+          <input type="number" id="cfgTimeout" value="30" min="5"></div>
+        <hr style="border:none;border-top:1px solid #eee;margin:13px 0">
+        <div class="acrd-t" style="font-size:.87rem;margin-bottom:9px">💳 Dados Pix</div>
+        <div class="fg"><label for="cfgPixChave">Chave Pix</label>
+          <input type="text" id="cfgPixChave" placeholder="CNPJ, CPF, e-mail ou telefone"></div>
+        <div class="fg"><label for="cfgPixNome">Nome do Beneficiário</label>
+          <input type="text" id="cfgPixNome" placeholder="Ala dos Estudantes Educador Paiva Netto"></div>
+        <hr style="border:none;border-top:1px solid #eee;margin:13px 0">
+        <div class="acrd-t" style="font-size:.87rem;margin-bottom:9px">🏦 Gateway de Pagamento</div>
+        <div style="background:#f0f7f0;border:1.5px solid #a8d5b5;border-radius:8px;padding:10px;font-size:.78rem;color:#1a6b3a;margin-bottom:10px;line-height:1.6">
+          ✅ Configure o gateway para pagamentos automáticos via Pix e cartão.<br>
+          Sem gateway: sistema usa chave Pix estática com confirmação manual (fallback).
+        </div>
+        <div class="fg"><label for="cfgGatewayTipo">Tipo de Gateway</label>
+          <select id="cfgGatewayTipo">
+            <option value="manual">Sem gateway (manual — fallback)</option>
+            <option value="efi">EfiBank / Gerencianet</option>
+            <option value="mercadopago">Mercado Pago</option>
+            <option value="pagarme">Pagar.me</option>
+          </select></div>
+        <div class="fg"><label for="cfgGatewayChave">Chave / Token do Gateway</label>
+          <input type="password" id="cfgGatewayChave" placeholder="Client ID:Secret ou Bearer Token"></div>
+        <div class="fg"><label for="cfgGatewayChavePix">Chave Pix do Gateway (CNPJ/CPF/e-mail)</label>
+          <input type="text" id="cfgGatewayChavePix" placeholder="Chave Pix cadastrada no gateway"></div>
+        <hr style="border:none;border-top:1px solid #eee;margin:13px 0">
+        <div class="acrd-t" style="font-size:.87rem;margin-bottom:9px">💳 Cartão de Crédito / Débito</div>
+        <div style="background:#fff8e0;border:1.5px solid var(--dourado-cl);border-radius:8px;padding:10px;font-size:.78rem;color:#a07a00;margin-bottom:10px">
+          💳 Cartão pode ser pago no totem (maquininha integrada) ou na recepção. Configure as taxas para fins de relatório e faturamento.
+        </div>
+        <div class="fg"><label for="cfgTaxaCredito">Taxa Cartão de Crédito (%)</label>
+          <input type="text" id="cfgTaxaCredito" placeholder="Ex: 3,5"></div>
+        <div class="fg"><label for="cfgTaxaDebito">Taxa Cartão de Débito (%)</label>
+          <input type="text" id="cfgTaxaDebito" placeholder="Ex: 1,5"></div>
+        <hr style="border:none;border-top:1px solid #eee;margin:13px 0">
+        <div class="acrd-t" style="font-size:.87rem;margin-bottom:9px">🔐 Control iD</div>
+        <div class="fg"><label for="cfgControlIdUrl">URL da API</label>
+          <input type="text" id="cfgControlIdUrl" placeholder="http://10.161.9.102"></div>
+        <div class="fg"><label for="cfgControlIdToken">Token</label>
+          <input type="password" id="cfgControlIdToken" placeholder="Bearer token"></div>
+        <hr style="border:none;border-top:1px solid #eee;margin:13px 0">
+        <div class="acrd-t" style="font-size:.87rem;margin-bottom:6px">💳 Stone EYE PRO</div>
+        <p style="font-size:.78rem;color:#777;line-height:1.6;margin-bottom:10px">
+          Integração com a maquininha Stone para cobrança automática na recepção.
+          As credenciais abaixo devem ser configuradas nas <b>variáveis de ambiente do Vercel</b> — não aqui.
+          Use este campo apenas para confirmar a URL do webhook a cadastrar no portal Stone.
+        </p>
+        <div style="background:#f0f4ff;border:1.5px solid #b0c4ef;border-radius:8px;padding:12px;margin-bottom:12px;font-size:.79rem;line-height:1.8">
+          <div style="font-weight:700;color:var(--azul);margin-bottom:6px">📋 Checklist Stone</div>
+          <div id="stoneCheckEnv" style="color:#888">⏳ Verificando variáveis de ambiente...</div>
+          <div style="margin-top:8px;color:#555">
+            <b>URL do Webhook</b> — cadastre no portal Stone:<br>
+            <code style="font-size:.75rem;background:#e8eeff;padding:3px 7px;border-radius:4px;word-break:break-all">
+              https://biblioteca-backend-v2-0.vercel.app/api/pagamentos?acao=webhook-stone
+            </code>
+          </div>
+          <div style="margin-top:8px;color:#555">
+            <b>Portal Stone:</b>
+            <a href="https://dashboard.stone.com.br" target="_blank" style="color:var(--azul)">dashboard.stone.com.br</a>
+            → API → Webhooks → Adicionar URL acima
+          </div>
+        </div>
+        <button class="btn btn-azul btn-sm" id="btnTestarStone" onclick="adminTestarStone()">🔌 Testar conexão Stone</button>
+        <div id="stoneTestStatus" style="display:none;margin-top:8px;font-size:.79rem;padding:8px 10px;border-radius:6px"></div>
+        <button class="btn btn-verde btn-sm" id="btnSalvarConfig" style="margin-top:13px">💾 Salvar Configurações</button>
+        <hr style="border:none;border-top:1px solid #eee;margin:16px 0">
+        <hr style="border:none;border-top:1px solid #eee;margin:16px 0">
+        <div class="acrd-t" style="font-size:.87rem;margin-bottom:6px">🔄 Reset Diário de Vagas</div>
+        <p style="font-size:.78rem;color:#777;line-height:1.6;margin-bottom:10px">
+          Encerra todos os acessos ativos e zera as vagas. Executado automaticamente às 20h via cron job.
+          Use manualmente apenas se necessário (ex: após reinicialização do sistema).
+        </p>
+        <div id="resetStatus" style="display:none;background:#f8fdf9;border:1.5px solid #a8d5b5;border-radius:8px;padding:10px;margin-bottom:10px;font-size:.8rem"></div>
+        <button class="btn btn-laranja btn-sm" id="btnResetDiario" onclick="adminResetDiario()">🔄 Executar Reset Diário agora</button>
+        <hr style="border:none;border-top:1px solid #eee;margin:16px 0">
+        <div class="acrd-t" style="font-size:.87rem;margin-bottom:6px">🔄 Sincronização com Control iD</div>
+        <p style="font-size:.78rem;color:#777;line-height:1.6;margin-bottom:10px">
+          Execute uma vez para vincular automaticamente usuários já cadastrados no banco físico do Control iD com os registros do sistema, sem criar duplicatas. A biometria existente é preservada.
+        </p>
+        <div id="syncStatus" style="display:none;background:#f8fdf9;border:1.5px solid #a8d5b5;border-radius:8px;padding:12px;margin-bottom:10px;font-size:.8rem;line-height:1.8"></div>
+        <button class="btn btn-azul btn-sm" id="btnSincronizarControlId">🔄 Sincronizar com Control iD agora</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL PAGAMENTO -->
+<div class="modal-bg" id="modalPagamento">
+  <div class="modal-pagto">
+    <div class="pagto-header">
+      <div class="pi">💳</div>
+      <h3>Pagar Acesso Diário</h3>
+      <p>Válido até 19h45 de hoje — pode sair e voltar</p>
+    </div>
+    <div class="pagto-body">
+      <div class="pagto-preco">
+        <div class="valor" id="pagtoValor">R$ 10,00</div>
+        <div class="sub">Acesso integral do dia</div>
+      </div>
+
+      <!-- SELETOR -->
+      <div style="margin-bottom:14px">
+        <div style="font-size:.71rem;font-weight:700;color:var(--cinza);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Forma de pagamento</div>
+        <div style="display:flex;gap:8px">
+          <label for="pagtoPix" style="flex:1;cursor:pointer">
+            <input type="radio" id="pagtoPix" name="pagtoTipo" value="pix" checked style="display:none">
+            <div class="pagto-tipo-btn" data-tipo="pix" style="border:2px solid var(--verde);border-radius:10px;padding:10px 6px;text-align:center;background:#f0f7f0;transition:.2s">
+              <div style="font-size:1.2rem">💠</div><div style="font-size:.72rem;font-weight:700;color:var(--verde)">Pix</div>
+            </div>
+          </label>
+          <label for="pagtoCredito" style="flex:1;cursor:pointer">
+            <input type="radio" id="pagtoCredito" name="pagtoTipo" value="credito" style="display:none">
+            <div class="pagto-tipo-btn" data-tipo="credito" style="border:2px solid var(--cinza-cl);border-radius:10px;padding:10px 6px;text-align:center;background:#fff;transition:.2s">
+              <div style="font-size:1.2rem">💳</div><div style="font-size:.72rem;font-weight:700;color:var(--cinza)">Crédito</div>
+            </div>
+          </label>
+          <label for="pagtoDebito" style="flex:1;cursor:pointer">
+            <input type="radio" id="pagtoDebito" name="pagtoTipo" value="debito" style="display:none">
+            <div class="pagto-tipo-btn" data-tipo="debito" style="border:2px solid var(--cinza-cl);border-radius:10px;padding:10px 6px;text-align:center;background:#fff;transition:.2s">
+              <div style="font-size:1.2rem">🏦</div><div style="font-size:.72rem;font-weight:700;color:var(--cinza)">Débito</div>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <!-- SEÇÃO PIX — QR Code gerado pelo gateway -->
+      <div id="pixSection">
+        <div id="pixCarregando" style="text-align:center;padding:18px 0;color:var(--cinza);font-size:.84rem">
+          <div style="font-size:2rem;margin-bottom:8px">⏳</div>Gerando cobrança Pix...
+        </div>
+        <div id="pixConteudo" style="display:none">
+          <!-- QR Code -->
+          <div style="text-align:center;margin-bottom:10px">
+            <div id="pixQrContainer" style="width:160px;height:160px;margin:0 auto;background:#f5f5f5;border-radius:10px;display:flex;align-items:center;justify-content:center;overflow:hidden;border:2px solid var(--cinza-cl)">
+              <span style="font-size:3rem">📲</span>
+            </div>
+          </div>
+          <!-- Copia e cola -->
+          <div class="pix-box" style="margin-bottom:10px">
+            <div class="pix-label">Pix Copia e Cola</div>
+            <div class="pix-chave" id="pagtoCopiaCola" style="font-size:.72rem;word-break:break-all">—</div>
+            <button class="btn btn-sec" id="btnCopiarPix" style="margin-top:8px;font-size:.77rem;padding:7px 14px;width:auto">
+              📋 Copiar código
+            </button>
+          </div>
+          <!-- Timer -->
+          <div style="text-align:center;font-size:.78rem;color:var(--cinza);margin-bottom:10px">
+            ⏱️ Expira em <b id="pixTimer">05:00</b> — aguardando pagamento automaticamente
+          </div>
+          <div class="pagto-aviso">
+            🔄 Após pagar, a confirmação é automática — a catraca abre sem mais ações.
+          </div>
+        </div>
+        <!-- Modo manual (gateway não configurado) -->
+        <div id="pixManual" style="display:none">
+          <div class="pix-box" style="margin-bottom:10px">
+            <div class="pix-label">Chave Pix</div>
+            <div class="pix-chave" id="pagtoChave">—</div>
+            <div class="pix-nome" id="pagtoNome">—</div>
+            <button class="btn btn-sec" id="btnCopiarChave" style="margin-top:8px;font-size:.77rem;padding:7px 14px;width:auto">
+              📋 Copiar chave
+            </button>
+          </div>
+          <div class="pagto-aviso" style="background:#fff5e0;border-color:var(--dourado-cl)">
+            ⚠️ Gateway não configurado. Pague na chave acima e toque em "Já Paguei".<br>
+            <span style="font-size:.72rem;color:#888">Configure o gateway no painel Admin para confirmação automática.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- SEÇÃO CARTÃO (crédito / débito) -->
+      <div id="cartaoSection" style="display:none">
+        <div style="background:#eef3ff;border:1.5px solid #b0c4ef;border-radius:var(--r-sm);padding:14px;text-align:center;margin-bottom:10px">
+          <div style="font-size:1.5rem;margin-bottom:6px" id="cartaoIcon">💳</div>
+          <div style="font-weight:700;font-size:.88rem;color:var(--azul);margin-bottom:4px" id="cartaoTitulo">Pagar com Crédito</div>
+          <div style="font-size:.77rem;color:#555;line-height:1.6" id="cartaoDesc">
+            Toque em "Gerar Link" abaixo para pagar com segurança pelo seu celular.
+            Após o pagamento a catraca abre automaticamente.
+          </div>
+        </div>
+        <div id="cartaoSemGateway" style="display:none;background:#fff8e0;border:1.5px solid var(--dourado-cl);border-radius:var(--r-sm);padding:10px;font-size:.77rem;color:#a07a00;margin-bottom:10px">
+          ⚠️ Gateway não configurado — use o totem para pagar no cartão, ou escolha Pix.
+        </div>
+        <div class="pagto-aviso" style="background:#eef3ff;border-color:#b0c4ef;color:#1a4a8a;display:none" id="cartaoAvisoAguardo">
+          🔄 Link aberto! Após pagar no site do gateway, a catraca abre automaticamente.
+        </div>
+      </div>
+
+      <div class="pagto-status" id="pagtoStatus"></div>
+
+      <!-- Botão "Já Paguei" — aparece APENAS no modo manual (sem gateway) -->
+      <button class="btn btn-verde" id="btnPagarManual" style="display:none;margin-bottom:9px" onclick="confirmarPagamentoManual()">
+        ✅ Já Paguei — Confirmar
+      </button>
+      <!-- Botão Link Gateway — cartão -->
+      <button class="btn btn-azul" id="btnGerarLinkApp" style="display:none;margin-bottom:9px" onclick="gerarLinkApp()">
+        🔗 Gerar Link de Pagamento
+      </button>
+      <button class="btn btn-sec" id="btnCancelarPagto">❌ Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL SAÍDA -->
+<div class="modal-bg" id="modalSair">
+  <div class="modal">
+    <div class="mi">👋</div>
+    <h3>Sair do aplicativo?</h3>
+    <p>Se você tiver acesso pago hoje, ele continua válido até 19h45.</p>
+    <div class="modal-btns">
+      <button class="btn btn-sec" id="btnCancelarSaida" style="flex:1">Cancelar</button>
+      <button class="btn btn-verde" id="btnConfirmarSaida" style="flex:1">Sair</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- MODAL AUDITORIA DE TERMO -->
+<div class="modal-bg" id="modalAssinatura" style="align-items:flex-start;padding:16px;overflow-y:auto">
+  <div style="background:#fff;border-radius:20px;width:100%;max-width:620px;margin:auto;overflow:hidden;animation:fadeUp .3s ease">
+    <div style="background:linear-gradient(135deg,var(--verde-esc),var(--verde));color:#fff;padding:20px 24px">
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <div>
+          <div style="font-size:.68rem;text-transform:uppercase;letter-spacing:.8px;opacity:.75;margin-bottom:3px">Documento de Auditoria LGPD</div>
+          <div style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700" id="modalAssinaturaNome">—</div>
+        </div>
+        <div style="background:rgba(255,255,255,.15);border-radius:8px;padding:6px 12px;font-size:.72rem;font-weight:700">📋 LGPD</div>
+      </div>
+    </div>
+    <div style="padding:22px 24px">
+      <div style="background:#f8fdf9;border:1.5px solid #a8d5b5;border-radius:10px;padding:14px;margin-bottom:16px">
+        <div style="font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--verde);margin-bottom:10px">📊 Dados de Auditoria</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:.8rem">
+          <div><span style="color:#888">Usuário:</span><br><b id="auditNome">—</b></div>
+          <div><span style="color:#888">CPF:</span><br><b id="auditCpf">—</b></div>
+          <div><span style="color:#888">Data/Hora:</span><br><b id="auditData">—</b></div>
+          <div><span style="color:#888">IP do dispositivo:</span><br><b id="auditIp">—</b></div>
+          <div><span style="color:#888">ID do registro:</span><br><b id="auditId" style="font-family:monospace;font-size:.7rem">—</b></div>
+          <div><span style="color:#888">Validade:</span><br><b style="color:var(--verde)">✅ Válido</b></div>
+        </div>
+      </div>
+      <div style="font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--cinza);margin-bottom:8px">✍️ Assinatura Manuscrita Digital</div>
+      <div style="border:1.5px solid #ddd;border-radius:8px;padding:10px;background:#fff;margin-bottom:14px">
+        <img id="modalAssinaturaImg" src="" style="width:100%;max-height:130px;object-fit:contain;display:block" alt="Assinatura digital">
+      </div>
+      <div id="auditFotoWrap" style="display:none;margin-bottom:14px">
+        <div style="font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--cinza);margin-bottom:8px">📸 Foto de Cadastro</div>
+        <div style="display:flex;align-items:center;gap:12px">
+          <img id="auditFoto" src="" style="width:72px;height:72px;object-fit:cover;border-radius:50%;border:3px solid var(--verde-suave)">
+          <div style="font-size:.77rem;color:#666">Foto para reconhecimento facial via Control iD.</div>
+        </div>
+      </div>
+      <div style="background:#f0f0f0;border-radius:8px;padding:10px 12px;font-size:.69rem;color:#888;margin-bottom:16px">
+        🔒 <b>Hash:</b> <span id="auditHash" style="font-family:monospace">—</span>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn btn-verde btn-sm" style="flex:1;min-width:130px" onclick="auditBaixarHTML()">⬇️ Baixar Documento</button>
+        <button class="btn btn-sec btn-sm" style="flex:1;min-width:100px" onclick="document.getElementById('modalAssinatura').classList.remove('ativo')">Fechar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL AVISO URGENTE -->
+<div class="modal-bg" id="modalAvisoUrgente">
+  <div class="modal" style="max-width:420px;text-align:left">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+      <span style="font-size:2rem" id="modalAvisoIcon">⚠️</span>
+      <div>
+        <div style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--vermelho);margin-bottom:2px">Comunicado Urgente</div>
+        <h3 id="modalAvisoTitulo" style="font-size:1rem;color:var(--cinza-esc)">—</h3>
+      </div>
+    </div>
+    <p id="modalAvisoConteudo" style="font-size:.85rem;color:var(--cinza);line-height:1.7;margin-bottom:16px">—</p>
+    <button class="btn btn-verde" id="btnFecharAvisoUrgente">✓ Entendido</button>
+  </div>
+</div>
+
+
+
+<script>
+// ═══════════════════════════════════════════════════════════
+//  CONFIGURAÇÃO — altere apenas API_BASE após o deploy
+// ═══════════════════════════════════════════════════════════
+const API_BASE = 'https://biblioteca-backend-v2-0.vercel.app';
+
+// ═══════════════════════════════════════════════════════════
+//  CAMADA DE API
+// ═══════════════════════════════════════════════════════════
+const api = {
+  token: null,
+
+  setToken(t) { this.token = t; },
+  clearToken() { this.token = null; },
+
+  async req(method, path, body) {
+    const headers = { 'Content-Type': 'application/json' };
+    if (this.token) headers['Authorization'] = `Bearer ${this.token}`;
+    const opts = { method, headers };
+    if (body) opts.body = JSON.stringify(body);
+    const r = await fetch(API_BASE + path, opts);
+    const data = await r.json();
+    if (!r.ok) throw new Error(data.erro || 'Erro na requisição');
+    return data;
+  },
+
+  get(path)         { return this.req('GET', path); },
+  post(path, body)  { return this.req('POST', path, body); },
+
+  // Auth
+  login(tipo, senha)         { return this.post('/api/auth?acao=login-staff', { tipo, senha }); },
+
+  // Vagas
+  vagas()                    { return this.get('/api/vagas?acao=status'); },
+
+  // Usuários
+  cadastrar(dados)           { return this.post('/api/usuarios?acao=cadastrar', dados); },
+  listarUsuarios(q)          { return this.get(`/api/usuarios?acao=listar&busca=${q||''}`); },
+
+  // Acessos
+  registrarAcesso(uid, pid)  { return this.post('/api/acessos?acao=registrar', { usuario_id: uid, pagamento_id: pid, registrado_por: 'recepcao' }); },
+  listarAcessos(data, status){ return this.get(`/api/acessos?acao=listar&data=${data||''}&status=${status||''}`); },
+  encerrarAcesso(id)         { return this.post('/api/acessos?acao=encerrar', { acesso_id: id }); },
+  // Avisos e Sugestoes
+  listarAvisos()             { return this.get('/api/avisos'); },
+  criarAviso(dados)          { return this.post('/api/avisos', dados); },
+  deletarAviso(id)           { return this.req('DELETE', '/api/avisos', { id }); },
+  enviarSugestao(dados)      { return this.post('/api/sugestoes', dados); },
+  listarSugestoes()          { return this.get('/api/sugestoes'); },
+  marcarSugestaoLida(id)     { return this.req('PUT', '/api/sugestoes', { id }); },
+};
+
+// ═══════════════════════════════════════════════════════════
+//  ESTADO DA SESSÃO (em memória, nunca localStorage)
+// ═══════════════════════════════════════════════════════════
+const sess = {
+  usuario: null,      // dados do usuário logado
+  tipo: null,         // 'app' | 'recepcao' | 'admin'
+  acesso: null,       // acesso ativo do dia
+};
+let _pollRealtimeRecep = null;  // polling em tempo real recep/admin
+
+// ═══════════════════════════════════════════════════════════
+//  UTILITÁRIOS
+// ═══════════════════════════════════════════════════════════
+function toast(msg, dur=2800) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), dur);
+}
+
+function fmtCpf(v) {
+  return v.replace(/\D/g,'').replace(/(\d{3})(\d{3})(\d{3})(\d{2})/,'$1.$2.$3-$4');
+}
+
+function maskCpf(input) {
+  input.addEventListener('input', () => {
+    let v = input.value.replace(/\D/g,'').slice(0,11);
+    if(v.length>9) v = v.replace(/(\d{3})(\d{3})(\d{3})(\d{1,2})/,'$1.$2.$3-$4');
+    else if(v.length>6) v = v.replace(/(\d{3})(\d{3})(\d{1,3})/,'$1.$2.$3');
+    else if(v.length>3) v = v.replace(/(\d{3})(\d{1,3})/,'$1.$2');
+    input.value = v;
+  });
+}
+
+function hojeISO() { return new Date().toISOString().split('T')[0]; }
+
+function fmtHora(iso) {
+  if(!iso) return '—';
+  return new Date(iso).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+}
+
+function mostrarErro(id, msg) {
+  const el = document.getElementById(id);
+  if(!el) return;
+  el.textContent = msg;
+  el.style.display = msg ? 'block' : 'none';
+}
+
+function loading(btnId, sim) {
+  const b = document.getElementById(btnId);
+  if(!b) return;
+  b.disabled = sim;
+  if(sim) { b._txt = b.innerHTML; b.innerHTML = `<span class="spinner"></span> Aguarde...`; }
+  else b.innerHTML = b._txt || b.innerHTML;
+}
+
+function mostrarTela(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('ativo'));
+  document.getElementById(id).classList.add('ativo');
+}
+
+// ═══════════════════════════════════════════════════════════
+//  INICIALIZAÇÃO
+// ═══════════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  // Máscaras
+  maskCpf(document.getElementById('loginCpf'));
+  maskCpf(document.getElementById('cadCpf'));
+  maskCpf(document.getElementById('recepCpfBusca'));
+  maskCpf(document.getElementById('migCpf'));
+
+  // Data atual na tela app
+  const now = new Date();
+  document.getElementById('msgData').textContent = now.toLocaleDateString('pt-BR',
+    { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+
+  // Data padrão no histórico admin
+  const dh = document.getElementById('adminDataHistorico');
+  if(dh) dh.value = hojeISO();
+
+  bindEventos();
+
+  // Carregar vagas públicas
+  setTimeout(atualizarVagas, 500);
+  setInterval(atualizarVagas, 30000);
+});
+
+// ═══════════════════════════════════════════════════════════
+//  EVENTOS
+// ═══════════════════════════════════════════════════════════
+function bindEventos() {
+
+  // Navegação login
+  document.getElementById('irCadastro').onclick   = () => mostrarTela('cadastroScreen');
+  document.getElementById('irLogin').onclick      = () => mostrarTela('loginScreen');
+  document.getElementById('irAdminLogin').onclick = () => mostrarTela('adminLoginScreen');
+  document.getElementById('voltarLogin').onclick  = () => mostrarTela('loginScreen');
+
+  // Login usuário (por CPF — busca o usuário e autentica localmente)
+  document.getElementById('btnLogin').onclick = loginUsuario;
+  document.getElementById('loginSenha').onkeydown = e => { if(e.key==='Enter') loginUsuario(); };
+
+  // Login admin/recepção
+  document.getElementById('btnAdminLogin').onclick = loginAdmin;
+  document.getElementById('adminSenha').onkeydown  = e => { if(e.key==='Enter') loginAdmin(); };
+
+  // Cadastro
+  document.getElementById('btnCadastrar').onclick = cadastrarUsuario;
+  // irLogin2 é o link na etapa 1 do cadastro (mesmo id já coberto acima)
+
+  // App — tabs + nav
+  document.querySelectorAll('.tab').forEach(b => b.onclick = () => mudarTab(b.dataset.panel));
+  document.querySelectorAll('.ni').forEach(n => n.onclick = () => {
+    document.querySelectorAll('.ni').forEach(x => x.classList.remove('ativo'));
+    n.classList.add('ativo');
+    mudarTab(n.dataset.panel);
+  });
+
+  // Acesso / pagamento
+  document.getElementById('btnAcesso').onclick     = abrirModalPagamento;
+  // btnPagarManual tem onclick inline — poll automático cuida do resto
+  document.getElementById('btnCancelarPagto').onclick = fecharModalPagamento;
+
+  // Seletor tipo pagamento
+  document.querySelectorAll('input[name="pagtoTipo"]').forEach(r => {
+    r.addEventListener('change', () => _atualizarUIPagto(r.value));
+  });
+  document.querySelectorAll('.pagto-tipo-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const t = btn.dataset.tipo;
+      document.getElementById(`pagto${t.charAt(0).toUpperCase()+t.slice(1)}`).checked = true;
+      _atualizarUIPagto(t);
+    });
+  });
+
+  // Sair app
+  document.getElementById('btnSairApp').onclick    = () => document.getElementById('modalSair').classList.add('ativo');
+  document.getElementById('btnSairPlano').onclick  = () => document.getElementById('modalSair').classList.add('ativo');
+  document.getElementById('btnCancelarSaida').onclick = () => document.getElementById('modalSair').classList.remove('ativo');
+  document.getElementById('btnConfirmarSaida').onclick = () => {
+    // Para todos os pollings antes de sair
+    clearInterval(_pollPagamento);
+    clearInterval(_pixTimerInterval);
+    clearInterval(_pollRealtimeRecep);
+    sess.usuario = null; sess.tipo = null; sess.acesso = null; api.clearToken();
+    document.getElementById('modalSair').classList.remove('ativo');
+    mostrarTela('loginScreen');
+  };
+
+  // ── Indicador de força de senha ────────────────────────────
+  function avaliarSenha(senha) {
+    const re = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()\-_=+\[\]{};:'",.<>?/\\|`~]).{8,}$/;
+    if (!senha) return { txt: '', cor: '' };
+    const ok  = re.test(senha);
+    const len = senha.length;
+    if (ok && len >= 12) return { txt: '🟢 Senha forte', cor: 'var(--verde)' };
+    if (ok)              return { txt: '🟡 Senha aceitável', cor: '#a07a00' };
+    if (len < 8)         return { txt: '🔴 Muito curta — mín. 8 caracteres', cor: 'var(--vermelho)' };
+    return { txt: '🔴 Adicione maiúscula, número e símbolo (!@#$...)', cor: 'var(--vermelho)' };
+  }
+  ['cadSenha','migSenha'].forEach(id => {
+    const el  = document.getElementById(id);
+    const out = document.getElementById(id.replace('Senha','SenhaForca').replace('migSenha','migSenhaForca'));
+    if (!el || !out) return;
+    el.addEventListener('input', () => {
+      const r = avaliarSenha(el.value);
+      out.textContent = r.txt;
+      out.style.color = r.cor;
+    });
+  });
+
+  // ── Polling de avisos urgentes no app (a cada 5 min) ───────
+  setInterval(verificarAvisosUrgentes, 300000);
+
+  // Sair recep/admin
+  document.getElementById('btnSairRecep').onclick  = () => { clearInterval(_pollRealtimeRecep); api.clearToken(); mostrarTela('loginScreen'); };
+  document.getElementById('btnSairAdmin').onclick  = () => { clearInterval(_pollRealtimeRecep); api.clearToken(); mostrarTela('loginScreen'); };
+
+  // Recepção — tabs
+  document.querySelectorAll('.atab').forEach(b => b.onclick = () => mudarATab(b.dataset.apanel, b));
+
+  // Recepção — busca usuário
+  document.getElementById('btnRecepBuscar').onclick = recepBuscarUsuario;
+  document.getElementById('recepCpfBusca').onkeydown = e => { if(e.key==='Enter') recepBuscarUsuario(); };
+
+  // Admin — busca usuário
+  const bu = document.getElementById('adminBuscaUsuario');
+  if(bu) bu.oninput = debounce(() => adminCarregarUsuarios(bu.value), 400);
+
+  // Admin — histórico data
+  const dh = document.getElementById('adminDataHistorico');
+  if(dh) dh.onchange = () => adminCarregarHistorico(dh.value);
+
+  // Admin — salvar config
+  document.getElementById('btnSalvarConfig').onclick = adminSalvarConfig;
+  document.getElementById('btnPublicarAviso').onclick = adminPublicarAviso;
+  document.getElementById('btnSincronizarControlId').onclick = adminSincronizarControlId;
+
+  // Sugestões
+  document.getElementById('btnEnviarMsg').onclick = enviarSugestao;
+}
+
+function debounce(fn, ms) {
+  let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); };
+}
+
+function mudarTab(panelId) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('ativo'));
+  document.querySelectorAll('.tab').forEach(b => b.classList.remove('ativo'));
+  document.getElementById(panelId)?.classList.add('ativo');
+  document.querySelector(`.tab[data-panel="${panelId}"]`)?.classList.add('ativo');
+  if(panelId === 'panelPlano') carregarHistoricoUsuario();
+  if(panelId === 'panelAvisos') carregarAvisos();
+}
+
+function mudarATab(panelId, btn) {
+  if(!panelId) return;
+  document.querySelectorAll('.apanel').forEach(p => p.classList.remove('ativo'));
+  document.querySelectorAll('.atab').forEach(b => b.classList.remove('ativo'));
+  document.getElementById(panelId)?.classList.add('ativo');
+  btn.classList.add('ativo');
+  if(panelId === 'adminPanelAvisos')    { adminCarregarAvisos(); }
+  if(panelId === 'recepPanelPendentes') { recepCarregarPendentes(); }
+  if(panelId === 'recepPanelPagos')     { recepCarregarPagos(); }
+  if(panelId === 'adminPanelHistorico') { adminCarregarHistorico(); }
+  if(panelId === 'adminPanelSugestoes') { adminCarregarSugestoes(); }
+  if(panelId === 'adminPanelConfig')    { adminCarregarConfigForm(); }
+}
+
+async function adminCarregarConfigForm() {
+  try {
+    const res = await api.get('/api/configuracoes');
+    const cfg = {};
+    (res.configuracoes || []).forEach(c => cfg[c.chave] = c.valor);
+
+    const set = (id, val) => { const el = document.getElementById(id); if(el && val !== undefined) el.value = val; };
+    set('cfgVagas',         cfg.total_vagas);
+    set('cfgTaxa',          cfg.valor_diaria);
+    set('cfgTimeout',       cfg.timeout_vaga_minutos);
+    set('cfgPixChave',      cfg.pix_chave);
+    set('cfgPixNome',       cfg.pix_nome);
+    set('cfgGatewayTipo',   cfg.gateway_tipo);
+    set('cfgGatewayChave',  cfg.gateway_chave);
+    set('cfgGatewayChavePix', cfg.gateway_chave_pix);
+    set('cfgControlIdUrl',  cfg.controlid_url);
+    set('cfgTaxaCredito',   cfg.taxa_credito);
+    set('cfgTaxaDebito',    cfg.taxa_debito);
+  } catch(e) { /* silencioso */ }
+}
+
+// ═══════════════════════════════════════════════════════════
+//  VAGAS (público)
+// ═══════════════════════════════════════════════════════════
+async function atualizarVagas() {
+  try {
+    const d = await api.vagas();
+    const pct = d.total > 0 ? Math.round((d.ocupadas/d.total)*100) : 0;
+
+    ['vagasL','rVL','rVL2','aVL'].forEach(id => {
+      const el = document.getElementById(id);
+      if(el) el.textContent = d.livres;
+    });
+    ['vagasO','rVO','rVO2','aVO'].forEach(id => {
+      const el = document.getElementById(id);
+      if(el) el.textContent = d.ocupadas;
+    });
+    ['rPresentes','aPresentes'].forEach(id => {
+      const el = document.getElementById(id);
+      if(el) el.textContent = d.ocupadas;
+    });
+
+    document.getElementById('pctOc').textContent = pct+'%';
+    document.getElementById('barraFill').style.width = pct+'%';
+    document.getElementById('rPct').textContent = pct+'%';
+    document.getElementById('rBarraFill').style.width = pct+'%';
+    document.getElementById('totalVagasInfo').textContent = `${d.total} vagas rotativas`;
+  } catch(e) {
+    // silencioso — pode estar offline
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+//  LOGIN USUÁRIO
+// ═══════════════════════════════════════════════════════════
+async function loginUsuario() {
+  mostrarErro('loginErro','');
+  const cpf   = document.getElementById('loginCpf').value.replace(/\D/g,'');
+  const senha = document.getElementById('loginSenha').value;
+
+  if(cpf.length !== 11) { mostrarErro('loginErro','CPF inválido'); return; }
+  if(!senha)             { mostrarErro('loginErro','Informe a senha'); return; }
+
+  loading('btnLogin', true);
+  try {
+    const res = await api.post('/api/auth?acao=login-usuario', { cpf, senha });
+    api.setToken(res.token);
+    sess.usuario = res.usuario;
+    sess.tipo    = 'app';
+
+    // ── Detecta primeiro acesso (importado do Control iD sem termo) ──
+    // Busca dados completos para verificar termo_aceito_em
+    try {
+      const perfil = await fetch(
+        `${API_BASE}/api/acessos?acao=historico-usuario&usuario_id=${res.usuario.id}`
+      ).then(r => r.json());
+      // Verifica se tem termo assinado via campo no token ou busca separada
+    } catch(e) {}
+
+    // Verifica se precisa assinar o termo
+    const semTermo = !res.usuario.termo_aceito_em;
+    if (semTermo) {
+      // Redireciona para fluxo de primeiro acesso
+      document.getElementById('migCpf').value = cpf;
+      // Pula o passo 1 (busca CPF) — usuário já está logado
+      _migUsuario = res.usuario;
+      document.getElementById('migNomeConfirm').textContent = res.usuario.nome;
+      document.getElementById('migCpfConfirm').textContent  = 'CPF: ' + fmtCpf(res.usuario.cpf);
+      document.getElementById('migAvatar').textContent      = res.usuario.nome[0].toUpperCase();
+      document.getElementById('migPasso1').style.display    = 'none';
+      document.getElementById('migPasso2').style.display    = 'block';
+      // Mostra aviso de que precisa assinar o termo
+      mostrarErro('migErro', '');
+      const avisoEl = document.getElementById('migAvisoPrimeiroAcesso');
+      if (avisoEl) avisoEl.style.display = 'block';
+      mostrarTela('migracaoScreen');
+      return;
+    }
+
+    entrarApp();
+  } catch(e) {
+    mostrarErro('loginErro', e.message || 'CPF ou senha incorretos');
+  } finally {
+    loading('btnLogin', false);
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+//  LOGIN ADMIN/RECEPÇÃO
+// ═══════════════════════════════════════════════════════════
+async function loginAdmin() {
+  mostrarErro('adminLoginErro','');
+  const tipo  = document.getElementById('adminUser').value.trim();
+  const senha = document.getElementById('adminSenha').value;
+
+  if(!tipo || !senha) { mostrarErro('adminLoginErro','Preencha usuário e senha'); return; }
+  if(!['admin','recepcao'].includes(tipo)) { mostrarErro('adminLoginErro','Usuário inválido. Use: admin ou recepcao'); return; }
+
+  loading('btnAdminLogin', true);
+  try {
+    const res = await api.login(tipo, senha);
+    api.setToken(res.token);
+    sess.tipo = tipo;
+
+    atualizarVagas();
+
+    if(tipo === 'admin') {
+      mostrarTela('adminScreen');
+      adminCarregarUsuarios();
+      adminCarregarStats();
+      adminVerificarStone();
+    } else {
+      mostrarTela('recepScreen');
+      recepCarregarPresentes();
+      recepCarregarPagos();
+    }
+
+    document.getElementById('adminUser').value = '';
+    document.getElementById('adminSenha').value = '';
+
+    toast(`✅ Bem-vindo ao painel de ${tipo}!`);
+    setInterval(atualizarVagas, 15000);
+
+    // ── Polling em tempo real ───────────────────────────────
+    // Recepção: atualiza presentes + pendentes a cada 20s automaticamente
+    if (tipo === 'recepcao') {
+      _pollRealtimeRecep = setInterval(() => {
+        recepCarregarPresentes();
+        recepCarregarPendentes();
+      }, 20000);
+    }
+    // Admin: atualiza stats a cada 30s
+    if (tipo === 'admin') {
+      _pollRealtimeRecep = setInterval(() => {
+        adminCarregarStats();
+      }, 30000);
+    }
+  } catch(e) {
+    mostrarErro('adminLoginErro', e.message || 'Senha incorreta');
+  } finally {
+    loading('btnAdminLogin', false);
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+//  CADASTRO COM ASSINATURA DIGITAL
+// ═══════════════════════════════════════════════════════════
+let _assinaturaFeita = false;
+let _ctx = null;
+let _desenhando = false;
+
+function initCanvas() {
+  const canvas = document.getElementById('canvasAssinatura');
+  if (!canvas || _ctx) return;
+  const wrap = document.getElementById('canvasWrap');
+  const dpr = window.devicePixelRatio || 1;
+  const w = wrap.offsetWidth || 350;
+  canvas.width  = w * dpr;
+  canvas.height = 130 * dpr;
+  canvas.style.width  = w + 'px';
+  canvas.style.height = '130px';
+  _ctx = canvas.getContext('2d');
+  _ctx.scale(dpr, dpr);
+  _ctx.strokeStyle = '#1a1a1a';
+  _ctx.lineWidth = 2.2;
+  _ctx.lineCap = 'round';
+  _ctx.lineJoin = 'round';
+
+  function getPos(e) {
+    const r = canvas.getBoundingClientRect();
+    const s = e.touches ? e.touches[0] : e;
+    return { x: s.clientX - r.left, y: s.clientY - r.top };
+  }
+  canvas.addEventListener('mousedown', e => {
+    _desenhando = true;
+    const p = getPos(e);
+    _ctx.beginPath(); _ctx.moveTo(p.x, p.y);
+  });
+  canvas.addEventListener('mousemove', e => {
+    if (!_desenhando) return;
+    const p = getPos(e);
+    _ctx.lineTo(p.x, p.y); _ctx.stroke();
+    _assinaturaFeita = true;
+    document.getElementById('assinaturaPlaceholder').style.display = 'none';
+  });
+  canvas.addEventListener('mouseup',    () => _desenhando = false);
+  canvas.addEventListener('mouseleave', () => _desenhando = false);
+  canvas.addEventListener('touchstart', e => {
+    e.preventDefault(); _desenhando = true;
+    const p = getPos(e); _ctx.beginPath(); _ctx.moveTo(p.x, p.y);
+  }, { passive: false });
+  canvas.addEventListener('touchmove', e => {
+    e.preventDefault();
+    if (!_desenhando) return;
+    const p = getPos(e); _ctx.lineTo(p.x, p.y); _ctx.stroke();
+    _assinaturaFeita = true;
+    document.getElementById('assinaturaPlaceholder').style.display = 'none';
+  }, { passive: false });
+  canvas.addEventListener('touchend', e => { e.preventDefault(); _desenhando = false; }, { passive: false });
+}
+
+function limparCanvas() {
+  if (!_ctx) return;
+  const c = document.getElementById('canvasAssinatura');
+  _ctx.clearRect(0, 0, c.width, c.height);
+  _assinaturaFeita = false;
+  document.getElementById('assinaturaPlaceholder').style.display = 'flex';
+}
+
+// ─── CÂMERA CADASTRO APP (3 ETAPAS) ──────────────────────────
+let _cadFotoDataUrl = null;
+let _cadStream = null;
+
+function _irEtapaCad(n) {
+  [1,2,3].forEach(i => {
+    const el = document.getElementById('cadEtapa'+i);
+    if(el) el.style.display = i===n ? 'block' : 'none';
+    const bar = document.getElementById('etapaInd'+i);
+    if(bar) bar.style.background = i<=n ? 'var(--verde)' : 'var(--cinza-cl)';
+  });
+  document.getElementById('etapaTxt').textContent = 'Etapa '+n+' de 3';
+  if(n===3){ _ctx=null; setTimeout(initCanvas,120); }
+}
+
+function _atualizarBotaoEtapa2() {
+  const btn = document.getElementById('btnCadEtapa2');
+  if(!btn) return;
+  btn.disabled = !_cadFotoDataUrl;
+  btn.style.opacity = _cadFotoDataUrl ? '1' : '.5';
+}
+
+document.getElementById('btnAbrirCamera').addEventListener('click', async () => {
+  try {
+    _cadStream = await navigator.mediaDevices.getUserMedia({video:{facingMode:'user'},audio:false});
+    const v = document.getElementById('cadVideo');
+    v.srcObject = _cadStream; v.style.display = 'block';
+    document.getElementById('cadFotoPlaceholder').style.display = 'none';
+    document.getElementById('cadCameraControles').style.display = 'block';
+    document.querySelector('#cadEtapa2 .cam-btns')?.style.setProperty('display','none');
+  } catch(e) { toast('⚠️ Câmera indisponível. Use a opção de arquivo.'); }
+});
+document.getElementById('btnCapturarFoto').addEventListener('click', () => {
+  const v = document.getElementById('cadVideo');
+  const c = document.getElementById('cadCanvas');
+  c.width = v.videoWidth; c.height = v.videoHeight;
+  c.getContext('2d').drawImage(v,0,0);
+  _cadFotoDataUrl = c.toDataURL('image/jpeg',0.85);
+  document.getElementById('cadFotoPreview').src = _cadFotoDataUrl;
+  document.getElementById('cadFotoPreview').style.display = 'block';
+  v.style.display = 'none';
+  document.getElementById('cadCameraControles').style.display = 'none';
+  document.getElementById('cadFotoFeitaControles').style.display = 'block';
+  _cadStream?.getTracks().forEach(t=>t.stop()); _cadStream=null;
+  _atualizarBotaoEtapa2();
+});
+document.getElementById('btnFecharCamera').addEventListener('click', () => {
+  _cadStream?.getTracks().forEach(t=>t.stop()); _cadStream=null;
+  document.getElementById('cadVideo').style.display = 'none';
+  document.getElementById('cadCameraControles').style.display = 'none';
+  document.getElementById('cadFotoPlaceholder').style.display = 'flex';
+});
+document.getElementById('btnRefazerFoto').addEventListener('click', () => {
+  _cadFotoDataUrl = null;
+  document.getElementById('cadFotoPreview').style.display = 'none';
+  document.getElementById('cadFotoFeitaControles').style.display = 'none';
+  document.getElementById('cadFotoPlaceholder').style.display = 'flex';
+  _atualizarBotaoEtapa2();
+});
+document.getElementById('cadFotoFile').addEventListener('change', e => {
+  const f=e.target.files[0]; if(!f) return;
+  const r=new FileReader();
+  r.onload = ev => {
+    _cadFotoDataUrl = ev.target.result;
+    document.getElementById('cadFotoPreview').src = _cadFotoDataUrl;
+    document.getElementById('cadFotoPreview').style.display = 'block';
+    document.getElementById('cadFotoPlaceholder').style.display = 'none';
+    document.getElementById('cadFotoFeitaControles').style.display = 'block';
+    _atualizarBotaoEtapa2();
+  };
+  r.readAsDataURL(f);
+});
+
+// Etapa 1 → 2
+document.getElementById('btnCadEtapa1').addEventListener('click', () => {
+  mostrarErro('cadErro','');
+  const nome  = document.getElementById('cadNome').value.trim();
+  const cpf   = document.getElementById('cadCpf').value.replace(/\D/g,'');
+  const tipo  = document.getElementById('cadTipo').value;
+  const senha = document.getElementById('cadSenha').value;
+  if (!nome)           { mostrarErro('cadErro','Informe seu nome'); return; }
+  if (cpf.length!==11) { mostrarErro('cadErro','CPF inválido'); return; }
+  if (!tipo)           { mostrarErro('cadErro','Selecione o tipo de usuário'); return; }
+  const _senhaRe = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()\-_=+\[\]{};:'",.<>?/\\|`~]).{8,}$/;
+  if (!_senhaRe.test(senha)) { mostrarErro('cadErro','Senha fraca — mínimo 8 caracteres com maiúscula, minúscula, número e símbolo (ex: Estudo@2025)'); return; }
+  _irEtapaCad(2);
+});
+// Etapa 2 → 3
+document.getElementById('btnCadEtapa2').addEventListener('click', () => {
+  if (!_cadFotoDataUrl) { mostrarErro('cadErro','Tire ou envie sua foto antes de continuar'); return; }
+  mostrarErro('cadErro','');
+  _irEtapaCad(3);
+});
+// Voltar 2→1
+document.getElementById('btnVoltarEtapa1').addEventListener('click', () => {
+  _cadStream?.getTracks().forEach(t=>t.stop()); _cadStream=null;
+  _irEtapaCad(1);
+});
+// Voltar 3→2
+document.getElementById('btnVoltarEtapa2').addEventListener('click', () => _irEtapaCad(2));
+
+document.getElementById('btnLimparAssinatura').addEventListener('click', limparCanvas);
+
+async function cadastrarUsuario() {
+  mostrarErro('cadErro','');
+  if (!_assinaturaFeita) { mostrarErro('cadErro','Por favor, assine o termo para continuar'); return; }
+  if (!_cadFotoDataUrl)  { mostrarErro('cadErro','Foto obrigatória — volte e tire a foto'); return; }
+  const nome  = document.getElementById('cadNome').value.trim();
+  const cpf   = document.getElementById('cadCpf').value.replace(/\D/g,'');
+  const email = document.getElementById('cadEmail').value.trim();
+  const tel   = document.getElementById('cadTel').value.trim();
+  const tipo  = document.getElementById('cadTipo').value;
+  const assinatura = document.getElementById('canvasAssinatura').toDataURL('image/png');
+  const senha = document.getElementById('cadSenha').value;
+
+  loading('btnCadastrar', true);
+  try {
+    const r = await fetch(API_BASE + '/api/usuarios?acao=cadastrar', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ nome, cpf, email, telefone:tel, tipo, senha,
+        assinatura_svg: assinatura, foto_base64: _cadFotoDataUrl })
+    });
+    const data = await r.json();
+    if (!r.ok) throw new Error(data.erro || 'Erro ao cadastrar');
+    toast('✅ Cadastro realizado! Foto enviada ao Control iD.');
+    _ctx=null; _assinaturaFeita=false; _cadFotoDataUrl=null;
+    document.getElementById('cadFotoPreview').style.display='none';
+    document.getElementById('cadFotoPlaceholder').style.display='flex';
+    document.getElementById('cadFotoFeitaControles').style.display='none';
+    _irEtapaCad(1);
+    setTimeout(()=>mostrarTela('loginScreen'),1600);
+  } catch(e) {
+    mostrarErro('cadErro', e.message);
+  } finally {
+    loading('btnCadastrar', false);
+  }
+}
+
+// ─── MIGRAÇÃO — USUÁRIOS JÁ CADASTRADOS ──────────────────────
+let _migUsuario=null, _migFotoDataUrl=null, _migStream=null;
+
+document.getElementById('irMigracao').addEventListener('click',()=>mostrarTela('migracaoScreen'));
+document.getElementById('migVoltarLogin').addEventListener('click',()=>mostrarTela('loginScreen'));
+document.getElementById('btnMigBuscarCpf').addEventListener('click', migBuscarCpf);
+document.getElementById('migCpf').addEventListener('keydown',e=>{if(e.key==='Enter')migBuscarCpf();});
+
+async function migBuscarCpf() {
+  mostrarErro('migErro','');
+  const cpf = document.getElementById('migCpf').value.replace(/\D/g,'');
+  if(cpf.length!==11){mostrarErro('migErro','CPF inválido');return;}
+  loading('btnMigBuscarCpf',true);
+  try {
+    const res = await api.get('/api/usuarios?acao=buscar-cpf&cpf='+cpf);
+    const u = res.usuario || null;
+    if(!u){mostrarErro('migErro','CPF não encontrado. Realize um novo cadastro.');return;}
+    if(!u.ativo){mostrarErro('migErro','Cadastro suspenso. Procure a recepção.');return;}
+    _migUsuario=u;
+    document.getElementById('migNomeConfirm').textContent=u.nome;
+    document.getElementById('migCpfConfirm').textContent='CPF: '+fmtCpf(u.cpf);
+    document.getElementById('migAvatar').textContent=u.nome[0].toUpperCase();
+    document.getElementById('migPasso1').style.display='none';
+    document.getElementById('migPasso2').style.display='block';
+  } catch(e){mostrarErro('migErro',e.message||'Erro de conexão');}
+  finally{loading('btnMigBuscarCpf',false);}
+}
+
+document.getElementById('btnMigAbrirCamera').addEventListener('click', async()=>{
+  try{
+    _migStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user'},audio:false});
+    const v=document.getElementById('migVideo');
+    v.srcObject=_migStream; v.style.display='block';
+    document.getElementById('migFotoPlaceholder').style.display='none';
+    document.getElementById('migCameraControles').style.display='block';
+  }catch(e){toast('⚠️ Câmera indisponível. Use a opção de arquivo.');}
+});
+document.getElementById('btnMigCapturar').addEventListener('click',()=>{
+  const v=document.getElementById('migVideo'),c=document.getElementById('migCanvas');
+  c.width=v.videoWidth; c.height=v.videoHeight;
+  c.getContext('2d').drawImage(v,0,0);
+  _migFotoDataUrl=c.toDataURL('image/jpeg',0.85);
+  document.getElementById('migFotoPreview').src=_migFotoDataUrl;
+  document.getElementById('migFotoPreview').style.display='block';
+  v.style.display='none';
+  document.getElementById('migCameraControles').style.display='none';
+  document.getElementById('migFotoFeitaControles').style.display='block';
+  _migStream?.getTracks().forEach(t=>t.stop()); _migStream=null;
+});
+document.getElementById('btnMigFecharCamera').addEventListener('click',()=>{
+  _migStream?.getTracks().forEach(t=>t.stop()); _migStream=null;
+  document.getElementById('migVideo').style.display='none';
+  document.getElementById('migCameraControles').style.display='none';
+  document.getElementById('migFotoPlaceholder').style.display='block';
+});
+document.getElementById('btnMigRefazerFoto').addEventListener('click',()=>{
+  _migFotoDataUrl=null;
+  document.getElementById('migFotoPreview').style.display='none';
+  document.getElementById('migFotoFeitaControles').style.display='none';
+  document.getElementById('migFotoPlaceholder').style.display='block';
+});
+document.getElementById('migFotoFile').addEventListener('change',e=>{
+  const f=e.target.files[0]; if(!f) return;
+  const r=new FileReader();
+  r.onload=ev=>{
+    _migFotoDataUrl=ev.target.result;
+    document.getElementById('migFotoPreview').src=_migFotoDataUrl;
+    document.getElementById('migFotoPreview').style.display='block';
+    document.getElementById('migFotoPlaceholder').style.display='none';
+    document.getElementById('migFotoFeitaControles').style.display='block';
+  };
+  r.readAsDataURL(f);
+});
+document.getElementById('btnMigVoltar').addEventListener('click',()=>{
+  _migStream?.getTracks().forEach(t=>t.stop()); _migStream=null;
+  _migUsuario=null; _migFotoDataUrl=null;
+  document.getElementById('migPasso1').style.display='block';
+  document.getElementById('migPasso2').style.display='none';
+});
+document.getElementById('btnMigFinalizar').addEventListener('click', migFinalizar);
+
+// Canvas de assinatura da migração
+let _migCtx = null, _migAssinaturaFeita = false, _migDesenhando = false;
+
+function initMigCanvas() {
+  const canvas = document.getElementById('migCanvasAssinatura');
+  if (!canvas || _migCtx) return;
+  const wrap = document.getElementById('migCanvasWrap');
+  const dpr  = window.devicePixelRatio || 1;
+  const w    = wrap.offsetWidth || 350;
+  canvas.width  = w * dpr;
+  canvas.height = 120 * dpr;
+  canvas.style.width  = w + 'px';
+  canvas.style.height = '120px';
+  _migCtx = canvas.getContext('2d');
+  _migCtx.scale(dpr, dpr);
+  _migCtx.strokeStyle = '#1a1a1a';
+  _migCtx.lineWidth   = 2.2;
+  _migCtx.lineCap     = 'round';
+  _migCtx.lineJoin    = 'round';
+
+  function getPos(e) {
+    const r = canvas.getBoundingClientRect();
+    const s = e.touches ? e.touches[0] : e;
+    return { x: s.clientX - r.left, y: s.clientY - r.top };
+  }
+  canvas.addEventListener('mousedown', e => { _migDesenhando=true; const p=getPos(e); _migCtx.beginPath(); _migCtx.moveTo(p.x,p.y); });
+  canvas.addEventListener('mousemove', e => { if(!_migDesenhando) return; const p=getPos(e); _migCtx.lineTo(p.x,p.y); _migCtx.stroke(); _migAssinaturaFeita=true; document.getElementById('migAssinaturaPlaceholder').style.display='none'; });
+  canvas.addEventListener('mouseup',    () => _migDesenhando=false);
+  canvas.addEventListener('mouseleave', () => _migDesenhando=false);
+  canvas.addEventListener('touchstart', e => { e.preventDefault(); _migDesenhando=true; const p=getPos(e); _migCtx.beginPath(); _migCtx.moveTo(p.x,p.y); }, {passive:false});
+  canvas.addEventListener('touchmove',  e => { e.preventDefault(); if(!_migDesenhando) return; const p=getPos(e); _migCtx.lineTo(p.x,p.y); _migCtx.stroke(); _migAssinaturaFeita=true; document.getElementById('migAssinaturaPlaceholder').style.display='none'; }, {passive:false});
+  canvas.addEventListener('touchend',   e => { e.preventDefault(); _migDesenhando=false; }, {passive:false});
+}
+
+function limparMigCanvas() {
+  if (!_migCtx) return;
+  const c = document.getElementById('migCanvasAssinatura');
+  _migCtx.clearRect(0, 0, c.width, c.height);
+  _migAssinaturaFeita = false;
+  document.getElementById('migAssinaturaPlaceholder').style.display = 'flex';
+}
+
+document.getElementById('btnLimparMigAssinatura').addEventListener('click', limparMigCanvas);
+
+// Inicializa canvas quando migPasso2 aparece
+const _migObserver = new MutationObserver(() => {
+  const p2 = document.getElementById('migPasso2');
+  if (p2 && p2.style.display !== 'none') { _migCtx = null; setTimeout(initMigCanvas, 100); }
+});
+_migObserver.observe(document.getElementById('migPasso2'), { attributes: true, attributeFilter: ['style'] });
+
+async function migFinalizar() {
+  mostrarErro('migErro','');
+  const senha  = document.getElementById('migSenha').value;
+  const senhaC = document.getElementById('migSenhaConfirm').value;
+  const _senhaRe = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()\-_=+\[\]{};:'",.<>?/\\|`~]).{8,}$/;
+  if(!_senhaRe.test(senha)){mostrarErro('migErro','Senha fraca — mínimo 8 caracteres com maiúscula, minúscula, número e símbolo (ex: Estudo@2025)');return;}
+  if(senha!==senhaC){mostrarErro('migErro','As senhas não coincidem');return;}
+  if(!_migFotoDataUrl){mostrarErro('migErro','Foto obrigatória para o reconhecimento facial');return;}
+  if(!_migAssinaturaFeita){mostrarErro('migErro','Assine o Termo de Conduta para continuar');return;}
+
+  const assinatura = document.getElementById('migCanvasAssinatura').toDataURL('image/png');
+
+  loading('btnMigFinalizar',true);
+  try {
+    // 1. Define senha
+    await fetch(API_BASE+'/api/usuarios?acao=redefinir-senha',{
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({usuario_id:_migUsuario.id, nova_senha:senha})
+    });
+
+    // 2. Salva assinatura e termo aceito
+    await fetch(API_BASE+'/api/usuarios?acao=assinar-termo',{
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        usuario_id:    _migUsuario.id,
+        assinatura_svg: assinatura,
+        ip: ''
+      })
+    });
+
+    // 3. Envia foto ao Control iD
+    const rF=await fetch(API_BASE+'/api/pagamentos?acao=enviar-foto',{
+      method:'POST',
+      headers:{'Content-Type':'application/json', 'Authorization':`Bearer ${api.token}`},
+      body:JSON.stringify({usuario_id:_migUsuario.id, foto_base64:_migFotoDataUrl})
+    });
+    const dF=await rF.json();
+    toast(dF.ok?'✅ Cadastro completo! Acesso facial ativo.':'✅ Cadastro salvo! Foto em processamento.');
+
+    // Reset completo
+    _migUsuario=null; _migFotoDataUrl=null; _migCtx=null; _migAssinaturaFeita=false;
+    document.getElementById('migSenha').value='';
+    document.getElementById('migSenhaConfirm').value='';
+    document.getElementById('migFotoPreview').style.display='none';
+    document.getElementById('migFotoPlaceholder').style.display='block';
+    document.getElementById('migFotoFeitaControles').style.display='none';
+    document.getElementById('migAvisoPrimeiroAcesso').style.display='none';
+    document.getElementById('migPasso1').style.display='block';
+    document.getElementById('migPasso2').style.display='none';
+    document.getElementById('migCpf').value='';
+    setTimeout(()=>mostrarTela('loginScreen'),1800);
+  } catch(e){mostrarErro('migErro',e.message||'Erro ao salvar');}
+  finally{loading('btnMigFinalizar',false);}
+}
+
+// ═══════════════════════════════════════════════════════════
+//  ENTRAR NO APP DO USUÁRIO
+// ═══════════════════════════════════════════════════════════
+function entrarApp() {
+  const u = sess.usuario;
+  document.getElementById('nomeUser').textContent = u.nome.split(' ')[0];
+  document.getElementById('avatarLetra').textContent = u.nome[0].toUpperCase();
+  document.getElementById('msgBV').textContent = `Olá, ${u.nome.split(' ')[0]}! 👋`;
+  mostrarTela('appScreen');
+  verificarAcessoHoje();
+  atualizarVagas();
+  carregarAvisos();
+  verificarAvisosUrgentes();
+}
+
+async function verificarAcessoHoje() {
+  try {
+    const res = await api.listarAcessos(hojeISO(), 'ativo');
+    const meu = res.acessos?.find(a => a.usuarios?.id === sess.usuario.id);
+    sess.acesso = meu || null;
+    renderizarStatusAcesso();
+  } catch(e) {
+    renderizarStatusAcesso();
+  }
+}
+
+function renderizarStatusAcesso() {
+  const box    = document.getElementById('statusBox');
+  const dot    = document.getElementById('dotSt');
+  const txt    = document.getElementById('txtSt');
+  const btn    = document.getElementById('btnAcesso');
+  const lblBtn = document.getElementById('lblBtn');
+  const ticket = document.getElementById('blocoTicket');
+
+  if(sess.acesso) {
+    box.className = 'st-box presente';
+    dot.className = 'dot verde';
+    txt.textContent = `Acesso ativo desde ${fmtHora(sess.acesso.entrada_em)}`;
+    lblBtn.textContent = '✅ Acesso Ativo';
+    btn.disabled = true;
+    ticket.style.display = 'block';
+    document.getElementById('ticketNome').textContent = sess.usuario.nome;
+    document.getElementById('ticketDetalhe').textContent = `CPF: ${fmtCpf(sess.usuario.cpf)} • Entrada: ${fmtHora(sess.acesso.entrada_em)}`;
+  } else {
+    box.className = 'st-box ausente';
+    dot.className = 'dot cinza';
+    txt.textContent = 'Sem acesso ativo para hoje';
+    lblBtn.textContent = '💳 Pagar e Garantir Acesso';
+    btn.disabled = false;
+    ticket.style.display = 'none';
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+//  PAGAMENTO — FLUXO AUTOMÁTICO SEM CONFIRMAÇÃO MANUAL
+//  Pix: gateway gera QR → webhook confirma → catraca libera
+//  Cartão: gateway gera link → webhook confirma → catraca libera
+//  Modo manual: fallback quando gateway não está configurado
+// ═══════════════════════════════════════════════════════════
+
+let _pollPagamento = null;   // intervalo do poll de status
+let _pixTimerInterval = null; // countdown do timer Pix
+let _pixSegundos = 300;
+
+// ── Abre modal e já inicia a cobrança ──────────────────────
+async function abrirModalPagamento() {
+  // Reseta UI
+  document.getElementById('pagtoStatus').textContent = '';
+  document.getElementById('pagtoPix').checked = true;
+  document.getElementById('pixCarregando').style.display = 'block';
+  document.getElementById('pixConteudo').style.display   = 'none';
+  document.getElementById('pixManual').style.display     = 'none';
+  document.getElementById('cartaoSection').style.display = 'none';
+  document.getElementById('btnPagarManual').style.display  = 'none';
+  document.getElementById('btnGerarLinkApp').style.display = 'none';
+  _atualizarSeletorUI('pix');
+  document.getElementById('modalPagamento').classList.add('ativo');
+
+  // Carrega configs e cria cobrança Pix em paralelo
+  try {
+    const [v, cfgRes] = await Promise.all([
+      api.vagas(),
+      api.get('/api/configuracoes')
+    ]);
+
+    if (v.lotado) {
+      document.getElementById('pagtoStatus').className = 'pagto-status';
+      document.getElementById('pagtoStatus').textContent = '⚠️ Sala lotada no momento — aguarde uma saída.';
+      return;
+    }
+
+    const cfg = {};
+    (cfgRes.configuracoes || []).forEach(c => { cfg[c.chave] = c.valor; });
+
+    const valorDiaria = cfg.valor_diaria
+      ? parseFloat(cfg.valor_diaria.replace(',','.')).toFixed(2).replace('.',',')
+      : '10,00';
+    document.getElementById('pagtoValor').textContent = 'R$ ' + valorDiaria;
+    window._gatewayConfigurado = !!(cfg.gateway_tipo && cfg.gateway_tipo !== 'manual' && cfg.gateway_chave);
+
+    // Inicia cobrança Pix automaticamente
+    await _iniciarCobrancaPix();
+
+  } catch(e) {
+    document.getElementById('pixCarregando').style.display = 'none';
+    document.getElementById('pixManual').style.display = 'block';
+    document.getElementById('pagtoChave').textContent = cfg?.pix_chave || '—';
+    document.getElementById('btnPagarManual').style.display = 'block';
+  }
+}
+
+// ── Cria cobrança Pix no gateway e exibe QR Code ───────────
+async function _iniciarCobrancaPix() {
+  document.getElementById('pixCarregando').style.display = 'block';
+  document.getElementById('pixConteudo').style.display   = 'none';
+  document.getElementById('pixManual').style.display     = 'none';
+  document.getElementById('btnPagarManual').style.display  = 'none';
+
+  try {
+    const res = await fetch(API_BASE + '/api/pagamentos?acao=criar-cobranca-pix', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ usuario_id: sess.usuario.id, origem: 'app' })
+    });
+    const data = await res.json();
+
+    if (data.status === 'confirmado') {
+      // Já tem acesso hoje
+      await verificarAcessoHoje();
+      document.getElementById('modalPagamento').classList.remove('ativo');
+      toast('✅ Você já tem acesso ativo para hoje!');
+      return;
+    }
+
+    document.getElementById('pixCarregando').style.display = 'none';
+
+    if (data.gateway === 'manual' || !data.copia_cola) {
+      // Sem gateway — modo manual (fallback)
+      document.getElementById('pixManual').style.display = 'block';
+      document.getElementById('pagtoChave').textContent  = data.copia_cola || '—';
+      document.getElementById('btnPagarManual').style.display = 'block';
+      window._pagamentoIdAtivo = data.pagamento_id;
+      return;
+    }
+
+    // Gateway configurado — exibe QR Code
+    document.getElementById('pixConteudo').style.display = 'block';
+    document.getElementById('pagtoCopiaCola').textContent = data.copia_cola || '—';
+
+    // QR Code — exibe imagem base64 se disponível
+    const qrContainer = document.getElementById('pixQrContainer');
+    if (data.qr_code) {
+      const src = data.qr_code.startsWith('data:') ? data.qr_code : `data:image/png;base64,${data.qr_code}`;
+      qrContainer.innerHTML = `<img src="${src}" style="width:100%;height:100%;object-fit:contain">`;
+    } else {
+      qrContainer.innerHTML = '<span style="font-size:3rem">📲</span>';
+    }
+
+    window._pagamentoIdAtivo = data.pagamento_id;
+
+    // Inicia timer e poll automático
+    _pixSegundos = data.expiracao_seg || 300;
+    _iniciarTimerPix();
+    _iniciarPollStatus();
+
+    // Botão copiar
+    document.getElementById('btnCopiarPix').onclick = () => {
+      const codigo = document.getElementById('pagtoCopiaCola').textContent;
+      navigator.clipboard?.writeText(codigo).catch(() => {
+        const el = document.createElement('input'); el.value = codigo;
+        document.body.appendChild(el); el.select(); document.execCommand('copy');
+        document.body.removeChild(el);
+      });
+      toast('📋 Código Pix copiado!');
+      document.getElementById('btnCopiarPix').textContent = '✅ Copiado!';
+      setTimeout(() => { document.getElementById('btnCopiarPix').textContent = '📋 Copiar código'; }, 2500);
+    };
+
+  } catch(e) {
+    document.getElementById('pixCarregando').style.display = 'none';
+    document.getElementById('pixManual').style.display = 'block';
+    document.getElementById('btnPagarManual').style.display = 'block';
+    toast('⚠️ Erro ao gerar cobrança — usando modo manual');
+  }
+}
+
+// ── Timer countdown do Pix ─────────────────────────────────
+function _iniciarTimerPix() {
+  clearInterval(_pixTimerInterval);
+  const el = document.getElementById('pixTimer');
+  function atualizar() {
+    const m = Math.floor(_pixSegundos / 60);
+    const s = _pixSegundos % 60;
+    if (el) el.textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+    if (_pixSegundos <= 0) {
+      clearInterval(_pixTimerInterval);
+      clearInterval(_pollPagamento);
+      document.getElementById('pagtoStatus').textContent = '⏰ Cobrança expirada — toque em Cancelar e tente novamente.';
+    }
+    _pixSegundos--;
+  }
+  atualizar();
+  _pixTimerInterval = setInterval(atualizar, 1000);
+}
+
+// ── Poll de status — detecta webhook sem refresh manual ────
+function _iniciarPollStatus() {
+  clearInterval(_pollPagamento);
+  _pollPagamento = setInterval(async () => {
+    if (!sess.usuario) { clearInterval(_pollPagamento); return; }
+    try {
+      const r = await fetch(`${API_BASE}/api/pagamentos?acao=status-hoje&usuario_id=${sess.usuario.id}`);
+      const d = await r.json();
+      if (d.status === 'confirmado') {
+        clearInterval(_pollPagamento);
+        clearInterval(_pixTimerInterval);
+        document.getElementById('pagtoStatus').className = 'pagto-status pagto-ok';
+        document.getElementById('pagtoStatus').textContent = '✅ Pagamento confirmado! Catraca liberada.';
+        toast('✅ Acesso liberado! Dirija-se à catraca.');
+        await verificarAcessoHoje();
+        setTimeout(() => {
+          document.getElementById('modalPagamento').classList.remove('ativo');
+          document.getElementById('pagtoStatus').textContent = '';
+        }, 3000);
+      }
+    } catch(e) {}
+  }, 3000);
+}
+
+// ── Atualiza visual do seletor ─────────────────────────────
+function _atualizarSeletorUI(tipo) {
+  document.querySelectorAll('.pagto-tipo-btn').forEach(el => {
+    const t = el.dataset.tipo, sel = t === tipo;
+    el.style.borderColor = sel ? 'var(--verde)' : 'var(--cinza-cl)';
+    el.style.background  = sel ? '#f0f7f0' : '#fff';
+    el.querySelector('div:last-child').style.color = sel ? 'var(--verde)' : 'var(--cinza)';
+  });
+}
+
+// ── Troca de forma de pagamento ────────────────────────────
+function _atualizarUIPagto(tipo) {
+  _atualizarSeletorUI(tipo);
+  clearInterval(_pollPagamento);
+  clearInterval(_pixTimerInterval);
+
+  const isPix    = tipo === 'pix';
+  const isCartao = tipo === 'credito' || tipo === 'debito';
+
+  document.getElementById('pixSection').style.display    = isPix    ? 'block' : 'none';
+  document.getElementById('cartaoSection').style.display = isCartao ? 'block' : 'none';
+
+  document.getElementById('btnPagarManual').style.display  = 'none';
+  document.getElementById('btnGerarLinkApp').style.display = 'none';
+
+  if (isPix) {
+    _iniciarCobrancaPix();
+    return;
+  }
+
+  // Cartão
+  const gatewayOk = window._gatewayConfigurado || false;
+  document.getElementById('cartaoIcon').textContent    = tipo === 'credito' ? '💳' : '🏦';
+  document.getElementById('cartaoTitulo').textContent  = `Pagar com ${tipo === 'credito' ? 'Crédito' : 'Débito'}`;
+  document.getElementById('cartaoSemGateway').style.display = gatewayOk ? 'none' : 'block';
+  document.getElementById('cartaoAvisoAguardo').style.display = 'none';
+
+  if (gatewayOk) {
+    document.getElementById('btnGerarLinkApp').style.display = 'block';
+    document.getElementById('cartaoDesc').textContent =
+      'Toque em "Gerar Link" — pague com segurança no site do gateway. Após o pagamento, a catraca abre automaticamente.';
+  }
+}
+
+// ── Gerar link de pagamento (cartão no app) ────────────────
+async function gerarLinkApp() {
+  const tipo = document.querySelector('input[name="pagtoTipo"]:checked')?.value || 'credito';
+  const btn  = document.getElementById('btnGerarLinkApp');
+  btn.disabled = true;
+  btn.textContent = '⏳ Gerando link...';
+  try {
+    const res = await fetch(API_BASE + '/api/pagamentos?acao=gerar-link', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ usuario_id: sess.usuario.id, tipo, origem: 'app' })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.erro || 'Erro ao gerar link');
+    window.open(data.url, '_blank');
+    document.getElementById('cartaoAvisoAguardo').style.display = 'block';
+    btn.textContent = '🔁 Gerar novo link';
+    btn.disabled = false;
+    // Inicia poll — quando usuário pagar, webhook confirma e poll detecta
+    _iniciarPollStatus();
+  } catch(e) {
+    toast('❌ ' + e.message);
+    btn.disabled = false;
+    btn.textContent = '🔗 Gerar Link de Pagamento';
+  }
+}
+
+// ── Confirmação manual (fallback sem gateway) ──────────────
+async function confirmarPagamentoManual() {
+  if (!sess.usuario) return;
+  const btn = document.getElementById('btnPagarManual');
+  btn.disabled = true;
+  btn.textContent = '⏳ Confirmando...';
+  document.getElementById('pagtoStatus').className = 'pagto-status pagto-processando';
+  document.getElementById('pagtoStatus').textContent = '⏳ Verificando pagamento...';
+  try {
+    // No modo manual chama confirmar (auth não exigida aqui pois é fallback declarado)
+    // ATENÇÃO: este endpoint só deve existir enquanto gateway não estiver configurado
+    const res = await fetch(API_BASE + '/api/pagamentos?acao=confirmar-direto-manual', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${api.token}` },
+      body: JSON.stringify({ usuario_id: sess.usuario.id, tipo: 'pix', origem: 'app_manual' })
+    });
+    const data = await res.json();
+    if (!res.ok && res.status !== 409) throw new Error(data.erro || 'Erro');
+    document.getElementById('pagtoStatus').className = 'pagto-status pagto-ok';
+    document.getElementById('pagtoStatus').textContent = data.catraca_liberada
+      ? '✅ Acesso liberado! Dirija-se à catraca.'
+      : '✅ Pagamento registrado!';
+    toast(data.catraca_liberada ? '✅ Catraca liberada!' : '✅ Pago! ' + (data.motivo_catraca || ''));
+    await verificarAcessoHoje();
+    setTimeout(() => {
+      document.getElementById('modalPagamento').classList.remove('ativo');
+      document.getElementById('pagtoStatus').textContent = '';
+    }, 3000);
+  } catch(e) {
+    document.getElementById('pagtoStatus').textContent = '❌ ' + e.message;
+    btn.disabled = false;
+    btn.textContent = '✅ Já Paguei — Confirmar';
+  }
+}
+
+// ── Fecha modal e limpa timers ─────────────────────────────
+function fecharModalPagamento() {
+  clearInterval(_pollPagamento);
+  clearInterval(_pixTimerInterval);
+  document.getElementById('modalPagamento').classList.remove('ativo');
+  document.getElementById('pagtoStatus').textContent = '';
+  document.getElementById('btnPagarManual').style.display  = 'none';
+  document.getElementById('btnGerarLinkApp').style.display = 'none';
+}
+
+async function recepCarregarPendentes() {
+  const grid = document.getElementById('rGridPendentes');
+  try {
+    const res = await api.get('/api/pagamentos?acao=pendentes');
+    const lista = res.pendentes || [];
+    const badge = document.getElementById('badgePendentes');
+    if (lista.length > 0) {
+      badge.textContent = lista.length;
+      badge.style.display = 'inline';
+    } else {
+      badge.style.display = 'none';
+    }
+    if (!lista.length) {
+      grid.innerHTML = '<div class="sem"><span class="si">✅</span>Nenhum pagamento aguardando.</div>';
+      return;
+    }
+    grid.innerHTML = lista.map(p => `
+      <div class="presenca-card" style="border-color:#f0d97a;background:#fffdf0">
+        <div class="pc-header">
+          <div class="pc-avatar" style="background:#fff8e0;color:var(--dourado)">${(p.usuarios?.nome||'?')[0].toUpperCase()}</div>
+          <div>
+            <div class="pc-nome">${p.usuarios?.nome||'—'}</div>
+            <div class="pc-tempo">CPF: ${fmtCpf(p.usuarios?.cpf||'')} • R$ ${parseFloat(p.valor).toFixed(2)} • ${fmtHora(p.created_at)}</div>
+          </div>
+        </div>
+        <div class="pc-btns">
+          <button class="btn btn-verde btn-xs" onclick="recepConfirmarPagamento('${p.id}', this)">✅ Confirmar Pagamento</button>
+          <button class="btn btn-vermelho btn-xs" onclick="recepRecusarPagamento('${p.id}', this)">❌ Recusar</button>
+        </div>
+      </div>
+    `).join('');
+  } catch(e) {
+    grid.innerHTML = '<div class="sem"><span class="si">⚠️</span>Erro ao carregar.</div>';
+  }
+}
+
+async function recepConfirmarPagamento(pagamentoId, btn) {
+  btn.disabled = true;
+  try {
+    await api.post('/api/pagamentos?acao=confirmar', { pagamento_id: pagamentoId });
+    toast('✅ Pagamento confirmado! Entrada registrada.');
+    atualizarVagas();
+    recepCarregarPresentes();
+    recepCarregarPendentes();
+  } catch(e) {
+    toast('❌ ' + e.message);
+    btn.disabled = false;
+  }
+}
+
+async function recepRecusarPagamento(pagamentoId, btn) {
+  if (!confirm('Recusar este pagamento?')) return;
+  btn.disabled = true;
+  try {
+    await fetch(API_BASE + '/api/pagamentos?acao=cancelar', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${api.token}` },
+      body: JSON.stringify({ pagamento_id: pagamentoId })
+    });
+    toast('Pagamento recusado.');
+    recepCarregarPendentes();
+  } catch(e) {
+    toast('❌ ' + e.message);
+    btn.disabled = false;
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+//  HISTÓRICO DO USUÁRIO
+// ═══════════════════════════════════════════════════════════
+async function carregarHistoricoUsuario() {
+  if(!sess.usuario) return;
+  const lista = document.getElementById('historicoLista');
+  lista.innerHTML = '<div class="sem"><span class="si">⏳</span>Carregando...</div>';
+  try {
+    // Rota pública por usuario_id — não exige token de admin
+    const res = await fetch(
+      `${API_BASE}/api/acessos?acao=historico-usuario&usuario_id=${sess.usuario.id}`
+    ).then(r => r.json());
+
+    const meus = res.acessos || [];
+
+    // Stats do mês atual
+    const inicioMes = new Date(); inicioMes.setDate(1); inicioMes.setHours(0,0,0,0);
+    const doMes = meus.filter(a => new Date(a.entrada_em) >= inicioMes);
+    document.getElementById('pVisitas').textContent = doMes.length;
+    document.getElementById('pDias').textContent    = doMes.length;
+
+    // Horas estudadas (apenas acessos encerrados)
+    let horas = 0;
+    meus.forEach(a => {
+      if(a.saida_em) horas += (new Date(a.saida_em) - new Date(a.entrada_em)) / 3600000;
+    });
+    document.getElementById('pHoras').textContent = Math.round(horas) + 'h';
+
+    if(!meus.length) {
+      lista.innerHTML = '<div class="sem"><span class="si">📋</span>Faça sua primeira visita!</div>';
+      return;
+    }
+
+    const tipoPag = { pix:'💠 Pix', credito:'💳 Crédito', debito:'🏦 Débito', cartao:'💳 Cartão' };
+    lista.innerHTML = meus.slice(0, 30).map(a => {
+      const entrada  = fmtHora(a.entrada_em);
+      const saida    = a.saida_em ? fmtHora(a.saida_em) : 'em curso';
+      const duracaoH = a.saida_em
+        ? ((new Date(a.saida_em) - new Date(a.entrada_em)) / 3600000).toFixed(1) + 'h'
+        : '—';
+      const pag      = tipoPag[a.pagamentos?.tipo] || '—';
+      const val      = a.pagamentos?.valor ? `R$ ${parseFloat(a.pagamentos.valor).toFixed(2).replace('.',',')}` : '';
+      const stClass  = a.status==='ativo' ? 'verde' : a.status==='encerrado' ? 'cinza' : 'gold';
+      return `
+        <div style="padding:10px 0;border-bottom:1px solid #f0f0f0">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px">
+            <div style="font-weight:600;font-size:.84rem">${new Date(a.entrada_em).toLocaleDateString('pt-BR',{weekday:'short',day:'2-digit',month:'2-digit'})}</div>
+            <span class="badge ${stClass}" style="font-size:.68rem">${a.status}</span>
+          </div>
+          <div style="font-size:.77rem;color:#888;display:flex;gap:12px;flex-wrap:wrap">
+            <span>⏰ ${entrada} → ${saida}</span>
+            <span>⏱️ ${duracaoH}</span>
+            <span>${pag}${val ? ' · '+val : ''}</span>
+          </div>
+        </div>`;
+    }).join('');
+  } catch(e) {
+    lista.innerHTML = '<div class="sem"><span class="si">⚠️</span>Erro ao carregar histórico</div>';
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+//  RECEPÇÃO
+// ═══════════════════════════════════════════════════════════
+async function recepCarregarPresentes() {
+  const grid = document.getElementById('rGridPresentes');
+  try {
+    const res = await api.listarAcessos(hojeISO(), 'ativo');
+    const lista = res.acessos || [];
+    document.getElementById('rPresentes').textContent = lista.length;
+
+    if(!lista.length) {
+      grid.innerHTML = '<div class="sem"><span class="si">🏛️</span>Nenhum usuário presente.</div>';
+      return;
+    }
+
+    grid.innerHTML = lista.map(a => `
+      <div class="presenca-card">
+        <div class="pc-header">
+          <div class="pc-avatar">${(a.usuarios?.nome||'?')[0].toUpperCase()}</div>
+          <div>
+            <div class="pc-nome">${a.usuarios?.nome||'—'}</div>
+            <div class="pc-tempo">Desde ${fmtHora(a.entrada_em)} • CPF: ${fmtCpf(a.usuarios?.cpf||'')}</div>
+          </div>
+        </div>
+        <div class="pc-btns">
+          <button class="btn btn-vermelho btn-xs" onclick="recepRegistrarSaida('${a.id}', this)">🚪 Registrar Saída</button>
+        </div>
+      </div>
+    `).join('');
+  } catch(e) {
+    grid.innerHTML = '<div class="sem"><span class="si">⚠️</span>Erro ao carregar.</div>';
+  }
+}
+
+async function recepRegistrarSaida(acessoId, btn) {
+  btn.disabled = true;
+  btn.textContent = '⏳...';
+  try {
+    await api.post('/api/acessos?acao=encerrar', { acesso_id: acessoId });
+    toast('✅ Saída registrada!');
+    atualizarVagas();
+    recepCarregarPresentes();
+  } catch(e) {
+    toast('❌ Erro: '+e.message);
+    btn.disabled = false;
+    btn.textContent = '🚪 Registrar Saída';
+  }
+}
+
+async function recepCarregarPagos() {
+  const tbody = document.getElementById('rTbodyPagos');
+  try {
+    const res = await api.get('/api/pagamentos?acao=pagos-hoje');
+    const lista = res.pagamentos || res.confirmados || [];
+    document.getElementById('rPagosHoje').textContent = lista.length;
+    if (!lista.length) {
+      tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#aaa">Nenhum pagamento confirmado hoje</td></tr>';
+      return;
+    }
+    tbody.innerHTML = lista.map(p => `
+      <tr>
+        <td>${p.usuarios?.nome||p.nome||'—'}</td>
+        <td>${fmtHora(p.confirmado_em||p.created_at)}</td>
+        <td><span class="badge verde">confirmado</span></td>
+        <td><span class="badge ${p.tipo==='pix'?'azul':p.tipo==='credito'?'gold':'verde'}">${p.tipo==='pix'?'💠 Pix':p.tipo==='credito'?'💳 Crédito':p.tipo==='debito'?'🏦 Débito':p.tipo||'—'}</span></td>
+      </tr>
+    `).join('');
+  } catch(e) {
+    tbody.innerHTML = '<tr><td colspan="4" style="color:var(--vermelho)">Erro ao carregar</td></tr>';
+  }
+}
+
+async function recepBuscarUsuario() {
+  const cpf = document.getElementById('recepCpfBusca').value.replace(/\D/g,'');
+  const div = document.getElementById('recepResultadoBusca');
+  if(cpf.length < 3) { div.innerHTML=''; return; }
+
+  div.innerHTML = '<p style="font-size:.82rem;color:#888">⏳ Buscando...</p>';
+  try {
+    const res = await api.listarUsuarios(cpf);
+    const usuarios = res.usuarios || [];
+    if(!usuarios.length) {
+      div.innerHTML = '<p style="font-size:.82rem;color:var(--vermelho)">❌ Usuário não encontrado</p>';
+      return;
+    }
+    div.innerHTML = usuarios.map(u => `
+      <div style="background:#f8f8f8;border-radius:8px;padding:12px;margin-bottom:8px">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+          <div style="width:40px;height:40px;border-radius:50%;background:${u.foto_url?'transparent':'var(--verde-suave)'};border:2px solid var(--cinza-cl);overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center">
+            ${u.foto_url
+              ? `<img src="${u.foto_url}" style="width:100%;height:100%;object-fit:cover">`
+              : `<span style="font-size:.9rem;font-weight:700;color:var(--verde)">${u.nome[0].toUpperCase()}</span>`
+            }
+          </div>
+          <div>
+            <div style="font-weight:700;font-size:.88rem">${u.nome}</div>
+            <div style="font-size:.76rem;color:#888">CPF: ${fmtCpf(u.cpf)} • ${u.tipo}</div>
+            ${!u.foto_url ? '<div style="font-size:.7rem;color:var(--laranja);margin-top:2px">⚠️ Sem foto — catraca facial não disponível</div>' : '<div style="font-size:.7rem;color:var(--verde);margin-top:2px">✅ Foto cadastrada — acesso facial ativo</div>'}
+          </div>
+        </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <button class="btn btn-verde btn-xs" onclick="recepEntradaManual('${u.id}', this)">✅ Registrar Entrada</button>
+          <button class="btn btn-dourado btn-xs" onclick="recepCobrarStone('${u.id}', '${u.nome.split(' ')[0]}', this)" title="Envia cobrança direto para a Stone EYE PRO">💳 Cobrar na Stone</button>
+          <button class="btn btn-laranja btn-xs" onclick="recepRedefinirSenha('${u.id}', '${u.nome.split(' ')[0]}', this)">🔑 Redefinir Senha</button>
+          <label class="btn btn-azul btn-xs" style="cursor:pointer;display:inline-flex;align-items:center;gap:4px">
+            📸 ${u.foto_url ? 'Atualizar Foto' : 'Adicionar Foto'}
+            <input type="file" accept="image/*" style="display:none" onchange="recepEnviarFoto('${u.id}','${u.nome.split(' ')[0]}',this)">
+          </label>
+        </div>
+      </div>
+    `).join('');
+  } catch(e) {
+    div.innerHTML = `<p style="font-size:.82rem;color:var(--vermelho)">Erro: ${e.message}</p>`;
+  }
+}
+
+async function recepEntradaManual(usuarioId, btn) {
+  btn.disabled = true;
+  try {
+    await api.registrarAcesso(usuarioId, null);
+    toast('✅ Entrada registrada!');
+    atualizarVagas();
+    recepCarregarPresentes();
+    document.getElementById('recepResultadoBusca').innerHTML =
+      '<p style="color:var(--verde);font-weight:600;font-size:.84rem">✅ Entrada registrada com sucesso!</p>';
+  } catch(e) {
+    toast('❌ '+e.message);
+    btn.disabled = false;
+  }
+}
+
+// ── COBRAR NA STONE EYE PRO ────────────────────────────────
+async function recepCobrarStone(usuarioId, nomeUsuario, btn) {
+  const tipo = prompt(
+    `Cobrar ${nomeUsuario} na Stone EYE PRO\n\nForma de pagamento:\n1 = Crédito\n2 = Débito\n\nDigite 1 ou 2:`
+  );
+  if (!tipo) return;
+  const tipoMap = { '1': 'credito', '2': 'debito' };
+  const tipoPagto = tipoMap[tipo.trim()];
+  if (!tipoPagto) { toast('⚠️ Opção inválida. Use 1 para crédito ou 2 para débito.'); return; }
+
+  btn.disabled = true;
+  btn.textContent = '⏳ Enviando...';
+
+  try {
+    const res = await api.post('/api/pagamentos?acao=cobrar-stone', {
+      usuario_id: usuarioId,
+      tipo: tipoPagto
+    });
+
+    toast(`✅ Cobrança enviada! Apresente a maquininha ao cliente.`);
+    document.getElementById('recepResultadoBusca').innerHTML = `
+      <div style="background:#e8f5ee;border:1.5px solid #a8d5b5;border-radius:8px;padding:12px;font-size:.83rem;color:var(--verde)">
+        <b>💳 Cobrança Stone enviada para a maquininha!</b><br>
+        Aguardando pagamento de <b>${nomeUsuario}</b>.<br>
+        <span style="font-size:.75rem;color:#888;margin-top:4px;display:block">
+          A catraca será liberada automaticamente após confirmação.
+        </span>
+      </div>`;
+
+    // Poll automático para detectar confirmação (a cada 3s por 3 min)
+    let tentativas = 0;
+    const poll = setInterval(async () => {
+      tentativas++;
+      if (tentativas > 60) { clearInterval(poll); return; }
+      try {
+        const st = await fetch(`${API_BASE}/api/pagamentos?acao=status-hoje&usuario_id=${usuarioId}`).then(r=>r.json());
+        if (st.status === 'confirmado') {
+          clearInterval(poll);
+          toast('✅ Pagamento confirmado! Catraca liberada.');
+          atualizarVagas();
+          recepCarregarPresentes();
+          document.getElementById('recepResultadoBusca').innerHTML =
+            '<p style="color:var(--verde);font-weight:600;font-size:.84rem">✅ Pago e acesso liberado automaticamente!</p>';
+        }
+      } catch(e) {}
+    }, 3000);
+
+  } catch(e) {
+    toast('❌ ' + e.message);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '💳 Cobrar na Stone';
+  }
+}
+
+async function recepRedefinirSenha(usuarioId, nomeUsuario, btn) {
+  const novaSenha = prompt(`Definir nova senha para ${nomeUsuario}:\n(mínimo 6 caracteres)`);
+  if (!novaSenha) return;
+  const _reRecep = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()\-_=+\[\]{};:'",.<>?/\\|`~]).{8,}$/;
+  if (!_reRecep.test(novaSenha)) { toast("⚠️ Senha fraca — mín. 8 caracteres com maiúscula, número e símbolo"); return; }
+  btn.disabled = true;
+  try {
+    await api.post("/api/usuarios?acao=redefinir-senha", { usuario_id: usuarioId, nova_senha: novaSenha });
+    toast(`✅ Senha de ${nomeUsuario} redefinida!`);
+    document.getElementById("recepResultadoBusca").innerHTML =
+      `<p style="color:var(--verde);font-weight:600;font-size:.84rem">✅ Senha redefinida! O usuário pode logar com a nova senha.</p>`;
+  } catch(e) {
+    toast("❌ "+e.message);
+    btn.disabled = false;
+  }
+}
+
+// ── ENVIAR FOTO PARA CONTROL ID (RECEPÇÃO) ──────────────────
+async function recepEnviarFoto(usuarioId, nomeUsuario, input) {
+  const file = input.files[0];
+  if (!file) return;
+
+  const label = input.closest('label');
+  const textoOriginal = label.textContent.trim();
+  label.style.opacity = '.6';
+  label.style.pointerEvents = 'none';
+
+  try {
+    // Converte para base64
+    const fotoBase64 = await new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = e => resolve(e.target.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+
+    // Salva foto no usuário e envia ao Control iD
+    const r = await fetch(API_BASE + '/api/totem?acao=enviar-foto', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${api.token}`
+      },
+      body: JSON.stringify({ usuario_id: usuarioId, foto_base64: fotoBase64 })
+    });
+    const data = await r.json();
+
+    if (data.ok) {
+      toast(`✅ Foto de ${nomeUsuario} enviada ao Control iD!`);
+      // Recarrega resultado da busca
+      recepBuscarUsuario();
+    } else {
+      toast(`⚠️ Foto salva, mas falha no Control iD: ${data.motivo || 'erro desconhecido'}`);
+    }
+  } catch(e) {
+    toast('❌ Erro ao enviar foto: ' + e.message);
+  } finally {
+    label.style.opacity = '1';
+    label.style.pointerEvents = 'auto';
+    input.value = '';
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+//  ADMIN
+// ═══════════════════════════════════════════════════════════
+async function adminCarregarStats() {
+  try {
+    const res = await api.listarUsuarios('');
+    document.getElementById('aTotalU').textContent = res.total || 0;
+  } catch(e) {}
+}
+
+async function adminCarregarUsuarios(busca='') {
+  const tbody = document.getElementById('tbodyUsuarios');
+  tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#aaa">⏳ Carregando...</td></tr>';
+  try {
+    const res = await api.listarUsuarios(busca);
+    const lista = res.usuarios || [];
+    document.getElementById('aTotalU').textContent = lista.length;
+
+    tbody.innerHTML = lista.map(u => `
+      <tr>
+        <td><div style="font-weight:600;font-size:.83rem">${u.nome}</div><div style="font-size:.69rem;color:#aaa">${u.email||''}</div></td>
+        <td style="font-family:monospace;font-size:.79rem">${fmtCpf(u.cpf)}</td>
+        <td><span class="badge azul">${u.tipo}</span></td>
+        <td><button class="btn btn-sec btn-xs" onclick="adminVerAssinatura('${u.id}','${u.nome.replace(/'/g,"\\'")}')">✍️ Ver Termo</button></td>
+        <td><span class="badge ${u.ativo?'verde':'vermelho'}">${u.ativo?'Ativo':'Bloqueado'}</span></td>
+        <td><button class="btn btn-xs ${u.ativo?'btn-vermelho':'btn-verde'}" onclick="adminBloquearUsuario('${u.id}','${u.nome.replace(/'/g,"\\'")}',${ !u.ativo},this)">${u.ativo?'🚫 Bloquear':'✅ Ativar'}</button></td>
+      </tr>
+    `).join('') || '<tr><td colspan="6" style="text-align:center;color:#aaa">Nenhum usuário</td></tr>';
+  } catch(e) {
+    tbody.innerHTML = `<tr><td colspan="5" style="color:var(--vermelho)">Erro: ${e.message}</td></tr>`;
+  }
+}
+
+async function adminCarregarHistorico(data='') {
+  const tbody = document.getElementById('tbodyHistorico');
+  tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#aaa">⏳ Carregando...</td></tr>';
+  try {
+    const res = await api.listarAcessos(data || hojeISO(), '');
+    const lista = res.acessos || [];
+
+    tbody.innerHTML = lista.map(a => `
+      <tr>
+        <td>${a.usuarios?.nome||'—'}</td>
+        <td>${fmtHora(a.entrada_em)}</td>
+        <td>${a.saida_em ? fmtHora(a.saida_em) : '—'}</td>
+        <td><span class="badge ${a.status==='ativo'?'verde':a.status==='encerrado'?'cinza':'gold'}">${a.status}</span></td>
+        <td><span class="badge ${a.pagamentos?.tipo==='pix'?'azul':'gold'}">${a.pagamentos?.tipo||'—'}</span></td>
+      </tr>
+    `).join('') || '<tr><td colspan="5" style="text-align:center;color:#aaa">Nenhum registro</td></tr>';
+  } catch(e) {
+    tbody.innerHTML = `<tr><td colspan="5" style="color:var(--vermelho)">Erro: ${e.message}</td></tr>`;
+  }
+}
+
+async function adminSalvarConfig() {
+  const config = {
+    total_vagas:          document.getElementById('cfgVagas').value,
+    valor_diaria:         document.getElementById('cfgTaxa').value,
+    taxa_credito:         document.getElementById('cfgTaxaCredito')?.value || '',
+    taxa_debito:          document.getElementById('cfgTaxaDebito')?.value || '',
+    timeout_vaga_minutos: document.getElementById('cfgTimeout').value,
+    pix_chave:            document.getElementById('cfgPixChave').value,
+    pix_nome:             document.getElementById('cfgPixNome').value,
+    gateway_tipo:         document.getElementById('cfgGatewayTipo')?.value || '',
+    gateway_chave:        document.getElementById('cfgGatewayChave')?.value || '',
+    gateway_chave_pix:    document.getElementById('cfgGatewayChavePix')?.value || '',
+    controlid_url:        document.getElementById('cfgControlIdUrl').value,
+    controlid_token:      document.getElementById('cfgControlIdToken').value,
+    controlid_db_host:    document.getElementById('cfgCidDbHost')?.value||'',
+    controlid_db_port:    document.getElementById('cfgCidDbPort')?.value||'',
+    controlid_db_name:    document.getElementById('cfgCidDbName')?.value||'',
+    controlid_db_user:    document.getElementById('cfgCidDbUser')?.value||'',
+    controlid_db_pass:    document.getElementById('cfgCidDbPass')?.value||'',
+  };
+  loading('btnSalvarConfig', true);
+  try {
+    for(const [chave, valor] of Object.entries(config)) {
+      if(valor) await api.post('/api/configuracoes?acao=salvar', { chave, valor });
+    }
+    toast('✅ Configurações salvas!');
+    atualizarVagas();
+  } catch(e) {
+    toast('❌ Erro: '+e.message);
+  } finally {
+    loading('btnSalvarConfig', false);
+  }
+}
+
+// ── RESET DIÁRIO DE VAGAS ──────────────────────────────────
+async function adminResetDiario() {
+  if (!confirm('Encerrar TODOS os acessos ativos agora e zerar as vagas?\n\nUse apenas se necessário — normalmente o cron faz isso automaticamente às 20h.')) return;
+
+  const btn    = document.getElementById('btnResetDiario');
+  const status = document.getElementById('resetStatus');
+
+  btn.disabled = true;
+  btn.textContent = '⏳ Executando...';
+  status.style.display = 'none';
+
+  try {
+    const res = await api.post('/api/acessos?acao=reset-diario', {});
+    status.style.display = 'block';
+    status.style.background = '#f8fdf9';
+    status.style.borderColor = '#a8d5b5';
+    status.innerHTML = `<span style="color:var(--verde);font-weight:700">✅ ${res.mensagem}</span>`;
+    toast('✅ Reset diário executado!');
+    atualizarVagas();
+  } catch(e) {
+    status.style.display = 'block';
+    status.style.background = '#fff5f5';
+    status.style.borderColor = '#f5b5a8';
+    status.innerHTML = `<span style="color:var(--vermelho)">❌ Erro: ${e.message}</span>`;
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '🔄 Executar Reset Diário agora';
+  }
+}
+
+// ── SINCRONIZAÇÃO CONTROL ID ───────────────────────────────
+async function adminSincronizarControlId() {
+  const btn = document.getElementById('btnSincronizarControlId');
+  const status = document.getElementById('syncStatus');
+
+  if (!confirm('Isso vai vincular automaticamente todos os usuários do sistema com os registros do Control iD pelo CPF.\n\nNenhuma foto ou biometria existente será apagada.\n\nDeseja continuar?')) return;
+
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Sincronizando...';
+  status.style.display = 'none';
+
+  try {
+    const res = await api.post('/api/totem?acao=sincronizar-controlid', {});
+
+    status.style.display = 'block';
+    status.innerHTML = `
+      <div style="font-weight:700;color:var(--verde);margin-bottom:8px">✅ ${res.mensagem}</div>
+      <div>🔗 Vinculados agora: <b>${res.vinculados}</b></div>
+      <div>✅ Já estavam vinculados: <b>${res.ja_vinculados}</b></div>
+      <div>❓ Não encontrados no Control iD: <b>${res.sem_correspondencia_controlid}</b>
+        <span style="font-size:.72rem;color:#888"> — precisam de foto cadastrada</span>
+      </div>
+      <div>📋 Total no Control iD: <b>${res.total_controlid}</b></div>
+      <div>👥 Total no nosso banco: <b>${res.total_nosso_banco}</b></div>
+      ${res.sem_correspondencia_nosso_banco > 0
+        ? `<div style="color:var(--laranja)">⚠️ ${res.sem_correspondencia_nosso_banco} pessoa(s) no Control iD sem registro no sistema</div>`
+        : ''
+      }
+    `;
+  } catch(e) {
+    status.style.display = 'block';
+    status.style.background = '#fff5f5';
+    status.style.borderColor = '#f5b5a8';
+    status.innerHTML = `<span style="color:var(--vermelho)">❌ Erro: ${e.message}</span>`;
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '🔄 Sincronizar com Control iD agora';
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+//  SUGESTÕES
+// ═══════════════════════════════════════════════════════════
+async function enviarSugestao() {
+  const tipo  = document.getElementById('tipoMsg').value;
+  const area  = document.getElementById('areaMsg').value;
+  const texto = document.getElementById('txtMsg').value.trim();
+  if(!tipo||!area||!texto) { toast('⚠️ Preencha todos os campos'); return; }
+  const btn = document.getElementById('btnEnviarMsg');
+  loading('btnEnviarMsg', true);
+  try {
+    await api.enviarSugestao({
+      tipo, area, mensagem: texto,
+      usuario_id: sess.usuario?.id || null
+    });
+    toast('✅ Mensagem enviada! Obrigado pelo feedback.');
+    document.getElementById('tipoMsg').value = '';
+    document.getElementById('areaMsg').value = '';
+    document.getElementById('txtMsg').value = '';
+  } catch(e) {
+    toast('❌ Erro ao enviar: ' + e.message);
+  } finally {
+    loading('btnEnviarMsg', false);
+  }
+}
+
+async function carregarAvisos() {
+  const lista = document.getElementById('avisosLista');
+  if (!lista) return;
+  try {
+    const res = await api.listarAvisos();
+    const avisos = res.avisos || [];
+    if (!avisos.length) {
+      lista.innerHTML = '<div class="sem"><span class="si">📢</span>Nenhum comunicado no momento.</div>';
+      return;
+    }
+    const icones = { urgente: '⚠️ Urgente', aviso: '📌 Aviso', info: 'ℹ️ Informação' };
+    lista.innerHTML = avisos.map(a => `
+      <div class="aviso ${a.tipo}">
+        <div class="tag">${icones[a.tipo] || '📌 Aviso'}</div>
+        <p>${a.conteudo}</p>
+        <div class="data">📅 ${new Date(a.created_at).toLocaleDateString('pt-BR')}</div>
+      </div>
+    `).join('');
+  } catch(e) {
+    lista.innerHTML = '<div class="sem"><span class="si">⚠️</span>Erro ao carregar avisos.</div>';
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+//  POPUP DE AVISO URGENTE
+// ═══════════════════════════════════════════════════════════
+async function verificarAvisosUrgentes() {
+  try {
+    const res = await api.listarAvisos();
+    const urgentes = (res.avisos || []).filter(a => a.tipo === 'urgente');
+    if (!urgentes.length) return;
+    const hoje = new Date().toISOString().split('T')[0];
+    const lidos = JSON.parse(localStorage.getItem('avisos_lidos') || '{}');
+    const naoLidos = urgentes.filter(a => lidos[a.id] !== hoje);
+    if (!naoLidos.length) return;
+    const aviso = naoLidos[0];
+    document.getElementById('modalAvisoTitulo').textContent   = aviso.titulo;
+    document.getElementById('modalAvisoConteudo').textContent = aviso.conteudo;
+    document.getElementById('modalAvisoUrgente').dataset.avisoId = aviso.id;
+    document.getElementById('modalAvisoUrgente').classList.add('ativo');
+  } catch(e) { /* silencioso */ }
+}
+</script>
+<script>
+
+// ═══════════════════════════════════════════════════════════
+//  ADMIN — AVISOS
+// ═══════════════════════════════════════════════════════════
+async function adminCarregarAvisos() {
+  const lista = document.getElementById('adminAvisosLista');
+  lista.innerHTML = '<div class="sem"><span class="si">⏳</span>Carregando...</div>';
+  try {
+    const res = await api.listarAvisos();
+    const avisos = res.avisos || [];
+    if (!avisos.length) {
+      lista.innerHTML = '<div class="sem"><span class="si">📢</span>Nenhum aviso publicado.</div>';
+      return;
+    }
+    const icones = { urgente: '⚠️', aviso: '📌', info: 'ℹ️' };
+    lista.innerHTML = avisos.map(a => `
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;padding:10px 0;border-bottom:1px solid #f0f0f0;gap:10px">
+        <div style="flex:1">
+          <div style="display:flex;align-items:center;gap:6px;margin-bottom:2px">
+            <span style="font-size:.82rem;font-weight:700;color:#333">${icones[a.tipo]||'📌'} ${a.titulo}</span>
+            ${a.tipo==='urgente' ? '<span style="background:#fff5f5;color:var(--vermelho);font-size:.65rem;font-weight:700;padding:1px 6px;border-radius:8px;border:1px solid #f5b5a8">POP-UP ATIVO</span>' : ''}
+          </div>
+          <div style="font-size:.78rem;color:#777;margin-top:2px">${a.conteudo}</div>
+          <div style="font-size:.7rem;color:#aaa;margin-top:3px">📅 ${new Date(a.created_at).toLocaleDateString('pt-BR')}</div>
+        </div>
+        <button class="btn btn-vermelho btn-xs" onclick="adminDeletarAviso('${a.id}', this)" title="Remover aviso — remove o pop-up para todos os usuários">🗑️ Remover</button>
+      </div>
+    `).join('');
+  } catch(e) {
+    lista.innerHTML = '<div class="sem"><span class="si">⚠️</span>Erro ao carregar.</div>';
+  }
+}
+
+async function adminPublicarAviso() {
+  const tipo     = document.getElementById('adminAvisoTipo').value;
+  const titulo   = document.getElementById('adminAvisoTitulo').value.trim();
+  const conteudo = document.getElementById('adminAvisoConteudo').value.trim();
+  if (!titulo || !conteudo) { toast('⚠️ Preencha título e conteúdo'); return; }
+  loading('btnPublicarAviso', true);
+  try {
+    await api.criarAviso({ tipo, titulo, conteudo });
+    toast('✅ Aviso publicado!');
+    document.getElementById('adminAvisoTitulo').value = '';
+    document.getElementById('adminAvisoConteudo').value = '';
+    adminCarregarAvisos();
+  } catch(e) {
+    toast('❌ Erro: ' + e.message);
+  } finally {
+    loading('btnPublicarAviso', false);
+  }
+}
+
+async function adminDeletarAviso(id, btn) {
+  if (!confirm('Remover este aviso?')) return;
+  btn.disabled = true;
+  try {
+    await api.deletarAviso(id);
+    toast('✅ Aviso removido!');
+    adminCarregarAvisos();
+  } catch(e) {
+    toast('❌ Erro: ' + e.message);
+    btn.disabled = false;
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+//  ADMIN — SUGESTÕES
+// ═══════════════════════════════════════════════════════════
+async function adminCarregarSugestoes() {
+  const lista = document.getElementById('adminSugestoesLista');
+  lista.innerHTML = '<div class="sem"><span class="si">⏳</span>Carregando...</div>';
+  try {
+    const res = await api.listarSugestoes();
+    const sugestoes = res.sugestoes || [];
+    if (!sugestoes.length) {
+      lista.innerHTML = '<div class="sem"><span class="si">📭</span>Nenhuma mensagem.</div>';
+      return;
+    }
+    const icons = { sugestao: '💡', elogio: '🌟', reclamacao: '⚠️', duvida: '❓' };
+    lista.innerHTML = sugestoes.map(s => `
+      <div style="background:${s.lida?'#fafafa':'#fffbea'};border-radius:8px;padding:12px;margin-bottom:8px;border:1px solid ${s.lida?'#eee':'#f0d97a'}">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px">
+          <span style="font-size:.78rem;font-weight:700;color:#333">${icons[s.tipo]||'💬'} ${s.tipo||'Mensagem'} — ${s.area||'Geral'}</span>
+          <div style="display:flex;gap:5px;align-items:center">
+            ${!s.lida ? `<button class="btn btn-verde btn-xs" onclick="adminMarcarLida('${s.id}',this)">✓ Lida</button>` : '<span style="font-size:.7rem;color:#aaa">✓ Lida</span>'}
+          </div>
+        </div>
+        <div style="font-size:.82rem;color:#444;line-height:1.5">${s.mensagem}</div>
+        <div style="font-size:.7rem;color:#aaa;margin-top:4px">
+          ${s.usuarios?.nome || 'Usuário anônimo'} • 📅 ${new Date(s.created_at).toLocaleDateString('pt-BR')}
+        </div>
+      </div>
+    `).join('');
+  } catch(e) {
+    lista.innerHTML = '<div class="sem"><span class="si">⚠️</span>Erro ao carregar.</div>';
+  }
+}
+
+// ── TESTAR STONE ────────────────────────────────────────────
+async function adminTestarStone() {
+  const btn    = document.getElementById('btnTestarStone');
+  const status = document.getElementById('stoneTestStatus');
+  btn.disabled = true;
+  btn.textContent = '⏳ Testando...';
+  status.style.display = 'none';
+  try {
+    // Testa o endpoint webhook-stone com payload vazio
+    // Se o servidor responder 200, o endpoint está no ar
+    const r = await fetch(API_BASE + '/api/pagamentos?acao=webhook-stone', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type: 'ping' })
+    });
+    const d = await r.json();
+    if (r.ok && d.ok !== undefined) {
+      status.style.display = 'block';
+      status.style.background = '#e8f5ee';
+      status.style.borderLeft = '3px solid var(--verde)';
+      status.innerHTML = '✅ Endpoint <b>webhook-stone</b> está no ar e respondendo corretamente.<br><span style="color:#888">Próximo passo: cadastrar a URL no portal Stone.</span>';
+    } else {
+      throw new Error('Resposta inesperada do servidor');
+    }
+  } catch(e) {
+    status.style.display = 'block';
+    status.style.background = '#fff5f5';
+    status.style.borderLeft = '3px solid var(--vermelho)';
+    status.innerHTML = '❌ Erro: ' + e.message;
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '🔌 Testar conexão Stone';
+  }
+}
+
+// ── VERIFICAR ENV VARS STONE (chamado ao entrar no painel admin) ──
+async function adminVerificarStone() {
+  const el = document.getElementById('stoneCheckEnv');
+  if (!el) return;
+  try {
+    // Tenta autenticar — se STONE_CODE/SECRET não estiverem configurados
+    // o endpoint retorna erro específico
+    const r = await fetch(API_BASE + '/api/pagamentos?acao=cobrar-stone', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${api.token}` },
+      body: JSON.stringify({ usuario_id: 'ping' })
+    });
+    const d = await r.json();
+    if (d.erro && d.erro.includes('STONE_CODE')) {
+      el.innerHTML = '⚠️ <b>STONE_CODE</b> ou <b>STONE_SECRET_KEY</b> não configurados no Vercel.<br><span style="color:#888">Vá em Vercel → Settings → Environment Variables.</span>';
+      el.style.color = 'var(--laranja)';
+    } else if (d.erro && d.erro.includes('STONE_SERIAL')) {
+      el.innerHTML = '⚠️ <b>STONE_SERIAL_POS</b> não configurado no Vercel.';
+      el.style.color = 'var(--laranja)';
+    } else {
+      el.innerHTML = '✅ Variáveis de ambiente Stone configuradas no Vercel.';
+      el.style.color = 'var(--verde)';
+    }
+  } catch(e) {
+    el.innerHTML = '⚠️ Não foi possível verificar — verifique sua conexão.';
+    el.style.color = '#aaa';
+  }
+}
+
+async function adminMarcarLida(id, btn) {
+  btn.disabled = true;
+  try {
+    await api.marcarSugestaoLida(id);
+    toast('✅ Marcada como lida');
+    adminCarregarSugestoes();
+  } catch(e) {
+    toast('❌ Erro: ' + e.message);
+  }
+}
+
+
+// ═══════════════════════════════════════════════════════════
+//  POPUP DE AVISO URGENTE — listener fechar
+// ═══════════════════════════════════════════════════════════
+document.getElementById('btnFecharAvisoUrgente').addEventListener('click', () => {
+  const modal  = document.getElementById('modalAvisoUrgente');
+  const avisoId = modal.dataset.avisoId;
+  // Marca como lido hoje para não mostrar novamente até amanhã
+  if (avisoId) {
+    const hoje  = new Date().toISOString().split('T')[0];
+    const lidos = JSON.parse(localStorage.getItem('avisos_lidos') || '{}');
+    lidos[avisoId] = hoje;
+    // Limpa lidos antigos (mantém só os últimos 30 dias)
+    Object.keys(lidos).forEach(k => { if(lidos[k] < hoje) delete lidos[k]; });
+    localStorage.setItem('avisos_lidos', JSON.stringify(lidos));
+  }
+  modal.classList.remove('ativo');
+});
+
+// ═══════════════════════════════════════════════════════════
+//  BLOQUEAR / ATIVAR USUÁRIO (ADMIN)
+// ═══════════════════════════════════════════════════════════
+async function adminBloquearUsuario(usuarioId, nome, ativar, btn) {
+  if (!confirm(`${ativar ? 'Ativar' : 'Bloquear'} o usuário ${nome}?`)) return;
+
+  btn.disabled = true;
+
+  try {
+    await api.post('/api/usuarios?acao=bloquear', {
+      usuario_id: usuarioId,
+      ativo: ativar
+    });
+
+    toast(`✅ Usuário ${nome} ${ativar ? 'ativado' : 'bloqueado'}!`);
+
+    adminCarregarUsuarios(
+      document.getElementById('adminBuscaUsuario')?.value || ''
+    );
+
+  } catch(e) {
+    toast('❌ Erro: ' + e.message);
+    btn.disabled = false;
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+//  AUDITORIA DE TERMO DIGITAL (ADMIN)
+// ═══════════════════════════════════════════════════════════
+let _auditDados = null;
+
+async function adminVerAssinatura(usuarioId) {
+  // Mostra modal com loading
+  document.getElementById('modalAssinatura').classList.add('ativo');
+  document.getElementById('modalAssinaturaNome').textContent = '⏳ Carregando...';
+  document.getElementById('auditNome').textContent  = '—';
+  document.getElementById('auditCpf').textContent   = '—';
+  document.getElementById('auditId').textContent    = '—';
+  document.getElementById('auditIp').textContent    = '—';
+  document.getElementById('auditData').textContent  = '—';
+  document.getElementById('auditHash').textContent  = '—';
+  document.getElementById('modalAssinaturaImg').src = '';
+  document.getElementById('auditFotoWrap').style.display = 'none';
+
+  try {
+    const res = await api.get(`/api/usuarios?acao=buscar&id=${usuarioId}`);
+    const u = res.usuario;
+
+    if (!u) {
+      document.getElementById('modalAssinaturaNome').textContent = '❌ Usuário não encontrado';
+      return;
+    }
+
+    _auditDados = u;
+
+    // Cabeçalho
+    document.getElementById('modalAssinaturaNome').textContent = `${u.nome} — Termo de Aceite`;
+
+    // Metadados
+    document.getElementById('auditNome').textContent  = u.nome;
+    document.getElementById('auditCpf').textContent   = fmtCpf(u.cpf);
+    document.getElementById('auditId').textContent    = u.id;
+    document.getElementById('auditIp').textContent    = u.termo_ip || 'Não registrado';
+    document.getElementById('auditData').textContent  = u.termo_aceito_em
+      ? new Date(u.termo_aceito_em).toLocaleString('pt-BR', { dateStyle:'full', timeStyle:'medium' })
+      : 'Não registrada';
+
+    // Hash de integridade
+    const hashIn = `${u.id}|${u.cpf}|${u.termo_aceito_em}|${u.termo_ip}`;
+    document.getElementById('auditHash').textContent =
+      btoa(unescape(encodeURIComponent(hashIn))).slice(0, 48) + '...';
+
+    // Assinatura
+    if (u.assinatura_svg) {
+      document.getElementById('modalAssinaturaImg').src = u.assinatura_svg;
+      document.getElementById('modalAssinaturaImg').alt = 'Assinatura digital';
+    } else {
+      document.getElementById('modalAssinaturaImg').src = '';
+      document.getElementById('modalAssinaturaImg').alt = 'Sem assinatura';
+      const wrap = document.getElementById('modalAssinaturaImg').parentElement;
+      const aviso = wrap.querySelector('.aviso-sem-assinatura');
+      if (!aviso) {
+        const div = document.createElement('div');
+        div.className = 'aviso-sem-assinatura';
+        div.style.cssText = 'padding:12px;text-align:center;font-size:.8rem;color:#888;background:#f9f9f9;border-radius:8px;margin-top:8px;border:1px solid #eee';
+        div.textContent = '⚠️ Usuário cadastrado antes da assinatura digital. Solicitar nova assinatura ou recadastrar.';
+        wrap.appendChild(div);
+      }
+    }
+
+    // Foto de cadastro
+    if (u.foto_url) {
+      document.getElementById('auditFoto').src = u.foto_url;
+      document.getElementById('auditFotoWrap').style.display = 'block';
+    }
+
+  } catch(e) {
+    document.getElementById('modalAssinaturaNome').textContent = '❌ Erro ao carregar dados';
+    toast('❌ Erro ao carregar dados de auditoria: ' + e.message);
+  }
+}
+
+function auditBaixarHTML() {
+  const u = _auditDados;
+  if (!u) { toast('⚠️ Nenhum dado carregado'); return; }
+
+  const html = `<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Termo de Aceite — ${u.nome}</title>
+<style>
+  body{font-family:Arial,sans-serif;max-width:700px;margin:40px auto;color:#222;line-height:1.6;padding:0 20px}
+  h1{color:#1a6b3a;border-bottom:3px solid #1a6b3a;padding-bottom:8px;font-size:1.3rem}
+  h2{color:#0d3d20;font-size:1rem;margin:20px 0 8px}
+  .meta{background:#f5fdf7;border:1px solid #a8d5b5;border-radius:8px;padding:16px;margin:16px 0;display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:.9rem}
+  .meta b{color:#0d3d20}
+  .reg{background:#fafafa;border:1px solid #ddd;border-radius:8px;padding:16px;margin:16px 0;font-size:.88rem;line-height:1.8}
+  .ass{text-align:center;border:1px dashed #ccc;border-radius:8px;padding:16px;margin:16px 0;background:#fff}
+  .ass img{max-width:100%;max-height:160px}
+  .ass-vazia{color:#aaa;font-style:italic;padding:20px}
+  .hash{background:#f0f0f0;border-radius:6px;padding:10px;font-size:.72rem;font-family:monospace;word-break:break-all;color:#555}
+  .rodape{text-align:center;color:#888;font-size:.72rem;margin-top:32px;border-top:1px solid #eee;padding-top:12px}
+  @media print{body{margin:20px}}
+</style>
+</head>
+<body>
+<h1>📋 Documento de Auditoria — Termo de Aceite</h1>
+<p style="color:#888;font-size:.82rem">Ala dos Estudantes Educador Paiva Netto — Gerado em ${new Date().toLocaleString('pt-BR')}</p>
+
+<h2>📊 Dados do Usuário</h2>
+<div class="meta">
+  <div><b>Nome completo:</b><br>${u.nome}</div>
+  <div><b>CPF:</b><br>${fmtCpf(u.cpf)}</div>
+  <div><b>E-mail:</b><br>${u.email || '—'}</div>
+  <div><b>Telefone:</b><br>${u.telefone || '—'}</div>
+  <div><b>ID do sistema:</b><br><code style="font-size:.8rem">${u.id}</code></div>
+  <div><b>IP do aceite:</b><br>${u.termo_ip || 'Não registrado'}</div>
+  <div><b>Data/Hora do aceite:</b><br>${u.termo_aceito_em ? new Date(u.termo_aceito_em).toLocaleString('pt-BR', {dateStyle:'full', timeStyle:'medium'}) : 'Não registrada'}</div>
+  <div><b>Status do aceite:</b><br>${u.termo_aceito_em ? '✅ Aceite registrado' : '⚠️ Sem aceite registrado'}</div>
+</div>
+
+<h2>📜 Regulamento Aceito</h2>
+<div class="reg">
+  <p><b>1. DO ACESSO.</b> O pagamento garante acesso pelo período integral do dia de uso (até 19h45). O acesso é realizado via reconhecimento facial na catraca após pagamento confirmado.</p>
+  <p><b>2. DA SAÍDA.</b> Saída temporária não configura encerramento do acesso. A saída definitiva é registrada pela recepção ao sair com os materiais.</p>
+  <p><b>3. DA VAGA.</b> O sistema controla vagas rotativas. Ao pagar, uma vaga é reservada e liberada na catraca. A vaga é liberada após saída definitiva.</p>
+  <p><b>4. DO CANCELAMENTO.</b> Não há reembolso após o pagamento. O acesso é pessoal e intransferível.</p>
+  <p><b>5. DA SUSPENSÃO.</b> O descumprimento das normas pode resultar em suspensão do cadastro.</p>
+  <p><b>6. LGPD.</b> Coletamos nome, CPF, e-mail, foto e telefone exclusivamente para controle de acesso. Dados não são compartilhados com terceiros. Você pode solicitar exclusão a qualquer momento na recepção.</p>
+</div>
+
+<h2>✍️ Assinatura Manuscrita Digital</h2>
+<div class="ass">
+  ${u.assinatura_svg
+    ? `<img src="${u.assinatura_svg}" alt="Assinatura digital">
+       <p style="font-size:.75rem;color:#888;margin-top:8px">
+         Assinatura capturada digitalmente em ${u.termo_aceito_em ? new Date(u.termo_aceito_em).toLocaleString('pt-BR') : '—'}
+       </p>`
+    : '<div class="ass-vazia">⚠️ Nenhuma assinatura registrada para este usuário</div>'
+  }
+</div>
+
+${u.foto_url ? `
+<h2>📸 Foto de Cadastro</h2>
+<div style="text-align:center;margin:16px 0">
+  <img src="${u.foto_url}" style="width:120px;height:120px;object-fit:cover;border-radius:50%;border:3px solid #1a6b3a">
+  <p style="font-size:.75rem;color:#888;margin-top:6px">Foto para reconhecimento facial no Control iD</p>
+</div>` : ''}
+
+<h2>🔒 Hash de Integridade</h2>
+<div class="hash">${btoa(unescape(encodeURIComponent(`${u.id}|${u.cpf}|${u.termo_aceito_em}|${u.termo_ip}`)))}</div>
+<p style="font-size:.72rem;color:#aaa;margin-top:6px">Para verificar autenticidade, consulte o banco de dados com o ID do usuário acima.</p>
+
+<div class="rodape">
+  <p>Ala dos Estudantes Educador Paiva Netto — SGAS 915 Sul, Brasília/DF</p>
+  <p>Documento sigiloso gerado automaticamente. Uso restrito à instituição.</p>
+  <p>© ${new Date().getFullYear()}</p>
+</div>
+</body>
+</html>`;
+
+  const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `termo-${u.cpf}-${new Date().toISOString().split('T')[0]}.html`;
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+  toast('📄 Documento exportado com sucesso!');
+}
+
+// ═══════════════════════════════════════════════════════════
+//  VER TERMO (APP)
+// ═══════════════════════════════════════════════════════════
+function verTermo(img, nome, data, ip) {
+  if (!img) {
+    toast('⚠️ Usuário não possui assinatura');
+    return;
+  }
+
+  document.getElementById('termoImg').src = img;
+  document.getElementById('termoNome').textContent = nome;
+  document.getElementById('termoData').textContent =
+    data ? new Date(data).toLocaleString('pt-BR') : '—';
+  document.getElementById('termoIP').textContent = ip || '—';
+
+  document.getElementById('modalTermo').classList.add('ativo');
+}
+
+function fecharTermo() {
+  document.getElementById('modalTermo').classList.remove('ativo');
+}
+
+// ═══════════════════════════════════════════════════════════
+//  SERVICE WORKER
+// ═══════════════════════════════════════════════════════════
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("/sw.js")
+      .then(() => console.log("PWA: Service Worker registrado"))
+      .catch(e => console.log("PWA: erro", e));
+  });
+}
+
+</script>
+
+<!-- MODAL (FORA DO SCRIPT) -->
+<div class="modal-bg" id="modalTermo">
+  <div class="modal" style="max-width:500px">
+
+    <h3>✍️ Termo Assinado</h3>
+
+    <p><b>Usuário:</b> <span id="termoNome"></span></p>
+    <p><b>Data:</b> <span id="termoData"></span></p>
+    <p><b>IP:</b> <span id="termoIP"></span></p>
+
+    <img id="termoImg"
+         style="width:100%;border:1px solid #ddd;border-radius:8px;margin-top:10px" />
+
+    <div style="margin-top:15px">
+      <button class="btn btn-sec" onclick="fecharTermo()">Fechar</button>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>
