@@ -227,6 +227,31 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
 .erro-api{background:#fff5f5;border:1.5px solid #f5b5a8;border-radius:var(--r-sm);padding:10px 14px;font-size:.82rem;color:var(--vermelho);margin-bottom:10px;display:none}
 @media(min-width:768px){.main{padding:20px 20px 100px}.cf{padding:42px 40px}}
 @media(min-width:1024px){.main{padding:24px 24px 80px}.bnav{max-width:900px;left:50%;transform:translateX(-50%);border-radius:20px 20px 0 0}.toast{bottom:90px}}
+
+/* ── Aba Perfil ── */
+.perfil-hero{background:linear-gradient(145deg,var(--verde-esc),var(--verde-cl));border-radius:var(--r);padding:22px 18px 18px;margin-bottom:12px;box-shadow:var(--shadow);text-align:center;position:relative;overflow:hidden}
+.perfil-hero::before{content:"";position:absolute;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,.05);top:-60px;right:-60px;pointer-events:none}
+.perfil-foto-wrap{position:relative;display:inline-block;margin-bottom:12px}
+.perfil-foto{width:88px;height:88px;border-radius:50%;border:3px solid rgba(255,255,255,.5);object-fit:cover;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-size:2rem;font-weight:700;color:#fff;overflow:hidden}
+.perfil-foto img{width:100%;height:100%;object-fit:cover}
+.perfil-foto-btn{position:absolute;bottom:2px;right:2px;width:26px;height:26px;background:var(--dourado);border-radius:50%;border:2px solid #fff;display:flex;align-items:center;justify-content:center;font-size:.7rem;cursor:pointer;transition:.2s}
+.perfil-foto-btn:hover{transform:scale(1.1)}
+.perfil-nome{font-family:"Playfair Display",serif;font-size:1.15rem;font-weight:700;color:#fff;margin-bottom:2px}
+.perfil-cpf{font-size:.72rem;color:rgba(255,255,255,.7);font-family:"JetBrains Mono",monospace;letter-spacing:.5px}
+.perfil-badges{display:flex;gap:6px;justify-content:center;margin-top:10px;flex-wrap:wrap}
+.pbadge{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:16px;font-size:.68rem;font-weight:700;border:1px solid rgba(255,255,255,.3)}
+.pbadge.ok{background:rgba(45,145,85,.35);color:#7dffb3}
+.pbadge.warn{background:rgba(230,126,34,.35);color:#ffd080}
+.dados-linha{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid #f3f3f3;font-size:.84rem}
+.dados-linha:last-child{border-bottom:none}
+.dados-linha .dl-icon{width:32px;height:32px;border-radius:8px;background:var(--verde-suave);display:flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0}
+.dados-linha .dl-key{font-size:.68rem;color:#aaa;text-transform:uppercase;letter-spacing:.4px;margin-bottom:1px}
+.dados-linha .dl-val{color:var(--cinza-esc);font-weight:500}
+.alerta-perfil{background:linear-gradient(135deg,#fff8e0,#fffbef);border:1.5px solid var(--dourado-cl);border-radius:var(--r-sm);padding:13px 14px;margin-bottom:12px;display:flex;align-items:flex-start;gap:10px}
+.alerta-perfil .ap-icon{font-size:1.3rem;flex-shrink:0;margin-top:1px}
+.alerta-perfil .ap-txt{font-size:.8rem;color:#7a5c00;line-height:1.5;flex:1}
+.alerta-perfil .ap-txt b{color:#5a4000}
+.alerta-perfil .ap-btn{margin-top:7px}
 </style>
 </head>
 <body>
@@ -307,10 +332,8 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
           <option value="aluno">📝 Concurseiro</option>
           <option value="aluno">🏘️ Comunidade Geral</option>
         </select></div>
-      <div class="campo"><label for="cadSenha">Senha * (mín. 8 car. — maiúscula, número e símbolo)</label>
-        <input type="password" id="cadSenha" placeholder="Ex: Estudo@2025">
-        <div id="cadSenhaForca" style="font-size:.71rem;margin-top:4px;min-height:16px"></div>
-      </div>
+      <div class="campo"><label for="cadSenha">Senha * (mín. 6 caracteres)</label>
+        <input type="password" id="cadSenha" placeholder="••••••••"></div>
       <button class="btn btn-verde" id="btnCadEtapa1">Próximo — Tirar Foto →</button>
       <div class="linktxt" style="margin-top:10px">Já tem conta? <span id="irLogin">Fazer login</span></div>
       <div class="linktxt" style="margin-top:6px">
@@ -360,21 +383,14 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
     <div id="cadEtapa3" style="display:none">
       <div style="font-size:.73rem;font-weight:700;color:var(--verde);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">📜 Leia o Regulamento completo</div>
       <div class="termos-box">
-        <h4>📜 Termo de Conduta — Ala dos Estudantes Educador Paiva Netto</h4>
-        <p><b>Objetivo:</b> Promover um ambiente respeitoso de aprendizado e pesquisa, para o desenvolvimento da Cidadania Ecumênica, de modo seguro e acolhedor para todos os usuários.</p><br>
-        <p><b>RESPEITO:</b> Tratar todos os frequentadores e colaboradores com respeito, sem preconceito ou discriminação. Respeitar o silêncio e a concentração dos demais.</p><br>
-        <p><b>COMPORTAMENTO:</b> É proibido conversas, barulhos excessivos e uso de aparelhos que causem incômodo. É proibido manusear pertences de outros sem autorização. Os computadores são apenas para estudo e pesquisa. Horário: 8h às 19h45.</p><br>
-        <p><b>USO DO ACERVO:</b> Manusear livros com cuidado. Devolver no prazo. Atraso: multa de R$ 2,00/dia. Não danificar materiais.</p><br>
-        <p><b>GUARDA-VOLUMES:</b> Planos: Diário R$ 4,00 · Quinzenal R$ 50,00 · Mensal R$ 90,00. Não devolução da chave: multa R$ 120,00. Não nos responsabilizamos por objetos guardados.</p><br>
-        <p><b>SEGURANÇA:</b> O ambiente possui monitoramento por câmeras. Não é permitido receber visitas. Apenas Órgãos Competentes do Governo podem solicitar imagens.</p><br>
-        <p><b>NÃO É PERMITIDO:</b> Conversar · Reservar lugar · Namorar · Falar ao telefone · Colocar pés sobre mesas/cadeiras · Reproduzir mídias sem fone · Consumir alimentos (exceto café e água).</p><br>
-        <p><b>VESTIMENTAS:</b> Não permitido: roupas que não cubram ombros/barriga, transparentes, com decotes, saias/vestidos acima do joelho, shorts e bermudas.</p><br>
-        <p><b>PENALIDADES:</b> O descumprimento pode resultar em advertência, suspensão temporária (até 90 dias) ou definitiva, e responsabilização por danos ao patrimônio.</p><br>
-        <p><b>DO ACESSO:</b> O pagamento garante acesso pelo dia inteiro (até 19h45). Acesso via reconhecimento facial após pagamento confirmado.</p><br>
-        <p><b>DA VAGA:</b> O sistema controla 148 vagas rotativas. Ao pagar, uma vaga é reservada. A vaga é liberada após saída definitiva registrada pela recepção.</p><br>
-        <p><b>DO CANCELAMENTO:</b> Não há reembolso após o pagamento. O acesso é pessoal e intransferível.</p><br>
+        <h4>📜 Regulamento de Uso — Ala dos Estudantes Educador Paiva Netto</h4>
+        <p><b>1. DO ACESSO.</b> O pagamento garante acesso pelo período integral do dia de uso (até 19h45). O acesso é realizado via reconhecimento facial na catraca após pagamento confirmado no aplicativo.</p><br>
+        <p><b>2. DA SAÍDA.</b> Saída temporária (banheiro, lanchonete, celular) não configura encerramento do acesso. A saída definitiva é configurada pela recepção quando o usuário sai com seus materiais ou quando identificado via câmeras que a mesa está desocupada.</p><br>
+        <p><b>3. DA VAGA.</b> O sistema controla 148 vagas rotativas. Ao pagar, uma vaga é reservada e liberada na catraca. A vaga é liberada ao sistema após saída definitiva registrada pela recepção.</p><br>
+        <p><b>4. DO CANCELAMENTO.</b> Não há reembolso após o pagamento. O acesso é pessoal e intransferível.</p><br>
+        <p><b>5. DA SUSPENSÃO.</b> O descumprimento das normas pode resultar em suspensão do cadastro.</p><br>
         <h4>🔒 Política de Privacidade (LGPD)</h4>
-        <p>Coletamos nome, CPF, foto, e-mail e telefone exclusivamente para controle de acesso e reconhecimento facial. Dados não são compartilhados com terceiros. Você pode solicitar exclusão na recepção a qualquer momento.</p>
+        <p><b>6.</b> Coletamos nome, CPF, foto, e-mail e telefone exclusivamente para controle de acesso e reconhecimento facial. Dados não são compartilhados com terceiros. Você pode solicitar a exclusão dos seus dados a qualquer momento na recepção.</p>
       </div>
       <div style="font-size:.73rem;font-weight:700;color:var(--verde);margin:12px 0 6px;text-transform:uppercase;letter-spacing:.5px">✍️ Assine abaixo para confirmar que leu e concorda</div>
       <div style="position:relative;border:2px solid var(--cinza-cl);border-radius:var(--r-sm);background:#fafafa;overflow:hidden;margin-bottom:8px" id="canvasWrap">
@@ -427,21 +443,13 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
         </div>
       </div>
 
-      <!-- Aviso primeiro acesso (importado do Control iD) -->
-      <div id="migAvisoPrimeiroAcesso" style="display:none;background:#e8f5ee;border:1.5px solid #a8d5b5;border-radius:var(--r-sm);padding:11px 13px;margin-bottom:13px;font-size:.8rem;color:var(--verde-esc);line-height:1.5">
-        👋 <b>Bem-vindo ao novo sistema!</b><br>
-        Seu cadastro foi localizado. Para continuar, crie uma senha e assine o Termo de Conduta.
-      </div>
-
       <!-- Senha -->
       <div style="background:#fffbe0;border:1px solid var(--dourado-cl);border-radius:var(--r-sm);padding:10px 12px;font-size:.78rem;color:#a07a00;margin-bottom:12px;line-height:1.5">
         ⚠️ Crie uma <b>senha de acesso</b> e adicione sua <b>foto</b> para ativar o reconhecimento facial na catraca.
       </div>
 
-      <div class="campo"><label for="migSenha">Nova senha * (mín. 8 car. — maiúscula, número e símbolo)</label>
-        <input type="password" id="migSenha" placeholder="Ex: Estudo@2025">
-        <div id="migSenhaForca" style="font-size:.71rem;margin-top:4px;min-height:16px"></div>
-      </div>
+      <div class="campo"><label for="migSenha">Nova senha * (mín. 6 caracteres)</label>
+        <input type="password" id="migSenha" placeholder="Crie uma senha segura"></div>
       <div class="campo"><label for="migSenhaConfirm">Confirmar senha *</label>
         <input type="password" id="migSenhaConfirm" placeholder="Repita a senha"></div>
 
@@ -466,38 +474,6 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
         <div id="migFotoFeitaControles" style="display:none;padding:8px;text-align:center">
           <button type="button" class="btn btn-sec btn-sm" id="btnMigRefazerFoto">🔄 Refazer foto</button>
         </div>
-      </div>
-
-      <!-- Termo de Conduta completo -->
-      <div style="font-size:.73rem;font-weight:700;color:var(--verde);margin:14px 0 6px;text-transform:uppercase;letter-spacing:.5px">📜 Leia e assine o Termo de Conduta</div>
-      <div class="termos-box" style="max-height:160px">
-        <h4>📜 Termo de Conduta — Ala dos Estudantes Educador Paiva Netto</h4>
-        <p><b>Objetivo:</b> Promover um ambiente respeitoso de aprendizado e pesquisa, de modo seguro e acolhedor para todos.</p><br>
-        <p><b>RESPEITO:</b> Tratar todos com respeito, sem preconceito ou discriminação. Respeitar o silêncio e a concentração dos demais.</p><br>
-        <p><b>COMPORTAMENTO:</b> Proibido conversas, barulhos, uso de aparelhos que causem incômodo. Computadores apenas para estudo. Horário: 8h às 19h45.</p><br>
-        <p><b>USO DO ACERVO:</b> Manusear livros com cuidado. Devolver no prazo. Atraso: multa R$ 2,00/dia.</p><br>
-        <p><b>GUARDA-VOLUMES:</b> Diário R$ 4,00 · Quinzenal R$ 50,00 · Mensal R$ 90,00. Não devolução da chave: multa R$ 120,00.</p><br>
-        <p><b>SEGURANÇA:</b> Ambiente monitorado por câmeras. Não é permitido receber visitas.</p><br>
-        <p><b>NÃO É PERMITIDO:</b> Conversar · Reservar lugar · Namorar · Falar ao telefone · Pés sobre mesas · Mídias sem fone · Alimentos (exceto café e água).</p><br>
-        <p><b>VESTIMENTAS:</b> Não permitido roupas que não cubram ombros/barriga, transparentes, com decotes, saias acima do joelho, shorts e bermudas.</p><br>
-        <p><b>PENALIDADES:</b> Advertência, suspensão temporária (até 90 dias) ou definitiva, e responsabilização por danos.</p><br>
-        <p><b>DO ACESSO:</b> Pagamento garante acesso pelo dia (até 19h45). Acesso via reconhecimento facial.</p><br>
-        <p><b>DO CANCELAMENTO:</b> Não há reembolso. Acesso pessoal e intransferível.</p><br>
-        <h4>🔒 LGPD</h4>
-        <p>Coletamos nome, CPF, foto, e-mail e telefone exclusivamente para controle de acesso. Dados não são compartilhados com terceiros.</p>
-      </div>
-
-      <!-- Assinatura digital -->
-      <div style="font-size:.73rem;font-weight:700;color:var(--verde);margin:10px 0 6px;text-transform:uppercase;letter-spacing:.5px">✍️ Assine para confirmar que leu e concorda</div>
-      <div style="position:relative;border:2px solid var(--cinza-cl);border-radius:var(--r-sm);background:#fafafa;overflow:hidden;margin-bottom:8px" id="migCanvasWrap">
-        <canvas id="migCanvasAssinatura" style="display:block;width:100%;touch-action:none;cursor:crosshair" height="120"></canvas>
-        <div id="migAssinaturaPlaceholder" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#ccc;font-size:.85rem;pointer-events:none;gap:6px">
-          ✍️ Desenhe sua assinatura aqui
-        </div>
-      </div>
-      <div style="display:flex;gap:8px;margin-bottom:14px;align-items:center">
-        <button class="btn btn-sec btn-sm" id="btnLimparMigAssinatura" style="flex:0 0 auto">🗑️ Limpar</button>
-        <span style="font-size:.71rem;color:#aaa;line-height:1.4">Sua assinatura confirma que leu e aceita o Termo de Conduta e a Política de Privacidade (LGPD).</span>
       </div>
 
       <button class="btn btn-dourado" id="btnMigFinalizar">✅ Ativar meu acesso completo</button>
@@ -531,7 +507,7 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
     <div class="tabs">
       <button class="tab ativo" data-panel="panelInicio">🏠 Início</button>
       <button class="tab" data-panel="panelAvisos">📢 Avisos</button>
-      <button class="tab" data-panel="panelPlano">🎫 Meu Plano</button>
+      <button class="tab" data-panel="panelPerfil">👤 Perfil</button>
       <button class="tab" data-panel="panelInformacoes">ℹ️ Info</button>
       <button class="tab" data-panel="panelSugestoes">💬 Sugestões</button>
     </div>
@@ -599,11 +575,67 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
       </div>
     </div>
 
-    <!-- PLANO -->
-    <div id="panelPlano" class="panel">
-      <div class="plano-crd">
-        <div class="plano-tipo">🎫 Acesso Diário</div>
-        <div class="plano-info">Pague uma vez, fique o dia inteiro • Saída registrada pela recepção</div>
+    <!-- PERFIL -->
+    <div id="panelPerfil" class="panel">
+
+      <!-- Alerta de cadastro incompleto -->
+      <div id="perfilAlerta" class="alerta-perfil" style="display:none">
+        <div class="ap-icon">⚠️</div>
+        <div class="ap-txt">
+          <b id="perfilAlertaTxt">Cadastro incompleto.</b><br>
+          <span id="perfilAlertaSub">Complete seu cadastro para usar a catraca facial.</span>
+          <div class="ap-btn">
+            <button class="btn btn-dourado btn-xs" id="btnPerfilCompletar">✅ Completar agora</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hero com foto -->
+      <div class="perfil-hero">
+        <div class="perfil-foto-wrap">
+          <div class="perfil-foto" id="perfilFotoCircle">
+            <span id="perfilFotoLetra">?</span>
+          </div>
+          <button class="perfil-foto-btn" id="btnAbrirModalFotoPerfil" title="Atualizar foto" type="button">📷</button>
+        </div>
+        <div class="perfil-nome" id="perfilNome">—</div>
+        <div class="perfil-cpf" id="perfilCpfExib">—</div>
+        <div class="perfil-badges">
+          <span class="pbadge" id="perfilBadgeFoto">⏳ Foto</span>
+          <span class="pbadge" id="perfilBadgeTermo">⏳ Termo</span>
+          <span class="pbadge ok">🎫 Acesso Diário</span>
+        </div>
+      </div>
+
+      <!-- Dados cadastrais -->
+      <div class="crd">
+        <div class="crd-t">📋 Dados Cadastrais</div>
+        <div class="dados-linha">
+          <div class="dl-icon">👤</div>
+          <div><div class="dl-key">Nome completo</div><div class="dl-val" id="perfilDadosNome">—</div></div>
+        </div>
+        <div class="dados-linha">
+          <div class="dl-icon">🪪</div>
+          <div><div class="dl-key">CPF</div><div class="dl-val" id="perfilDadosCpf" style="font-family:'JetBrains Mono',monospace">—</div></div>
+        </div>
+        <div class="dados-linha">
+          <div class="dl-icon">✉️</div>
+          <div><div class="dl-key">E-mail</div><div class="dl-val" id="perfilDadosEmail">—</div></div>
+        </div>
+        <div class="dados-linha">
+          <div class="dl-icon">📱</div>
+          <div><div class="dl-key">Telefone</div><div class="dl-val" id="perfilDadosTel">—</div></div>
+        </div>
+        <div class="dados-linha">
+          <div class="dl-icon">🏷️</div>
+          <div><div class="dl-key">Tipo de cadastro</div><div class="dl-val" id="perfilDadosTipo">—</div></div>
+        </div>
+      </div>
+
+      <!-- Estatísticas e histórico -->
+      <div class="plano-crd" style="border-radius:var(--r)">
+        <div class="plano-tipo">📊 Minha Frequência</div>
+        <div class="plano-info">Visitas registradas no mês atual</div>
         <div class="plano-det">
           <div class="pd"><div class="val" id="pVisitas">0</div><div class="key">Visitas mês</div></div>
           <div class="pd"><div class="val" id="pHoras">0h</div><div class="key">Horas estud.</div></div>
@@ -611,14 +643,13 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
         </div>
       </div>
       <div class="crd">
-        <div class="crd-t">📊 Histórico de Acessos</div>
+        <div class="crd-t">📅 Histórico de Acessos</div>
         <div id="historicoLista"><div class="sem"><span class="si">⏳</span>Carregando...</div></div>
       </div>
-      <div class="crd" style="text-align:center">
-        <button class="btn btn-vermelho" id="btnSairPlano" style="max-width:280px;margin:0 auto">
-          🚪 Sair do aplicativo
-        </button>
-        <p style="font-size:.73rem;color:#aaa;margin-top:8px;line-height:1.5">Seu acesso do dia continua válido até 19h45.<br>Você pode fazer login novamente a qualquer momento.</p>
+
+      <!-- Sair -->
+      <div class="crd" style="text-align:center;padding:14px">
+        <button class="btn btn-vermelho" id="btnSairPerfilTab" style="max-width:280px;margin:0 auto">🚪 Sair da conta</button>
       </div>
     </div>
 
@@ -671,7 +702,7 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
   <nav class="bnav">
     <div class="ni ativo" data-panel="panelInicio"><span class="ic">🏠</span><span class="lb">Início</span></div>
     <div class="ni" data-panel="panelAvisos"><span class="ic">📢</span><span class="lb">Avisos</span></div>
-    <div class="ni" data-panel="panelPlano"><span class="ic">🎫</span><span class="lb">Plano</span></div>
+    <div class="ni" data-panel="panelPerfil"><span class="ic">👤</span><span class="lb">Perfil</span></div>
     <div class="ni" data-panel="panelInformacoes"><span class="ic">ℹ️</span><span class="lb">Info</span></div>
     <div class="ni" data-panel="panelSugestoes"><span class="ic">💬</span><span class="lb">Sugestões</span></div>
   </nav>
@@ -845,80 +876,14 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
         <div class="fg"><label for="cfgPixChave">Chave Pix</label>
           <input type="text" id="cfgPixChave" placeholder="CNPJ, CPF, e-mail ou telefone"></div>
         <div class="fg"><label for="cfgPixNome">Nome do Beneficiário</label>
-          <input type="text" id="cfgPixNome" placeholder="Ala dos Estudantes Educador Paiva Netto"></div>
-        <hr style="border:none;border-top:1px solid #eee;margin:13px 0">
-        <div class="acrd-t" style="font-size:.87rem;margin-bottom:9px">🏦 Gateway de Pagamento</div>
-        <div style="background:#f0f7f0;border:1.5px solid #a8d5b5;border-radius:8px;padding:10px;font-size:.78rem;color:#1a6b3a;margin-bottom:10px;line-height:1.6">
-          ✅ Configure o gateway para pagamentos automáticos via Pix e cartão.<br>
-          Sem gateway: sistema usa chave Pix estática com confirmação manual (fallback).
-        </div>
-        <div class="fg"><label for="cfgGatewayTipo">Tipo de Gateway</label>
-          <select id="cfgGatewayTipo">
-            <option value="manual">Sem gateway (manual — fallback)</option>
-            <option value="efi">EfiBank / Gerencianet</option>
-            <option value="mercadopago">Mercado Pago</option>
-            <option value="pagarme">Pagar.me</option>
-          </select></div>
-        <div class="fg"><label for="cfgGatewayChave">Chave / Token do Gateway</label>
-          <input type="password" id="cfgGatewayChave" placeholder="Client ID:Secret ou Bearer Token"></div>
-        <div class="fg"><label for="cfgGatewayChavePix">Chave Pix do Gateway (CNPJ/CPF/e-mail)</label>
-          <input type="text" id="cfgGatewayChavePix" placeholder="Chave Pix cadastrada no gateway"></div>
-        <hr style="border:none;border-top:1px solid #eee;margin:13px 0">
-        <div class="acrd-t" style="font-size:.87rem;margin-bottom:9px">💳 Cartão de Crédito / Débito</div>
-        <div style="background:#fff8e0;border:1.5px solid var(--dourado-cl);border-radius:8px;padding:10px;font-size:.78rem;color:#a07a00;margin-bottom:10px">
-          💳 Cartão pode ser pago no totem (maquininha integrada) ou na recepção. Configure as taxas para fins de relatório e faturamento.
-        </div>
-        <div class="fg"><label for="cfgTaxaCredito">Taxa Cartão de Crédito (%)</label>
-          <input type="text" id="cfgTaxaCredito" placeholder="Ex: 3,5"></div>
-        <div class="fg"><label for="cfgTaxaDebito">Taxa Cartão de Débito (%)</label>
-          <input type="text" id="cfgTaxaDebito" placeholder="Ex: 1,5"></div>
+          <input type="text" id="cfgPixNome" placeholder="Biblioteca Paiva Netto"></div>
         <hr style="border:none;border-top:1px solid #eee;margin:13px 0">
         <div class="acrd-t" style="font-size:.87rem;margin-bottom:9px">🔐 Control iD</div>
         <div class="fg"><label for="cfgControlIdUrl">URL da API</label>
-          <input type="text" id="cfgControlIdUrl" placeholder="http://10.161.9.102"></div>
+          <input type="text" id="cfgControlIdUrl" placeholder="http://192.168.1.100/api/v1"></div>
         <div class="fg"><label for="cfgControlIdToken">Token</label>
           <input type="password" id="cfgControlIdToken" placeholder="Bearer token"></div>
-        <hr style="border:none;border-top:1px solid #eee;margin:13px 0">
-        <div class="acrd-t" style="font-size:.87rem;margin-bottom:6px">💳 Stone EYE PRO</div>
-        <p style="font-size:.78rem;color:#777;line-height:1.6;margin-bottom:10px">
-          Integração com a maquininha Stone para cobrança automática na recepção.
-          As credenciais abaixo devem ser configuradas nas <b>variáveis de ambiente do Vercel</b> — não aqui.
-          Use este campo apenas para confirmar a URL do webhook a cadastrar no portal Stone.
-        </p>
-        <div style="background:#f0f4ff;border:1.5px solid #b0c4ef;border-radius:8px;padding:12px;margin-bottom:12px;font-size:.79rem;line-height:1.8">
-          <div style="font-weight:700;color:var(--azul);margin-bottom:6px">📋 Checklist Stone</div>
-          <div id="stoneCheckEnv" style="color:#888">⏳ Verificando variáveis de ambiente...</div>
-          <div style="margin-top:8px;color:#555">
-            <b>URL do Webhook</b> — cadastre no portal Stone:<br>
-            <code style="font-size:.75rem;background:#e8eeff;padding:3px 7px;border-radius:4px;word-break:break-all">
-              https://biblioteca-backend-v2-0.vercel.app/api/pagamentos?acao=webhook-stone
-            </code>
-          </div>
-          <div style="margin-top:8px;color:#555">
-            <b>Portal Stone:</b>
-            <a href="https://dashboard.stone.com.br" target="_blank" style="color:var(--azul)">dashboard.stone.com.br</a>
-            → API → Webhooks → Adicionar URL acima
-          </div>
-        </div>
-        <button class="btn btn-azul btn-sm" id="btnTestarStone" onclick="adminTestarStone()">🔌 Testar conexão Stone</button>
-        <div id="stoneTestStatus" style="display:none;margin-top:8px;font-size:.79rem;padding:8px 10px;border-radius:6px"></div>
-        <button class="btn btn-verde btn-sm" id="btnSalvarConfig" style="margin-top:13px">💾 Salvar Configurações</button>
-        <hr style="border:none;border-top:1px solid #eee;margin:16px 0">
-        <hr style="border:none;border-top:1px solid #eee;margin:16px 0">
-        <div class="acrd-t" style="font-size:.87rem;margin-bottom:6px">🔄 Reset Diário de Vagas</div>
-        <p style="font-size:.78rem;color:#777;line-height:1.6;margin-bottom:10px">
-          Encerra todos os acessos ativos e zera as vagas. Executado automaticamente às 20h via cron job.
-          Use manualmente apenas se necessário (ex: após reinicialização do sistema).
-        </p>
-        <div id="resetStatus" style="display:none;background:#f8fdf9;border:1.5px solid #a8d5b5;border-radius:8px;padding:10px;margin-bottom:10px;font-size:.8rem"></div>
-        <button class="btn btn-laranja btn-sm" id="btnResetDiario" onclick="adminResetDiario()">🔄 Executar Reset Diário agora</button>
-        <hr style="border:none;border-top:1px solid #eee;margin:16px 0">
-        <div class="acrd-t" style="font-size:.87rem;margin-bottom:6px">🔄 Sincronização com Control iD</div>
-        <p style="font-size:.78rem;color:#777;line-height:1.6;margin-bottom:10px">
-          Execute uma vez para vincular automaticamente usuários já cadastrados no banco físico do Control iD com os registros do sistema, sem criar duplicatas. A biometria existente é preservada.
-        </p>
-        <div id="syncStatus" style="display:none;background:#f8fdf9;border:1.5px solid #a8d5b5;border-radius:8px;padding:12px;margin-bottom:10px;font-size:.8rem;line-height:1.8"></div>
-        <button class="btn btn-azul btn-sm" id="btnSincronizarControlId">🔄 Sincronizar com Control iD agora</button>
+        <button class="btn btn-verde btn-sm" id="btnSalvarConfig">💾 Salvar Configurações</button>
       </div>
     </div>
   </div>
@@ -937,8 +902,7 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
         <div class="valor" id="pagtoValor">R$ 10,00</div>
         <div class="sub">Acesso integral do dia</div>
       </div>
-
-      <!-- SELETOR -->
+      <!-- SELETOR FORMA DE PAGAMENTO -->
       <div style="margin-bottom:14px">
         <div style="font-size:.71rem;font-weight:700;color:var(--cinza);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Forma de pagamento</div>
         <div style="display:flex;gap:8px">
@@ -962,81 +926,20 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
           </label>
         </div>
       </div>
-
-      <!-- SEÇÃO PIX — QR Code gerado pelo gateway -->
-      <div id="pixSection">
-        <div id="pixCarregando" style="text-align:center;padding:18px 0;color:var(--cinza);font-size:.84rem">
-          <div style="font-size:2rem;margin-bottom:8px">⏳</div>Gerando cobrança Pix...
-        </div>
-        <div id="pixConteudo" style="display:none">
-          <!-- QR Code -->
-          <div style="text-align:center;margin-bottom:10px">
-            <div id="pixQrContainer" style="width:160px;height:160px;margin:0 auto;background:#f5f5f5;border-radius:10px;display:flex;align-items:center;justify-content:center;overflow:hidden;border:2px solid var(--cinza-cl)">
-              <span style="font-size:3rem">📲</span>
-            </div>
-          </div>
-          <!-- Copia e cola -->
-          <div class="pix-box" style="margin-bottom:10px">
-            <div class="pix-label">Pix Copia e Cola</div>
-            <div class="pix-chave" id="pagtoCopiaCola" style="font-size:.72rem;word-break:break-all">—</div>
-            <button class="btn btn-sec" id="btnCopiarPix" style="margin-top:8px;font-size:.77rem;padding:7px 14px;width:auto">
-              📋 Copiar código
-            </button>
-          </div>
-          <!-- Timer -->
-          <div style="text-align:center;font-size:.78rem;color:var(--cinza);margin-bottom:10px">
-            ⏱️ Expira em <b id="pixTimer">05:00</b> — aguardando pagamento automaticamente
-          </div>
-          <div class="pagto-aviso">
-            🔄 Após pagar, a confirmação é automática — a catraca abre sem mais ações.
-          </div>
-        </div>
-        <!-- Modo manual (gateway não configurado) -->
-        <div id="pixManual" style="display:none">
-          <div class="pix-box" style="margin-bottom:10px">
-            <div class="pix-label">Chave Pix</div>
-            <div class="pix-chave" id="pagtoChave">—</div>
-            <div class="pix-nome" id="pagtoNome">—</div>
-            <button class="btn btn-sec" id="btnCopiarChave" style="margin-top:8px;font-size:.77rem;padding:7px 14px;width:auto">
-              📋 Copiar chave
-            </button>
-          </div>
-          <div class="pagto-aviso" style="background:#fff5e0;border-color:var(--dourado-cl)">
-            ⚠️ Gateway não configurado. Pague na chave acima e toque em "Já Paguei".<br>
-            <span style="font-size:.72rem;color:#888">Configure o gateway no painel Admin para confirmação automática.</span>
-          </div>
-        </div>
+      <div id="pixSection" class="pix-box">
+        <div class="pix-label">Chave Pix</div>
+        <div class="pix-chave" id="pagtoChave">—</div>
+        <div class="pix-nome" id="pagtoNome">—</div>
       </div>
-
-      <!-- SEÇÃO CARTÃO (crédito / débito) -->
-      <div id="cartaoSection" style="display:none">
-        <div style="background:#eef3ff;border:1.5px solid #b0c4ef;border-radius:var(--r-sm);padding:14px;text-align:center;margin-bottom:10px">
-          <div style="font-size:1.5rem;margin-bottom:6px" id="cartaoIcon">💳</div>
-          <div style="font-weight:700;font-size:.88rem;color:var(--azul);margin-bottom:4px" id="cartaoTitulo">Pagar com Crédito</div>
-          <div style="font-size:.77rem;color:#555;line-height:1.6" id="cartaoDesc">
-            Toque em "Gerar Link" abaixo para pagar com segurança pelo seu celular.
-            Após o pagamento a catraca abre automaticamente.
-          </div>
-        </div>
-        <div id="cartaoSemGateway" style="display:none;background:#fff8e0;border:1.5px solid var(--dourado-cl);border-radius:var(--r-sm);padding:10px;font-size:.77rem;color:#a07a00;margin-bottom:10px">
-          ⚠️ Gateway não configurado — use o totem para pagar no cartão, ou escolha Pix.
-        </div>
-        <div class="pagto-aviso" style="background:#eef3ff;border-color:#b0c4ef;color:#1a4a8a;display:none" id="cartaoAvisoAguardo">
-          🔄 Link aberto! Após pagar no site do gateway, a catraca abre automaticamente.
-        </div>
+      <div id="cartaoSection" style="display:none;background:#f5f5f5;border:1.5px solid var(--cinza-cl);border-radius:var(--r-sm);padding:13px;text-align:center;margin-bottom:14px">
+        <div style="font-size:1.4rem;margin-bottom:4px">💳</div>
+        <div style="font-size:.84rem;font-weight:700;margin-bottom:3px">Pague na maquininha da recepção</div>
+        <div style="font-size:.77rem;color:#888;line-height:1.5">Apresente-se na recepção. O acesso é confirmado após o pagamento.</div>
       </div>
-
+      <div class="pagto-aviso">🚦 Após confirmação do pagamento pela recepção, seu acesso será ativado.</div>
       <div class="pagto-status" id="pagtoStatus"></div>
-
-      <!-- Botão "Já Paguei" — aparece APENAS no modo manual (sem gateway) -->
-      <button class="btn btn-verde" id="btnPagarManual" style="display:none;margin-bottom:9px" onclick="confirmarPagamentoManual()">
-        ✅ Já Paguei — Confirmar
-      </button>
-      <!-- Botão Link Gateway — cartão -->
-      <button class="btn btn-azul" id="btnGerarLinkApp" style="display:none;margin-bottom:9px" onclick="gerarLinkApp()">
-        🔗 Gerar Link de Pagamento
-      </button>
-      <button class="btn btn-sec" id="btnCancelarPagto">❌ Cancelar</button>
+      <button class="btn btn-verde" id="btnPagar" style="margin-bottom:9px">✅ Já Paguei — Confirmar</button>
+      <button class="btn btn-sec" id="btnCancelarPagto">Cancelar</button>
     </div>
   </div>
 </div>
@@ -1119,6 +1022,46 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
 
 
 
+<!-- MODAL FOTO PERFIL -->
+<div class="modal-bg" id="modalFotoPerfil">
+  <div class="modal" style="max-width:400px;text-align:left;padding:22px 20px">
+    <div style="font-size:2rem;margin-bottom:6px">📷</div>
+    <h3 style="margin-bottom:4px">Atualizar Foto</h3>
+    <p style="font-size:.82rem;color:#777;margin-bottom:14px">Tire uma selfie ou envie uma foto do rosto com boa iluminação.</p>
+
+    <div style="position:relative;border-radius:var(--r-sm);overflow:hidden;background:#111;margin-bottom:10px;min-height:150px" id="pfCameraWrap">
+      <video id="pfVideo" autoplay playsinline style="display:none;width:100%;max-height:210px;object-fit:cover"></video>
+      <canvas id="pfCanvas" style="display:none"></canvas>
+      <img id="pfPreview" src="" alt="" style="display:none;width:100%;max-height:210px;object-fit:cover;border-radius:var(--r-sm)">
+      <div id="pfPlaceholder" style="min-height:150px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;background:#f5f5f5;border-radius:var(--r-sm)">
+        <span style="font-size:2.5rem">🤳</span>
+        <p style="font-size:.77rem;color:#999;text-align:center">Câmera ou arquivo de imagem</p>
+      </div>
+    </div>
+
+    <div id="pfControlesCamera" style="display:none;margin-bottom:10px">
+      <button class="btn btn-verde btn-sm" id="pfBtnCapturar" style="margin-bottom:6px">📸 Capturar foto</button>
+      <button class="btn btn-sec btn-sm" id="pfBtnFecharCam">✕ Cancelar câmera</button>
+    </div>
+    <div id="pfControlesFoto" style="display:none;margin-bottom:10px">
+      <button class="btn btn-sec btn-sm" id="pfBtnRefazer">🔄 Refazer</button>
+    </div>
+
+    <div style="display:flex;gap:8px;margin-bottom:12px" id="pfBotoesPrincipais">
+      <button class="btn btn-verde btn-sm" id="pfBtnAbrirCam" style="flex:1">📷 Usar câmera</button>
+      <label style="flex:1;cursor:pointer">
+        <span class="btn btn-sec btn-sm" style="display:block;text-align:center">📁 Enviar arquivo</span>
+        <input type="file" id="pfArquivoInput" accept="image/*" style="display:none">
+      </label>
+    </div>
+
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-verde" id="pfBtnEnviar" disabled style="opacity:.5;flex:1">✅ Salvar foto</button>
+      <button class="btn btn-sec" id="pfBtnCancelar" style="flex:0 0 auto;width:auto;padding:13px 18px">Cancelar</button>
+    </div>
+  </div>
+</div>
+
 <script>
 // ═══════════════════════════════════════════════════════════
 //  CONFIGURAÇÃO — altere apenas API_BASE após o deploy
@@ -1179,7 +1122,6 @@ const sess = {
   tipo: null,         // 'app' | 'recepcao' | 'admin'
   acesso: null,       // acesso ativo do dia
 };
-let _pollRealtimeRecep = null;  // polling em tempo real recep/admin
 
 // ═══════════════════════════════════════════════════════════
 //  UTILITÁRIOS
@@ -1291,8 +1233,9 @@ function bindEventos() {
 
   // Acesso / pagamento
   document.getElementById('btnAcesso').onclick     = abrirModalPagamento;
-  // btnPagarManual tem onclick inline — poll automático cuida do resto
-  document.getElementById('btnCancelarPagto').onclick = fecharModalPagamento;
+  document.getElementById('btnPagar').onclick      = confirmarPagamento;
+  document.getElementById('btnCancelarPagto').onclick = () =>
+    document.getElementById('modalPagamento').classList.remove('ativo');
 
   // Seletor tipo pagamento
   document.querySelectorAll('input[name="pagtoTipo"]').forEach(r => {
@@ -1308,46 +1251,16 @@ function bindEventos() {
 
   // Sair app
   document.getElementById('btnSairApp').onclick    = () => document.getElementById('modalSair').classList.add('ativo');
-  document.getElementById('btnSairPlano').onclick  = () => document.getElementById('modalSair').classList.add('ativo');
   document.getElementById('btnCancelarSaida').onclick = () => document.getElementById('modalSair').classList.remove('ativo');
   document.getElementById('btnConfirmarSaida').onclick = () => {
-    // Para todos os pollings antes de sair
-    clearInterval(_pollPagamento);
-    clearInterval(_pixTimerInterval);
-    clearInterval(_pollRealtimeRecep);
     sess.usuario = null; sess.tipo = null; sess.acesso = null; api.clearToken();
     document.getElementById('modalSair').classList.remove('ativo');
     mostrarTela('loginScreen');
   };
 
-  // ── Indicador de força de senha ────────────────────────────
-  function avaliarSenha(senha) {
-    const re = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()\-_=+\[\]{};:'",.<>?/\\|`~]).{8,}$/;
-    if (!senha) return { txt: '', cor: '' };
-    const ok  = re.test(senha);
-    const len = senha.length;
-    if (ok && len >= 12) return { txt: '🟢 Senha forte', cor: 'var(--verde)' };
-    if (ok)              return { txt: '🟡 Senha aceitável', cor: '#a07a00' };
-    if (len < 8)         return { txt: '🔴 Muito curta — mín. 8 caracteres', cor: 'var(--vermelho)' };
-    return { txt: '🔴 Adicione maiúscula, número e símbolo (!@#$...)', cor: 'var(--vermelho)' };
-  }
-  ['cadSenha','migSenha'].forEach(id => {
-    const el  = document.getElementById(id);
-    const out = document.getElementById(id.replace('Senha','SenhaForca').replace('migSenha','migSenhaForca'));
-    if (!el || !out) return;
-    el.addEventListener('input', () => {
-      const r = avaliarSenha(el.value);
-      out.textContent = r.txt;
-      out.style.color = r.cor;
-    });
-  });
-
-  // ── Polling de avisos urgentes no app (a cada 5 min) ───────
-  setInterval(verificarAvisosUrgentes, 300000);
-
   // Sair recep/admin
-  document.getElementById('btnSairRecep').onclick  = () => { clearInterval(_pollRealtimeRecep); api.clearToken(); mostrarTela('loginScreen'); };
-  document.getElementById('btnSairAdmin').onclick  = () => { clearInterval(_pollRealtimeRecep); api.clearToken(); mostrarTela('loginScreen'); };
+  document.getElementById('btnSairRecep').onclick  = () => { api.clearToken(); mostrarTela('loginScreen'); };
+  document.getElementById('btnSairAdmin').onclick  = () => { api.clearToken(); mostrarTela('loginScreen'); };
 
   // Recepção — tabs
   document.querySelectorAll('.atab').forEach(b => b.onclick = () => mudarATab(b.dataset.apanel, b));
@@ -1367,7 +1280,6 @@ function bindEventos() {
   // Admin — salvar config
   document.getElementById('btnSalvarConfig').onclick = adminSalvarConfig;
   document.getElementById('btnPublicarAviso').onclick = adminPublicarAviso;
-  document.getElementById('btnSincronizarControlId').onclick = adminSincronizarControlId;
 
   // Sugestões
   document.getElementById('btnEnviarMsg').onclick = enviarSugestao;
@@ -1382,8 +1294,8 @@ function mudarTab(panelId) {
   document.querySelectorAll('.tab').forEach(b => b.classList.remove('ativo'));
   document.getElementById(panelId)?.classList.add('ativo');
   document.querySelector(`.tab[data-panel="${panelId}"]`)?.classList.add('ativo');
-  if(panelId === 'panelPlano') carregarHistoricoUsuario();
-  if(panelId === 'panelAvisos') carregarAvisos();
+  if(panelId === 'panelPerfil')  { _renderizarPerfil(); carregarHistoricoUsuario(); }
+  if(panelId === 'panelAvisos')  { carregarAvisos(); }
 }
 
 function mudarATab(panelId, btn) {
@@ -1397,28 +1309,6 @@ function mudarATab(panelId, btn) {
   if(panelId === 'recepPanelPagos')     { recepCarregarPagos(); }
   if(panelId === 'adminPanelHistorico') { adminCarregarHistorico(); }
   if(panelId === 'adminPanelSugestoes') { adminCarregarSugestoes(); }
-  if(panelId === 'adminPanelConfig')    { adminCarregarConfigForm(); }
-}
-
-async function adminCarregarConfigForm() {
-  try {
-    const res = await api.get('/api/configuracoes');
-    const cfg = {};
-    (res.configuracoes || []).forEach(c => cfg[c.chave] = c.valor);
-
-    const set = (id, val) => { const el = document.getElementById(id); if(el && val !== undefined) el.value = val; };
-    set('cfgVagas',         cfg.total_vagas);
-    set('cfgTaxa',          cfg.valor_diaria);
-    set('cfgTimeout',       cfg.timeout_vaga_minutos);
-    set('cfgPixChave',      cfg.pix_chave);
-    set('cfgPixNome',       cfg.pix_nome);
-    set('cfgGatewayTipo',   cfg.gateway_tipo);
-    set('cfgGatewayChave',  cfg.gateway_chave);
-    set('cfgGatewayChavePix', cfg.gateway_chave_pix);
-    set('cfgControlIdUrl',  cfg.controlid_url);
-    set('cfgTaxaCredito',   cfg.taxa_credito);
-    set('cfgTaxaDebito',    cfg.taxa_debito);
-  } catch(e) { /* silencioso */ }
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -1467,38 +1357,24 @@ async function loginUsuario() {
   try {
     const res = await api.post('/api/auth?acao=login-usuario', { cpf, senha });
     api.setToken(res.token);
-    sess.usuario = res.usuario;
-    sess.tipo    = 'app';
 
-    // ── Detecta primeiro acesso (importado do Control iD sem termo) ──
-    // Busca dados completos para verificar termo_aceito_em
+    // ── Busca dados frescos do banco — usa /api/usuarios?acao=buscar que já existe ──
+    // O JWT pode conter foto_url/termo_aceito_em stale (valor do momento do cadastro).
+    // Buscar direto garante o estado atual do banco.
+    let usuarioFresco = res.usuario;
     try {
-      const perfil = await fetch(
-        `${API_BASE}/api/acessos?acao=historico-usuario&usuario_id=${res.usuario.id}`
-      ).then(r => r.json());
-      // Verifica se tem termo assinado via campo no token ou busca separada
-    } catch(e) {}
+      const freshRes = await fetch(
+        `${API_BASE}/api/usuarios?acao=buscar&id=${res.usuario.id}`,
+        { headers: { 'Authorization': `Bearer ${res.token}` } }
+      );
+      if (freshRes.ok) {
+        const freshData = await freshRes.json();
+        if (freshData?.usuario) usuarioFresco = { ...res.usuario, ...freshData.usuario };
+      }
+    } catch (_) { /* fallback silencioso para os dados do token */ }
 
-    // Verifica se precisa assinar o termo
-    const semTermo = !res.usuario.termo_aceito_em;
-    if (semTermo) {
-      // Redireciona para fluxo de primeiro acesso
-      document.getElementById('migCpf').value = cpf;
-      // Pula o passo 1 (busca CPF) — usuário já está logado
-      _migUsuario = res.usuario;
-      document.getElementById('migNomeConfirm').textContent = res.usuario.nome;
-      document.getElementById('migCpfConfirm').textContent  = 'CPF: ' + fmtCpf(res.usuario.cpf);
-      document.getElementById('migAvatar').textContent      = res.usuario.nome[0].toUpperCase();
-      document.getElementById('migPasso1').style.display    = 'none';
-      document.getElementById('migPasso2').style.display    = 'block';
-      // Mostra aviso de que precisa assinar o termo
-      mostrarErro('migErro', '');
-      const avisoEl = document.getElementById('migAvisoPrimeiroAcesso');
-      if (avisoEl) avisoEl.style.display = 'block';
-      mostrarTela('migracaoScreen');
-      return;
-    }
-
+    sess.usuario = usuarioFresco;
+    sess.tipo = 'app';
     entrarApp();
   } catch(e) {
     mostrarErro('loginErro', e.message || 'CPF ou senha incorretos');
@@ -1530,7 +1406,6 @@ async function loginAdmin() {
       mostrarTela('adminScreen');
       adminCarregarUsuarios();
       adminCarregarStats();
-      adminVerificarStone();
     } else {
       mostrarTela('recepScreen');
       recepCarregarPresentes();
@@ -1542,21 +1417,6 @@ async function loginAdmin() {
 
     toast(`✅ Bem-vindo ao painel de ${tipo}!`);
     setInterval(atualizarVagas, 15000);
-
-    // ── Polling em tempo real ───────────────────────────────
-    // Recepção: atualiza presentes + pendentes a cada 20s automaticamente
-    if (tipo === 'recepcao') {
-      _pollRealtimeRecep = setInterval(() => {
-        recepCarregarPresentes();
-        recepCarregarPendentes();
-      }, 20000);
-    }
-    // Admin: atualiza stats a cada 30s
-    if (tipo === 'admin') {
-      _pollRealtimeRecep = setInterval(() => {
-        adminCarregarStats();
-      }, 30000);
-    }
   } catch(e) {
     mostrarErro('adminLoginErro', e.message || 'Senha incorreta');
   } finally {
@@ -1712,8 +1572,7 @@ document.getElementById('btnCadEtapa1').addEventListener('click', () => {
   if (!nome)           { mostrarErro('cadErro','Informe seu nome'); return; }
   if (cpf.length!==11) { mostrarErro('cadErro','CPF inválido'); return; }
   if (!tipo)           { mostrarErro('cadErro','Selecione o tipo de usuário'); return; }
-  const _senhaRe = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()\-_=+\[\]{};:'",.<>?/\\|`~]).{8,}$/;
-  if (!_senhaRe.test(senha)) { mostrarErro('cadErro','Senha fraca — mínimo 8 caracteres com maiúscula, minúscula, número e símbolo (ex: Estudo@2025)'); return; }
+  if (senha.length<6)  { mostrarErro('cadErro','Senha mínima de 6 caracteres'); return; }
   _irEtapaCad(2);
 });
 // Etapa 2 → 3
@@ -1782,8 +1641,8 @@ async function migBuscarCpf() {
   if(cpf.length!==11){mostrarErro('migErro','CPF inválido');return;}
   loading('btnMigBuscarCpf',true);
   try {
-    const res = await api.get('/api/usuarios?acao=buscar-cpf&cpf='+cpf);
-    const u = res.usuario || null;
+    const res = await api.get('/api/usuarios?acao=listar&busca='+cpf);
+    const u = (res.usuarios||[]).find(x=>x.cpf===cpf);
     if(!u){mostrarErro('migErro','CPF não encontrado. Realize um novo cadastro.');return;}
     if(!u.ativo){mostrarErro('migErro','Cadastro suspenso. Procure a recepção.');return;}
     _migUsuario=u;
@@ -1849,69 +1708,13 @@ document.getElementById('btnMigVoltar').addEventListener('click',()=>{
 });
 document.getElementById('btnMigFinalizar').addEventListener('click', migFinalizar);
 
-// Canvas de assinatura da migração
-let _migCtx = null, _migAssinaturaFeita = false, _migDesenhando = false;
-
-function initMigCanvas() {
-  const canvas = document.getElementById('migCanvasAssinatura');
-  if (!canvas || _migCtx) return;
-  const wrap = document.getElementById('migCanvasWrap');
-  const dpr  = window.devicePixelRatio || 1;
-  const w    = wrap.offsetWidth || 350;
-  canvas.width  = w * dpr;
-  canvas.height = 120 * dpr;
-  canvas.style.width  = w + 'px';
-  canvas.style.height = '120px';
-  _migCtx = canvas.getContext('2d');
-  _migCtx.scale(dpr, dpr);
-  _migCtx.strokeStyle = '#1a1a1a';
-  _migCtx.lineWidth   = 2.2;
-  _migCtx.lineCap     = 'round';
-  _migCtx.lineJoin    = 'round';
-
-  function getPos(e) {
-    const r = canvas.getBoundingClientRect();
-    const s = e.touches ? e.touches[0] : e;
-    return { x: s.clientX - r.left, y: s.clientY - r.top };
-  }
-  canvas.addEventListener('mousedown', e => { _migDesenhando=true; const p=getPos(e); _migCtx.beginPath(); _migCtx.moveTo(p.x,p.y); });
-  canvas.addEventListener('mousemove', e => { if(!_migDesenhando) return; const p=getPos(e); _migCtx.lineTo(p.x,p.y); _migCtx.stroke(); _migAssinaturaFeita=true; document.getElementById('migAssinaturaPlaceholder').style.display='none'; });
-  canvas.addEventListener('mouseup',    () => _migDesenhando=false);
-  canvas.addEventListener('mouseleave', () => _migDesenhando=false);
-  canvas.addEventListener('touchstart', e => { e.preventDefault(); _migDesenhando=true; const p=getPos(e); _migCtx.beginPath(); _migCtx.moveTo(p.x,p.y); }, {passive:false});
-  canvas.addEventListener('touchmove',  e => { e.preventDefault(); if(!_migDesenhando) return; const p=getPos(e); _migCtx.lineTo(p.x,p.y); _migCtx.stroke(); _migAssinaturaFeita=true; document.getElementById('migAssinaturaPlaceholder').style.display='none'; }, {passive:false});
-  canvas.addEventListener('touchend',   e => { e.preventDefault(); _migDesenhando=false; }, {passive:false});
-}
-
-function limparMigCanvas() {
-  if (!_migCtx) return;
-  const c = document.getElementById('migCanvasAssinatura');
-  _migCtx.clearRect(0, 0, c.width, c.height);
-  _migAssinaturaFeita = false;
-  document.getElementById('migAssinaturaPlaceholder').style.display = 'flex';
-}
-
-document.getElementById('btnLimparMigAssinatura').addEventListener('click', limparMigCanvas);
-
-// Inicializa canvas quando migPasso2 aparece
-const _migObserver = new MutationObserver(() => {
-  const p2 = document.getElementById('migPasso2');
-  if (p2 && p2.style.display !== 'none') { _migCtx = null; setTimeout(initMigCanvas, 100); }
-});
-_migObserver.observe(document.getElementById('migPasso2'), { attributes: true, attributeFilter: ['style'] });
-
 async function migFinalizar() {
   mostrarErro('migErro','');
   const senha  = document.getElementById('migSenha').value;
   const senhaC = document.getElementById('migSenhaConfirm').value;
-  const _senhaRe = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()\-_=+\[\]{};:'",.<>?/\\|`~]).{8,}$/;
-  if(!_senhaRe.test(senha)){mostrarErro('migErro','Senha fraca — mínimo 8 caracteres com maiúscula, minúscula, número e símbolo (ex: Estudo@2025)');return;}
+  if(senha.length<6){mostrarErro('migErro','Senha mínima de 6 caracteres');return;}
   if(senha!==senhaC){mostrarErro('migErro','As senhas não coincidem');return;}
   if(!_migFotoDataUrl){mostrarErro('migErro','Foto obrigatória para o reconhecimento facial');return;}
-  if(!_migAssinaturaFeita){mostrarErro('migErro','Assine o Termo de Conduta para continuar');return;}
-
-  const assinatura = document.getElementById('migCanvasAssinatura').toDataURL('image/png');
-
   loading('btnMigFinalizar',true);
   try {
     // 1. Define senha
@@ -1919,34 +1722,20 @@ async function migFinalizar() {
       method:'POST', headers:{'Content-Type':'application/json'},
       body:JSON.stringify({usuario_id:_migUsuario.id, nova_senha:senha})
     });
-
-    // 2. Salva assinatura e termo aceito
-    await fetch(API_BASE+'/api/usuarios?acao=assinar-termo',{
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        usuario_id:    _migUsuario.id,
-        assinatura_svg: assinatura,
-        ip: ''
-      })
-    });
-
-    // 3. Envia foto ao Control iD
+    // 2. Envia foto ao Control iD
     const rF=await fetch(API_BASE+'/api/pagamentos?acao=enviar-foto',{
-      method:'POST',
-      headers:{'Content-Type':'application/json', 'Authorization':`Bearer ${api.token}`},
+      method:'POST', headers:{'Content-Type':'application/json'},
       body:JSON.stringify({usuario_id:_migUsuario.id, foto_base64:_migFotoDataUrl})
     });
     const dF=await rF.json();
-    toast(dF.ok?'✅ Cadastro completo! Acesso facial ativo.':'✅ Cadastro salvo! Foto em processamento.');
-
-    // Reset completo
-    _migUsuario=null; _migFotoDataUrl=null; _migCtx=null; _migAssinaturaFeita=false;
+    toast(dF.ok?'✅ Senha criada e foto enviada! Acesso facial ativo.':'✅ Senha criada! Foto salva para processamento.');
+    // Reset
+    _migUsuario=null; _migFotoDataUrl=null;
     document.getElementById('migSenha').value='';
     document.getElementById('migSenhaConfirm').value='';
     document.getElementById('migFotoPreview').style.display='none';
     document.getElementById('migFotoPlaceholder').style.display='block';
     document.getElementById('migFotoFeitaControles').style.display='none';
-    document.getElementById('migAvisoPrimeiroAcesso').style.display='none';
     document.getElementById('migPasso1').style.display='block';
     document.getElementById('migPasso2').style.display='none';
     document.getElementById('migCpf').value='';
@@ -1961,14 +1750,230 @@ async function migFinalizar() {
 function entrarApp() {
   const u = sess.usuario;
   document.getElementById('nomeUser').textContent = u.nome.split(' ')[0];
-  document.getElementById('avatarLetra').textContent = u.nome[0].toUpperCase();
   document.getElementById('msgBV').textContent = `Olá, ${u.nome.split(' ')[0]}! 👋`;
+
+  // Avatar na topbar — foto real se disponível
+  const avatarEl = document.getElementById('avatarLetra');
+  if (u.foto_url) {
+    avatarEl.innerHTML = `<img src="${u.foto_url}" alt="${u.nome[0]}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
+  } else {
+    avatarEl.textContent = u.nome[0].toUpperCase();
+  }
+
   mostrarTela('appScreen');
+  _renderizarPerfil();
   verificarAcessoHoje();
   atualizarVagas();
   carregarAvisos();
   verificarAvisosUrgentes();
 }
+
+/** Popula a aba Perfil com os dados de sess.usuario */
+function _renderizarPerfil() {
+  const u = sess.usuario;
+  if (!u) return;
+
+  // Helper para setar textContent com segurança
+  const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+  const setHtml = (id, val) => { const el = document.getElementById(id); if (el) el.innerHTML = val; };
+  const setStyle = (id, prop, val) => { const el = document.getElementById(id); if (el) el.style[prop] = val; };
+  const setClass = (id, val) => { const el = document.getElementById(id); if (el) el.className = val; };
+
+  // Hero
+  set('perfilNome', u.nome || '—');
+  set('perfilCpfExib', fmtCpf(u.cpf || ''));
+
+  // Foto
+  const fotoCircle = document.getElementById('perfilFotoCircle');
+  if (fotoCircle) {
+    if (u.foto_url) {
+      fotoCircle.innerHTML = `<img src="${u.foto_url}" alt="${(u.nome||'?')[0]}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
+    } else {
+      fotoCircle.innerHTML = `<span style="font-size:2rem;font-weight:700;color:#fff">${(u.nome||'?')[0].toUpperCase()}</span>`;
+    }
+  }
+
+  // Badges
+  const temFoto  = !!(u.foto_url && u.foto_url.trim());
+  const temTermo = !!(u.termo_aceito_em && u.termo_aceito_em.trim() && u.termo_aceito_em !== 'null');
+
+  setClass('perfilBadgeFoto',  `pbadge ${temFoto  ? 'ok' : 'warn'}`);
+  set('perfilBadgeFoto',  temFoto  ? '📸 Foto OK'    : '⚠️ Sem foto');
+  setClass('perfilBadgeTermo', `pbadge ${temTermo ? 'ok' : 'warn'}`);
+  set('perfilBadgeTermo', temTermo ? '✍️ Termo OK'  : '⚠️ Sem termo');
+
+  // Alerta cadastro incompleto
+  const alerta = document.getElementById('perfilAlerta');
+  if (alerta) {
+    if (!temFoto || !temTermo) {
+      alerta.style.display = 'flex';
+      const faltando = [];
+      if (!temFoto)  faltando.push('foto');
+      if (!temTermo) faltando.push('assinatura do termo');
+      set('perfilAlertaTxt', `Cadastro incompleto — falta: ${faltando.join(' e ')}.`);
+      set('perfilAlertaSub', 'Sem esses dados o reconhecimento facial na catraca não funciona.');
+    } else {
+      alerta.style.display = 'none';
+    }
+  }
+
+  // Dados cadastrais
+  set('perfilDadosNome',  u.nome      || '—');
+  set('perfilDadosCpf',   fmtCpf(u.cpf || ''));
+  set('perfilDadosEmail', u.email     || '—');
+  set('perfilDadosTel',   u.telefone  || '—');
+  const tipoMap = { aluno: '👨‍🎓 Estudante / Concurseiro', admin: '⚙️ Administrador', staff: '🛎️ Staff', recepcao: '🛎️ Recepção' };
+  set('perfilDadosTipo',  tipoMap[u.tipo] || u.tipo || '—');
+}
+
+// ═══════════════════════════════════════════════════════════
+//  MODAL FOTO PERFIL — câmera + arquivo
+// ═══════════════════════════════════════════════════════════
+let _pfStream = null;
+let _pfFotoDataUrl = null;
+
+function _pfReset() {
+  _pfFotoDataUrl = null;
+  if (_pfStream) { _pfStream.getTracks().forEach(t => t.stop()); _pfStream = null; }
+  document.getElementById('pfVideo').style.display       = 'none';
+  document.getElementById('pfPreview').style.display     = 'none';
+  document.getElementById('pfPlaceholder').style.display = 'flex';
+  document.getElementById('pfControlesCamera').style.display = 'none';
+  document.getElementById('pfControlesFoto').style.display   = 'none';
+  document.getElementById('pfBotoesPrincipais').style.display = 'flex';
+  const btn = document.getElementById('pfBtnEnviar');
+  btn.disabled = true; btn.style.opacity = '.5';
+  document.getElementById('pfArquivoInput').value = '';
+}
+
+function abrirModalFotoPerfil() {
+  _pfReset();
+  document.getElementById('modalFotoPerfil').classList.add('ativo');
+}
+
+function fecharModalFotoPerfil() {
+  _pfReset();
+  document.getElementById('modalFotoPerfil').classList.remove('ativo');
+}
+
+function _pfFotoCapturada(dataUrl) {
+  _pfFotoDataUrl = dataUrl;
+  document.getElementById('pfPreview').src = dataUrl;
+  document.getElementById('pfPreview').style.display     = 'block';
+  document.getElementById('pfPlaceholder').style.display = 'none';
+  document.getElementById('pfVideo').style.display       = 'none';
+  document.getElementById('pfControlesCamera').style.display = 'none';
+  document.getElementById('pfControlesFoto').style.display   = 'block';
+  document.getElementById('pfBotoesPrincipais').style.display = 'none';
+  const btn = document.getElementById('pfBtnEnviar');
+  btn.disabled = false; btn.style.opacity = '1';
+}
+
+document.getElementById('btnAbrirModalFotoPerfil').addEventListener('click', abrirModalFotoPerfil);
+
+document.getElementById('pfBtnCancelar').addEventListener('click', fecharModalFotoPerfil);
+
+document.getElementById('pfBtnAbrirCam').addEventListener('click', async () => {
+  try {
+    _pfStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: false });
+    const v = document.getElementById('pfVideo');
+    v.srcObject = _pfStream;
+    v.style.display = 'block';
+    document.getElementById('pfPlaceholder').style.display     = 'none';
+    document.getElementById('pfControlesCamera').style.display = 'block';
+    document.getElementById('pfBotoesPrincipais').style.display = 'none';
+  } catch (e) {
+    toast('⚠️ Câmera indisponível — use a opção de arquivo.');
+  }
+});
+
+document.getElementById('pfBtnCapturar').addEventListener('click', () => {
+  const v = document.getElementById('pfVideo');
+  const c = document.getElementById('pfCanvas');
+  c.width = v.videoWidth; c.height = v.videoHeight;
+  c.getContext('2d').drawImage(v, 0, 0);
+  const dataUrl = c.toDataURL('image/jpeg', 0.88);
+  if (_pfStream) { _pfStream.getTracks().forEach(t => t.stop()); _pfStream = null; }
+  _pfFotoCapturada(dataUrl);
+});
+
+document.getElementById('pfBtnFecharCam').addEventListener('click', () => {
+  if (_pfStream) { _pfStream.getTracks().forEach(t => t.stop()); _pfStream = null; }
+  document.getElementById('pfVideo').style.display = 'none';
+  document.getElementById('pfControlesCamera').style.display = 'none';
+  document.getElementById('pfPlaceholder').style.display = 'flex';
+  document.getElementById('pfBotoesPrincipais').style.display = 'flex';
+});
+
+document.getElementById('pfBtnRefazer').addEventListener('click', () => {
+  _pfFotoDataUrl = null;
+  document.getElementById('pfPreview').style.display     = 'none';
+  document.getElementById('pfControlesFoto').style.display = 'none';
+  document.getElementById('pfPlaceholder').style.display = 'flex';
+  document.getElementById('pfBotoesPrincipais').style.display = 'flex';
+  const btn = document.getElementById('pfBtnEnviar');
+  btn.disabled = true; btn.style.opacity = '.5';
+});
+
+document.getElementById('pfArquivoInput').addEventListener('change', e => {
+  const f = e.target.files[0]; if (!f) return;
+  const r = new FileReader();
+  r.onload = ev => _pfFotoCapturada(ev.target.result);
+  r.readAsDataURL(f);
+});
+
+// ── Enviar foto ao backend ──────────────────────────────────
+document.getElementById('pfBtnEnviar').addEventListener('click', async () => {
+  if (!_pfFotoDataUrl || !sess.usuario) return;
+
+  const btn  = document.getElementById('pfBtnEnviar');
+  btn.disabled = true;
+  btn.textContent = '⏳ Enviando...';
+
+  try {
+    const res = await fetch(API_BASE + '/api/pagamentos?acao=enviar-foto', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${api.token}` },
+      body: JSON.stringify({ usuario_id: sess.usuario.id, foto_base64: _pfFotoDataUrl })
+    });
+    const data = await res.json();
+
+    if (data.ok || data.foto_url) {
+      sess.usuario.foto_url = data.foto_url || _pfFotoDataUrl;
+      _renderizarPerfil();
+      // Atualiza avatar topbar
+      const avatarEl = document.getElementById('avatarLetra');
+      avatarEl.innerHTML = `<img src="${sess.usuario.foto_url}" alt="${sess.usuario.nome[0]}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
+      toast('✅ Foto atualizada! Reconhecimento facial ativo.');
+      fecharModalFotoPerfil();
+    } else {
+      toast('⚠️ ' + (data.motivo || 'Erro ao salvar — tente novamente'));
+      btn.disabled = false;
+      btn.textContent = '✅ Salvar foto';
+    }
+  } catch (err) {
+    toast('❌ Erro: ' + err.message);
+    btn.disabled = false;
+    btn.textContent = '✅ Salvar foto';
+  }
+});
+
+// ── "Completar agora" abre o modal de foto (ou migração p/ termo) ──
+document.getElementById('btnPerfilCompletar').addEventListener('click', () => {
+  const u = sess.usuario;
+  const temFoto  = !!(u?.foto_url && u.foto_url.trim());
+  const temTermo = !!(u?.termo_aceito_em && u.termo_aceito_em.trim() && u.termo_aceito_em !== 'null');
+  if (!temFoto) {
+    abrirModalFotoPerfil();
+  } else if (!temTermo) {
+    mostrarTela('migracaoScreen');
+  }
+});
+
+// ── Botão Sair dentro da aba Perfil ───────────────────────
+document.getElementById('btnSairPerfilTab').addEventListener('click', () => {
+  document.getElementById('modalSair').classList.add('ativo');
+});
 
 async function verificarAcessoHoje() {
   try {
@@ -2009,295 +2014,64 @@ function renderizarStatusAcesso() {
 }
 
 // ═══════════════════════════════════════════════════════════
-//  PAGAMENTO — FLUXO AUTOMÁTICO SEM CONFIRMAÇÃO MANUAL
-//  Pix: gateway gera QR → webhook confirma → catraca libera
-//  Cartão: gateway gera link → webhook confirma → catraca libera
-//  Modo manual: fallback quando gateway não está configurado
+//  MODAL PAGAMENTO
 // ═══════════════════════════════════════════════════════════
-
-let _pollPagamento = null;   // intervalo do poll de status
-let _pixTimerInterval = null; // countdown do timer Pix
-let _pixSegundos = 300;
-
-// ── Abre modal e já inicia a cobrança ──────────────────────
 async function abrirModalPagamento() {
-  // Reseta UI
   document.getElementById('pagtoStatus').textContent = '';
+  document.getElementById('btnPagar').disabled = false;
   document.getElementById('pagtoPix').checked = true;
-  document.getElementById('pixCarregando').style.display = 'block';
-  document.getElementById('pixConteudo').style.display   = 'none';
-  document.getElementById('pixManual').style.display     = 'none';
-  document.getElementById('cartaoSection').style.display = 'none';
-  document.getElementById('btnPagarManual').style.display  = 'none';
-  document.getElementById('btnGerarLinkApp').style.display = 'none';
-  _atualizarSeletorUI('pix');
+  _atualizarUIPagto('pix');
   document.getElementById('modalPagamento').classList.add('ativo');
-
-  // Carrega configs e cria cobrança Pix em paralelo
   try {
-    const [v, cfgRes] = await Promise.all([
-      api.vagas(),
-      api.get('/api/configuracoes')
-    ]);
-
-    if (v.lotado) {
-      document.getElementById('pagtoStatus').className = 'pagto-status';
-      document.getElementById('pagtoStatus').textContent = '⚠️ Sala lotada no momento — aguarde uma saída.';
-      return;
+    const v = await api.vagas();
+    document.getElementById('pagtoChave').textContent = 'Configure a Chave Pix no painel admin';
+    document.getElementById('pagtoNome').textContent = 'Biblioteca Paiva Netto';
+    if(v.lotado) {
+      document.getElementById('pagtoStatus').textContent = '⚠️ Sala lotada no momento';
+      document.getElementById('btnPagar').disabled = true;
     }
-
-    const cfg = {};
-    (cfgRes.configuracoes || []).forEach(c => { cfg[c.chave] = c.valor; });
-
-    const valorDiaria = cfg.valor_diaria
-      ? parseFloat(cfg.valor_diaria.replace(',','.')).toFixed(2).replace('.',',')
-      : '10,00';
-    document.getElementById('pagtoValor').textContent = 'R$ ' + valorDiaria;
-    window._gatewayConfigurado = !!(cfg.gateway_tipo && cfg.gateway_tipo !== 'manual' && cfg.gateway_chave);
-
-    // Inicia cobrança Pix automaticamente
-    await _iniciarCobrancaPix();
-
-  } catch(e) {
-    document.getElementById('pixCarregando').style.display = 'none';
-    document.getElementById('pixManual').style.display = 'block';
-    document.getElementById('pagtoChave').textContent = cfg?.pix_chave || '—';
-    document.getElementById('btnPagarManual').style.display = 'block';
-  }
+  } catch(e) {}
 }
 
-// ── Cria cobrança Pix no gateway e exibe QR Code ───────────
-async function _iniciarCobrancaPix() {
-  document.getElementById('pixCarregando').style.display = 'block';
-  document.getElementById('pixConteudo').style.display   = 'none';
-  document.getElementById('pixManual').style.display     = 'none';
-  document.getElementById('btnPagarManual').style.display  = 'none';
-
-  try {
-    const res = await fetch(API_BASE + '/api/pagamentos?acao=criar-cobranca-pix', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ usuario_id: sess.usuario.id, origem: 'app' })
-    });
-    const data = await res.json();
-
-    if (data.status === 'confirmado') {
-      // Já tem acesso hoje
-      await verificarAcessoHoje();
-      document.getElementById('modalPagamento').classList.remove('ativo');
-      toast('✅ Você já tem acesso ativo para hoje!');
-      return;
-    }
-
-    document.getElementById('pixCarregando').style.display = 'none';
-
-    if (data.gateway === 'manual' || !data.copia_cola) {
-      // Sem gateway — modo manual (fallback)
-      document.getElementById('pixManual').style.display = 'block';
-      document.getElementById('pagtoChave').textContent  = data.copia_cola || '—';
-      document.getElementById('btnPagarManual').style.display = 'block';
-      window._pagamentoIdAtivo = data.pagamento_id;
-      return;
-    }
-
-    // Gateway configurado — exibe QR Code
-    document.getElementById('pixConteudo').style.display = 'block';
-    document.getElementById('pagtoCopiaCola').textContent = data.copia_cola || '—';
-
-    // QR Code — exibe imagem base64 se disponível
-    const qrContainer = document.getElementById('pixQrContainer');
-    if (data.qr_code) {
-      const src = data.qr_code.startsWith('data:') ? data.qr_code : `data:image/png;base64,${data.qr_code}`;
-      qrContainer.innerHTML = `<img src="${src}" style="width:100%;height:100%;object-fit:contain">`;
-    } else {
-      qrContainer.innerHTML = '<span style="font-size:3rem">📲</span>';
-    }
-
-    window._pagamentoIdAtivo = data.pagamento_id;
-
-    // Inicia timer e poll automático
-    _pixSegundos = data.expiracao_seg || 300;
-    _iniciarTimerPix();
-    _iniciarPollStatus();
-
-    // Botão copiar
-    document.getElementById('btnCopiarPix').onclick = () => {
-      const codigo = document.getElementById('pagtoCopiaCola').textContent;
-      navigator.clipboard?.writeText(codigo).catch(() => {
-        const el = document.createElement('input'); el.value = codigo;
-        document.body.appendChild(el); el.select(); document.execCommand('copy');
-        document.body.removeChild(el);
-      });
-      toast('📋 Código Pix copiado!');
-      document.getElementById('btnCopiarPix').textContent = '✅ Copiado!';
-      setTimeout(() => { document.getElementById('btnCopiarPix').textContent = '📋 Copiar código'; }, 2500);
-    };
-
-  } catch(e) {
-    document.getElementById('pixCarregando').style.display = 'none';
-    document.getElementById('pixManual').style.display = 'block';
-    document.getElementById('btnPagarManual').style.display = 'block';
-    toast('⚠️ Erro ao gerar cobrança — usando modo manual');
-  }
-}
-
-// ── Timer countdown do Pix ─────────────────────────────────
-function _iniciarTimerPix() {
-  clearInterval(_pixTimerInterval);
-  const el = document.getElementById('pixTimer');
-  function atualizar() {
-    const m = Math.floor(_pixSegundos / 60);
-    const s = _pixSegundos % 60;
-    if (el) el.textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-    if (_pixSegundos <= 0) {
-      clearInterval(_pixTimerInterval);
-      clearInterval(_pollPagamento);
-      document.getElementById('pagtoStatus').textContent = '⏰ Cobrança expirada — toque em Cancelar e tente novamente.';
-    }
-    _pixSegundos--;
-  }
-  atualizar();
-  _pixTimerInterval = setInterval(atualizar, 1000);
-}
-
-// ── Poll de status — detecta webhook sem refresh manual ────
-function _iniciarPollStatus() {
-  clearInterval(_pollPagamento);
-  _pollPagamento = setInterval(async () => {
-    if (!sess.usuario) { clearInterval(_pollPagamento); return; }
-    try {
-      const r = await fetch(`${API_BASE}/api/pagamentos?acao=status-hoje&usuario_id=${sess.usuario.id}`);
-      const d = await r.json();
-      if (d.status === 'confirmado') {
-        clearInterval(_pollPagamento);
-        clearInterval(_pixTimerInterval);
-        document.getElementById('pagtoStatus').className = 'pagto-status pagto-ok';
-        document.getElementById('pagtoStatus').textContent = '✅ Pagamento confirmado! Catraca liberada.';
-        toast('✅ Acesso liberado! Dirija-se à catraca.');
-        await verificarAcessoHoje();
-        setTimeout(() => {
-          document.getElementById('modalPagamento').classList.remove('ativo');
-          document.getElementById('pagtoStatus').textContent = '';
-        }, 3000);
-      }
-    } catch(e) {}
-  }, 3000);
-}
-
-// ── Atualiza visual do seletor ─────────────────────────────
-function _atualizarSeletorUI(tipo) {
+function _atualizarUIPagto(tipo) {
   document.querySelectorAll('.pagto-tipo-btn').forEach(el => {
-    const t = el.dataset.tipo, sel = t === tipo;
+    const t = el.dataset.tipo;
+    const sel = t === tipo;
     el.style.borderColor = sel ? 'var(--verde)' : 'var(--cinza-cl)';
     el.style.background  = sel ? '#f0f7f0' : '#fff';
     el.querySelector('div:last-child').style.color = sel ? 'var(--verde)' : 'var(--cinza)';
   });
+  const isPix = tipo === 'pix';
+  document.getElementById('pixSection').style.display   = isPix ? 'block' : 'none';
+  document.getElementById('cartaoSection').style.display = isPix ? 'none'  : 'block';
+  document.getElementById('btnPagar').textContent =
+    isPix ? '✅ Já Paguei — Confirmar' : '📲 Solicitar Acesso (Pagar na Recepção)';
 }
 
-// ── Troca de forma de pagamento ────────────────────────────
-function _atualizarUIPagto(tipo) {
-  _atualizarSeletorUI(tipo);
-  clearInterval(_pollPagamento);
-  clearInterval(_pixTimerInterval);
-
-  const isPix    = tipo === 'pix';
-  const isCartao = tipo === 'credito' || tipo === 'debito';
-
-  document.getElementById('pixSection').style.display    = isPix    ? 'block' : 'none';
-  document.getElementById('cartaoSection').style.display = isCartao ? 'block' : 'none';
-
-  document.getElementById('btnPagarManual').style.display  = 'none';
-  document.getElementById('btnGerarLinkApp').style.display = 'none';
-
-  if (isPix) {
-    _iniciarCobrancaPix();
-    return;
-  }
-
-  // Cartão
-  const gatewayOk = window._gatewayConfigurado || false;
-  document.getElementById('cartaoIcon').textContent    = tipo === 'credito' ? '💳' : '🏦';
-  document.getElementById('cartaoTitulo').textContent  = `Pagar com ${tipo === 'credito' ? 'Crédito' : 'Débito'}`;
-  document.getElementById('cartaoSemGateway').style.display = gatewayOk ? 'none' : 'block';
-  document.getElementById('cartaoAvisoAguardo').style.display = 'none';
-
-  if (gatewayOk) {
-    document.getElementById('btnGerarLinkApp').style.display = 'block';
-    document.getElementById('cartaoDesc').textContent =
-      'Toque em "Gerar Link" — pague com segurança no site do gateway. Após o pagamento, a catraca abre automaticamente.';
-  }
-}
-
-// ── Gerar link de pagamento (cartão no app) ────────────────
-async function gerarLinkApp() {
-  const tipo = document.querySelector('input[name="pagtoTipo"]:checked')?.value || 'credito';
-  const btn  = document.getElementById('btnGerarLinkApp');
-  btn.disabled = true;
-  btn.textContent = '⏳ Gerando link...';
+async function confirmarPagamento() {
+  if (!sess.usuario) { toast('⚠️ Faça login primeiro'); return; }
+  const tipo = document.querySelector('input[name="pagtoTipo"]:checked')?.value || 'pix';
+  document.getElementById('pagtoStatus').className = 'pagto-status pagto-processando';
+  document.getElementById('pagtoStatus').textContent = '⏳ Enviando solicitação...';
+  document.getElementById('btnPagar').disabled = true;
   try {
-    const res = await fetch(API_BASE + '/api/pagamentos?acao=gerar-link', {
+    await fetch(API_BASE + '/api/pagamentos?acao=solicitar', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ usuario_id: sess.usuario.id, tipo, origem: 'app' })
+      body: JSON.stringify({ usuario_id: sess.usuario.id, tipo })
     });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.erro || 'Erro ao gerar link');
-    window.open(data.url, '_blank');
-    document.getElementById('cartaoAvisoAguardo').style.display = 'block';
-    btn.textContent = '🔁 Gerar novo link';
-    btn.disabled = false;
-    // Inicia poll — quando usuário pagar, webhook confirma e poll detecta
-    _iniciarPollStatus();
-  } catch(e) {
-    toast('❌ ' + e.message);
-    btn.disabled = false;
-    btn.textContent = '🔗 Gerar Link de Pagamento';
-  }
-}
-
-// ── Confirmação manual (fallback sem gateway) ──────────────
-async function confirmarPagamentoManual() {
-  if (!sess.usuario) return;
-  const btn = document.getElementById('btnPagarManual');
-  btn.disabled = true;
-  btn.textContent = '⏳ Confirmando...';
-  document.getElementById('pagtoStatus').className = 'pagto-status pagto-processando';
-  document.getElementById('pagtoStatus').textContent = '⏳ Verificando pagamento...';
-  try {
-    // No modo manual chama confirmar (auth não exigida aqui pois é fallback declarado)
-    // ATENÇÃO: este endpoint só deve existir enquanto gateway não estiver configurado
-    const res = await fetch(API_BASE + '/api/pagamentos?acao=confirmar-direto-manual', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${api.token}` },
-      body: JSON.stringify({ usuario_id: sess.usuario.id, tipo: 'pix', origem: 'app_manual' })
-    });
-    const data = await res.json();
-    if (!res.ok && res.status !== 409) throw new Error(data.erro || 'Erro');
     document.getElementById('pagtoStatus').className = 'pagto-status pagto-ok';
-    document.getElementById('pagtoStatus').textContent = data.catraca_liberada
-      ? '✅ Acesso liberado! Dirija-se à catraca.'
-      : '✅ Pagamento registrado!';
-    toast(data.catraca_liberada ? '✅ Catraca liberada!' : '✅ Pago! ' + (data.motivo_catraca || ''));
-    await verificarAcessoHoje();
+    document.getElementById('pagtoStatus').textContent = '✅ Solicitação enviada!';
+    toast(tipo === 'pix' ? '✅ Apresente o comprovante Pix na recepção.' : '✅ Dirija-se à recepção para pagar no cartão.');
     setTimeout(() => {
       document.getElementById('modalPagamento').classList.remove('ativo');
+      document.getElementById('btnPagar').disabled = false;
       document.getElementById('pagtoStatus').textContent = '';
-    }, 3000);
+    }, 2500);
   } catch(e) {
-    document.getElementById('pagtoStatus').textContent = '❌ ' + e.message;
-    btn.disabled = false;
-    btn.textContent = '✅ Já Paguei — Confirmar';
+    document.getElementById('pagtoStatus').textContent = '❌ Erro: ' + e.message;
+    document.getElementById('btnPagar').disabled = false;
   }
-}
-
-// ── Fecha modal e limpa timers ─────────────────────────────
-function fecharModalPagamento() {
-  clearInterval(_pollPagamento);
-  clearInterval(_pixTimerInterval);
-  document.getElementById('modalPagamento').classList.remove('ativo');
-  document.getElementById('pagtoStatus').textContent = '';
-  document.getElementById('btnPagarManual').style.display  = 'none';
-  document.getElementById('btnGerarLinkApp').style.display = 'none';
 }
 
 async function recepCarregarPendentes() {
@@ -2375,54 +2149,36 @@ async function carregarHistoricoUsuario() {
   const lista = document.getElementById('historicoLista');
   lista.innerHTML = '<div class="sem"><span class="si">⏳</span>Carregando...</div>';
   try {
-    // Rota pública por usuario_id — não exige token de admin
-    const res = await fetch(
-      `${API_BASE}/api/acessos?acao=historico-usuario&usuario_id=${sess.usuario.id}`
-    ).then(r => r.json());
+    // Carrega últimos 30 dias
+    const res = await api.listarAcessos('', '');
+    const meus = (res.acessos||[]).filter(a => a.usuarios?.id === sess.usuario.id);
 
-    const meus = res.acessos || [];
-
-    // Stats do mês atual
-    const inicioMes = new Date(); inicioMes.setDate(1); inicioMes.setHours(0,0,0,0);
-    const doMes = meus.filter(a => new Date(a.entrada_em) >= inicioMes);
+    // Stats
+    const mes = new Date(); mes.setDate(1);
+    const doMes = meus.filter(a => new Date(a.entrada_em) >= mes);
     document.getElementById('pVisitas').textContent = doMes.length;
     document.getElementById('pDias').textContent    = doMes.length;
 
-    // Horas estudadas (apenas acessos encerrados)
     let horas = 0;
     meus.forEach(a => {
-      if(a.saida_em) horas += (new Date(a.saida_em) - new Date(a.entrada_em)) / 3600000;
+      if(a.saida_em) horas += (new Date(a.saida_em)-new Date(a.entrada_em))/3600000;
     });
-    document.getElementById('pHoras').textContent = Math.round(horas) + 'h';
+    document.getElementById('pHoras').textContent = Math.round(horas)+'h';
 
     if(!meus.length) {
       lista.innerHTML = '<div class="sem"><span class="si">📋</span>Faça sua primeira visita!</div>';
       return;
     }
 
-    const tipoPag = { pix:'💠 Pix', credito:'💳 Crédito', debito:'🏦 Débito', cartao:'💳 Cartão' };
-    lista.innerHTML = meus.slice(0, 30).map(a => {
-      const entrada  = fmtHora(a.entrada_em);
-      const saida    = a.saida_em ? fmtHora(a.saida_em) : 'em curso';
-      const duracaoH = a.saida_em
-        ? ((new Date(a.saida_em) - new Date(a.entrada_em)) / 3600000).toFixed(1) + 'h'
-        : '—';
-      const pag      = tipoPag[a.pagamentos?.tipo] || '—';
-      const val      = a.pagamentos?.valor ? `R$ ${parseFloat(a.pagamentos.valor).toFixed(2).replace('.',',')}` : '';
-      const stClass  = a.status==='ativo' ? 'verde' : a.status==='encerrado' ? 'cinza' : 'gold';
-      return `
-        <div style="padding:10px 0;border-bottom:1px solid #f0f0f0">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px">
-            <div style="font-weight:600;font-size:.84rem">${new Date(a.entrada_em).toLocaleDateString('pt-BR',{weekday:'short',day:'2-digit',month:'2-digit'})}</div>
-            <span class="badge ${stClass}" style="font-size:.68rem">${a.status}</span>
-          </div>
-          <div style="font-size:.77rem;color:#888;display:flex;gap:12px;flex-wrap:wrap">
-            <span>⏰ ${entrada} → ${saida}</span>
-            <span>⏱️ ${duracaoH}</span>
-            <span>${pag}${val ? ' · '+val : ''}</span>
-          </div>
-        </div>`;
-    }).join('');
+    lista.innerHTML = meus.slice(0,20).map(a => `
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid #f0f0f0;font-size:.82rem">
+        <div>
+          <div style="font-weight:600">${new Date(a.entrada_em).toLocaleDateString('pt-BR')}</div>
+          <div style="color:#888;font-size:.74rem">${fmtHora(a.entrada_em)} → ${a.saida_em ? fmtHora(a.saida_em) : 'em curso'}</div>
+        </div>
+        <span class="badge ${a.status==='ativo'?'verde':a.status==='encerrado'?'cinza':'gold'}">${a.status}</span>
+      </div>
+    `).join('');
   } catch(e) {
     lista.innerHTML = '<div class="sem"><span class="si">⚠️</span>Erro ao carregar histórico</div>';
   }
@@ -2530,7 +2286,6 @@ async function recepBuscarUsuario() {
         </div>
         <div style="display:flex;gap:6px;flex-wrap:wrap">
           <button class="btn btn-verde btn-xs" onclick="recepEntradaManual('${u.id}', this)">✅ Registrar Entrada</button>
-          <button class="btn btn-dourado btn-xs" onclick="recepCobrarStone('${u.id}', '${u.nome.split(' ')[0]}', this)" title="Envia cobrança direto para a Stone EYE PRO">💳 Cobrar na Stone</button>
           <button class="btn btn-laranja btn-xs" onclick="recepRedefinirSenha('${u.id}', '${u.nome.split(' ')[0]}', this)">🔑 Redefinir Senha</button>
           <label class="btn btn-azul btn-xs" style="cursor:pointer;display:inline-flex;align-items:center;gap:4px">
             📸 ${u.foto_url ? 'Atualizar Foto' : 'Adicionar Foto'}
@@ -2559,66 +2314,10 @@ async function recepEntradaManual(usuarioId, btn) {
   }
 }
 
-// ── COBRAR NA STONE EYE PRO ────────────────────────────────
-async function recepCobrarStone(usuarioId, nomeUsuario, btn) {
-  const tipo = prompt(
-    `Cobrar ${nomeUsuario} na Stone EYE PRO\n\nForma de pagamento:\n1 = Crédito\n2 = Débito\n\nDigite 1 ou 2:`
-  );
-  if (!tipo) return;
-  const tipoMap = { '1': 'credito', '2': 'debito' };
-  const tipoPagto = tipoMap[tipo.trim()];
-  if (!tipoPagto) { toast('⚠️ Opção inválida. Use 1 para crédito ou 2 para débito.'); return; }
-
-  btn.disabled = true;
-  btn.textContent = '⏳ Enviando...';
-
-  try {
-    const res = await api.post('/api/pagamentos?acao=cobrar-stone', {
-      usuario_id: usuarioId,
-      tipo: tipoPagto
-    });
-
-    toast(`✅ Cobrança enviada! Apresente a maquininha ao cliente.`);
-    document.getElementById('recepResultadoBusca').innerHTML = `
-      <div style="background:#e8f5ee;border:1.5px solid #a8d5b5;border-radius:8px;padding:12px;font-size:.83rem;color:var(--verde)">
-        <b>💳 Cobrança Stone enviada para a maquininha!</b><br>
-        Aguardando pagamento de <b>${nomeUsuario}</b>.<br>
-        <span style="font-size:.75rem;color:#888;margin-top:4px;display:block">
-          A catraca será liberada automaticamente após confirmação.
-        </span>
-      </div>`;
-
-    // Poll automático para detectar confirmação (a cada 3s por 3 min)
-    let tentativas = 0;
-    const poll = setInterval(async () => {
-      tentativas++;
-      if (tentativas > 60) { clearInterval(poll); return; }
-      try {
-        const st = await fetch(`${API_BASE}/api/pagamentos?acao=status-hoje&usuario_id=${usuarioId}`).then(r=>r.json());
-        if (st.status === 'confirmado') {
-          clearInterval(poll);
-          toast('✅ Pagamento confirmado! Catraca liberada.');
-          atualizarVagas();
-          recepCarregarPresentes();
-          document.getElementById('recepResultadoBusca').innerHTML =
-            '<p style="color:var(--verde);font-weight:600;font-size:.84rem">✅ Pago e acesso liberado automaticamente!</p>';
-        }
-      } catch(e) {}
-    }, 3000);
-
-  } catch(e) {
-    toast('❌ ' + e.message);
-  } finally {
-    btn.disabled = false;
-    btn.textContent = '💳 Cobrar na Stone';
-  }
-}
-
 async function recepRedefinirSenha(usuarioId, nomeUsuario, btn) {
   const novaSenha = prompt(`Definir nova senha para ${nomeUsuario}:\n(mínimo 6 caracteres)`);
   if (!novaSenha) return;
-  const _reRecep = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()\-_=+\[\]{};:'",.<>?/\\|`~]).{8,}$/;
-  if (!_reRecep.test(novaSenha)) { toast("⚠️ Senha fraca — mín. 8 caracteres com maiúscula, número e símbolo"); return; }
+  if (novaSenha.length < 6) { toast("⚠️ Senha mínima de 6 caracteres"); return; }
   btn.disabled = true;
   try {
     await api.post("/api/usuarios?acao=redefinir-senha", { usuario_id: usuarioId, nova_senha: novaSenha });
@@ -2651,7 +2350,7 @@ async function recepEnviarFoto(usuarioId, nomeUsuario, input) {
     });
 
     // Salva foto no usuário e envia ao Control iD
-    const r = await fetch(API_BASE + '/api/totem?acao=enviar-foto', {
+    const r = await fetch(API_BASE + '/api/pagamentos?acao=enviar-foto', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -2735,14 +2434,9 @@ async function adminSalvarConfig() {
   const config = {
     total_vagas:          document.getElementById('cfgVagas').value,
     valor_diaria:         document.getElementById('cfgTaxa').value,
-    taxa_credito:         document.getElementById('cfgTaxaCredito')?.value || '',
-    taxa_debito:          document.getElementById('cfgTaxaDebito')?.value || '',
     timeout_vaga_minutos: document.getElementById('cfgTimeout').value,
     pix_chave:            document.getElementById('cfgPixChave').value,
     pix_nome:             document.getElementById('cfgPixNome').value,
-    gateway_tipo:         document.getElementById('cfgGatewayTipo')?.value || '',
-    gateway_chave:        document.getElementById('cfgGatewayChave')?.value || '',
-    gateway_chave_pix:    document.getElementById('cfgGatewayChavePix')?.value || '',
     controlid_url:        document.getElementById('cfgControlIdUrl').value,
     controlid_token:      document.getElementById('cfgControlIdToken').value,
     controlid_db_host:    document.getElementById('cfgCidDbHost')?.value||'',
@@ -2762,76 +2456,6 @@ async function adminSalvarConfig() {
     toast('❌ Erro: '+e.message);
   } finally {
     loading('btnSalvarConfig', false);
-  }
-}
-
-// ── RESET DIÁRIO DE VAGAS ──────────────────────────────────
-async function adminResetDiario() {
-  if (!confirm('Encerrar TODOS os acessos ativos agora e zerar as vagas?\n\nUse apenas se necessário — normalmente o cron faz isso automaticamente às 20h.')) return;
-
-  const btn    = document.getElementById('btnResetDiario');
-  const status = document.getElementById('resetStatus');
-
-  btn.disabled = true;
-  btn.textContent = '⏳ Executando...';
-  status.style.display = 'none';
-
-  try {
-    const res = await api.post('/api/acessos?acao=reset-diario', {});
-    status.style.display = 'block';
-    status.style.background = '#f8fdf9';
-    status.style.borderColor = '#a8d5b5';
-    status.innerHTML = `<span style="color:var(--verde);font-weight:700">✅ ${res.mensagem}</span>`;
-    toast('✅ Reset diário executado!');
-    atualizarVagas();
-  } catch(e) {
-    status.style.display = 'block';
-    status.style.background = '#fff5f5';
-    status.style.borderColor = '#f5b5a8';
-    status.innerHTML = `<span style="color:var(--vermelho)">❌ Erro: ${e.message}</span>`;
-  } finally {
-    btn.disabled = false;
-    btn.textContent = '🔄 Executar Reset Diário agora';
-  }
-}
-
-// ── SINCRONIZAÇÃO CONTROL ID ───────────────────────────────
-async function adminSincronizarControlId() {
-  const btn = document.getElementById('btnSincronizarControlId');
-  const status = document.getElementById('syncStatus');
-
-  if (!confirm('Isso vai vincular automaticamente todos os usuários do sistema com os registros do Control iD pelo CPF.\n\nNenhuma foto ou biometria existente será apagada.\n\nDeseja continuar?')) return;
-
-  btn.disabled = true;
-  btn.innerHTML = '<span class="spinner"></span> Sincronizando...';
-  status.style.display = 'none';
-
-  try {
-    const res = await api.post('/api/totem?acao=sincronizar-controlid', {});
-
-    status.style.display = 'block';
-    status.innerHTML = `
-      <div style="font-weight:700;color:var(--verde);margin-bottom:8px">✅ ${res.mensagem}</div>
-      <div>🔗 Vinculados agora: <b>${res.vinculados}</b></div>
-      <div>✅ Já estavam vinculados: <b>${res.ja_vinculados}</b></div>
-      <div>❓ Não encontrados no Control iD: <b>${res.sem_correspondencia_controlid}</b>
-        <span style="font-size:.72rem;color:#888"> — precisam de foto cadastrada</span>
-      </div>
-      <div>📋 Total no Control iD: <b>${res.total_controlid}</b></div>
-      <div>👥 Total no nosso banco: <b>${res.total_nosso_banco}</b></div>
-      ${res.sem_correspondencia_nosso_banco > 0
-        ? `<div style="color:var(--laranja)">⚠️ ${res.sem_correspondencia_nosso_banco} pessoa(s) no Control iD sem registro no sistema</div>`
-        : ''
-      }
-    `;
-  } catch(e) {
-    status.style.display = 'block';
-    status.style.background = '#fff5f5';
-    status.style.borderColor = '#f5b5a8';
-    status.innerHTML = `<span style="color:var(--vermelho)">❌ Erro: ${e.message}</span>`;
-  } finally {
-    btn.disabled = false;
-    btn.innerHTML = '🔄 Sincronizar com Control iD agora';
   }
 }
 
@@ -2883,26 +2507,6 @@ async function carregarAvisos() {
     lista.innerHTML = '<div class="sem"><span class="si">⚠️</span>Erro ao carregar avisos.</div>';
   }
 }
-
-// ═══════════════════════════════════════════════════════════
-//  POPUP DE AVISO URGENTE
-// ═══════════════════════════════════════════════════════════
-async function verificarAvisosUrgentes() {
-  try {
-    const res = await api.listarAvisos();
-    const urgentes = (res.avisos || []).filter(a => a.tipo === 'urgente');
-    if (!urgentes.length) return;
-    const hoje = new Date().toISOString().split('T')[0];
-    const lidos = JSON.parse(localStorage.getItem('avisos_lidos') || '{}');
-    const naoLidos = urgentes.filter(a => lidos[a.id] !== hoje);
-    if (!naoLidos.length) return;
-    const aviso = naoLidos[0];
-    document.getElementById('modalAvisoTitulo').textContent   = aviso.titulo;
-    document.getElementById('modalAvisoConteudo').textContent = aviso.conteudo;
-    document.getElementById('modalAvisoUrgente').dataset.avisoId = aviso.id;
-    document.getElementById('modalAvisoUrgente').classList.add('ativo');
-  } catch(e) { /* silencioso */ }
-}
 </script>
 <script>
 
@@ -2923,14 +2527,11 @@ async function adminCarregarAvisos() {
     lista.innerHTML = avisos.map(a => `
       <div style="display:flex;justify-content:space-between;align-items:flex-start;padding:10px 0;border-bottom:1px solid #f0f0f0;gap:10px">
         <div style="flex:1">
-          <div style="display:flex;align-items:center;gap:6px;margin-bottom:2px">
-            <span style="font-size:.82rem;font-weight:700;color:#333">${icones[a.tipo]||'📌'} ${a.titulo}</span>
-            ${a.tipo==='urgente' ? '<span style="background:#fff5f5;color:var(--vermelho);font-size:.65rem;font-weight:700;padding:1px 6px;border-radius:8px;border:1px solid #f5b5a8">POP-UP ATIVO</span>' : ''}
-          </div>
+          <div style="font-size:.82rem;font-weight:700;color:#333">${icones[a.tipo]||'📌'} ${a.titulo}</div>
           <div style="font-size:.78rem;color:#777;margin-top:2px">${a.conteudo}</div>
           <div style="font-size:.7rem;color:#aaa;margin-top:3px">📅 ${new Date(a.created_at).toLocaleDateString('pt-BR')}</div>
         </div>
-        <button class="btn btn-vermelho btn-xs" onclick="adminDeletarAviso('${a.id}', this)" title="Remover aviso — remove o pop-up para todos os usuários">🗑️ Remover</button>
+        <button class="btn btn-vermelho btn-xs" onclick="adminDeletarAviso('${a.id}', this)">🗑️</button>
       </div>
     `).join('');
   } catch(e) {
@@ -3003,70 +2604,6 @@ async function adminCarregarSugestoes() {
   }
 }
 
-// ── TESTAR STONE ────────────────────────────────────────────
-async function adminTestarStone() {
-  const btn    = document.getElementById('btnTestarStone');
-  const status = document.getElementById('stoneTestStatus');
-  btn.disabled = true;
-  btn.textContent = '⏳ Testando...';
-  status.style.display = 'none';
-  try {
-    // Testa o endpoint webhook-stone com payload vazio
-    // Se o servidor responder 200, o endpoint está no ar
-    const r = await fetch(API_BASE + '/api/pagamentos?acao=webhook-stone', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ type: 'ping' })
-    });
-    const d = await r.json();
-    if (r.ok && d.ok !== undefined) {
-      status.style.display = 'block';
-      status.style.background = '#e8f5ee';
-      status.style.borderLeft = '3px solid var(--verde)';
-      status.innerHTML = '✅ Endpoint <b>webhook-stone</b> está no ar e respondendo corretamente.<br><span style="color:#888">Próximo passo: cadastrar a URL no portal Stone.</span>';
-    } else {
-      throw new Error('Resposta inesperada do servidor');
-    }
-  } catch(e) {
-    status.style.display = 'block';
-    status.style.background = '#fff5f5';
-    status.style.borderLeft = '3px solid var(--vermelho)';
-    status.innerHTML = '❌ Erro: ' + e.message;
-  } finally {
-    btn.disabled = false;
-    btn.textContent = '🔌 Testar conexão Stone';
-  }
-}
-
-// ── VERIFICAR ENV VARS STONE (chamado ao entrar no painel admin) ──
-async function adminVerificarStone() {
-  const el = document.getElementById('stoneCheckEnv');
-  if (!el) return;
-  try {
-    // Tenta autenticar — se STONE_CODE/SECRET não estiverem configurados
-    // o endpoint retorna erro específico
-    const r = await fetch(API_BASE + '/api/pagamentos?acao=cobrar-stone', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${api.token}` },
-      body: JSON.stringify({ usuario_id: 'ping' })
-    });
-    const d = await r.json();
-    if (d.erro && d.erro.includes('STONE_CODE')) {
-      el.innerHTML = '⚠️ <b>STONE_CODE</b> ou <b>STONE_SECRET_KEY</b> não configurados no Vercel.<br><span style="color:#888">Vá em Vercel → Settings → Environment Variables.</span>';
-      el.style.color = 'var(--laranja)';
-    } else if (d.erro && d.erro.includes('STONE_SERIAL')) {
-      el.innerHTML = '⚠️ <b>STONE_SERIAL_POS</b> não configurado no Vercel.';
-      el.style.color = 'var(--laranja)';
-    } else {
-      el.innerHTML = '✅ Variáveis de ambiente Stone configuradas no Vercel.';
-      el.style.color = 'var(--verde)';
-    }
-  } catch(e) {
-    el.innerHTML = '⚠️ Não foi possível verificar — verifique sua conexão.';
-    el.style.color = '#aaa';
-  }
-}
-
 async function adminMarcarLida(id, btn) {
   btn.disabled = true;
   try {
@@ -3080,21 +2617,21 @@ async function adminMarcarLida(id, btn) {
 
 
 // ═══════════════════════════════════════════════════════════
-//  POPUP DE AVISO URGENTE — listener fechar
+//  POPUP DE AVISO URGENTE
 // ═══════════════════════════════════════════════════════════
+async function verificarAvisosUrgentes() {
+  try {
+    const res = await api.listarAvisos();
+    const urgentes = (res.avisos || []).filter(a => a.tipo === 'urgente');
+    if (!urgentes.length) return;
+    const aviso = urgentes[0];
+    document.getElementById('modalAvisoTitulo').textContent = aviso.titulo;
+    document.getElementById('modalAvisoConteudo').textContent = aviso.conteudo;
+    document.getElementById('modalAvisoUrgente').classList.add('ativo');
+  } catch(e) { /* silencioso */ }
+}
 document.getElementById('btnFecharAvisoUrgente').addEventListener('click', () => {
-  const modal  = document.getElementById('modalAvisoUrgente');
-  const avisoId = modal.dataset.avisoId;
-  // Marca como lido hoje para não mostrar novamente até amanhã
-  if (avisoId) {
-    const hoje  = new Date().toISOString().split('T')[0];
-    const lidos = JSON.parse(localStorage.getItem('avisos_lidos') || '{}');
-    lidos[avisoId] = hoje;
-    // Limpa lidos antigos (mantém só os últimos 30 dias)
-    Object.keys(lidos).forEach(k => { if(lidos[k] < hoje) delete lidos[k]; });
-    localStorage.setItem('avisos_lidos', JSON.stringify(lidos));
-  }
-  modal.classList.remove('ativo');
+  document.getElementById('modalAvisoUrgente').classList.remove('ativo');
 });
 
 // ═══════════════════════════════════════════════════════════
@@ -3172,19 +2709,10 @@ async function adminVerAssinatura(usuarioId) {
     // Assinatura
     if (u.assinatura_svg) {
       document.getElementById('modalAssinaturaImg').src = u.assinatura_svg;
-      document.getElementById('modalAssinaturaImg').alt = 'Assinatura digital';
     } else {
+      document.getElementById('modalAssinaturaImg').alt = 'Sem assinatura registrada';
+      // Mostra mensagem inline
       document.getElementById('modalAssinaturaImg').src = '';
-      document.getElementById('modalAssinaturaImg').alt = 'Sem assinatura';
-      const wrap = document.getElementById('modalAssinaturaImg').parentElement;
-      const aviso = wrap.querySelector('.aviso-sem-assinatura');
-      if (!aviso) {
-        const div = document.createElement('div');
-        div.className = 'aviso-sem-assinatura';
-        div.style.cssText = 'padding:12px;text-align:center;font-size:.8rem;color:#888;background:#f9f9f9;border-radius:8px;margin-top:8px;border:1px solid #eee';
-        div.textContent = '⚠️ Usuário cadastrado antes da assinatura digital. Solicitar nova assinatura ou recadastrar.';
-        wrap.appendChild(div);
-      }
     }
 
     // Foto de cadastro

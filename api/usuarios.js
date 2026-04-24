@@ -83,7 +83,7 @@ module.exports = async function handler(req, res) {
       if (!id) return res.status(400).json({ erro: 'id obrigatório' });
       const { data, error } = await supabase
         .from('usuarios')
-        .select('id, nome, cpf, email, tipo, ativo, assinatura_svg, termo_aceito_em, termo_ip, created_at')
+        .select('id, nome, cpf, email, telefone, foto_url, tipo, ativo, assinatura_svg, termo_aceito_em, termo_ip, created_at')
         .eq('id', id)
         .maybeSingle();
       if (error || !data) return res.status(404).json({ erro: 'Usuário não encontrado' });
