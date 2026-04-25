@@ -11,7 +11,7 @@ import { createClient } from '@supabase/supabase-js';
 
 const supabase = createClient(
   process.env.SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_KEY  // service_role key (nunca exposta ao browser)
+  process.env.SUPABASE_SERVICE_ROLE_KEY  // service_role key (nunca exposta ao browser)
 );
 
 const AGENT_SECRET = process.env.AGENT_SECRET; // mesma chave do agente.js
