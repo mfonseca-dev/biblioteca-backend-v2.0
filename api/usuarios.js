@@ -1,10 +1,8 @@
 // api/usuarios.js
-// GET  /api/usuarios?acao=verificar-primeiro-acesso&cpf=CPF → verifica cadastro incompleto (público)
 // GET  /api/usuarios?acao=listar            → listar usuários (auth)
 // GET  /api/usuarios?acao=buscar&id=UUID    → buscar usuário individual com assinatura (auth)
 // GET  /api/usuarios?acao=buscar-cpf&cpf=CPF → buscar por CPF exato (público — totem)
 // POST /api/usuarios?acao=cadastrar         → cadastrar novo usuário (público)
-// POST /api/usuarios?acao=definir-senha-primeiro-acesso → senha inicial (público — migração)
 // POST /api/usuarios?acao=redefinir-senha   → redefinir senha (auth)
 // POST /api/usuarios?acao=bloquear          → bloquear/ativar usuário (auth admin)
 // POST /api/usuarios?acao=assinar-termo     → salvar assinatura (público)
@@ -13,6 +11,7 @@ const bcrypt   = require('bcryptjs');
 const supabase = require('../lib/supabase');
 const { autenticado } = require('../middleware/auth');
 
+// Validação de senha forte: mín. 8 chars, maiúscula, minúscula, número e símbolo
 const SENHA_RE = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()\-_=+\[\]{};:'",.<>?/\\|`~]).{8,}$/;
 const SENHA_MSG = 'Senha fraca: mínimo 8 caracteres, com maiúscula, minúscula, número e símbolo (ex: !@#$)';
 
@@ -28,23 +27,18 @@ module.exports = async function handler(req, res) {
   if (req.method === 'GET') {
 
     // ── VERIFICAR PRIMEIRO ACESSO — público ──────────────────────────────────
-    // DEVE vir ANTES do buscar-cpf para não ser interceptado pela auth
     if (acao === 'verificar-primeiro-acesso') {
       const { cpf } = req.query;
       if (!cpf) return res.status(400).json({ erro: 'cpf obrigatório' });
       const cpfLimpo = cpf.replace(/\D/g, '');
-
       const { data } = await supabase
         .from('usuarios')
         .select('id, nome, cpf, foto_url, senha_hash, termo_aceito_em, ativo')
         .eq('cpf', cpfLimpo)
         .maybeSingle();
-
       if (!data) return res.status(200).json({ encontrado: false });
       if (!data.ativo) return res.status(403).json({ erro: 'Conta suspensa. Entre em contato com a recepção.' });
-
       const precisaCadastro = !data.senha_hash || !data.termo_aceito_em || !data.foto_url;
-
       return res.status(200).json({
         encontrado:      true,
         id:              data.id,
@@ -56,6 +50,15 @@ module.exports = async function handler(req, res) {
         sem_termo:       !data.termo_aceito_em,
         sem_foto:        !data.foto_url
       });
+    }
+
+    // ── TOTAL DE USUÁRIOS — público ───────────────────────────────────────────
+    if (acao === 'total') {
+      const { count, error } = await supabase
+        .from('usuarios')
+        .select('*', { count: 'exact', head: true });
+      if (error) return res.status(500).json({ erro: 'Erro interno' });
+      return res.status(200).json({ total: count || 0 });
     }
 
     // ── BUSCAR POR CPF EXATO — público ───────────────────────────────────────
@@ -73,11 +76,11 @@ module.exports = async function handler(req, res) {
       return res.status(200).json({ usuario: data });
     }
 
-    // ── Rotas abaixo exigem autenticação ─────────────────────────────────────
+    // Rotas abaixo exigem autenticação
     const auth = autenticado(req, res);
     if (!auth.ok) return;
 
-    // Buscar usuário individual (admin)
+    // Buscar usuário individual com assinatura (admin)
     if (acao === 'buscar') {
       const { id } = req.query;
       if (!id) return res.status(400).json({ erro: 'id obrigatório' });
@@ -116,7 +119,7 @@ module.exports = async function handler(req, res) {
   // ── POST ──────────────────────────────────────────────────────────────────
   if (req.method !== 'POST') return res.status(405).json({ erro: 'Método não permitido' });
 
-  // ── CADASTRAR — público ───────────────────────────────────────────────────
+  // Cadastrar (público)
   if (acao === 'cadastrar' || !acao) {
     const { nome, cpf, email, telefone, foto_url, tipo = 'aluno', senha, assinatura_svg } = req.body || {};
     if (!nome || !cpf) return res.status(400).json({ erro: 'Nome e CPF são obrigatórios' });
@@ -144,7 +147,7 @@ module.exports = async function handler(req, res) {
     return res.status(201).json({ mensagem: 'Usuário cadastrado com sucesso', usuario: data });
   }
 
-  // ── ASSINAR TERMO — público ───────────────────────────────────────────────
+  // Assinar termo (público)
   if (acao === 'assinar-termo') {
     const { usuario_id, assinatura_svg, ip } = req.body || {};
     if (!usuario_id || !assinatura_svg) return res.status(400).json({ erro: 'usuario_id e assinatura_svg obrigatórios' });
@@ -155,7 +158,9 @@ module.exports = async function handler(req, res) {
     return res.status(200).json({ mensagem: 'Termo assinado com sucesso' });
   }
 
-  // ── DEFINIR SENHA PRIMEIRO ACESSO — público (importados sem senha) ────────
+  // ── DEFINIR SENHA PRIMEIRO ACESSO (público — migração) ──────
+  // Só funciona se o usuário NÃO tiver senha_hash ainda
+  // (usuários importados do Control iD sem senha definida)
   if (acao === 'definir-senha-primeiro-acesso') {
     const { usuario_id, nova_senha, cpf } = req.body || {};
     if (!usuario_id || !nova_senha || !cpf) {
@@ -164,6 +169,8 @@ module.exports = async function handler(req, res) {
     if (!SENHA_RE.test(nova_senha)) return res.status(400).json({ erro: SENHA_MSG });
 
     const cpfLimpo = cpf.replace(/\D/g, '');
+
+    // Verifica que o usuario_id bate com o CPF informado (proteção)
     const { data: usuario } = await supabase
       .from('usuarios')
       .select('id, nome, cpf, senha_hash')
@@ -171,7 +178,11 @@ module.exports = async function handler(req, res) {
       .eq('cpf', cpfLimpo)
       .maybeSingle();
 
-    if (!usuario) return res.status(404).json({ erro: 'Usuário não encontrado' });
+    if (!usuario) {
+      return res.status(404).json({ erro: 'Usuário não encontrado' });
+    }
+
+    // Se já tem senha, não permite sobrescrever por esta rota pública
     if (usuario.senha_hash) {
       return res.status(409).json({
         erro: 'Senha já definida. Use a opção "Esqueci minha senha" na recepção.'
@@ -185,10 +196,13 @@ module.exports = async function handler(req, res) {
       .eq('id', usuario_id);
 
     if (error) return res.status(500).json({ erro: 'Erro ao salvar senha' });
-    return res.status(200).json({ mensagem: `Senha definida com sucesso para ${usuario.nome}` });
+
+    return res.status(200).json({
+      mensagem: `Senha definida com sucesso para ${usuario.nome}`
+    });
   }
 
-  // ── REDEFINIR SENHA — auth recepção/admin ────────────────────────────────
+  // Redefinir senha (auth recepção/admin)
   if (acao === 'redefinir-senha') {
     const auth = autenticado(req, res);
     if (!auth.ok) return;
@@ -203,7 +217,7 @@ module.exports = async function handler(req, res) {
     return res.status(200).json({ mensagem: `Senha redefinida para ${data.nome}`, usuario: data });
   }
 
-  // ── BLOQUEAR / ATIVAR — auth admin ───────────────────────────────────────
+  // Bloquear / Ativar usuário (auth admin)
   if (acao === 'bloquear') {
     const auth = autenticado(req, res);
     if (!auth.ok) return;
