@@ -1,7 +1,7 @@
 // Service Worker — Ala dos Estudantes
 // Permite funcionamento offline e instalação como PWA
 
-const CACHE_NAME = 'ala-estudantes-v1';
+const CACHE_NAME = 'ala-estudantes-v2';
 const URLS_CACHE = [
   '/',
   '/index.html',
@@ -28,8 +28,10 @@ self.addEventListener('activate', event => {
 
 // Estratégia: network first, cache como fallback
 self.addEventListener('fetch', event => {
-  // Requisições de API sempre vão para a rede
-  if (event.request.url.includes('/api/')) return;
+  const url = event.request.url;
+
+  // API e totem sempre vão direto para a rede — SW não intercepta
+  if (url.includes('/api/') || url.includes('/totem')) return;
 
   event.respondWith(
     fetch(event.request)

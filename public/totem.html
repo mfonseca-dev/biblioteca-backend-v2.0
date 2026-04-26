@@ -1,0 +1,1534 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0d3d20">
+<title>Totem — Ala dos Estudantes</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════ BASE ═══════════════ */
+:root{
+  --verde:#1a6b3a;--verde-esc:#0d3d20;--verde-cl:#2d9155;--verde-suave:#e8f5ee;
+  --dourado:#c9a227;--dourado-cl:#f0d97a;
+  --creme:#faf8f2;--branco:#ffffff;
+  --cinza-esc:#1e1e1e;--cinza:#555;--cinza-cl:#e8e8e8;
+  --vermelho:#c0392b;--azul:#1a4a8a;--laranja:#e67e22;
+  --r:20px;--r-sm:12px;--r-lg:28px;
+  --shadow:0 8px 40px rgba(0,0,0,.18);
+  --shadow-lg:0 20px 80px rgba(0,0,0,.35);
+}
+*,::before,::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{
+  width:100%;height:100%;overflow:hidden;
+  font-family:"DM Sans",sans-serif;
+  background:linear-gradient(160deg,#061a0e 0%,#0d3d20 45%,#1a6b3a 100%);
+  color:#fff;
+  user-select:none;
+  -webkit-user-select:none;
+  cursor:default;
+}
+/* Bloqueia context menu e seleção */
+body{-webkit-touch-callout:none}
+
+/* ═══════════════ TELAS ═══════════════ */
+.screen{
+  display:none;position:absolute;inset:0;
+  align-items:center;justify-content:center;
+  flex-direction:column;padding:32px 24px;
+  overflow:hidden;
+}
+.screen.ativo{display:flex}
+
+/* ═══════════════ HEADER TOTEM ═══════════════ */
+.totem-header{
+  position:fixed;top:0;left:0;right:0;
+  background:rgba(0,0,0,.35);backdrop-filter:blur(12px);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 28px;height:72px;z-index:100;
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
+.th-logo{display:flex;align-items:center;gap:12px}
+.th-logo-icon{font-size:28px}
+.th-logo-text{font-family:"Playfair Display",serif;font-size:.95rem;line-height:1.25;font-weight:700}
+.th-logo-sub{font-size:.62rem;opacity:.65;text-transform:uppercase;letter-spacing:.7px}
+.th-clock{font-family:"JetBrains Mono",monospace;font-size:1.05rem;font-weight:600;opacity:.85}
+.th-vagas{background:rgba(45,145,85,.25);border:1px solid rgba(45,145,85,.4);border-radius:10px;padding:6px 14px;font-size:.78rem;font-weight:700;color:#7dffb3;display:flex;align-items:center;gap:6px}
+
+/* ═══════════════ CARD PRINCIPAL ═══════════════ */
+.card{
+  background:rgba(255,255,255,.97);
+  border-radius:var(--r-lg);
+  color:var(--cinza-esc);
+  width:100%;max-width:700px;
+  box-shadow:var(--shadow-lg);
+  overflow:hidden;
+  margin-top:72px;
+  max-height:calc(100vh - 88px);
+  overflow-y:auto;
+}
+.card-header{
+  background:linear-gradient(135deg,var(--verde-esc),var(--verde-cl));
+  color:#fff;padding:26px 32px;
+  text-align:center;
+}
+.card-header .icon{font-size:48px;margin-bottom:8px;display:block}
+.card-header h2{font-family:"Playfair Display",serif;font-size:1.6rem;font-weight:900;margin-bottom:4px}
+.card-header p{font-size:.85rem;opacity:.82}
+.card-body{padding:28px 32px}
+
+/* ═══════════════ BOTÕES GRANDES ═══════════════ */
+.btn-totem{
+  width:100%;padding:22px 24px;
+  border:none;border-radius:var(--r);
+  font-family:"DM Sans",sans-serif;font-size:1.15rem;font-weight:700;
+  cursor:pointer;transition:.15s;
+  display:flex;align-items:center;gap:14px;
+  letter-spacing:.2px;margin-bottom:14px;
+  touch-action:manipulation;
+}
+.btn-totem:last-child{margin-bottom:0}
+.btn-totem .bt-icon{font-size:2rem;flex-shrink:0}
+.btn-totem .bt-text{text-align:left;flex:1}
+.btn-totem .bt-title{display:block;font-size:1.1rem;line-height:1.2}
+.btn-totem .bt-sub{display:block;font-size:.75rem;opacity:.8;margin-top:2px;font-weight:500}
+.btn-totem:active{transform:scale(.98)}
+
+.btn-verde-t{background:linear-gradient(135deg,var(--verde-esc),var(--verde-cl));color:#fff;box-shadow:0 6px 24px rgba(26,107,58,.4)}
+.btn-verde-t:hover{box-shadow:0 10px 32px rgba(26,107,58,.5)}
+.btn-dourado-t{background:linear-gradient(135deg,#b8881a,var(--dourado));color:#fff;box-shadow:0 6px 24px rgba(201,162,39,.4)}
+.btn-sec-t{background:#f0f0f0;color:var(--cinza-esc)}
+.btn-vermelho-t{background:linear-gradient(135deg,#e74c3c,var(--vermelho));color:#fff}
+.btn-azul-t{background:linear-gradient(135deg,#2563eb,var(--azul));color:#fff;box-shadow:0 6px 24px rgba(26,74,138,.35)}
+
+/* ═══════════════ TECLADO VIRTUAL ═══════════════ */
+.teclado-bg{
+  position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:500;
+  display:none;align-items:flex-end;
+}
+.teclado-bg.ativo{display:flex}
+.teclado{
+  background:#1a1a2e;border-radius:28px 28px 0 0;
+  padding:20px 16px 32px;width:100%;
+}
+.teclado-display{
+  background:#0d0d1a;border-radius:14px;padding:16px 20px;
+  margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;
+}
+.teclado-label{font-size:.72rem;text-transform:uppercase;letter-spacing:.7px;color:#888;margin-bottom:4px}
+.teclado-valor{font-family:"JetBrains Mono",monospace;font-size:1.6rem;font-weight:600;color:#fff;letter-spacing:4px;min-height:38px}
+.teclado-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:10px}
+.teclado-grid.nums-embaralhados{/* ordem definida em JS */}
+.tk{
+  background:rgba(255,255,255,.1);border:none;border-radius:14px;
+  font-family:"JetBrains Mono",monospace;font-size:1.5rem;font-weight:700;
+  color:#fff;padding:18px;cursor:pointer;transition:.1s;
+  touch-action:manipulation;
+}
+.tk:active{background:rgba(255,255,255,.2);transform:scale(.95)}
+.tk.especial{font-size:1rem;background:rgba(255,255,255,.07);color:#aaa}
+.tk.confirmar{background:linear-gradient(135deg,var(--verde-esc),var(--verde-cl));font-size:1rem;font-weight:800}
+.tk.apagar{background:rgba(192,57,43,.2);color:#f5b5a8}
+.tk.cancelar-tk{background:rgba(192,57,43,.15);color:#f5b5a8;font-size:.85rem}
+.teclado-btns-extra{display:grid;grid-template-columns:1fr 2fr 1fr;gap:10px}
+
+/* ═══════════════ INPUTS TOTEM ═══════════════ */
+.inp-group{margin-bottom:16px}
+.inp-label{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--cinza);margin-bottom:6px;display:block}
+.inp-display{
+  width:100%;padding:16px 18px;
+  border:2.5px solid var(--cinza-cl);border-radius:var(--r-sm);
+  font-family:"JetBrains Mono",monospace;font-size:1.1rem;
+  color:var(--cinza-esc);background:#fff;
+  cursor:pointer;transition:border-color .2s;
+  min-height:54px;display:flex;align-items:center;
+  letter-spacing:3px;
+}
+.inp-display.focus{border-color:var(--verde);box-shadow:0 0 0 4px rgba(26,107,58,.12)}
+.inp-display.texto{letter-spacing:normal;font-family:"DM Sans",sans-serif;font-size:.95rem}
+.inp-display.placeholder{color:#bbb;letter-spacing:normal;font-family:"DM Sans",sans-serif;font-size:.9rem}
+
+/* ═══════════════ STEPS ═══════════════ */
+.steps{display:flex;align-items:center;gap:0;margin-bottom:20px}
+.step{flex:1;height:5px;background:#e0e0e0;border-radius:3px;transition:.4s}
+.step.done{background:var(--verde)}
+.step.active{background:linear-gradient(90deg,var(--verde),var(--verde-cl))}
+.step-gap{width:6px;flex-shrink:0}
+.step-label{text-align:center;font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.4px;color:var(--cinza);margin-top:8px}
+
+/* ═══════════════ CÂMERA ═══════════════ */
+.camera-wrap{
+  border-radius:16px;overflow:hidden;background:#000;
+  width:100%;max-height:280px;position:relative;margin-bottom:14px;
+}
+.camera-wrap video,.camera-wrap canvas,.camera-wrap img{
+  width:100%;height:100%;object-fit:cover;display:block;
+}
+.camera-overlay{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  pointer-events:none;
+}
+.camera-oval{
+  width:160px;height:200px;border:4px solid rgba(255,255,255,.7);
+  border-radius:50%;box-shadow:0 0 0 2000px rgba(0,0,0,.5);
+}
+.camera-status{
+  position:absolute;bottom:12px;left:50%;transform:translateX(-50%);
+  background:rgba(0,0,0,.65);border-radius:20px;padding:6px 16px;
+  font-size:.78rem;font-weight:600;white-space:nowrap;color:#fff;
+}
+
+/* ═══════════════ PIX QR ═══════════════ */
+.pix-card{
+  background:linear-gradient(135deg,#f0f7f0,#e8f5ee);
+  border:2.5px solid var(--verde-cl);border-radius:16px;
+  padding:22px;text-align:center;margin-bottom:16px;
+}
+.pix-qr{
+  width:200px;height:200px;background:#fff;border-radius:12px;
+  margin:0 auto 12px;display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 20px rgba(0,0,0,.1);overflow:hidden;
+}
+.pix-qr img,.pix-qr canvas{width:100%;height:100%}
+.pix-qr-placeholder{font-size:4rem}
+.pix-chave{font-family:"JetBrains Mono",monospace;font-size:.85rem;font-weight:600;color:var(--verde);word-break:break-all;margin-bottom:4px}
+.pix-valor{font-family:"Playfair Display",serif;font-size:2rem;font-weight:900;color:var(--verde)}
+.pix-timer{
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  font-size:.82rem;color:#a07a00;font-weight:600;margin-top:8px;
+}
+
+/* ═══════════════ STATUS ACESSO ═══════════════ */
+.acesso-ok{
+  text-align:center;padding:32px 20px;
+}
+.acesso-ok .big-icon{font-size:80px;margin-bottom:16px;display:block;animation:pulseIn .6s ease}
+@keyframes pulseIn{0%{transform:scale(.5);opacity:0}70%{transform:scale(1.1)}100%{transform:scale(1);opacity:1}}
+.acesso-ok h2{font-family:"Playfair Display",serif;font-size:1.8rem;font-weight:900;color:var(--verde);margin-bottom:6px}
+.acesso-ok p{color:var(--cinza);font-size:.9rem;line-height:1.6}
+
+/* ═══════════════ ALERTA / ERRO ═══════════════ */
+.alerta-t{
+  background:#fff5f5;border:2px solid #f5b5a8;border-radius:12px;
+  padding:14px 16px;display:flex;align-items:flex-start;gap:10px;
+  margin-bottom:14px;
+}
+.alerta-t p{font-size:.84rem;color:var(--vermelho);line-height:1.5;font-weight:500}
+.alerta-t .ai{font-size:20px;flex-shrink:0}
+
+/* ═══════════════ TOAST ═══════════════ */
+.toast-t{
+  position:fixed;bottom:40px;left:50%;transform:translateX(-50%) translateY(20px);
+  background:#1a1a1a;color:#fff;padding:14px 28px;border-radius:30px;
+  font-size:.88rem;font-weight:600;opacity:0;transition:.3s;
+  z-index:2000;white-space:nowrap;pointer-events:none;max-width:90vw;text-align:center;
+}
+.toast-t.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ═══════════════ IDLE OVERLAY ═══════════════ */
+.idle-overlay{
+  position:fixed;inset:0;
+  background:linear-gradient(160deg,#061a0e,#0d3d20 50%,#1a6b3a);
+  z-index:1000;display:flex;align-items:center;justify-content:center;
+  flex-direction:column;text-align:center;
+  opacity:0;pointer-events:none;transition:opacity .5s;
+}
+.idle-overlay.ativo{opacity:1;pointer-events:all}
+.idle-overlay .em{font-size:80px;margin-bottom:16px;display:block}
+.idle-overlay h2{font-family:"Playfair Display",serif;font-size:2rem;font-weight:900;margin-bottom:8px}
+.idle-overlay p{font-size:.95rem;opacity:.8;margin-bottom:24px}
+.idle-overlay .countdown{
+  font-family:"JetBrains Mono",monospace;font-size:3rem;font-weight:900;
+  color:var(--dourado-cl);margin-bottom:20px;
+}
+
+/* ═══════════════ BLOQUEIO ═══════════════ */
+.bloqueio-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:900;
+  display:none;align-items:center;justify-content:center;flex-direction:column;
+}
+.bloqueio-overlay.ativo{display:flex}
+.bloqueio-overlay .icon{font-size:64px;margin-bottom:16px}
+.bloqueio-overlay h2{font-size:1.6rem;font-weight:800;margin-bottom:8px;color:#f5b5a8}
+.bloqueio-overlay p{color:#aaa;text-align:center;max-width:320px;line-height:1.6}
+.bloqueio-timer{font-family:"JetBrains Mono",monospace;font-size:2rem;font-weight:900;color:var(--vermelho);margin:12px 0}
+
+/* ═══════════════ POPUP AVISO URGENTE ═══════════════ */
+.popup-urgente{
+  position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:1500;
+  display:none;align-items:center;justify-content:center;padding:24px;
+}
+.popup-urgente.ativo{display:flex}
+.popup-urgente-box{
+  background:#fff;border-radius:24px;padding:32px 28px;
+  max-width:560px;width:100%;text-align:center;
+  box-shadow:0 24px 80px rgba(0,0,0,.5);
+  animation:pulseIn .4s ease;
+}
+.popup-urgente-icone{font-size:56px;margin-bottom:12px;display:block}
+.popup-urgente-titulo{font-family:"Playfair Display",serif;font-size:1.5rem;font-weight:900;color:var(--vermelho);margin-bottom:10px}
+.popup-urgente-msg{font-size:.92rem;color:#444;line-height:1.7;margin-bottom:22px}
+.popup-urgente-btn{
+  background:linear-gradient(135deg,#e74c3c,var(--vermelho));color:#fff;
+  border:none;border-radius:14px;padding:16px 40px;
+  font-family:"DM Sans",sans-serif;font-size:1rem;font-weight:700;
+  cursor:pointer;touch-action:manipulation;
+}
+.popup-urgente-btn:active{transform:scale(.97)}
+
+/* ═══════════════ MISC ═══════════════ */
+.divider{height:1px;background:var(--cinza-cl);margin:16px 0}
+.chip{display:inline-flex;align-items:center;gap:5px;background:var(--verde-suave);color:var(--verde);border-radius:20px;padding:4px 12px;font-size:.74rem;font-weight:700}
+.spinner-t{width:20px;height:20px;border:3px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;display:inline-block;vertical-align:middle;margin-right:8px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.mask-cpf{letter-spacing:4px}
+</style>
+</head>
+<body>
+
+<!-- ═══════════ HEADER FIXO ═══════════ -->
+<div class="totem-header">
+  <div class="th-logo">
+    <span class="th-logo-icon">📚</span>
+    <div>
+      <div class="th-logo-text">Ala dos Estudantes</div>
+      <div class="th-logo-sub">Educador Paiva Netto</div>
+    </div>
+  </div>
+  <div class="th-vagas">🟢 <span id="hdrVagas">-- vagas livres</span></div>
+  <div class="th-clock" id="hdrClock">--:--</div>
+</div>
+
+<!-- ═══════════ TELA INICIAL ═══════════ -->
+<div id="screenInicio" class="screen ativo">
+  <div class="card">
+    <div class="card-header" style="padding:20px 28px">
+      <span class="icon" style="font-size:40px">📚</span>
+      <h2 style="font-size:1.45rem">Ala dos Estudantes</h2>
+      <p style="opacity:.85">Educador Paiva Netto — Brasília</p>
+    </div>
+    <div class="card-body" style="padding:20px 24px">
+
+      <!-- Vagas em tempo real -->
+      <div id="inicioVagasCard" style="background:linear-gradient(135deg,#e8f5ee,#d0eddb);border:2px solid #a8d5b5;border-radius:16px;padding:16px 20px;margin-bottom:18px;display:flex;align-items:center;justify-content:space-between;gap:12px">
+        <div>
+          <div style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:#1a6b3a;opacity:.8">Vagas disponíveis agora</div>
+          <div style="display:flex;align-items:baseline;gap:8px;margin-top:2px">
+            <span id="inicioVagasNum" style="font-size:2.8rem;font-weight:700;color:#1a6b3a;line-height:1">—</span>
+            <span id="inicioVagasTotal" style="font-size:.85rem;color:#555">de — vagas</span>
+          </div>
+        </div>
+        <div style="text-align:right">
+          <div id="inicioVagasStatus" style="font-size:.8rem;font-weight:700;padding:5px 12px;border-radius:20px;background:#1a6b3a;color:#fff">Verificando...</div>
+          <div style="font-size:.69rem;color:#777;margin-top:5px">Horário: 8h às 19h45</div>
+          <div style="font-size:.69rem;color:#777" id="inicioUltimaAtualizacao">—</div>
+        </div>
+      </div>
+
+      <!-- Botões principais -->
+      <button class="btn-totem btn-verde-t" onclick="irPara('screenCpf')" style="margin-bottom:10px">
+        <span class="bt-icon">🔑</span>
+        <span class="bt-text">
+          <span class="bt-title">Já tenho cadastro</span>
+          <span class="bt-sub">Digite seu CPF e pague aqui no totem</span>
+        </span>
+        <span style="font-size:1.5rem;opacity:.6">›</span>
+      </button>
+
+      <button class="btn-totem btn-dourado-t" onclick="irPara('screenCadastro')" style="margin-bottom:14px">
+        <span class="bt-icon">✨</span>
+        <span class="bt-text">
+          <span class="bt-title">Primeiro acesso — Cadastrar aqui</span>
+          <span class="bt-sub">Preencha seus dados, tire a foto e pague</span>
+        </span>
+        <span style="font-size:1.5rem;opacity:.6">›</span>
+      </button>
+
+      <!-- Convite para app -->
+      <div style="border:1.5px dashed #c9a227;border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:14px;background:rgba(201,162,39,.06)">
+        <div style="flex-shrink:0">
+          <!-- QR Code SVG gerado inline — aponta para o app -->
+          <div id="totemQrCode" style="width:72px;height:72px;background:#fff;border-radius:8px;display:flex;align-items:center;justify-content:center;border:1px solid #e8e8e8;overflow:hidden">
+            <canvas id="totemQrCanvas" width="72" height="72"></canvas>
+          </div>
+        </div>
+        <div style="flex:1">
+          <div style="font-size:.82rem;font-weight:700;color:var(--dourado);margin-bottom:3px">📱 Use pelo celular — é mais rápido!</div>
+          <div style="font-size:.74rem;color:#666;line-height:1.5">
+            Aponte a câmera para o QR Code, baixe o app e faça seu cadastro com mais comodidade. Pague pelo celular sem precisar do totem.
+          </div>
+          <div id="totemAppUrl" style="font-size:.68rem;color:#1a6b3a;margin-top:4px;font-weight:600">biblioteca-backend-v2-0.vercel.app</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ TELA CPF ═══════════ -->
+<div id="screenCpf" class="screen">
+  <div class="card">
+    <div class="card-header" style="background:linear-gradient(135deg,#0a1628,#1a4a8a)">
+      <span class="icon">👤</span>
+      <h2>Identifique-se</h2>
+      <p>Digite seu CPF para localizar seu cadastro</p>
+    </div>
+    <div class="card-body">
+      <div class="inp-group">
+        <span class="inp-label">CPF (apenas números)</span>
+        <div class="inp-display placeholder mask-cpf" id="cpfDisplay" onclick="abrirTeclado('cpf')">
+          Toque para digitar seu CPF
+        </div>
+      </div>
+      <div id="cpfErro" class="alerta-t" style="display:none">
+        <span class="ai">⚠️</span><p id="cpfErroMsg">—</p>
+      </div>
+      <button class="btn-totem btn-verde-t" id="btnBuscarCpf" onclick="buscarCpf()">
+        <span class="bt-icon">🔍</span>
+        <span class="bt-text">
+          <span class="bt-title">Buscar meu cadastro</span>
+          <span class="bt-sub">Avançar para pagamento</span>
+        </span>
+      </button>
+      <button class="btn-totem btn-sec-t" onclick="irPara('screenInicio')" style="margin-top:8px">
+        <span class="bt-icon">←</span>
+        <span class="bt-text"><span class="bt-title">Voltar</span></span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ TELA CADASTRO ═══════════ -->
+<div id="screenCadastro" class="screen">
+  <div class="card">
+    <div class="card-header" style="background:linear-gradient(135deg,#6b4a0d,var(--dourado))">
+      <span class="icon">📋</span>
+      <h2>Novo Cadastro</h2>
+      <p>Preencha os dados para liberar o acesso</p>
+    </div>
+    <div class="card-body">
+      <!-- Steps -->
+      <div class="steps">
+        <div class="step active" id="stepBar1"></div><div class="step-gap"></div>
+        <div class="step" id="stepBar2"></div><div class="step-gap"></div>
+        <div class="step" id="stepBar3"></div>
+      </div>
+      <div class="step-label" id="stepLabel">Etapa 1 de 3 — Dados pessoais</div>
+
+      <!-- ETAPA 1: DADOS -->
+      <div id="cadEtapa1T">
+        <div class="inp-group">
+          <span class="inp-label">Nome completo</span>
+          <div class="inp-display texto placeholder" id="nomeDisplay" onclick="abrirTeclado('nome')">
+            Toque para digitar seu nome
+          </div>
+        </div>
+        <div class="inp-group">
+          <span class="inp-label">CPF</span>
+          <div class="inp-display mask-cpf placeholder" id="cpfCadDisplay" onclick="abrirTeclado('cpfCad')">
+            Toque para digitar seu CPF
+          </div>
+        </div>
+        <button class="btn-totem btn-verde-t" id="btnCadEtapa1T" onclick="cadAvancarEtapa1()">
+          <span class="bt-icon">📸</span>
+          <span class="bt-text">
+            <span class="bt-title">Próximo — Foto</span>
+            <span class="bt-sub">Capturar foto para reconhecimento facial</span>
+          </span>
+        </button>
+        <button class="btn-totem btn-sec-t" onclick="irPara('screenInicio')" style="margin-top:8px">
+          <span class="bt-icon">←</span><span class="bt-text"><span class="bt-title">Voltar</span></span>
+        </button>
+      </div>
+
+      <!-- ETAPA 2: FOTO -->
+      <div id="cadEtapa2T" style="display:none">
+        <div class="camera-wrap" id="cameraWrapT">
+          <video id="videoT" autoplay playsinline style="display:none"></video>
+          <canvas id="canvasT" style="display:none"></canvas>
+          <img id="fotoPreviewT" style="display:none" alt="Foto capturada">
+          <div id="cameraPlaceholderT" style="background:#111;height:260px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px">
+            <span style="font-size:64px">📷</span>
+            <p style="color:#888;font-size:.84rem">Câmera não iniciada</p>
+          </div>
+          <div class="camera-overlay" id="cameraOvalT" style="display:none">
+            <div class="camera-oval"></div>
+          </div>
+          <div class="camera-status" id="cameraStatusT" style="display:none">Posicione seu rosto no oval</div>
+        </div>
+        <div id="cameraCtrlsT" style="display:none">
+          <button class="btn-totem btn-azul-t" onclick="capturarFotoT()">
+            <span class="bt-icon">📸</span>
+            <span class="bt-text"><span class="bt-title">Tirar Foto</span><span class="bt-sub">Olhe para a câmera e toque aqui</span></span>
+          </button>
+          <button class="btn-totem btn-sec-t" onclick="fecharCameraT()" style="margin-top:8px">
+            <span class="bt-icon">←</span><span class="bt-text"><span class="bt-title">Cancelar</span></span>
+          </button>
+        </div>
+        <div id="fotoFeitaCtrlsT" style="display:none">
+          <button class="btn-totem btn-verde-t" onclick="cadAvancarEtapa2()">
+            <span class="bt-icon">✅</span>
+            <span class="bt-text"><span class="bt-title">Foto aprovada — Próximo</span><span class="bt-sub">Assinar termo e pagar</span></span>
+          </button>
+          <button class="btn-totem btn-sec-t" onclick="refazerFotoT()" style="margin-top:8px">
+            <span class="bt-icon">🔄</span><span class="bt-text"><span class="bt-title">Refazer foto</span></span>
+          </button>
+        </div>
+        <button class="btn-totem btn-sec-t" id="btnAbrirCameraT" onclick="abrirCameraT()">
+          <span class="bt-icon">📷</span>
+          <span class="bt-text"><span class="bt-title">Iniciar câmera</span><span class="bt-sub">Posicione seu rosto para a captura</span></span>
+        </button>
+      </div>
+
+      <!-- ETAPA 3: TERMO + PAGAMENTO -->
+      <div id="cadEtapa3T" style="display:none">
+        <div id="termoBoxT" style="background:#f8fdf9;border:1.5px solid #a8d5b5;border-radius:10px;padding:14px;margin-bottom:14px;max-height:200px;overflow-y:auto;font-size:.76rem;color:#444;line-height:1.7">
+          <div style="font-weight:700;color:var(--verde);margin-bottom:8px">📜 Termo de Conduta — Ala dos Estudantes Educador Paiva Netto</div>
+          <div id="termoConteudoT">⏳ Carregando termo...</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;background:#e8f5ee;border:1.5px solid #a8d5b5;border-radius:10px;padding:12px;margin-bottom:14px;cursor:pointer" onclick="toggleAceite()">
+          <div id="aceiteBox" style="width:24px;height:24px;border:2.5px solid var(--verde);border-radius:6px;background:#fff;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:16px;transition:.15s"></div>
+          <p style="font-size:.82rem;color:var(--cinza-esc);line-height:1.5"><b>Li e aceito</b> o Termo de Conduta e a Política de Privacidade (LGPD)</p>
+        </div>
+        <button class="btn-totem btn-verde-t" id="btnCadFinalizar" onclick="cadFinalizar()" disabled style="opacity:.5">
+          <span class="bt-icon">💳</span>
+          <span class="bt-text">
+            <span class="bt-title">Aceitar e ir para Pagamento</span>
+            <span class="bt-sub">Finalizar cadastro e pagar</span>
+          </span>
+        </button>
+        <button class="btn-totem btn-sec-t" onclick="voltarEtapa2T()" style="margin-top:8px">
+          <span class="bt-icon">←</span><span class="bt-text"><span class="bt-title">Voltar — Refazer foto</span></span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ TELA PAGAMENTO ═══════════ -->
+<div id="screenPagamento" class="screen">
+  <div class="card">
+    <div class="card-header" style="background:linear-gradient(135deg,#1a3a6b,#2563eb)">
+      <span class="icon">💳</span>
+      <h2>Pagamento</h2>
+      <p id="pagtoUserInfo">—</p>
+    </div>
+    <div class="card-body">
+      <!-- Seletor forma de pagamento -->
+      <div style="display:flex;gap:8px;margin-bottom:16px">
+        <button class="btn-totem btn-azul-t" id="btnEscolhePix" onclick="selecionarFormaPagamento('pix')" style="flex:1;padding:14px;margin-bottom:0">
+          <span class="bt-icon" style="font-size:1.5rem">💠</span>
+          <span class="bt-text"><span class="bt-title" style="font-size:.95rem">Pix</span><span class="bt-sub">QR Code</span></span>
+        </button>
+        <button class="btn-totem btn-sec-t" id="btnEscolheCredito" onclick="selecionarFormaPagamento('credito')" style="flex:1;padding:14px;margin-bottom:0">
+          <span class="bt-icon" style="font-size:1.5rem">💳</span>
+          <span class="bt-text"><span class="bt-title" style="font-size:.95rem">Crédito</span><span class="bt-sub">Maquininha</span></span>
+        </button>
+        <button class="btn-totem btn-sec-t" id="btnEscolheDebito" onclick="selecionarFormaPagamento('debito')" style="flex:1;padding:14px;margin-bottom:0">
+          <span class="bt-icon" style="font-size:1.5rem">🏦</span>
+          <span class="bt-text"><span class="bt-title" style="font-size:.95rem">Débito</span><span class="bt-sub">Maquininha</span></span>
+        </button>
+      </div>
+
+      <!-- PIX — cobrança gerada automaticamente pelo gateway -->
+      <div id="secaoPix">
+        <!-- Carregando -->
+        <div id="pixCarregandoT" style="text-align:center;padding:24px 0;color:#fff;opacity:.8">
+          <div style="font-size:2.5rem;margin-bottom:10px">⏳</div>
+          <div style="font-size:.9rem">Gerando cobrança Pix...</div>
+        </div>
+        <!-- QR Code (gateway configurado) -->
+        <div id="pixConteudoT" style="display:none">
+          <div class="pix-card">
+            <div style="font-size:.7rem;text-transform:uppercase;letter-spacing:.7px;color:#888;margin-bottom:8px">Valor a pagar</div>
+            <div class="pix-valor" id="pagtoValorT">R$ 10,00</div>
+            <div class="pix-qr" id="pixQrWrapT">
+              <div class="pix-qr-placeholder">📲</div>
+            </div>
+            <div class="pix-chave" id="pagtoCopiaCola" style="font-size:.72rem;word-break:break-all;padding:0 8px">—</div>
+            <div class="pix-timer">
+              ⏱️ Expira em: <span id="pixTimerCount" style="font-family:'JetBrains Mono',monospace">05:00</span>
+            </div>
+          </div>
+          <div style="background:#e8f5ee;border:1.5px solid #a8d5b5;border-radius:10px;padding:12px;font-size:.82rem;color:#1a6b3a;font-weight:600;text-align:center;margin-bottom:14px">
+            🔄 Pagamento detectado automaticamente — não é necessário confirmar.
+          </div>
+        </div>
+        <!-- Modo manual (sem gateway) -->
+        <div id="pixManualT" style="display:none">
+          <div class="pix-card">
+            <div style="font-size:.7rem;text-transform:uppercase;letter-spacing:.7px;color:#888;margin-bottom:8px">Valor a pagar</div>
+            <div class="pix-valor" id="pagtoValorT2">R$ 10,00</div>
+            <div class="pix-chave" id="pagtoChaveT">—</div>
+            <div style="font-size:.76rem;color:#888;margin-top:4px" id="pagtoNomeT">—</div>
+            <div class="pix-timer">
+              ⏱️ Aguardando: <span id="pixTimerCount2" style="font-family:'JetBrains Mono',monospace">05:00</span>
+            </div>
+          </div>
+          <div style="background:#fff8e0;border:1.5px solid var(--dourado-cl);border-radius:10px;padding:12px;font-size:.79rem;color:#a07a00;line-height:1.6;margin-bottom:14px">
+            ⚠️ Gateway não configurado. Pague na chave acima e toque em confirmar abaixo.
+          </div>
+          <button class="btn-totem btn-verde-t" id="btnPixManualT" onclick="confirmarPixManualTotem()">
+            <span class="bt-icon">✅</span>
+            <span class="bt-text"><span class="bt-title">Já paguei — Confirmar</span><span class="bt-sub">Apenas quando gateway não configurado</span></span>
+          </button>
+        </div>
+      </div>
+
+      <!-- CRÉDITO — TEF integrado -->
+      <div id="secaoCredito" style="display:none">
+        <div style="background:#f0f4ff;border:2px solid #b0c4ef;border-radius:14px;padding:20px;text-align:center;margin-bottom:14px">
+          <div style="font-size:2.5rem;margin-bottom:8px">💳</div>
+          <div style="font-weight:700;font-size:1rem;color:var(--azul);margin-bottom:4px">Cartão de Crédito</div>
+          <p style="font-size:.82rem;color:#555;line-height:1.6;margin-bottom:10px">Insira ou aproxime seu cartão na maquininha ao lado e siga as instruções do terminal.</p>
+          <div class="pix-valor" id="pagtoValorCredito">R$ 10,00</div>
+          <!-- Status TEF em tempo real -->
+          <div id="tefStatusCredito" style="margin-top:12px;font-size:.8rem;font-weight:600;color:#555;min-height:20px"></div>
+        </div>
+        <button class="btn-totem btn-verde-t" id="btnIniciarTefCredito" onclick="iniciarTEF('credito')">
+          <span class="bt-icon">▶️</span>
+          <span class="bt-text"><span class="bt-title">Iniciar cobrança no terminal</span><span class="bt-sub">Aciona a maquininha automaticamente</span></span>
+        </button>
+        <button class="btn-totem btn-sec-t" id="btnConfirmarCredito" onclick="confirmarCartaoManual('credito')" style="display:none;margin-top:8px">
+          <span class="bt-icon">✅</span>
+          <span class="bt-text"><span class="bt-title">Pagamento aprovado — Confirmar</span><span class="bt-sub">Use se o terminal não comunicar automaticamente</span></span>
+        </button>
+      </div>
+
+      <!-- DÉBITO — TEF integrado -->
+      <div id="secaoDebito" style="display:none">
+        <div style="background:#f0f4ff;border:2px solid #b0c4ef;border-radius:14px;padding:20px;text-align:center;margin-bottom:14px">
+          <div style="font-size:2.5rem;margin-bottom:8px">🏦</div>
+          <div style="font-weight:700;font-size:1rem;color:var(--azul);margin-bottom:4px">Cartão de Débito</div>
+          <p style="font-size:.82rem;color:#555;line-height:1.6;margin-bottom:10px">Insira ou aproxime seu cartão na maquininha ao lado e siga as instruções do terminal.</p>
+          <div class="pix-valor" id="pagtoValorDebito">R$ 10,00</div>
+          <div id="tefStatusDebito" style="margin-top:12px;font-size:.8rem;font-weight:600;color:#555;min-height:20px"></div>
+        </div>
+        <button class="btn-totem btn-verde-t" id="btnIniciarTefDebito" onclick="iniciarTEF('debito')">
+          <span class="bt-icon">▶️</span>
+          <span class="bt-text"><span class="bt-title">Iniciar cobrança no terminal</span><span class="bt-sub">Aciona a maquininha automaticamente</span></span>
+        </button>
+        <button class="btn-totem btn-sec-t" id="btnConfirmarDebito" onclick="confirmarCartaoManual('debito')" style="display:none;margin-top:8px">
+          <span class="bt-icon">✅</span>
+          <span class="bt-text"><span class="bt-title">Pagamento aprovado — Confirmar</span><span class="bt-sub">Use se o terminal não comunicar automaticamente</span></span>
+        </button>
+      </div>
+
+      <button class="btn-totem btn-sec-t" onclick="cancelarPagamento()" style="margin-top:8px">
+        <span class="bt-icon">✕</span><span class="bt-text"><span class="bt-title">Cancelar</span></span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ TELA ACESSO LIBERADO ═══════════ -->
+<div id="screenSucesso" class="screen">
+  <div class="card">
+    <div class="card-body">
+      <div class="acesso-ok">
+        <span class="big-icon">✅</span>
+        <h2>Acesso Liberado!</h2>
+        <p id="sucessoNome" style="font-size:1rem;font-weight:700;color:var(--verde);margin:8px 0">—</p>
+        <p>A catraca foi desbloqueada.<br>Apresente-se para o scanner facial.</p>
+        <div style="background:var(--verde-suave);border:2px solid #a8d5b5;border-radius:12px;padding:16px;margin:16px 0;text-align:left">
+          <div style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--verde);margin-bottom:8px">Informações do acesso</div>
+          <div style="font-size:.84rem;color:#333;line-height:1.9">
+            📅 Válido até: <b>19h45 de hoje</b><br>
+            💳 Forma de pagamento: <b id="sucessoTipo">—</b><br>
+            ⏰ Entrada registrada: <b id="sucessoHora">—</b>
+          </div>
+        </div>
+        <p style="font-size:.78rem;color:#aaa;margin-top:8px">Esta tela reinicia automaticamente em <span id="sucessoCountdown">15</span>s</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ TELA ERRO / JÁ TEM ACESSO ═══════════ -->
+<div id="screenErro" class="screen">
+  <div class="card">
+    <div class="card-header" style="background:linear-gradient(135deg,#7a0d0d,var(--vermelho))">
+      <span class="icon" id="erroIcon">⚠️</span>
+      <h2 id="erroTitulo">Atenção</h2>
+      <p id="erroSubtitulo">—</p>
+    </div>
+    <div class="card-body">
+      <p id="erroMensagem" style="font-size:.9rem;color:#555;line-height:1.7;margin-bottom:20px">—</p>
+      <button class="btn-totem btn-verde-t" onclick="irPara('screenInicio')">
+        <span class="bt-icon">🏠</span>
+        <span class="bt-text"><span class="bt-title">Voltar ao início</span></span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ TECLADO VIRTUAL ═══════════ -->
+<div class="teclado-bg" id="tecladoBg">
+  <div class="teclado">
+    <div class="teclado-display">
+      <div>
+        <div class="teclado-label" id="tecladoLabel">Digite</div>
+        <div class="teclado-valor" id="tecladoValor">_</div>
+      </div>
+      <button class="tk apagar" onclick="tecladoApagar()" style="padding:10px 18px;border-radius:10px;font-size:1.4rem">⌫</button>
+    </div>
+    <div class="teclado-grid" id="tecladoGrid">
+      <!-- gerado por JS com embaralhamento -->
+    </div>
+    <div class="teclado-btns-extra">
+      <button class="tk cancelar-tk" onclick="fecharTeclado()">✕ Cancelar</button>
+      <button class="tk confirmar" onclick="confirmarTeclado()">✓ Confirmar</button>
+      <button class="tk especial" onclick="tecladoEspaco()">␣</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ IDLE OVERLAY ═══════════ -->
+<div class="idle-overlay" id="idleOverlay">
+  <span class="em">📚</span>
+  <h2>Ala dos Estudantes</h2>
+  <p>Educador Paiva Netto<br>Toque para iniciar</p>
+  <div class="countdown" id="idleCountdown">--</div>
+  <button onclick="resetarIdle()" style="background:var(--verde);border:none;border-radius:14px;color:#fff;padding:16px 40px;font-size:1rem;font-weight:700;cursor:pointer">
+    Toque para começar
+  </button>
+</div>
+
+<!-- ═══════════ BLOQUEIO ═══════════ -->
+<div class="bloqueio-overlay" id="bloqueioOverlay">
+  <span class="icon">🔒</span>
+  <h2>Acesso bloqueado</h2>
+  <p>Muitas tentativas inválidas de CPF.<br>Aguarde para tentar novamente.</p>
+  <div class="bloqueio-timer" id="bloqueioTimer">60</div>
+  <p style="color:#666;font-size:.8rem">segundos restantes</p>
+</div>
+
+<!-- POP-UP AVISO URGENTE -->
+<div class="popup-urgente" id="popupUrgente">
+  <div class="popup-urgente-box">
+    <span class="popup-urgente-icone">⚠️</span>
+    <div class="popup-urgente-titulo" id="popupUrgenteT">Aviso Urgente</div>
+    <div class="popup-urgente-msg" id="popupUrgenteMsg"></div>
+    <button class="popup-urgente-btn" onclick="fecharPopupUrgente()">✓ Entendido</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast-t" id="toastT"></div>
+
+<script>
+// ═══════════════════════════════════════════════════════════
+//  CONFIG
+// ═══════════════════════════════════════════════════════════
+const API_BASE = 'https://biblioteca-backend-v2-0.vercel.app';
+const IDLE_TIMEOUT   = 30000; // 30s sem interação → idle
+const IDLE_COUNTDOWN = 15;    // segundos no idle antes de limpar
+const BLOQUEIO_TENTATIVAS = 5;
+const BLOQUEIO_TEMPO = 60;    // segundos bloqueado
+
+// ═══════════════════════════════════════════════════════════
+//  ESTADO DA SESSÃO
+// ═══════════════════════════════════════════════════════════
+const sess = {
+  cpf: '',
+  nome: '',
+  usuario: null,
+  fotoDataUrl: null,
+  pagamentoId: null,
+  formaPagamento: 'pix',
+  novoUsuario: false,
+  aceiteTermos: false,
+};
+
+function limparSessao() {
+  sess.cpf = ''; sess.nome = ''; sess.usuario = null;
+  sess.fotoDataUrl = null; sess.pagamentoId = null;
+  sess.formaPagamento = 'pix'; sess.novoUsuario = false; sess.aceiteTermos = false;
+  // Limpa displays
+  ['cpfDisplay','cpfCadDisplay','nomeDisplay'].forEach(id => {
+    const el = document.getElementById(id);
+    if(el){ el.textContent = el.id==='nomeDisplay'?'Toque para digitar seu nome':'Toque para digitar seu CPF'; el.classList.add('placeholder');}
+  });
+  document.getElementById('cpfErro').style.display='none';
+  if(_totemStream){ _totemStream.getTracks().forEach(t=>t.stop()); _totemStream=null; }
+  document.getElementById('fotoPreviewT').style.display='none';
+  document.getElementById('cameraPlaceholderT').style.display='flex';
+  document.getElementById('btnAbrirCameraT').style.display='flex';
+  document.getElementById('fotoFeitaCtrlsT').style.display='none';
+  document.getElementById('cameraCtrlsT').style.display='none';
+  document.getElementById('videoT').style.display='none';
+  document.getElementById('cameraOvalT').style.display='none';
+  document.getElementById('cameraStatusT').style.display='none';
+  // Reset etapas cadastro
+  cadIrEtapa(1);
+  // Reset aceite
+  sess.aceiteTermos=false;
+  document.getElementById('aceiteBox').textContent='';
+  document.getElementById('btnCadFinalizar').disabled=true;
+  document.getElementById('btnCadFinalizar').style.opacity='.5';
+  // Reset pagamento
+  clearInterval(_pixTimerT);
+  clearInterval(_pollStatusT);
+  clearInterval(_tefPollInterval);
+  document.getElementById('secaoPix').style.display='block';
+  if(document.getElementById('secaoCredito')) document.getElementById('secaoCredito').style.display='none';
+  if(document.getElementById('secaoDebito'))  document.getElementById('secaoDebito').style.display='none';
+  if(document.getElementById('pixCarregandoT')) document.getElementById('pixCarregandoT').style.display='block';
+  if(document.getElementById('pixConteudoT'))   document.getElementById('pixConteudoT').style.display='none';
+  if(document.getElementById('pixManualT'))     document.getElementById('pixManualT').style.display='none';
+  ['tefStatusCredito','tefStatusDebito'].forEach(id=>{ const el=document.getElementById(id); if(el) el.textContent=''; });
+  ['btnConfirmarCredito','btnConfirmarDebito'].forEach(id=>{ const el=document.getElementById(id); if(el) el.style.display='none'; });
+}
+
+// ═══════════════════════════════════════════════════════════
+//  NAVEGAÇÃO
+// ═══════════════════════════════════════════════════════════
+function irPara(screenId) {
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('ativo'));
+  document.getElementById(screenId).classList.add('ativo');
+  resetarIdleTimer();
+}
+
+// ═══════════════════════════════════════════════════════════
+//  CLOCK + VAGAS
+// ═══════════════════════════════════════════════════════════
+function atualizarClock(){
+  const now=new Date();
+  document.getElementById('hdrClock').textContent=
+    now.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+}
+setInterval(atualizarClock,1000); atualizarClock();
+
+async function atualizarVagasHdr(){
+  try{
+    const r=await fetch(API_BASE+'/api/vagas');
+    const d=await r.json();
+    const hdr=document.getElementById('hdrVagas');
+    hdr.textContent=`${d.livres} vagas livres`;
+    hdr.parentElement.style.borderColor=d.lotado?'rgba(192,57,43,.6)':'rgba(45,145,85,.4)';
+    hdr.parentElement.style.background=d.lotado?'rgba(192,57,43,.25)':'rgba(45,145,85,.25)';
+    hdr.style.color=d.lotado?'#f5b5a8':'#7dffb3';
+  }catch(e){}
+}
+atualizarVagasHdr(); setInterval(atualizarVagasHdr, 30000);
+
+// ── Vagas na tela inicial ─────────────────────────────────────
+async function atualizarVagasInicio() {
+  try {
+    const r = await fetch(API_BASE + '/api/vagas');
+    const d = await r.json();
+    document.getElementById('inicioVagasNum').textContent   = d.livres ?? '—';
+    document.getElementById('inicioVagasTotal').textContent = `de ${d.total ?? '—'} vagas`;
+    const statusEl = document.getElementById('inicioVagasStatus');
+    if (d.lotado) {
+      statusEl.textContent = '🔴 Lotado';
+      statusEl.style.background = 'var(--vermelho)';
+      document.getElementById('inicioVagasCard').style.background = 'linear-gradient(135deg,#fdecea,#f8d0cc)';
+      document.getElementById('inicioVagasCard').style.borderColor = '#e8a09a';
+    } else if (d.livres <= 10) {
+      statusEl.textContent = '🟡 Quase lotado';
+      statusEl.style.background = '#e67e22';
+    } else {
+      statusEl.textContent = '🟢 Vagas disponíveis';
+      statusEl.style.background = 'var(--verde)';
+    }
+    const agora = new Date();
+    document.getElementById('inicioUltimaAtualizacao').textContent =
+      'Atualizado às ' + agora.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+  } catch(e) {}
+}
+atualizarVagasInicio();
+setInterval(atualizarVagasInicio, 30000);
+
+// ── QR Code simples para o app ────────────────────────────────
+(function gerarQrCodeTotem() {
+  // QR Code simplificado via API pública (sem dependência)
+  const url = encodeURIComponent('https://biblioteca-backend-v2-0.vercel.app');
+  const img = new Image();
+  img.onload = () => {
+    const canvas = document.getElementById('totemQrCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0, 72, 72);
+  };
+  img.src = `https://api.qrserver.com/v1/create-qr-code/?size=72x72&data=${url}&bgcolor=ffffff&color=1a6b3a&margin=4`;
+})();
+
+// ── Termo dinâmico ────────────────────────────────────────────
+async function carregarTermoT() {
+  try {
+    const r = await fetch(API_BASE + '/api/configuracoes');
+    const d = await r.json();
+    const cfg = {};
+    (d.configuracoes || []).forEach(c => { cfg[c.chave] = c.valor; });
+    const el = document.getElementById('termoConteudoT');
+    if (el && cfg.termo_conteudo) {
+      el.innerHTML = cfg.termo_conteudo;
+    } else if (el) {
+      el.innerHTML = `
+        <p><b>Objetivo:</b> Promover um ambiente respeitoso de aprendizado e pesquisa, de modo seguro e acolhedor para todos.</p><br>
+        <p><b>COMPORTAMENTO:</b> Proibido conversas, barulhos, uso de aparelhos que causem incômodo. Horário: 8h às 19h45.</p><br>
+        <p><b>NÃO É PERMITIDO:</b> Conversar · Reservar lugar · Namorar · Falar ao telefone · Reproduzir mídias sem fone · Alimentos (exceto café e água).</p><br>
+        <p><b>VESTIMENTAS:</b> Roupas que cubram ombros e barriga, sem transparências ou decotes. Saias/vestidos abaixo do joelho. Sem shorts.</p><br>
+        <p><b>PENALIDADES:</b> Advertência, suspensão temporária (até 90 dias) ou definitiva.</p><br>
+        <p><b>DO ACESSO:</b> Pagamento garante acesso pelo dia (até 19h45). Via reconhecimento facial.</p><br>
+        <p><b>🔒 LGPD:</b> Coletamos nome, CPF e foto exclusivamente para controle de acesso. Dados não são compartilhados com terceiros.</p>`;
+    }
+  } catch(e) {}
+}
+carregarTermoT();
+
+// ═══════════════════════════════════════════════════════════
+//  IDLE SYSTEM
+// ═══════════════════════════════════════════════════════════
+let _idleTimer=null, _idleCountTimer=null;
+
+function resetarIdleTimer(){
+  clearTimeout(_idleTimer);
+  clearInterval(_idleCountTimer);
+  document.getElementById('idleOverlay').classList.remove('ativo');
+  _idleTimer=setTimeout(mostrarIdle, IDLE_TIMEOUT);
+}
+
+function mostrarIdle(){
+  const overlay=document.getElementById('idleOverlay');
+  overlay.classList.add('ativo');
+  let c=IDLE_COUNTDOWN;
+  document.getElementById('idleCountdown').textContent=c;
+  _idleCountTimer=setInterval(()=>{
+    c--;
+    document.getElementById('idleCountdown').textContent=c;
+    if(c<=0){
+      clearInterval(_idleCountTimer);
+      limparSessao();
+      irPara('screenInicio');
+    }
+  },1000);
+}
+
+function resetarIdle(){
+  clearInterval(_idleCountTimer);
+  document.getElementById('idleOverlay').classList.remove('ativo');
+  resetarIdleTimer();
+}
+
+// Captura qualquer interação para resetar timer
+['touchstart','mousedown','keydown'].forEach(ev=>{
+  document.addEventListener(ev, resetarIdleTimer, {passive:true});
+});
+resetarIdleTimer();
+
+// ═══════════════════════════════════════════════════════════
+//  BLOQUEIO POR TENTATIVAS
+// ═══════════════════════════════════════════════════════════
+let _tentativasInvalidas=0, _bloqueioTimer=null;
+
+function registrarTentativaInvalida(){
+  _tentativasInvalidas++;
+  if(_tentativasInvalidas>=BLOQUEIO_TENTATIVAS){
+    ativarBloqueio();
+  }
+}
+
+function ativarBloqueio(){
+  const overlay=document.getElementById('bloqueioOverlay');
+  overlay.classList.add('ativo');
+  let t=BLOQUEIO_TEMPO;
+  document.getElementById('bloqueioTimer').textContent=t;
+  _bloqueioTimer=setInterval(()=>{
+    t--;
+    document.getElementById('bloqueioTimer').textContent=t;
+    if(t<=0){
+      clearInterval(_bloqueioTimer);
+      _tentativasInvalidas=0;
+      overlay.classList.remove('ativo');
+      limparSessao();
+      irPara('screenInicio');
+    }
+  },1000);
+}
+
+// ═══════════════════════════════════════════════════════════
+//  TECLADO VIRTUAL
+// ═══════════════════════════════════════════════════════════
+let _tecladoAlvo='', _tecladoValorBruto='', _tecladoTipo='texto';
+const NUMS_BASE=[1,2,3,4,5,6,7,8,9,0];
+
+function embaralharArray(arr){
+  const a=[...arr];
+  for(let i=a.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
+
+function abrirTeclado(alvo){
+  _tecladoAlvo=alvo;
+  _tecladoValorBruto='';
+  const isNum=alvo==='cpf'||alvo==='cpfCad';
+  _tecladoTipo=isNum?'numerico':'texto';
+
+  // Label do teclado
+  const labels={cpf:'Digite seu CPF',cpfCad:'Digite seu CPF',nome:'Digite seu nome completo'};
+  document.getElementById('tecladoLabel').textContent=labels[alvo]||'Digite';
+  document.getElementById('tecladoValor').textContent='_';
+
+  // Gera grid
+  const grid=document.getElementById('tecladoGrid');
+  grid.innerHTML='';
+  if(isNum){
+    // Embaralha números para segurança
+    const nums=embaralharArray(NUMS_BASE);
+    nums.forEach(n=>{
+      const b=document.createElement('button');
+      b.className='tk'; b.textContent=n;
+      b.onclick=()=>tecladoDigito(String(n));
+      grid.appendChild(b);
+    });
+    // Botão extra vazio (já tem apagar no display)
+    ['',''].forEach(()=>{const d=document.createElement('div');grid.appendChild(d);});
+  } else {
+    // Teclado alfabético simplificado — linhas QWERTY
+    const linhas=[
+      ['Q','W','E','R','T','Y','U','I','O','P'],
+      ['A','S','D','F','G','H','J','K','L'],
+      ['Z','X','C','V','B','N','M']
+    ];
+    grid.style.gridTemplateColumns='repeat(10,1fr)';
+    linhas.forEach(linha=>{
+      linha.forEach(l=>{
+        const b=document.createElement('button');
+        b.className='tk';b.style.fontSize='1rem';b.style.padding='12px 4px';
+        b.textContent=l;
+        b.onclick=()=>tecladoDigito(l);
+        grid.appendChild(b);
+      });
+      // Preenche linha com espaços
+      const resto=10-linha.length;
+      for(let i=0;i<resto;i++){const d=document.createElement('div');grid.appendChild(d);}
+    });
+    grid.style.gridTemplateColumns='repeat(10,1fr)';
+  }
+
+  document.getElementById('tecladoBg').classList.add('ativo');
+  resetarIdleTimer();
+}
+
+function tecladoDigito(v){
+  const isNum=_tecladoTipo==='numerico';
+  const max=isNum?11:100;
+  if(_tecladoValorBruto.length>=max) return;
+  _tecladoValorBruto+=v;
+  atualizarDisplayTeclado();
+  resetarIdleTimer();
+}
+
+function tecladoApagar(){
+  _tecladoValorBruto=_tecladoValorBruto.slice(0,-1);
+  atualizarDisplayTeclado();
+}
+
+function tecladoEspaco(){
+  if(_tecladoTipo==='texto') tecladoDigito(' ');
+}
+
+function atualizarDisplayTeclado(){
+  const isNum=_tecladoTipo==='numerico';
+  let display;
+  if(isNum){
+    // Mascara CPF: ***.***.***-**
+    const raw=_tecladoValorBruto.slice(0,11);
+    if(raw.length<=3) display='•'.repeat(raw.length);
+    else if(raw.length<=6) display='•••.'+'•'.repeat(raw.length-3);
+    else if(raw.length<=9) display='•••.•••.'+'•'.repeat(raw.length-6);
+    else display='•••.•••.•••-'+'•'.repeat(raw.length-9);
+  } else {
+    // Nome: primeiras 2 letras + asteriscos
+    const raw=_tecladoValorBruto;
+    if(raw.length<=2) display=raw;
+    else display=raw.slice(0,2)+'*'.repeat(Math.min(raw.length-2,8))+'…';
+  }
+  document.getElementById('tecladoValor').textContent=display||'_';
+}
+
+function confirmarTeclado(){
+  const val=_tecladoValorBruto.trim();
+  if(!val){ fecharTeclado(); return; }
+
+  if(_tecladoAlvo==='cpf'){
+    const cpfLimpo=val.replace(/\D/g,'');
+    if(cpfLimpo.length!==11){ toastT('⚠️ CPF deve ter 11 dígitos'); return; }
+    sess.cpf=cpfLimpo;
+    // Mostra CPF mascarado no display
+    const d=document.getElementById('cpfDisplay');
+    d.textContent='•••.'+'•••.'+cpfLimpo.slice(6,9)+'-'+cpfLimpo.slice(9);
+    d.classList.remove('placeholder');
+  }
+  else if(_tecladoAlvo==='cpfCad'){
+    const cpfLimpo=val.replace(/\D/g,'');
+    if(cpfLimpo.length!==11){ toastT('⚠️ CPF deve ter 11 dígitos'); return; }
+    sess.cpf=cpfLimpo;
+    const d=document.getElementById('cpfCadDisplay');
+    d.textContent='•••.'+'•••.'+cpfLimpo.slice(6,9)+'-'+cpfLimpo.slice(9);
+    d.classList.remove('placeholder');
+  }
+  else if(_tecladoAlvo==='nome'){
+    if(val.length<3){ toastT('⚠️ Nome muito curto'); return; }
+    sess.nome=val;
+    // Exibe parcialmente: "Maurício G***"
+    const partes=val.trim().split(' ');
+    const prim=partes[0];
+    const seg=partes[1]||'';
+    const display=seg ? `${prim} ${seg[0]}${'*'.repeat(Math.min(seg.length-1,3))}` : prim;
+    const d=document.getElementById('nomeDisplay');
+    d.textContent=display;
+    d.classList.remove('placeholder');
+  }
+
+  fecharTeclado();
+}
+
+function fecharTeclado(){
+  document.getElementById('tecladoBg').classList.remove('ativo');
+}
+
+// ═══════════════════════════════════════════════════════════
+//  BUSCA CPF (USUÁRIO EXISTENTE)
+// ═══════════════════════════════════════════════════════════
+async function buscarCpf(){
+  const erroEl=document.getElementById('cpfErro');
+  erroEl.style.display='none';
+  if(!sess.cpf||sess.cpf.length!==11){
+    document.getElementById('cpfErroMsg').textContent='Digite seu CPF completo antes de continuar.';
+    erroEl.style.display='flex';
+    return;
+  }
+  const btn=document.getElementById('btnBuscarCpf');
+  btn.innerHTML='<span class="spinner-t"></span><span class="bt-text"><span class="bt-title">Buscando...</span></span>';
+  btn.disabled=true;
+  try{
+    const r=await fetch(`${API_BASE}/api/usuarios?acao=buscar-cpf&cpf=${sess.cpf}`);
+    const data=await r.json();
+    const usuario=data.usuario||null;
+
+    if(!usuario){
+      registrarTentativaInvalida();
+      document.getElementById('cpfErroMsg').textContent='CPF não encontrado. Você pode realizar o cadastro na opção "Primeiro acesso".';
+      erroEl.style.display='flex';
+      return;
+    }
+    if(!usuario.ativo){
+      mostrarErroTela('🚫','Conta suspensa','Seu cadastro está suspenso.','Entre em contato com a recepção: (61) 3114-1027.');
+      return;
+    }
+    _tentativasInvalidas=0; // Reset tentativas
+    sess.usuario=usuario;
+    sess.novoUsuario=false;
+    irParaPagamento();
+  }catch(e){
+    document.getElementById('cpfErroMsg').textContent='Erro de conexão. Tente novamente.';
+    erroEl.style.display='flex';
+  }finally{
+    btn.innerHTML='<span class="bt-icon">🔍</span><span class="bt-text"><span class="bt-title">Buscar meu cadastro</span><span class="bt-sub">Avançar para pagamento</span></span>';
+    btn.disabled=false;
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+//  CADASTRO — ETAPAS
+// ═══════════════════════════════════════════════════════════
+function cadIrEtapa(n){
+  [1,2,3].forEach(i=>{
+    document.getElementById(`cadEtapa${i}T`).style.display=i===n?'block':'none';
+    const bar=document.getElementById(`stepBar${i}`);
+    if(bar){
+      bar.className='step'+(i<n?' done':i===n?' active':'');
+    }
+  });
+  const labels={1:'Etapa 1 de 3 — Dados pessoais',2:'Etapa 2 de 3 — Foto facial',3:'Etapa 3 de 3 — Aceite e pagamento'};
+  document.getElementById('stepLabel').textContent=labels[n]||'';
+}
+
+function cadAvancarEtapa1(){
+  if(!sess.nome||sess.nome.length<3){toastT('⚠️ Informe seu nome completo'); return;}
+  if(!sess.cpf||sess.cpf.length!==11){toastT('⚠️ Informe seu CPF'); return;}
+  cadIrEtapa(2);
+}
+
+async function cadAvancarEtapa2(){
+  if(!sess.fotoDataUrl){toastT('⚠️ Capture a foto primeiro'); return;}
+  cadIrEtapa(3);
+}
+
+function voltarEtapa2T(){cadIrEtapa(2);}
+
+function toggleAceite(){
+  sess.aceiteTermos=!sess.aceiteTermos;
+  const box=document.getElementById('aceiteBox');
+  box.textContent=sess.aceiteTermos?'✓':'';
+  box.style.background=sess.aceiteTermos?'var(--verde)':'#fff';
+  box.style.color='#fff';
+  const btn=document.getElementById('btnCadFinalizar');
+  btn.disabled=!sess.aceiteTermos;
+  btn.style.opacity=sess.aceiteTermos?'1':'.5';
+}
+
+async function cadFinalizar(){
+  if(!sess.aceiteTermos){toastT('⚠️ Aceite o regulamento para continuar');return;}
+  const btn=document.getElementById('btnCadFinalizar');
+  btn.disabled=true;
+  btn.innerHTML='<span class="spinner-t"></span><span class="bt-text"><span class="bt-title">Cadastrando...</span></span>';
+  try{
+    // Verifica se CPF já existe
+    const rCheck=await fetch(`${API_BASE}/api/usuarios?acao=buscar-cpf&cpf=${sess.cpf}`);
+    const dCheck=await rCheck.json();
+    const existe=dCheck.usuario||null;
+    if(existe){
+      sess.usuario=existe;
+      sess.novoUsuario=false;
+      toastT('ℹ️ CPF já cadastrado — prosseguindo para pagamento');
+      irParaPagamento();
+      return;
+    }
+    // Cadastra novo
+    const r=await fetch(`${API_BASE}/api/usuarios?acao=cadastrar`,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        nome:sess.nome, cpf:sess.cpf, tipo:'aluno',
+        termo_aceito_em:new Date().toISOString(),
+        foto_base64:sess.fotoDataUrl||null,
+        origem:'totem'
+      })
+    });
+    const data=await r.json();
+    if(!r.ok) throw new Error(data.erro||'Erro ao cadastrar');
+    sess.usuario=data.usuario;
+    sess.novoUsuario=true;
+    irParaPagamento();
+  }catch(e){
+    toastT('❌ '+e.message);
+    btn.disabled=false;
+    btn.innerHTML='<span class="bt-icon">💳</span><span class="bt-text"><span class="bt-title">Aceitar e ir para Pagamento</span><span class="bt-sub">Finalizar cadastro e pagar</span></span>';
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+//  CÂMERA — TOTEM
+// ═══════════════════════════════════════════════════════════
+let _totemStream=null;
+
+async function abrirCameraT(){
+  try{
+    _totemStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user',width:{ideal:1280},height:{ideal:720}},audio:false});
+    const video=document.getElementById('videoT');
+    video.srcObject=_totemStream;
+    video.style.display='block';
+    document.getElementById('cameraPlaceholderT').style.display='none';
+    document.getElementById('cameraOvalT').style.display='flex';
+    document.getElementById('cameraStatusT').style.display='block';
+    document.getElementById('cameraCtrlsT').style.display='block';
+    document.getElementById('btnAbrirCameraT').style.display='none';
+  }catch(e){
+    toastT('⚠️ Câmera não disponível neste dispositivo');
+  }
+}
+
+function fecharCameraT(){
+  _totemStream?.getTracks().forEach(t=>t.stop()); _totemStream=null;
+  document.getElementById('videoT').style.display='none';
+  document.getElementById('cameraOvalT').style.display='none';
+  document.getElementById('cameraStatusT').style.display='none';
+  document.getElementById('cameraCtrlsT').style.display='none';
+  document.getElementById('btnAbrirCameraT').style.display='flex';
+}
+
+function capturarFotoT(){
+  const video=document.getElementById('videoT');
+  const canvas=document.getElementById('canvasT');
+  canvas.width=video.videoWidth||640;
+  canvas.height=video.videoHeight||480;
+  canvas.getContext('2d').drawImage(video,0,0);
+  sess.fotoDataUrl=canvas.toDataURL('image/jpeg',0.85);
+  document.getElementById('fotoPreviewT').src=sess.fotoDataUrl;
+  document.getElementById('fotoPreviewT').style.display='block';
+  document.getElementById('videoT').style.display='none';
+  document.getElementById('cameraOvalT').style.display='none';
+  document.getElementById('cameraStatusT').style.display='none';
+  document.getElementById('cameraCtrlsT').style.display='none';
+  document.getElementById('fotoFeitaCtrlsT').style.display='block';
+  document.getElementById('btnAbrirCameraT').style.display='none';
+  _totemStream?.getTracks().forEach(t=>t.stop()); _totemStream=null;
+}
+
+function refazerFotoT(){
+  sess.fotoDataUrl=null;
+  document.getElementById('fotoPreviewT').style.display='none';
+  document.getElementById('fotoFeitaCtrlsT').style.display='none';
+  document.getElementById('cameraPlaceholderT').style.display='flex';
+  document.getElementById('btnAbrirCameraT').style.display='flex';
+}
+
+// ═══════════════════════════════════════════════════════════
+//  PAGAMENTO — FLUXO AUTOMÁTICO
+//  Pix: gateway gera QR → webhook confirma → catraca libera
+//  Cartão: TEF automático ou confirmação manual como fallback
+// ═══════════════════════════════════════════════════════════
+let _pixTimerT=null, _pixSegundosT=300, _pollStatusT=null, _tefPollInterval=null;
+
+async function irParaPagamento(){
+  const u=sess.usuario;
+  const partes=(u.nome||sess.nome).split(' ');
+  const display=partes.length>1?`${partes[0]} ${partes[1][0]}***`:partes[0];
+  document.getElementById('pagtoUserInfo').textContent=`Olá, ${display}`;
+
+  // Carrega vagas e configurações em paralelo
+  try{
+    const [rv, rc] = await Promise.all([
+      fetch(API_BASE+'/api/vagas').then(r=>r.json()),
+      fetch(`${API_BASE}/api/configuracoes`).then(r=>r.json())
+    ]);
+
+    if(rv.lotado){
+      mostrarErroTela('🔴','Sala lotada','Não há vagas disponíveis no momento.','Aguarde a saída de outro usuário ou tente mais tarde.');
+      return;
+    }
+
+    // Monta mapa chave→valor
+    const cfg={};
+    (rc.configuracoes||[]).forEach(c=>{ cfg[c.chave]=c.valor; });
+    const valor = cfg.valor_diaria
+      ? parseFloat(String(cfg.valor_diaria).replace(',','.')).toFixed(2).replace('.',',')
+      : '10,00';
+
+    ['pagtoValorT','pagtoValorT2','pagtoValorCredito','pagtoValorDebito'].forEach(id=>{
+      const el=document.getElementById(id); if(el) el.textContent=`R$ ${valor}`;
+    });
+  }catch(e){}
+
+  selecionarFormaPagamento('pix');
+  irPara('screenPagamento');
+}
+
+// ── Seleciona forma e inicia o fluxo correspondente ────────
+function selecionarFormaPagamento(tipo){
+  sess.formaPagamento=tipo;
+  clearInterval(_pollStatusT);
+  clearInterval(_pixTimerT);
+
+  document.getElementById('secaoPix').style.display     = tipo==='pix'     ? 'block' : 'none';
+  document.getElementById('secaoCredito').style.display = tipo==='credito' ? 'block' : 'none';
+  document.getElementById('secaoDebito').style.display  = tipo==='debito'  ? 'block' : 'none';
+
+  ['btnEscolhePix','btnEscolheCredito','btnEscolheDebito'].forEach(id=>{
+    const el=document.getElementById(id); if(!el) return;
+    const t=id.replace('btnEscolhe','').toLowerCase();
+    el.className='btn-totem '+(t===tipo?'btn-azul-t':'btn-sec-t');
+    el.style.flex='1'; el.style.padding='14px'; el.style.marginBottom='0';
+  });
+
+  const val=document.getElementById('pagtoValorT')?.textContent||'R$ 10,00';
+  ['pagtoValorCredito','pagtoValorDebito'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=val;});
+
+  if(tipo==='pix') _iniciarCobrancaPixTotem();
+}
+
+// ── Cria cobrança Pix no gateway e exibe QR Code ──────────
+async function _iniciarCobrancaPixTotem(){
+  document.getElementById('pixCarregandoT').style.display = 'block';
+  document.getElementById('pixConteudoT').style.display   = 'none';
+  document.getElementById('pixManualT').style.display     = 'none';
+
+  try{
+    const r=await fetch(`${API_BASE}/api/pagamentos?acao=criar-cobranca-pix`,{
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({usuario_id:sess.usuario.id,origem:'totem'})
+    });
+    const d=await r.json();
+
+    if(d.status==='confirmado'){
+      mostrarSucesso('pix'); return;
+    }
+
+    document.getElementById('pixCarregandoT').style.display='none';
+
+    if(d.gateway==='manual'||!d.copia_cola){
+      // Sem gateway — modo manual
+      document.getElementById('pixManualT').style.display='block';
+      document.getElementById('pagtoChaveT').textContent=d.copia_cola||'—';
+      sess.pagamentoId=d.pagamento_id;
+      _iniciarTimerTotem('pixTimerCount2');
+      return;
+    }
+
+    // Gateway — exibe QR Code
+    document.getElementById('pixConteudoT').style.display='block';
+    document.getElementById('pagtoCopiaCola').textContent=d.copia_cola||'—';
+
+    const qrWrap=document.getElementById('pixQrWrapT');
+    if(d.qr_code){
+      const src=d.qr_code.startsWith('data:')?d.qr_code:`data:image/png;base64,${d.qr_code}`;
+      qrWrap.innerHTML=`<img src="${src}" style="width:100%;height:100%;object-fit:contain">`;
+    }
+
+    sess.pagamentoId=d.pagamento_id;
+    _pixSegundosT=d.expiracao_seg||300;
+    _iniciarTimerTotem('pixTimerCount');
+    _iniciarPollStatusTotem();
+
+  }catch(e){
+    document.getElementById('pixCarregandoT').style.display='none';
+    document.getElementById('pixManualT').style.display='block';
+    toastT('⚠️ Erro ao gerar cobrança — modo manual ativo');
+    sess.pagamentoId=null;
+  }
+}
+
+// ── Timer countdown ────────────────────────────────────────
+function _iniciarTimerTotem(elId){
+  clearInterval(_pixTimerT);
+  _pixSegundosT=300;
+  function atualizar(){
+    const m=Math.floor(_pixSegundosT/60),s=_pixSegundosT%60;
+    const el=document.getElementById(elId);
+    if(el) el.textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+    if(_pixSegundosT<=0){ clearInterval(_pixTimerT); clearInterval(_pollStatusT); cancelarPagamento(); toastT('⏰ Tempo expirado.'); }
+    _pixSegundosT--;
+  }
+  atualizar();
+  _pixTimerT=setInterval(atualizar,1000);
+}
+
+// ── Poll automático de status ──────────────────────────────
+function _iniciarPollStatusTotem(){
+  clearInterval(_pollStatusT);
+  _pollStatusT=setInterval(async()=>{
+    if(!sess.usuario) return;
+    try{
+      const r=await fetch(`${API_BASE}/api/pagamentos?acao=status-hoje&usuario_id=${sess.usuario.id}`);
+      const d=await r.json();
+      if(d.status==='confirmado'){
+        clearInterval(_pollStatusT); clearInterval(_pixTimerT);
+        mostrarSucesso(sess.formaPagamento||'pix');
+      }
+    }catch(e){}
+  },3000);
+}
+
+// ── Confirmação manual Pix (fallback sem gateway) ──────────
+async function confirmarPixManualTotem(){
+  const btn=document.getElementById('btnPixManualT');
+  btn.disabled=true;
+  btn.innerHTML='<span class="spinner-t"></span><span class="bt-text"><span class="bt-title">Confirmando...</span></span>';
+  try{
+    const r=await fetch(`${API_BASE}/api/pagamentos?acao=confirmar-direto-manual`,{
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({usuario_id:sess.usuario.id,tipo:'pix',origem:'totem_manual'})
+    });
+    const d=await r.json();
+    if(!r.ok&&r.status!==409) throw new Error(d.erro||'Erro');
+    clearInterval(_pollStatusT); clearInterval(_pixTimerT);
+    mostrarSucesso('pix');
+  }catch(e){
+    toastT('❌ '+e.message);
+    btn.disabled=false;
+    btn.innerHTML='<span class="bt-icon">✅</span><span class="bt-text"><span class="bt-title">Já paguei — Confirmar</span></span>';
+  }
+}
+
+function cancelarPagamento(){
+  clearInterval(_pixTimerT);
+  clearInterval(_pollStatusT);
+  clearInterval(_tefPollInterval);
+  limparSessao();
+  irPara('screenInicio');
+}
+
+// ═══════════════════════════════════════════════════════════
+//  SUCESSO
+// ═══════════════════════════════════════════════════════════
+function mostrarSucesso(tipo){
+  clearInterval(_pixTimerT); clearInterval(_pollStatusT); clearInterval(_tefPollInterval);
+  const u=sess.usuario;
+  const partes=(u.nome||sess.nome).split(' ');
+  const display=partes.length>1?`${partes[0]} ${partes[1][0]}***`:partes[0];
+  document.getElementById('sucessoNome').textContent=display;
+  document.getElementById('sucessoTipo').textContent=tipo==='pix'?'💠 Pix':'💳 Cartão';
+  document.getElementById('sucessoHora').textContent=new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+  irPara('screenSucesso');
+  // Conta regressiva para reiniciar
+  let c=15;
+  document.getElementById('sucessoCountdown').textContent=c;
+  const t=setInterval(()=>{
+    c--;
+    document.getElementById('sucessoCountdown').textContent=c;
+    if(c<=0){ clearInterval(t); limparSessao(); irPara('screenInicio'); }
+  },1000);
+}
+
+// ═══════════════════════════════════════════════════════════
+//  TELA DE ERRO
+// ═══════════════════════════════════════════════════════════
+function mostrarErroTela(icon,titulo,subtitulo,msg){
+  document.getElementById('erroIcon').textContent=icon;
+  document.getElementById('erroTitulo').textContent=titulo;
+  document.getElementById('erroSubtitulo').textContent=subtitulo;
+  document.getElementById('erroMensagem').textContent=msg;
+  irPara('screenErro');
+}
+
+// ═══════════════════════════════════════════════════════════
+//  TOAST
+// ═══════════════════════════════════════════════════════════
+function toastT(msg,dur=3000){
+  const t=document.getElementById('toastT');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),dur);
+}
+
+// ═══════════════════════════════════════════════════════════
+//  AVISOS URGENTES — pop-up no totem
+// ═══════════════════════════════════════════════════════════
+let _ultimoAvisoUrgenteId = null;
+
+async function verificarAvisosUrgentesT(){
+  try{
+    const r=await fetch(`${API_BASE}/api/avisos`);
+    const d=await r.json();
+    const urgentes=(d.avisos||[]).filter(a=>a.tipo==='urgente');
+    if(!urgentes.length) return;
+    const aviso=urgentes[0];
+    // Só mostra se for diferente do último exibido (evita repetição em loop)
+    if(aviso.id===_ultimoAvisoUrgenteId) return;
+    _ultimoAvisoUrgenteId=aviso.id;
+    document.getElementById('popupUrgenteT').textContent=aviso.titulo||'Aviso Urgente';
+    document.getElementById('popupUrgenteMsg').textContent=aviso.conteudo||'';
+    document.getElementById('popupUrgente').classList.add('ativo');
+  }catch(e){}
+}
+
+function fecharPopupUrgente(){
+  document.getElementById('popupUrgente').classList.remove('ativo');
+  resetarIdleTimer();
+}
+
+// Verifica avisos ao iniciar e a cada 3 minutos
+verificarAvisosUrgentesT();
+setInterval(verificarAvisosUrgentesT, 180000);
+
+// ═══════════════════════════════════════════════════════════
+//  BLOQUEIO DE CONTEXTO (MODO KIOSK)
+// ═══════════════════════════════════════════════════════════
+document.addEventListener('contextmenu',e=>e.preventDefault());
+document.addEventListener('keydown',e=>{
+  // Bloqueia F5, F11, Alt+F4, Ctrl+W, etc.
+  if(['F5','F11','F1','F3'].includes(e.key)) e.preventDefault();
+  if(e.altKey&&(e.key==='F4'||e.key==='Tab')) e.preventDefault();
+  if(e.ctrlKey&&['w','r','p','s','a','f','j','u'].includes(e.key.toLowerCase())) e.preventDefault();
+});
+// Desabilita drag
+document.addEventListener('dragstart',e=>e.preventDefault());
+</script>
+</body>
+</html>
