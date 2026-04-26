@@ -1,7 +1,7 @@
 // api/configuracoes.js
+// GET  /api/configuracoes?acao=ping → verifica saúde da API
 // GET  /api/configuracoes           → lista configs públicas
 // POST /api/configuracoes           → salva config (admin)
-
 const supabase = require('../lib/supabase');
 const { soAdmin } = require('../middleware/auth');
 
@@ -11,11 +11,18 @@ module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   if (req.method === 'OPTIONS') return res.status(200).end();
 
+  const { acao } = req.query;
+
+  // ── Ping (absorvido do ping.js) ──────────────────────────────
+  if (acao === 'ping') {
+    return res.status(200).json({ ping: 'ok', supabase: !!process.env.SUPABASE_URL });
+  }
+
   if (req.method === 'GET') {
     const { data } = await supabase
       .from('configuracoes')
       .select('chave, valor')
-      .not('chave', 'in', '("controlid_token","senha_admin","senha_recepcao")');
+      .not('chave', 'in', '("controlid_token","senha_admin","senha_recepcao","cron_token","gateway_chave")');
     return res.status(200).json({ configuracoes: data || [] });
   }
 
