@@ -3978,14 +3978,14 @@ ${u.foto_url ? `
     <h3 id="modalAEtitulo">🎟️ Novo Acesso Especial</h3>
     <input type="hidden" id="aeId">
     <div class="fg" style="margin-top:14px">
-      <label>Usuário (busca por nome ou CPF)</label>
+      <label for="aeBusca">Usuário (busca por nome ou CPF)</label>
       <input type="text" id="aeBusca" placeholder="Digite nome ou CPF..." oninput="buscarUsuarioAE(this.value)">
       <div id="aeBuscaResultados" style="margin-top:6px"></div>
       <input type="hidden" id="aeUsuarioId">
       <div id="aeUsuarioSelecionado" style="display:none;background:var(--verde-suave);border:1.5px solid #a8d5b5;border-radius:8px;padding:9px 12px;margin-top:6px;font-size:.82rem;color:var(--verde-esc)"></div>
     </div>
     <div class="fg">
-      <label>Perfil</label>
+      <label for="aePerfil">Perfil</label>
       <select id="aePerfil" onchange="atualizarOcupaVagaAE()">
         <option value="funcionario">👔 Funcionário</option>
         <option value="voluntario">🤝 Voluntário</option>
@@ -3996,11 +3996,11 @@ ${u.foto_url ? `
       </select>
     </div>
     <div class="fg">
-      <label>Motivo / Observação</label>
+      <label for="aeMotivo">Motivo / Observação</label>
       <input type="text" id="aeMotivo" placeholder="Ex: Recepcionista turno manhã">
     </div>
     <div class="fg">
-      <label>Validade</label>
+      <label for="aeValidadeTipo">Validade</label>
       <select id="aeValidadeTipo" onchange="toggleValidadeAE()">
         <option value="permanente">♾️ Permanente (sem expiração)</option>
         <option value="data">📅 Data específica</option>
