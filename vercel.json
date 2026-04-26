@@ -2,10 +2,12 @@
   "outputDirectory": "public",
   "routes": [
     { "src": "/api/(.*)", "dest": "/api/$1" },
+    { "src": "/sw.js", "dest": "/sw.js" },
     { "src": "/manifest.json", "dest": "/manifest.json" },
     { "src": "/icon-192.png", "dest": "/icon-192.png" },
     { "src": "/icon-512.png", "dest": "/icon-512.png" },
     { "src": "/favicon.ico", "dest": "/favicon.ico" },
+    { "src": "/totem.html", "dest": "/totem.html" },
     { "src": "/totem", "dest": "/totem.html" },
     { "src": "/(.*)", "dest": "/index.html" }
   ],
