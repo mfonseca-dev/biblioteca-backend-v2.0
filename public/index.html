@@ -1210,17 +1210,15 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
       <video id="perfilVideo" style="display:none;width:100%;max-height:260px;object-fit:cover" autoplay playsinline muted></video>
       <canvas id="perfilCanvas" style="display:none"></canvas>
       <img id="perfilFotoCapturada" src="" style="display:none;width:100%;max-height:260px;object-fit:cover" alt="">
-      <!-- CROP EDITOR -->
       <div id="cropContainer" style="display:none;position:relative;width:100%;height:260px;background:#111;overflow:hidden;border-radius:10px;touch-action:none">
         <img id="cropImg" style="position:absolute;transform-origin:center center;cursor:grab;user-select:none;-webkit-user-select:none" draggable="false">
-        <!-- Guia circular -->
         <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none">
           <div style="width:200px;height:200px;border-radius:50%;border:2px solid rgba(255,255,255,.7);box-shadow:0 0 0 9999px rgba(0,0,0,.45)"></div>
         </div>
       </div>
       <div id="cropControls" style="display:none;padding:8px 0 4px">
         <input type="range" id="cropZoom" min="1" max="4" step="0.01" value="1" style="width:100%;accent-color:var(--verde)">
-        <div style="text-align:center;font-size:.72rem;color:#888;margin-top:2px">🔍 Ajuste o zoom • Arraste para centralizar o rosto</div>
+        <div style="text-align:center;font-size:.72rem;color:#888;margin-top:2px">🔍 Zoom • Arraste para centralizar o rosto</div>
       </div>
       <div id="perfilCameraPlaceholder" style="min-height:180px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;color:#666">
         <span style="font-size:3rem">👤</span>
@@ -2496,40 +2494,29 @@ document.getElementById('modalFotoFile').addEventListener('change', function() {
   const file = this.files[0];
   if (!file) return;
   const reader = new FileReader();
-  reader.onload = e => {
-    abrirCropEditor(e.target.result);
-  };
+  reader.onload = e => { abrirCropEditor(e.target.result); };
   reader.readAsDataURL(file);
   this.value = '';
 });
 
 // ── CROP EDITOR ──────────────────────────────────────────────────
-let _crop = { x:0, y:0, scale:1, dragging:false, startX:0, startY:0, imgW:0, imgH:0 };
+let _crop = { x:0, y:0, scale:1, dragging:false, startX:0, startY:0 };
 
 function abrirCropEditor(src) {
   const container = document.getElementById('cropContainer');
   const img       = document.getElementById('cropImg');
   const zoom      = document.getElementById('cropZoom');
-
-  _crop = { x:0, y:0, scale:1, dragging:false, startX:0, startY:0, imgW:0, imgH:0 };
+  _crop = { x:0, y:0, scale:1, dragging:false, startX:0, startY:0 };
   zoom.value = 1;
-
   img.onload = () => {
-    _crop.imgW = img.naturalWidth;
-    _crop.imgH = img.naturalHeight;
-    // Calcular escala inicial para preencher o container (260px altura)
-    const ch = container.clientHeight || 260;
-    const cw = container.clientWidth  || container.offsetWidth || 320;
-    const scaleH = ch / img.naturalHeight;
-    const scaleW = cw / img.naturalWidth;
-    _crop.scale = Math.max(scaleH, scaleW);
-    zoom.min   = _crop.scale.toFixed(2);
-    zoom.value = _crop.scale;
-    _crop.x = 0; _crop.y = 0;
+    const ch = 260, cw = container.offsetWidth || 320;
+    const s  = Math.max(ch / img.naturalHeight, cw / img.naturalWidth);
+    _crop.scale = s;
+    zoom.min = s.toFixed(2);
+    zoom.value = s;
     aplicarCropTransform();
   };
   img.src = src;
-
   document.getElementById('perfilCameraPlaceholder').style.display = 'none';
   document.getElementById('perfilFotoOpcoes').style.display = 'none';
   document.getElementById('perfilFotoFeitaControles').style.display = 'block';
@@ -2540,84 +2527,59 @@ function abrirCropEditor(src) {
 
 function aplicarCropTransform() {
   const img = document.getElementById('cropImg');
-  img.style.transform = `translate(calc(-50% + ${_crop.x}px), calc(-50% + ${_crop.y}px)) scale(${_crop.scale})`;
   img.style.left = '50%';
   img.style.top  = '50%';
+  img.style.transform = `translate(calc(-50% + ${_crop.x}px), calc(-50% + ${_crop.y}px)) scale(${_crop.scale})`;
 }
-
-// Zoom slider
-document.getElementById('cropZoom').addEventListener('input', function() {
-  _crop.scale = parseFloat(this.value);
-  aplicarCropTransform();
-});
-
-// Mouse drag
-const cropContainer = document.getElementById('cropContainer');
-cropContainer.addEventListener('mousedown', e => {
-  _crop.dragging = true; _crop.startX = e.clientX - _crop.x; _crop.startY = e.clientY - _crop.y;
-  document.getElementById('cropImg').style.cursor = 'grabbing';
-});
-document.addEventListener('mousemove', e => {
-  if (!_crop.dragging) return;
-  _crop.x = e.clientX - _crop.startX;
-  _crop.y = e.clientY - _crop.startY;
-  aplicarCropTransform();
-});
-document.addEventListener('mouseup', () => {
-  _crop.dragging = false;
-  document.getElementById('cropImg').style.cursor = 'grab';
-});
-
-// Touch drag
-cropContainer.addEventListener('touchstart', e => {
-  const t = e.touches[0];
-  _crop.dragging = true; _crop.startX = t.clientX - _crop.x; _crop.startY = t.clientY - _crop.y;
-}, { passive:true });
-cropContainer.addEventListener('touchmove', e => {
-  if (!_crop.dragging) return;
-  const t = e.touches[0];
-  _crop.x = t.clientX - _crop.startX;
-  _crop.y = t.clientY - _crop.startY;
-  aplicarCropTransform();
-  e.preventDefault();
-}, { passive:false });
-cropContainer.addEventListener('touchend', () => { _crop.dragging = false; });
 
 function cropParaDataUrl() {
   const container = document.getElementById('cropContainer');
   const img       = document.getElementById('cropImg');
-  const size      = 400; // output 400x400px
-  const canvas    = document.createElement('canvas');
-  canvas.width    = size;
-  canvas.height   = size;
-  const ctx       = canvas.getContext('2d');
-
-  const cw = container.clientWidth  || 320;
-  const ch = container.clientHeight || 260;
-
-  // Centro do círculo guia (200px de diâmetro)
-  const circleR = 100;
-  const cx = cw / 2 + _crop.x; // posição X do centro da img no container
-  const cy = ch / 2 + _crop.y;
-
-  // Área do círculo no espaço da imagem original
-  const imgCenterX = _crop.imgW / 2;
-  const imgCenterY = _crop.imgH / 2;
-  const offsetX    = (cw/2 - cx) / _crop.scale;
-  const offsetY    = (ch/2 - cy) / _crop.scale;
-  const srcX = imgCenterX + offsetX - circleR / _crop.scale;
-  const srcY = imgCenterY + offsetY - circleR / _crop.scale;
-  const srcW = (circleR * 2) / _crop.scale;
-  const srcH = (circleR * 2) / _crop.scale;
-
-  // Clip circular
-  ctx.beginPath();
-  ctx.arc(size/2, size/2, size/2, 0, Math.PI*2);
-  ctx.clip();
-
-  ctx.drawImage(img, srcX, srcY, srcW, srcH, 0, 0, size, size);
+  const size = 400, r = 100;
+  const canvas = document.createElement('canvas');
+  canvas.width = canvas.height = size;
+  const ctx = canvas.getContext('2d');
+  const cw = container.clientWidth || 320, ch = 260;
+  const offX = (cw/2 - (cw/2 + _crop.x)) / _crop.scale;
+  const offY = (ch/2 - (ch/2 + _crop.y)) / _crop.scale;
+  const srcX = img.naturalWidth/2  + offX - r/_crop.scale;
+  const srcY = img.naturalHeight/2 + offY - r/_crop.scale;
+  const srcS = (r*2) / _crop.scale;
+  ctx.beginPath(); ctx.arc(size/2, size/2, size/2, 0, Math.PI*2); ctx.clip();
+  ctx.drawImage(img, srcX, srcY, srcS, srcS, 0, 0, size, size);
   return canvas.toDataURL('image/jpeg', 0.88);
 }
+
+// zoom slider
+document.getElementById('cropZoom').addEventListener('input', function() {
+  _crop.scale = parseFloat(this.value); aplicarCropTransform();
+});
+
+// mouse drag
+const _cropEl = document.getElementById('cropContainer');
+_cropEl.addEventListener('mousedown', e => {
+  _crop.dragging=true; _crop.startX=e.clientX-_crop.x; _crop.startY=e.clientY-_crop.y;
+  document.getElementById('cropImg').style.cursor='grabbing';
+});
+document.addEventListener('mousemove', e => {
+  if(!_crop.dragging) return;
+  _crop.x=e.clientX-_crop.startX; _crop.y=e.clientY-_crop.startY; aplicarCropTransform();
+});
+document.addEventListener('mouseup', () => {
+  _crop.dragging=false; document.getElementById('cropImg').style.cursor='grab';
+});
+
+// touch drag
+_cropEl.addEventListener('touchstart', e => {
+  const t=e.touches[0]; _crop.dragging=true;
+  _crop.startX=t.clientX-_crop.x; _crop.startY=t.clientY-_crop.y;
+}, {passive:true});
+_cropEl.addEventListener('touchmove', e => {
+  if(!_crop.dragging) return;
+  const t=e.touches[0]; _crop.x=t.clientX-_crop.startX; _crop.y=t.clientY-_crop.startY;
+  aplicarCropTransform(); e.preventDefault();
+}, {passive:false});
+_cropEl.addEventListener('touchend', () => { _crop.dragging=false; });
 
 function perfilIrCompletarCadastro() {
   fetch(`${API_BASE}/api/usuarios?acao=verificar-primeiro-acesso&cpf=${sess.usuario.cpf}`)
@@ -4096,52 +4058,25 @@ ${u.foto_url ? `
   <p>Documento sigiloso gerado automaticamente. Uso restrito à instituição.</p>
   <p>© ${new Date().getFullYear()}</p>
 </div>
+</body>
+</html>
+`;
 
-<!-- MODAL ACESSO ESPECIAL -->
-<div class="modal-bg" id="modalAcessoEspecial">
-  <div class="modal" style="max-width:440px;text-align:left">
-    <h3 id="modalAEtitulo">🎟️ Novo Acesso Especial</h3>
-    <input type="hidden" id="aeId">
-    <div class="fg" style="margin-top:14px">
-      <label for="aeBusca">Usuário (busca por nome ou CPF)</label>
-      <input type="text" id="aeBusca" placeholder="Digite nome ou CPF..." oninput="buscarUsuarioAE(this.value)">
-      <div id="aeBuscaResultados" style="margin-top:6px"></div>
-      <input type="hidden" id="aeUsuarioId">
-      <div id="aeUsuarioSelecionado" style="display:none;background:var(--verde-suave);border:1.5px solid #a8d5b5;border-radius:8px;padding:9px 12px;margin-top:6px;font-size:.82rem;color:var(--verde-esc)"></div>
-    </div>
-    <div class="fg">
-      <label for="aePerfil">Perfil</label>
-      <select id="aePerfil" onchange="atualizarOcupaVagaAE()">
-        <option value="funcionario">👔 Funcionário</option>
-        <option value="voluntario">🤝 Voluntário</option>
-        <option value="parceiro">🤲 Parceiro</option>
-        <option value="convidado">🎟️ Convidado</option>
-        <option value="pcd">♿ PCD</option>
-        <option value="outro">⭐ Outro</option>
-      </select>
-    </div>
-    <div class="fg">
-      <label for="aeMotivo">Motivo / Observação</label>
-      <input type="text" id="aeMotivo" placeholder="Ex: Recepcionista turno manhã">
-    </div>
-    <div class="fg">
-      <label for="aeValidadeTipo">Validade</label>
-      <select id="aeValidadeTipo" onchange="toggleValidadeAE()">
-        <option value="permanente">♾️ Permanente (sem expiração)</option>
-        <option value="data">📅 Data específica</option>
-      </select>
-      <input type="date" id="aeValidadeData" style="display:none;margin-top:6px">
-    </div>
-    <div id="aeOcupaVagaBox" style="background:#e8f5ee;border:1.5px solid #a8d5b5;border-radius:8px;padding:10px 12px;margin-bottom:12px;font-size:.81rem">
-      <b id="aeOcupaVagaTexto" style="color:var(--verde-esc)">✨ Este perfil não ocupa vaga — não conta no limite da sala</b>
-    </div>
-    <div style="display:flex;gap:8px;margin-top:4px">
-      <button class="btn btn-verde" onclick="salvarAcessoEspecial()">✅ Salvar</button>
-      <button class="btn btn-sec" onclick="fecharModalAE()">Cancelar</button>
-    </div>
-  </div>
-</div>
-
+  const win = window.open('', '_blank');
+  if (win) {
+    win.document.write(html);
+    win.document.close();
+    setTimeout(() => win.print(), 500);
+  } else {
+    const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href     = url;
+    a.download = `termo-${(_auditDados?.cpf||'usuario').replace(/[^0-9]/g,'')}.html`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+}
 
 
 // ── Acessos Especiais ────────────────────────────────────
@@ -4327,6 +4262,52 @@ function fecharTermo() {
   document.getElementById('modalTermo').classList.remove('ativo');
 }
 </script>
+
+<!-- MODAL ACESSO ESPECIAL -->
+<div class="modal-bg" id="modalAcessoEspecial">
+  <div class="modal" style="max-width:440px;text-align:left">
+    <h3 id="modalAEtitulo">🎟️ Novo Acesso Especial</h3>
+    <input type="hidden" id="aeId">
+    <div class="fg" style="margin-top:14px">
+      <label for="aeBusca">Usuário (busca por nome ou CPF)</label>
+      <input type="text" id="aeBusca" placeholder="Digite nome ou CPF..." oninput="buscarUsuarioAE(this.value)">
+      <div id="aeBuscaResultados" style="margin-top:6px"></div>
+      <input type="hidden" id="aeUsuarioId">
+      <div id="aeUsuarioSelecionado" style="display:none;background:var(--verde-suave);border:1.5px solid #a8d5b5;border-radius:8px;padding:9px 12px;margin-top:6px;font-size:.82rem;color:var(--verde-esc)"></div>
+    </div>
+    <div class="fg">
+      <label for="aePerfil">Perfil</label>
+      <select id="aePerfil" onchange="atualizarOcupaVagaAE()">
+        <option value="funcionario">👔 Funcionário</option>
+        <option value="voluntario">🤝 Voluntário</option>
+        <option value="parceiro">🤲 Parceiro</option>
+        <option value="convidado">🎟️ Convidado</option>
+        <option value="pcd">♿ PCD</option>
+        <option value="outro">⭐ Outro</option>
+      </select>
+    </div>
+    <div class="fg">
+      <label for="aeMotivo">Motivo / Observação</label>
+      <input type="text" id="aeMotivo" placeholder="Ex: Recepcionista turno manhã">
+    </div>
+    <div class="fg">
+      <label for="aeValidadeTipo">Validade</label>
+      <select id="aeValidadeTipo" onchange="toggleValidadeAE()">
+        <option value="permanente">♾️ Permanente (sem expiração)</option>
+        <option value="data">📅 Data específica</option>
+      </select>
+      <input type="date" id="aeValidadeData" style="display:none;margin-top:6px">
+    </div>
+    <div id="aeOcupaVagaBox" style="background:#e8f5ee;border:1.5px solid #a8d5b5;border-radius:8px;padding:10px 12px;margin-bottom:12px;font-size:.81rem">
+      <b id="aeOcupaVagaTexto" style="color:var(--verde-esc)">✨ Este perfil não ocupa vaga — não conta no limite da sala</b>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:4px">
+      <button class="btn btn-verde" onclick="salvarAcessoEspecial()">✅ Salvar</button>
+      <button class="btn btn-sec" onclick="fecharModalAE()">Cancelar</button>
+    </div>
+  </div>
+</div>
+
 
 <!-- MODAL (FORA DO SCRIPT) -->
 <div class="modal-bg" id="modalTermo">
