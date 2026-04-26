@@ -3462,8 +3462,6 @@ async function verificarAvisosUrgentes() {
     document.getElementById('modalAvisoUrgente').classList.add('ativo');
   } catch(e) { /* silencioso */ }
 }
-</script>
-<script>
 
 // ═══════════════════════════════════════════════════════════
 //  ADMIN — AVISOS
@@ -3971,53 +3969,28 @@ ${u.foto_url ? `
   <p>Documento sigiloso gerado automaticamente. Uso restrito à instituição.</p>
   <p>© ${new Date().getFullYear()}</p>
 </div>
+</body>
+</html>
+`;
 
-<!-- MODAL ACESSO ESPECIAL -->
-<div class="modal-bg" id="modalAcessoEspecial">
-  <div class="modal" style="max-width:440px;text-align:left">
-    <h3 id="modalAEtitulo">🎟️ Novo Acesso Especial</h3>
-    <input type="hidden" id="aeId">
-    <div class="fg" style="margin-top:14px">
-      <label for="aeBusca">Usuário (busca por nome ou CPF)</label>
-      <input type="text" id="aeBusca" placeholder="Digite nome ou CPF..." oninput="buscarUsuarioAE(this.value)">
-      <div id="aeBuscaResultados" style="margin-top:6px"></div>
-      <input type="hidden" id="aeUsuarioId">
-      <div id="aeUsuarioSelecionado" style="display:none;background:var(--verde-suave);border:1.5px solid #a8d5b5;border-radius:8px;padding:9px 12px;margin-top:6px;font-size:.82rem;color:var(--verde-esc)"></div>
-    </div>
-    <div class="fg">
-      <label for="aePerfil">Perfil</label>
-      <select id="aePerfil" onchange="atualizarOcupaVagaAE()">
-        <option value="funcionario">👔 Funcionário</option>
-        <option value="voluntario">🤝 Voluntário</option>
-        <option value="parceiro">🤲 Parceiro</option>
-        <option value="convidado">🎟️ Convidado</option>
-        <option value="pcd">♿ PCD</option>
-        <option value="outro">⭐ Outro</option>
-      </select>
-    </div>
-    <div class="fg">
-      <label for="aeMotivo">Motivo / Observação</label>
-      <input type="text" id="aeMotivo" placeholder="Ex: Recepcionista turno manhã">
-    </div>
-    <div class="fg">
-      <label for="aeValidadeTipo">Validade</label>
-      <select id="aeValidadeTipo" onchange="toggleValidadeAE()">
-        <option value="permanente">♾️ Permanente (sem expiração)</option>
-        <option value="data">📅 Data específica</option>
-      </select>
-      <input type="date" id="aeValidadeData" style="display:none;margin-top:6px">
-    </div>
-    <div id="aeOcupaVagaBox" style="background:#e8f5ee;border:1.5px solid #a8d5b5;border-radius:8px;padding:10px 12px;margin-bottom:12px;font-size:.81rem">
-      <b id="aeOcupaVagaTexto" style="color:var(--verde-esc)">✨ Este perfil não ocupa vaga — não conta no limite da sala</b>
-    </div>
-    <div style="display:flex;gap:8px;margin-top:4px">
-      <button class="btn btn-verde" onclick="salvarAcessoEspecial()">✅ Salvar</button>
-      <button class="btn btn-sec" onclick="fecharModalAE()">Cancelar</button>
-    </div>
-  </div>
-</div>
+  const win = window.open('', '_blank');
+  if (win) {
+    win.document.write(html);
+    win.document.close();
+    setTimeout(() => win.print(), 500);
+  } else {
+    const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href     = url;
+    a.download = `termo-${(_auditDados?.cpf||'usuario').replace(/[^0-9]/g,'')}.html`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+}
 
-<script>
+
+// ── Acessos Especiais ────────────────────────────────────
 const AE_PERFIS = {
   funcionario: { label:'Funcionário', emoji:'👔', ocupa_vaga:false },
   voluntario:  { label:'Voluntário',  emoji:'🤝', ocupa_vaga:false },
@@ -4031,7 +4004,7 @@ async function carregarAcessosEspeciais() {
   const el = document.getElementById('acessosEspeciaisLista');
   el.innerHTML = '<div class="sem"><span class="si">⏳</span>Carregando...</div>';
   try {
-    const resp = await apiFetch('/api/acessos-especiais?acao=listar');
+    const resp = await fetch(API_BASE+'/api/acessos-especiais?acao=listar', {headers:{'Authorization':'Bearer '+api.token}});
     const { acessos } = await resp.json();
     if (!acessos || acessos.length === 0) {
       el.innerHTML = '<div class="sem"><span class="si">🎟️</span>Nenhum acesso especial cadastrado</div>';
@@ -4069,7 +4042,7 @@ function buscarUsuarioAE(q) {
   _buscaAETimer = setTimeout(async () => {
     el.innerHTML = '<div style="font-size:.75rem;color:#aaa">Buscando...</div>';
     try {
-      const resp = await apiFetch(`/api/usuarios?acao=buscar&q=${encodeURIComponent(q)}`);
+      const resp = await fetch(API_BASE+`/api/usuarios?acao=listar&busca=${encodeURIComponent(q)}`, {headers:{'Authorization':'Bearer '+api.token}});
       const { usuarios } = await resp.json();
       if (!usuarios?.length) { el.innerHTML='<div style="font-size:.75rem;color:#aaa">Nenhum encontrado</div>'; return; }
       el.innerHTML = usuarios.slice(0,5).map(u=>`
@@ -4137,8 +4110,14 @@ async function salvarAcessoEspecial() {
                      ? document.getElementById('aeValidadeData').value : null;
   if (!id && !usuario_id) return toast('⚠️ Selecione um usuário');
   try {
-    const resp = await apiFetch(`/api/acessos-especiais?acao=${id?'atualizar':'criar'}`, {
-      method:'POST', body: JSON.stringify(id ? {id:parseInt(id),perfil,motivo,validade} : {usuario_id,perfil,motivo,validade})
+    const acao = id ? 'atualizar' : 'criar';
+    const body = id
+      ? { id: parseInt(id), perfil, motivo, validade }
+      : { usuario_id, perfil, motivo, validade };
+    const resp = await fetch(API_BASE+`/api/acessos-especiais?acao=${acao}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer '+api.token },
+      body: JSON.stringify(body)
     });
     const data = await resp.json();
     if (!resp.ok) return toast(`❌ ${data.erro}`);
@@ -4151,7 +4130,7 @@ async function salvarAcessoEspecial() {
 async function toggleAcessoEspecial(id, nome, ativo) {
   if (!confirm(`${ativo?'🚫 Bloquear':'✅ Ativar'} acesso de ${nome}?`)) return;
   try {
-    const resp = await apiFetch('/api/acessos-especiais?acao=toggle', {method:'POST',body:JSON.stringify({id})});
+    const resp = await fetch(API_BASE+'/api/acessos-especiais?acao=toggle', {method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+api.token},body:JSON.stringify({id})});
     const data = await resp.json();
     if (!resp.ok) return toast(`❌ ${data.erro}`);
     toast(data.ativo ? '✅ Acesso ativado' : '🚫 Acesso bloqueado');
@@ -4162,60 +4141,84 @@ async function toggleAcessoEspecial(id, nome, ativo) {
 async function excluirAcessoEspecial(id, nome) {
   if (!confirm(`🗑️ Remover acesso especial de ${nome}?`)) return;
   try {
-    const resp = await apiFetch('/api/acessos-especiais?acao=excluir', {method:'POST',body:JSON.stringify({id})});
+    const resp = await fetch(API_BASE+'/api/acessos-especiais?acao=excluir', {method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+api.token},body:JSON.stringify({id})});
     if (!resp.ok) return toast('❌ Erro ao excluir');
     toast('🗑️ Acesso removido');
     carregarAcessosEspeciais();
   } catch(err) { toast(`❌ ${err.message}`); }
 }
-</script>
 
-</body>
-</html>`;
-
-  const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = `termo-${u.cpf}-${new Date().toISOString().split('T')[0]}.html`;
-  a.click();
-  setTimeout(() => URL.revokeObjectURL(a.href), 5000);
-  toast('📄 Documento exportado com sucesso!');
+// ── Service Worker (PWA) ─────────────────────────────────────
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js')
+      .then(() => console.log('PWA: Service Worker registrado'))
+      .catch(e => console.log('PWA: erro', e));
+  });
 }
 
 // ═══════════════════════════════════════════════════════════
 //  VER TERMO (APP)
 // ═══════════════════════════════════════════════════════════
 function verTermo(img, nome, data, ip) {
-  if (!img) {
-    toast('⚠️ Usuário não possui assinatura');
-    return;
-  }
-
+  if (!img) { toast('⚠️ Usuário não possui assinatura'); return; }
   document.getElementById('termoImg').src = img;
   document.getElementById('termoNome').textContent = nome;
-  document.getElementById('termoData').textContent =
-    data ? new Date(data).toLocaleString('pt-BR') : '—';
+  document.getElementById('termoData').textContent = data ? new Date(data).toLocaleString('pt-BR') : '—';
   document.getElementById('termoIP').textContent = ip || '—';
-
   document.getElementById('modalTermo').classList.add('ativo');
 }
 
 function fecharTermo() {
   document.getElementById('modalTermo').classList.remove('ativo');
 }
-
-// ═══════════════════════════════════════════════════════════
-//  SERVICE WORKER
-// ═══════════════════════════════════════════════════════════
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register("/sw.js")
-      .then(() => console.log("PWA: Service Worker registrado"))
-      .catch(e => console.log("PWA: erro", e));
-  });
-}
-
 </script>
+
+<!-- MODAL ACESSO ESPECIAL -->
+<div class="modal-bg" id="modalAcessoEspecial">
+  <div class="modal" style="max-width:440px;text-align:left">
+    <h3 id="modalAEtitulo">🎟️ Novo Acesso Especial</h3>
+    <input type="hidden" id="aeId">
+    <div class="fg" style="margin-top:14px">
+      <label for="aeBusca">Usuário (busca por nome ou CPF)</label>
+      <input type="text" id="aeBusca" placeholder="Digite nome ou CPF..." oninput="buscarUsuarioAE(this.value)">
+      <div id="aeBuscaResultados" style="margin-top:6px"></div>
+      <input type="hidden" id="aeUsuarioId">
+      <div id="aeUsuarioSelecionado" style="display:none;background:var(--verde-suave);border:1.5px solid #a8d5b5;border-radius:8px;padding:9px 12px;margin-top:6px;font-size:.82rem;color:var(--verde-esc)"></div>
+    </div>
+    <div class="fg">
+      <label for="aePerfil">Perfil</label>
+      <select id="aePerfil" onchange="atualizarOcupaVagaAE()">
+        <option value="funcionario">👔 Funcionário</option>
+        <option value="voluntario">🤝 Voluntário</option>
+        <option value="parceiro">🤲 Parceiro</option>
+        <option value="convidado">🎟️ Convidado</option>
+        <option value="pcd">♿ PCD</option>
+        <option value="outro">⭐ Outro</option>
+      </select>
+    </div>
+    <div class="fg">
+      <label for="aeMotivo">Motivo / Observação</label>
+      <input type="text" id="aeMotivo" placeholder="Ex: Recepcionista turno manhã">
+    </div>
+    <div class="fg">
+      <label for="aeValidadeTipo">Validade</label>
+      <select id="aeValidadeTipo" onchange="toggleValidadeAE()">
+        <option value="permanente">♾️ Permanente (sem expiração)</option>
+        <option value="data">📅 Data específica</option>
+      </select>
+      <input type="date" id="aeValidadeData" style="display:none;margin-top:6px">
+    </div>
+    <div id="aeOcupaVagaBox" style="background:#e8f5ee;border:1.5px solid #a8d5b5;border-radius:8px;padding:10px 12px;margin-bottom:12px;font-size:.81rem">
+      <b id="aeOcupaVagaTexto" style="color:var(--verde-esc)">✨ Este perfil não ocupa vaga — não conta no limite da sala</b>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:4px">
+      <button class="btn btn-verde" onclick="salvarAcessoEspecial()">✅ Salvar</button>
+      <button class="btn btn-sec" onclick="fecharModalAE()">Cancelar</button>
+    </div>
+  </div>
+</div>
+
 
 <!-- MODAL (FORA DO SCRIPT) -->
 <div class="modal-bg" id="modalTermo">
