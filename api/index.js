@@ -1,44 +1,42 @@
-import acessosEspeciais from '../lib/handlers/acessos-especiais.js';
-import acessos from '../lib/handlers/acessos.js';
-import auth from '../lib/handlers/auth.js';
-import avisos from '../lib/handlers/avisos.js';
-import configuracoes from '../lib/handlers/configuracoes.js';
-import gerarTokens from '../lib/handlers/gerar-tokens.js';
-import liberarAcesso from '../lib/handlers/liberar-acesso.js';
-import pagamentos from '../lib/handlers/pagamentos.js';
-import sugestoes from '../lib/handlers/sugestoes.js';
-import totem from '../lib/handlers/totem.js';
-import usuarios from '../lib/handlers/usuarios.js';
-import vagas from '../lib/handlers/vagas.js';
-import agenteConfirmar from '../lib/handlers/agente/confirmar.js';
-import agenteFila from '../lib/handlers/agente/fila.js';
+const acessosEspeciais = require('../lib/handlers/acessos-especiais.js');
+const acessos          = require('../lib/handlers/acessos.js');
+const auth             = require('../lib/handlers/auth.js');
+const avisos           = require('../lib/handlers/avisos.js');
+const configuracoes    = require('../lib/handlers/configuracoes.js');
+const gerarTokens      = require('../lib/handlers/gerar-tokens.js');
+const liberarAcesso    = require('../lib/handlers/liberar-acesso.js');
+const pagamentos       = require('../lib/handlers/pagamentos.js');
+const sugestoes        = require('../lib/handlers/sugestoes.js');
+const totem            = require('../lib/handlers/totem.js');
+const usuarios         = require('../lib/handlers/usuarios.js');
+const vagas            = require('../lib/handlers/vagas.js');
+const agenteConfirmar  = require('../lib/handlers/agente/confirmar.js');
+const agenteFila       = require('../lib/handlers/agente/fila.js');
 
 const rotas = {
   '/api/acessos-especiais': acessosEspeciais,
-  '/api/acessos': acessos,
-  '/api/auth': auth,
-  '/api/avisos': avisos,
-  '/api/configuracoes': configuracoes,
-  '/api/gerar-tokens': gerarTokens,
-  '/api/liberar-acesso': liberarAcesso,
-  '/api/pagamentos': pagamentos,
-  '/api/sugestoes': sugestoes,
-  '/api/totem': totem,
-  '/api/usuarios': usuarios,
-  '/api/vagas': vagas,
-  '/api/agente/confirmar': agenteConfirmar,
-  '/api/agente/fila': agenteFila,
+  '/api/acessos':           acessos,
+  '/api/auth':              auth,
+  '/api/avisos':            avisos,
+  '/api/configuracoes':     configuracoes,
+  '/api/gerar-tokens':      gerarTokens,
+  '/api/liberar-acesso':    liberarAcesso,
+  '/api/pagamentos':        pagamentos,
+  '/api/sugestoes':         sugestoes,
+  '/api/totem':             totem,
+  '/api/usuarios':          usuarios,
+  '/api/vagas':             vagas,
+  '/api/agente/confirmar':  agenteConfirmar,
+  '/api/agente/fila':       agenteFila,
 };
 
-export default function handler(req, res) {
-  const url = new URL(req.url, 'http://localhost');
+module.exports = function handler(req, res) {
+  const url  = new URL(req.url, 'http://localhost');
   const path = url.pathname.replace(/\/$/, '');
 
   const fn = rotas[path];
 
-  if (fn) {
-    return fn(req, res);
-  }
+  if (fn) return fn(req, res);
 
   res.status(404).json({ erro: `Rota não encontrada: ${path}` });
-}
+};
