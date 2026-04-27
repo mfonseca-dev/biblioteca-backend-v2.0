@@ -1,7 +1,8 @@
 {
   "outputDirectory": "public",
   "routes": [
-    { "src": "/api/(.*)", "dest": "/api/$1" },
+    { "src": "/api/agente/(.*)", "dest": "/api/index" },
+    { "src": "/api/(.*)", "dest": "/api/index" },
     { "src": "/totem", "dest": "/totem.html" },
     { "handle": "filesystem" },
     { "src": "/(.*)", "dest": "/index.html" }

@@ -1210,16 +1210,6 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
       <video id="perfilVideo" style="display:none;width:100%;max-height:260px;object-fit:cover" autoplay playsinline muted></video>
       <canvas id="perfilCanvas" style="display:none"></canvas>
       <img id="perfilFotoCapturada" src="" style="display:none;width:100%;max-height:260px;object-fit:cover" alt="">
-      <div id="cropContainer" style="display:none;position:relative;width:100%;height:260px;background:#111;overflow:hidden;border-radius:10px;touch-action:none">
-        <img id="cropImg" style="position:absolute;transform-origin:center center;cursor:grab;user-select:none;-webkit-user-select:none" draggable="false">
-        <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none">
-          <div style="width:200px;height:200px;border-radius:50%;border:2px solid rgba(255,255,255,.7);box-shadow:0 0 0 9999px rgba(0,0,0,.45)"></div>
-        </div>
-      </div>
-      <div id="cropControls" style="display:none;padding:8px 0 4px">
-        <input type="range" id="cropZoom" min="1" max="4" step="0.01" value="1" style="width:100%;accent-color:var(--verde)">
-        <div style="text-align:center;font-size:.72rem;color:#888;margin-top:2px">🔍 Zoom • Arraste para centralizar o rosto</div>
-      </div>
       <div id="perfilCameraPlaceholder" style="min-height:180px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;color:#666">
         <span style="font-size:3rem">👤</span>
         <span style="font-size:.78rem">Câmera não iniciada</span>
@@ -2067,16 +2057,15 @@ async function migBuscarCpf() {
   if(cpf.length!==11){mostrarErro('migErro','CPF inválido');return;}
   loading('btnMigBuscarCpf',true);
   try {
-    const res = await api.get('/api/usuarios?acao=listar&busca='+cpf);
-    const u = (res.usuarios||[]).find(x=>x.cpf===cpf);
-    if(!u){mostrarErro('migErro','CPF não encontrado. Realize um novo cadastro.');return;}
-    if(!u.ativo){mostrarErro('migErro','Cadastro suspenso. Procure a recepção.');return;}
-    _migUsuario=u;
-    document.getElementById('migNomeConfirm').textContent=u.nome;
-    document.getElementById('migCpfConfirm').textContent='CPF: '+fmtCpf(u.cpf);
-    document.getElementById('migAvatar').textContent=u.nome[0].toUpperCase();
-    document.getElementById('migPasso1').style.display='none';
-    document.getElementById('migPasso2').style.display='block';
+    const res = await api.get('/api/usuarios?acao=verificar-primeiro-acesso&cpf='+cpf);
+    if (!res.encontrado) { mostrarErro('migErro', 'CPF não encontrado. Realize um novo cadastro.'); return; }
+    _migUsuario = { id: res.id, nome: res.nome, cpf: res.cpf, foto_url: res.foto_url,
+                    sem_senha: res.sem_senha, sem_foto: res.sem_foto, sem_termo: res.sem_termo };
+    document.getElementById('migNomeConfirm').textContent = _migUsuario.nome;
+    document.getElementById('migCpfConfirm').textContent  = 'CPF: ' + fmtCpf(_migUsuario.cpf);
+    document.getElementById('migAvatar').textContent      = _migUsuario.nome[0].toUpperCase();
+    document.getElementById('migPasso1').style.display = 'none';
+    document.getElementById('migPasso2').style.display = 'block';
   } catch(e){mostrarErro('migErro',e.message||'Erro de conexão');}
   finally{loading('btnMigBuscarCpf',false);}
 }
@@ -2458,11 +2447,6 @@ document.getElementById('btnPerfilFecharCamera').onclick = () => {
 };
 
 document.getElementById('btnPerfilSalvarFoto').onclick = async () => {
-  if (document.getElementById('cropContainer').style.display !== 'none') {
-    _perfilFotoDataUrl = cropParaDataUrl();
-    document.getElementById('cropContainer').style.display = 'none';
-    document.getElementById('cropControls').style.display = 'none';
-  }
   if (!_perfilFotoDataUrl || !sess.usuario) return;
   document.getElementById('btnPerfilSalvarFoto').disabled = true;
   document.getElementById('btnPerfilSalvarFoto').textContent = '⏳ Salvando...';
@@ -2494,92 +2478,18 @@ document.getElementById('modalFotoFile').addEventListener('change', function() {
   const file = this.files[0];
   if (!file) return;
   const reader = new FileReader();
-  reader.onload = e => { abrirCropEditor(e.target.result); };
+  reader.onload = e => {
+    _perfilFotoDataUrl = e.target.result;
+    const preview = document.getElementById('perfilFotoCapturada');
+    preview.src = _perfilFotoDataUrl;
+    preview.style.display = 'block';
+    document.getElementById('perfilCameraPlaceholder').style.display = 'none';
+    document.getElementById('perfilFotoOpcoes').style.display = 'none';
+    document.getElementById('perfilFotoFeitaControles').style.display = 'block';
+  };
   reader.readAsDataURL(file);
   this.value = '';
 });
-
-// ── CROP EDITOR ──────────────────────────────────────────────────
-let _crop = { x:0, y:0, scale:1, dragging:false, startX:0, startY:0 };
-
-function abrirCropEditor(src) {
-  const container = document.getElementById('cropContainer');
-  const img       = document.getElementById('cropImg');
-  const zoom      = document.getElementById('cropZoom');
-  _crop = { x:0, y:0, scale:1, dragging:false, startX:0, startY:0 };
-  zoom.value = 1;
-  img.onload = () => {
-    const ch = 260, cw = container.offsetWidth || 320;
-    const s  = Math.max(ch / img.naturalHeight, cw / img.naturalWidth);
-    _crop.scale = s;
-    zoom.min = s.toFixed(2);
-    zoom.value = s;
-    aplicarCropTransform();
-  };
-  img.src = src;
-  document.getElementById('perfilCameraPlaceholder').style.display = 'none';
-  document.getElementById('perfilFotoOpcoes').style.display = 'none';
-  document.getElementById('perfilFotoFeitaControles').style.display = 'block';
-  container.style.display = 'block';
-  document.getElementById('cropControls').style.display = 'block';
-  document.getElementById('perfilFotoCapturada').style.display = 'none';
-}
-
-function aplicarCropTransform() {
-  const img = document.getElementById('cropImg');
-  img.style.left = '50%';
-  img.style.top  = '50%';
-  img.style.transform = `translate(calc(-50% + ${_crop.x}px), calc(-50% + ${_crop.y}px)) scale(${_crop.scale})`;
-}
-
-function cropParaDataUrl() {
-  const container = document.getElementById('cropContainer');
-  const img       = document.getElementById('cropImg');
-  const size = 400, r = 100;
-  const canvas = document.createElement('canvas');
-  canvas.width = canvas.height = size;
-  const ctx = canvas.getContext('2d');
-  const cw = container.clientWidth || 320, ch = 260;
-  const offX = (cw/2 - (cw/2 + _crop.x)) / _crop.scale;
-  const offY = (ch/2 - (ch/2 + _crop.y)) / _crop.scale;
-  const srcX = img.naturalWidth/2  + offX - r/_crop.scale;
-  const srcY = img.naturalHeight/2 + offY - r/_crop.scale;
-  const srcS = (r*2) / _crop.scale;
-  ctx.beginPath(); ctx.arc(size/2, size/2, size/2, 0, Math.PI*2); ctx.clip();
-  ctx.drawImage(img, srcX, srcY, srcS, srcS, 0, 0, size, size);
-  return canvas.toDataURL('image/jpeg', 0.88);
-}
-
-// zoom slider
-document.getElementById('cropZoom').addEventListener('input', function() {
-  _crop.scale = parseFloat(this.value); aplicarCropTransform();
-});
-
-// mouse drag
-const _cropEl = document.getElementById('cropContainer');
-_cropEl.addEventListener('mousedown', e => {
-  _crop.dragging=true; _crop.startX=e.clientX-_crop.x; _crop.startY=e.clientY-_crop.y;
-  document.getElementById('cropImg').style.cursor='grabbing';
-});
-document.addEventListener('mousemove', e => {
-  if(!_crop.dragging) return;
-  _crop.x=e.clientX-_crop.startX; _crop.y=e.clientY-_crop.startY; aplicarCropTransform();
-});
-document.addEventListener('mouseup', () => {
-  _crop.dragging=false; document.getElementById('cropImg').style.cursor='grab';
-});
-
-// touch drag
-_cropEl.addEventListener('touchstart', e => {
-  const t=e.touches[0]; _crop.dragging=true;
-  _crop.startX=t.clientX-_crop.x; _crop.startY=t.clientY-_crop.y;
-}, {passive:true});
-_cropEl.addEventListener('touchmove', e => {
-  if(!_crop.dragging) return;
-  const t=e.touches[0]; _crop.x=t.clientX-_crop.startX; _crop.y=t.clientY-_crop.startY;
-  aplicarCropTransform(); e.preventDefault();
-}, {passive:false});
-_cropEl.addEventListener('touchend', () => { _crop.dragging=false; });
 
 function perfilIrCompletarCadastro() {
   fetch(`${API_BASE}/api/usuarios?acao=verificar-primeiro-acesso&cpf=${sess.usuario.cpf}`)
@@ -2651,6 +2561,24 @@ let _pixSegundos = 300;
 
 // ── Abre modal e já inicia a cobrança ──────────────────────
 async function abrirModalPagamento() {
+  // ── Verifica acesso especial ativo ──────────────────────────
+  try {
+    const ae = await api.get(`/api/acessos-especiais?usuario_id=${sess.usuario.id}`);
+    if (ae.ativo) {
+      toast('🔓 Acesso especial ativo — liberando catraca...');
+      await api.post('/api/liberar-acesso', {
+        usuario_id:        sess.usuario.id,
+        controlid_user_id: sess.usuario.controlid_user_id,
+        nome:              sess.usuario.nome,
+      });
+      await verificarAcessoHoje();
+      return; // não abre o modal de pagamento
+    }
+  } catch(e) {
+    // falha silenciosa — segue para o fluxo normal de pagamento
+  }
+  // ────────────────────────────────────────────────────────────
+
   // Reseta UI
   document.getElementById('pagtoStatus').textContent = '';
   document.getElementById('pagtoPix').checked = true;

@@ -1,0 +1,75 @@
+[33m97d766a[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m fix: fluxo pagamento automático
+[33m9424ac6[m feat: cron encerramento automatico 19h45
+[33m06c8b0e[m fix: buscar-cpf publico sem auth
+[33m5d642fc[m feat: popup urgente, bloquear usuario, fila pagamentos
+[33mfa58d21[m feat: popup urgente, bloquear usuario, fila pagamentos
+[33m17bcdf4[m feat: popup urgente, bloquear usuario, fila pagamentos
+[33m1c0fc9d[m feat: popup urgente, bloquear usuario, fila pagamentos
+[33m68aa201[m fix: corrigido erro script duplicado
+[33m372bf45[m fix: corrigido bloco JS final
+[33m6294db3[m fix: script final corrigido e limpo
+[33m49da4b2[m fix: verTermo corrigido
+[33m61f33fb[m fix: erro chave corrigido
+[33m4365ef3[m fix: fechamento do script corrigido
+[33m3d443cc[m fix: modal termo corrigido
+[33m525de38[m feat: popup urgente, bloquear usuario, fila pagamentos
+[33m6fe6818[m fix: api usuarios corrigida
+[33m6325606[m ajustes
+[33m919663c[m refactor: consolidar api para 9 funcoes
+[33m3e0de41[m test api
+[33mec1b35d[m feat: PWA instalar como app
+[33mab37667[m[33m ([m[1;31morigin/apresentacao-stable[m[33m, [m[1;32mapresentacao-stable[m[33m)[m fix: enviar senha no cadastro
+[33mb71e526[m feat: redefinir senha pelo painel da recepcao
+[33m9121a8f[m fix: mover login-usuario para pasta auth
+[33mb8469c0[m fix: login usuario com senha real
+[33mdbfaba5[m fix: login com verificacao de senha bcrypt
+[33mec157c6[m fix: login com verificacao de senha bcrypt
+[33mff4fdc4[m fix: login com verificacao de senha bcrypt
+[33mbb32e9d[m fix: login com verificacao de senha bcrypt
+[33m2f3af41[m fix: rota pública de login de usuário
+[33m3166323[m fix: corrigir URL do API_BASE
+[33m17f1d4f[m fix: voltar routes no vercel.json
+[33m9200e64[m fix: API_BASE e vercel.json rewrites
+[33m58eb325[m fix: vercel.json usar rewrites
+[33m731b384[m fix: corrigir cadastrar.js
+[33mefacd9d[m fix: salvar assinatura na tabela usuarios
+[33m3a8a820[m fix: arquivo cadastrar corrigido
+[33m0477928[m fix: API_BASE corrigida e assinatura integrada ao cadastro
+[33maa8f0cf[m fix: cadastro publico sem autenticacao
+[33m8f46183[m fix: corrigir API_BASE para dominio correto
+[33m0cccb8e[m fix: simplificar vercel.json
+[33m4176852[m fix: corrigir vercel.json corrompido
+[33mcc8588b[m fix: adicionar builds no vercel.json
+[33m0daaa6b[m fix: remover barra extra no API_BASE
+[33mc599b22[m fix: vercel.json com rotas corretas
+[33m3187b4a[m fix: atualizar API_BASE para novo projeto
+[33m396cf84[m fix: reescrever ping e debug sem backticks
+[33mda955ab[m fix: remover vercel.json
+[33m91007a5[m trigger deploy
+[33m06ceaba[m fix: corrigir debug.js para CommonJS
+[33m070c6d3[m fix: corrigir ping.js para CommonJS
+[33me7c2542[m fix: vercel.json vazio
+[33m51e0774[m fix: definir runtime nodejs nas functions
+[33mdfeb4d5[m fix: mover api para raiz do projeto
+[33me0428a1[m fix: remover git interno e adicionar todos arquivos
+[33m943d12f[m fix: resetar cache git e adicionar todos arquivos
+[33m6c79959[m fix: remover submodulo e adicionar arquivos api
+[33mda3bb84[m fix: vercel.json minimo
+[33mcf92d02[m fix: simplificar vercel.json
+[33m7f0d96c[m fix: rota auth/login corrigida
+[33m28ec578[m fix: vercel.json frontend e rota auth
+[33md7982cb[m fix: corrigir todas as rotas da API
+[33mafca8dd[m fix: corrigir todas as rotas da API
+[33m9d87494[m fix: rota auth/login corrigida
+[33m2f7dd87[m fix: renomear rotas para index.js
+[33m06bbbbf[m fix: adicionar vercel.json
+[33mc88cb7a[m fix: API_BASE corrigido
+[33m1361c77[m fix: configurar API_BASE
+[33m7e0b437[m feat: assinatura digital no cadastro
+[33m571acc2[m fix: configurar API_BASE
+[33mddf3dcb[m feat: adicionar frontend
+[33m8d30f50[m feat: adicionar api, middleware e configuracoes
+[33mcc539f3[m removido filtro status
+[33m3d97369[m resolve conflito README
+[33ma12a3d5[m feat: backend inicial Ala dos Estudantes
+[33m3b0b79a[m Initial commit
