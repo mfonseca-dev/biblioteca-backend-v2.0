@@ -3617,18 +3617,19 @@ async function adminVerificarStone() {
   const el = document.getElementById('stoneCheckEnv');
   if (!el) return;
   try {
-    // Tenta autenticar — se STONE_CODE/SECRET não estiverem configurados
-    // o endpoint retorna erro específico
-    const r = await fetch(API_BASE + '/api/pagamentos?acao=cobrar-stone', {
+    // Usa webhook-stone com ping — não faz queries no banco,
+    // só verifica se as variáveis de ambiente estão presentes
+    const r = await fetch(API_BASE + '/api/pagamentos?acao=webhook-stone', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${api.token}` },
-      body: JSON.stringify({ usuario_id: 'ping' })
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type: 'ping' })
     });
     const d = await r.json();
-    if (d.erro && d.erro.includes('STONE_CODE')) {
+    // Se chegou aqui sem erro de env, as variáveis estão OK
+    if (r.status === 500 && d.erro && (d.erro.includes('STONE_CODE') || d.erro.includes('STONE_SECRET'))) {
       el.innerHTML = '⚠️ <b>STONE_CODE</b> ou <b>STONE_SECRET_KEY</b> não configurados no Vercel.<br><span style="color:#888">Vá em Vercel → Settings → Environment Variables.</span>';
       el.style.color = 'var(--laranja)';
-    } else if (d.erro && d.erro.includes('STONE_SERIAL')) {
+    } else if (r.status === 500 && d.erro && d.erro.includes('STONE_SERIAL')) {
       el.innerHTML = '⚠️ <b>STONE_SERIAL_POS</b> não configurado no Vercel.';
       el.style.color = 'var(--laranja)';
     } else {
