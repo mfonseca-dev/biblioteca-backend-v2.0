@@ -1312,7 +1312,7 @@ const API_BASE = 'https://biblioteca-backend-v2-0.vercel.app';
 const api = {
   token: null,
 
-  setToken(t) { this.token = t; },
+  setToken(t) { this.token = t; if(t) sessionStorage.setItem('_tk', t); else sessionStorage.removeItem('_tk'); },
   clearToken() { this.token = null; },
 
   async req(method, path, body) {
@@ -1786,6 +1786,7 @@ async function loginUsuario() {
 
 // ═══════════════════════════════════════════════════════════
 //  LOGIN ADMIN/RECEPÇÃO
+const _tkSalvo = sessionStorage.getItem('_tk'); if (_tkSalvo) api.setToken(_tkSalvo);
 // ═══════════════════════════════════════════════════════════
 async function loginAdmin() {
   mostrarErro('adminLoginErro','');
