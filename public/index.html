@@ -2573,11 +2573,11 @@ async function abrirModalPagamento() {
     const ae = await api.get(`/api/acessos-especiais?acao=verificar&uid=${sess.usuario.id}`);
     if (ae.tem_acesso) {
       toast('🔓 Acesso especial ativo — liberando catraca...');
-    await api.post('/api/liberar-acesso', {
-  usuario_id:        sess.usuario.id,
-  controlid_user_id: sess.usuario.controlid_user_id || 0,
-  nome:              sess.usuario.nome,
-});
+      await api.post('/api/liberar-acesso', {
+        usuario_id:        sess.usuario.id,
+        controlid_user_id: sess.usuario.controlid_user_id || 0,
+        nome:              sess.usuario.nome,
+      });
       await verificarAcessoHoje();
       return; // não abre o modal de pagamento
     }
