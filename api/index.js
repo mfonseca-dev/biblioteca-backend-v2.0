@@ -3,7 +3,6 @@ const acessos          = require('../lib/handlers/acessos.js');
 const auth             = require('../lib/handlers/auth.js');
 const avisos           = require('../lib/handlers/avisos.js');
 const configuracoes    = require('../lib/handlers/configuracoes.js');
-const gerarTokens      = require('../lib/handlers/gerar-tokens.js');
 const liberarAcesso    = require('../lib/handlers/liberar-acesso.js');
 const pagamentos       = require('../lib/handlers/pagamentos.js');
 const sugestoes        = require('../lib/handlers/sugestoes.js');
@@ -19,7 +18,6 @@ const rotas = {
   '/api/auth':              auth,
   '/api/avisos':            avisos,
   '/api/configuracoes':     configuracoes,
-  '/api/gerar-tokens':      gerarTokens,
   '/api/liberar-acesso':    liberarAcesso,
   '/api/pagamentos':        pagamentos,
   '/api/sugestoes':         sugestoes,
