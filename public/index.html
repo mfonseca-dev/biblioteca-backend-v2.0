@@ -653,6 +653,9 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
         <button class="btn btn-dourado" id="btnAcesso">
           <span id="lblBtn">💳 Pagar e Garantir Acesso</span>
         </button>
+        <button class="btn btn-vermelho" id="btnSairLiberar" style="display:none;margin-top:9px">
+          🚪 Sair e Liberar Vaga
+        </button>
         <p style="font-size:.71rem;color:#aaa;margin-top:9px;text-align:center">⏰ Funcionamento: todos os dias — 8h às 19h45</p>
       </div>
       <div class="crd" style="padding:14px 16px">
@@ -2522,12 +2525,13 @@ async function verificarAcessoHoje() {
 }
 
 function renderizarStatusAcesso() {
-  const box    = document.getElementById('statusBox');
-  const dot    = document.getElementById('dotSt');
-  const txt    = document.getElementById('txtSt');
-  const btn    = document.getElementById('btnAcesso');
-  const lblBtn = document.getElementById('lblBtn');
-  const ticket = document.getElementById('blocoTicket');
+  const box          = document.getElementById('statusBox');
+  const dot          = document.getElementById('dotSt');
+  const txt          = document.getElementById('txtSt');
+  const btn          = document.getElementById('btnAcesso');
+  const lblBtn       = document.getElementById('lblBtn');
+  const ticket       = document.getElementById('blocoTicket');
+  const btnSairLib   = document.getElementById('btnSairLiberar');
 
   if(sess.acesso) {
     box.className = 'st-box presente';
@@ -2535,6 +2539,7 @@ function renderizarStatusAcesso() {
     txt.textContent = `Acesso ativo desde ${fmtHora(sess.acesso.entrada_em)}`;
     lblBtn.textContent = '✅ Acesso Ativo';
     btn.disabled = true;
+    if (btnSairLib) btnSairLib.style.display = 'block';
     ticket.style.display = 'block';
     document.getElementById('ticketNome').textContent = sess.usuario.nome;
     document.getElementById('ticketDetalhe').textContent = `CPF: ${fmtCpf(sess.usuario.cpf)} • Entrada: ${fmtHora(sess.acesso.entrada_em)}`;
@@ -2544,6 +2549,7 @@ function renderizarStatusAcesso() {
     txt.textContent = 'Sem acesso ativo para hoje';
     lblBtn.textContent = '💳 Pagar e Garantir Acesso';
     btn.disabled = false;
+    if (btnSairLib) btnSairLib.style.display = 'none';
     ticket.style.display = 'none';
   }
 }
@@ -4163,6 +4169,42 @@ async function excluirAcessoEspecial(id, nome) {
     toast('🗑️ Acesso removido');
     carregarAcessosEspeciais();
   } catch(err) { toast(`❌ ${err.message}`); }
+}
+
+// ═══════════════════════════════════════════════════════════
+//  SAÍDA VOLUNTÁRIA — Usuário libera a própria vaga pelo app
+// ═══════════════════════════════════════════════════════════
+document.getElementById('btnSairLiberar').addEventListener('click', registrarSaidaUsuario);
+
+async function registrarSaidaUsuario() {
+  if (!sess.acesso) return;
+  if (!confirm('🚪 Tem certeza que vai embora?\n\nSua vaga será liberada e o acesso de hoje encerrado.')) return;
+
+  const btn = document.getElementById('btnSairLiberar');
+  btn.disabled = true;
+  btn.textContent = '⏳ Registrando saída...';
+
+  try {
+    const res = await fetch(API_BASE + '/api/acessos?acao=registrar-saida', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + api.token
+      },
+      body: JSON.stringify({ acesso_id: sess.acesso.id, usuario_id: sess.usuario.id })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.erro || 'Erro ao registrar saída');
+
+    sess.acesso = null;
+    renderizarStatusAcesso();
+    atualizarVagas();
+    toast('✅ Saída registrada! Vaga liberada.');
+  } catch(e) {
+    toast('❌ ' + e.message);
+    btn.disabled = false;
+    btn.textContent = '🚪 Sair e Liberar Vaga';
+  }
 }
 
 // ── Service Worker (PWA) ─────────────────────────────────────
