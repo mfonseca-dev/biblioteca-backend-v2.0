@@ -2570,14 +2570,20 @@ let _pixSegundos = 300;
 async function abrirModalPagamento() {
   // ── Verifica acesso especial ativo ──────────────────────────
   try {
-    const ae = await api.get(`/api/acessos-especiais?acao=verificar&uid=${sess.usuario.id}`);
+  const ae = await api.get(`/api/acessos-especiais?acao=verificar&uid=${sess.usuario.id}&_=${Date.now()}`);
     if (ae.tem_acesso) {
       toast('🔓 Acesso especial ativo — liberando catraca...');
-      await api.post('/api/liberar-acesso', {
-        usuario_id:        sess.usuario.id,
-        controlid_user_id: sess.usuario.controlid_user_id || 0,
-        nome:              sess.usuario.nome,
-      });
+      try {
+        await api.post('/api/liberar-acesso', {
+          usuario_id:        sess.usuario.id,
+          controlid_user_id: sess.usuario.controlid_user_id || 0,
+          nome:              sess.usuario.nome,
+        });
+      } catch(errLiberar) {
+        console.warn('[liberar-acesso] erro ao liberar catraca:', errLiberar.message);
+      }
+      // Aguarda o banco gravar antes de verificar
+      await new Promise(r => setTimeout(r, 800));
       await verificarAcessoHoje();
       return; // não abre o modal de pagamento
     }
