@@ -1398,7 +1398,7 @@ function maskCpf(input) {
   });
 }
 
-function hojeISO() { return new Date().toISOString().split('T')[0]; }
+function hojeISO() { const d = new Date(); return new Date(d - d.getTimezoneOffset() * 60000).toISOString().split('T')[0]; }
 
 function fmtHora(iso) {
   if(!iso) return '—';
