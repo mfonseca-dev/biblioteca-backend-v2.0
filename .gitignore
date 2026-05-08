@@ -50,3 +50,4 @@ yarn-error.log*
 # ── Agente local (contém senhas, nunca subir pro GitHub) ─────
 agente.js
 iniciar-agente.bat
+.env*.local

@@ -2228,19 +2228,27 @@ async function migFinalizar() {
       })
     });
 
-    // 3. Envia foto ao Control iD (só se necessário e fornecida)
-    if (precisaFoto && _migFotoDataUrl) {
-      const authHeader = api.token ? { 'Authorization': `Bearer ${api.token}` } : {};
-      const rF = await fetch(API_BASE+'/api/pagamentos?acao=enviar-foto',{
-        method:'POST',
-        headers:{ 'Content-Type':'application/json', ...authHeader },
-        body:JSON.stringify({ usuario_id:_migUsuario.id, foto_base64:_migFotoDataUrl })
-      });
-      const dF = await rF.json();
-      toast(dF.ok ? '✅ Cadastro completo! Acesso facial ativo.' : '✅ Cadastro salvo! Foto em processamento.');
-    } else {
-      toast('✅ Termo assinado! Cadastro atualizado.');
-    }
+    // 3. Salva foto (rota pública — usuário ainda não logado)
+if (precisaFoto && _migFotoDataUrl) {
+
+  await fetch(API_BASE + '/api/usuarios?acao=salvar-foto', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      usuario_id: _migUsuario.id,
+      cpf: _migUsuario.cpf,
+      foto_base64: _migFotoDataUrl
+    })
+  });
+
+  toast('✅ Cadastro completo! Acesso facial ativo.');
+
+} else {
+
+  toast('✅ Termo assinado! Cadastro atualizado.');
+}
 
     // Reset completo
     _migUsuario=null; _migFotoDataUrl=null; _migCtx=null; _migAssinaturaFeita=false;
