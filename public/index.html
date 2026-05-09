@@ -2416,7 +2416,8 @@ async function carregarPerfil() {
   const img   = document.getElementById('perfilFotoImg');
   const letra = document.getElementById('perfilFotoLetra');
   if (img && letra) {
-    if (u.foto_url) {
+    const fotoValida = u.foto_url && (u.foto_url.startsWith('http') || u.foto_url.startsWith('data:image'));
+    if (fotoValida) {
       img.src = u.foto_url; img.style.display = 'block'; letra.style.display = 'none';
     } else {
       img.style.display = 'none';
@@ -3369,7 +3370,7 @@ async function adminCarregarUsuarios(busca='') {
         <td><button class="btn btn-sec btn-xs" onclick="adminVerAssinatura('${u.id}','${u.nome.replace(/'/g,"\\'")}')">✍️ Ver Termo</button></td>
         <td><span class="badge ${u.ativo?'verde':'vermelho'}">${u.ativo?'Ativo':'Bloqueado'}</span></td>
         <td style="display:flex;gap:5px;flex-wrap:wrap">
-          <button class="btn btn-xs btn-azul" onclick="adminVerPerfil(${JSON.stringify(u).replace(/"/g,'&quot;')})">👤 Perfil</button>
+          <button class="btn btn-xs btn-azul" onclick="adminVerPerfilById('${u.id}')">👤 Perfil</button>
           <button class="btn btn-xs ${u.ativo?'btn-vermelho':'btn-verde'}" onclick="adminBloquearUsuario('${u.id}','${u.nome.replace(/'/g,"\\'")}',${ !u.ativo},this)">${u.ativo?'🚫 Bloquear':'✅ Ativar'}</button>
         </td>
       </tr>
@@ -4359,10 +4360,11 @@ function adminVerPerfil(u) {
 
   // Foto
   const fotoWrap = document.getElementById('perfilAdminFotoWrap');
-  if (u.foto_url) {
+  const fotoValida = u.foto_url && (u.foto_url.startsWith('http') || u.foto_url.startsWith('data:image'));
+  if (fotoValida) {
     fotoWrap.innerHTML = `<img src="${u.foto_url}" alt="Foto" style="width:100%;height:100%;object-fit:cover">`;
   } else {
-    fotoWrap.innerHTML = `<span id="perfilAdminLetra" style="font-size:2rem;font-weight:700;color:var(--verde)">${(u.nome||'?')[0].toUpperCase()}</span>`;
+    fotoWrap.innerHTML = `<span style="font-size:2rem;font-weight:700;color:var(--verde)">${(u.nome||'?')[0].toUpperCase()}</span>`;
   }
 
   // Assinatura
@@ -4383,6 +4385,16 @@ function adminVerPerfil(u) {
 function fecharModalPerfilAdmin() {
   document.getElementById('modalPerfilAdmin').classList.remove('ativo');
   _perfilUsuarioAtual = null;
+}
+
+async function adminVerPerfilById(id) {
+  try {
+    const res = await api.get(`/usuarios?acao=buscar&id=${id}`);
+    if (res.usuario) adminVerPerfil(res.usuario);
+    else toast('⚠️ Usuário não encontrado');
+  } catch(e) {
+    toast('❌ Erro ao carregar perfil: ' + e.message);
+  }
 }
 
 async function adminSalvarPerfil() {
