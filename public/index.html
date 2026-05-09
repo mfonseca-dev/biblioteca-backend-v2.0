@@ -1984,6 +1984,31 @@ function limparCanvas() {
   document.getElementById('assinaturaPlaceholder').style.display = 'flex';
 }
 
+// ─── COMPRESSÃO DE FOTO ───────────────────────────────────────
+// Reduz para no máximo 200KB mantendo qualidade para reconhecimento facial
+function comprimirFoto(dataUrl, maxKB = 200) {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      const maxW = 640;
+      let w = img.width, h = img.height;
+      if (w > maxW) { h = Math.round(h * maxW / w); w = maxW; }
+      canvas.width = w; canvas.height = h;
+      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+      let quality = 0.8;
+      let result  = canvas.toDataURL('image/jpeg', quality);
+      while (result.length > maxKB * 1024 * 1.37 && quality > 0.2) {
+        quality -= 0.1;
+        result = canvas.toDataURL('image/jpeg', quality);
+      }
+      resolve(result);
+    };
+    img.onerror = () => resolve(dataUrl);
+    img.src = dataUrl;
+  });
+}
+
 // ─── CÂMERA CADASTRO APP (3 ETAPAS) ──────────────────────────
 let _cadFotoDataUrl = null;
 let _cadStream = null;
@@ -2016,12 +2041,12 @@ document.getElementById('btnAbrirCamera').addEventListener('click', async () => 
     document.querySelector('#cadEtapa2 .cam-btns')?.style.setProperty('display','none');
   } catch(e) { toast('⚠️ Câmera indisponível. Use a opção de arquivo.'); }
 });
-document.getElementById('btnCapturarFoto').addEventListener('click', () => {
+document.getElementById('btnCapturarFoto').addEventListener('click', async () => {
   const v = document.getElementById('cadVideo');
   const c = document.getElementById('cadCanvas');
   c.width = v.videoWidth; c.height = v.videoHeight;
   c.getContext('2d').drawImage(v,0,0);
-  _cadFotoDataUrl = c.toDataURL('image/jpeg',0.85);
+  _cadFotoDataUrl = await comprimirFoto(c.toDataURL('image/jpeg',0.85));
   document.getElementById('cadFotoPreview').src = _cadFotoDataUrl;
   document.getElementById('cadFotoPreview').style.display = 'block';
   v.style.display = 'none';
@@ -2046,8 +2071,8 @@ document.getElementById('btnRefazerFoto').addEventListener('click', () => {
 document.getElementById('cadFotoFile').addEventListener('change', e => {
   const f=e.target.files[0]; if(!f) return;
   const r=new FileReader();
-  r.onload = ev => {
-    _cadFotoDataUrl = ev.target.result;
+  r.onload = async ev => {
+    _cadFotoDataUrl = await comprimirFoto(ev.target.result);
     document.getElementById('cadFotoPreview').src = _cadFotoDataUrl;
     document.getElementById('cadFotoPreview').style.display = 'block';
     document.getElementById('cadFotoPlaceholder').style.display = 'none';
@@ -2159,11 +2184,11 @@ document.getElementById('btnMigAbrirCamera').addEventListener('click', async()=>
     document.getElementById('migCameraControles').style.display='block';
   }catch(e){toast('⚠️ Câmera indisponível. Use a opção de arquivo.');}
 });
-document.getElementById('btnMigCapturar').addEventListener('click',()=>{
+document.getElementById('btnMigCapturar').addEventListener('click', async ()=>{
   const v=document.getElementById('migVideo'),c=document.getElementById('migCanvas');
   c.width=v.videoWidth; c.height=v.videoHeight;
   c.getContext('2d').drawImage(v,0,0);
-  _migFotoDataUrl=c.toDataURL('image/jpeg',0.85);
+  _migFotoDataUrl=await comprimirFoto(c.toDataURL('image/jpeg',0.85));
   document.getElementById('migFotoPreview').src=_migFotoDataUrl;
   document.getElementById('migFotoPreview').style.display='block';
   v.style.display='none';
@@ -2186,8 +2211,8 @@ document.getElementById('btnMigRefazerFoto').addEventListener('click',()=>{
 document.getElementById('migFotoFile').addEventListener('change',e=>{
   const f=e.target.files[0]; if(!f) return;
   const r=new FileReader();
-  r.onload=ev=>{
-    _migFotoDataUrl=ev.target.result;
+  r.onload=async ev=>{
+    _migFotoDataUrl=await comprimirFoto(ev.target.result);
     document.getElementById('migFotoPreview').src=_migFotoDataUrl;
     document.getElementById('migFotoPreview').style.display='block';
     document.getElementById('migFotoPlaceholder').style.display='none';
@@ -2501,13 +2526,13 @@ document.getElementById('btnPerfilAbrirCamera').onclick = async () => {
   }
 };
 
-document.getElementById('btnPerfilCapturar').onclick = () => {
+document.getElementById('btnPerfilCapturar').onclick = async () => {
   const video  = document.getElementById('perfilVideo');
   const canvas = document.getElementById('perfilCanvas');
   canvas.width  = video.videoWidth  || 640;
   canvas.height = video.videoHeight || 480;
   canvas.getContext('2d').drawImage(video, 0, 0);
-  _perfilFotoDataUrl = canvas.toDataURL('image/jpeg', 0.85);
+  _perfilFotoDataUrl = await comprimirFoto(canvas.toDataURL('image/jpeg', 0.85));
 
   const preview = document.getElementById('perfilFotoCapturada');
   preview.src = _perfilFotoDataUrl;
@@ -2567,8 +2592,8 @@ document.getElementById('modalFotoFile').addEventListener('change', function() {
   const file = this.files[0];
   if (!file) return;
   const reader = new FileReader();
-  reader.onload = e => {
-    _perfilFotoDataUrl = e.target.result;
+  reader.onload = async e => {
+    _perfilFotoDataUrl = await comprimirFoto(e.target.result);
     const preview = document.getElementById('perfilFotoCapturada');
     preview.src = _perfilFotoDataUrl;
     preview.style.display = 'block';
