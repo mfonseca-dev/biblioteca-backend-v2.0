@@ -1235,6 +1235,82 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
   </div>
 </div>
 
+<!-- MODAL PERFIL USUÁRIO (ADMIN) -->
+<div class="modal-bg" id="modalPerfilAdmin" style="align-items:flex-start;padding:16px;overflow-y:auto">
+  <div style="background:#fff;border-radius:20px;width:100%;max-width:500px;margin:auto;overflow:hidden;animation:fadeUp .3s ease">
+    <div style="background:linear-gradient(135deg,var(--verde-esc),var(--verde));color:#fff;padding:20px 24px">
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <div>
+          <div style="font-size:.7rem;text-transform:uppercase;letter-spacing:.8px;opacity:.7;margin-bottom:4px">Perfil do Usuário</div>
+          <div style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700" id="perfilAdminNome">—</div>
+        </div>
+        <button onclick="fecharModalPerfilAdmin()" style="background:rgba(255,255,255,.15);border:none;color:#fff;width:32px;height:32px;border-radius:50%;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center">✕</button>
+      </div>
+    </div>
+    <div style="padding:22px 24px">
+      <!-- Foto -->
+      <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px">
+        <div id="perfilAdminFotoWrap" style="width:72px;height:72px;border-radius:50%;background:var(--verde-suave);display:flex;align-items:center;justify-content:center;font-size:2rem;font-weight:700;color:var(--verde);overflow:hidden;flex-shrink:0">
+          <span id="perfilAdminLetra">?</span>
+        </div>
+        <div style="flex:1">
+          <div style="font-size:.72rem;color:#aaa;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px">Tipo de acesso</div>
+          <span id="perfilAdminTipo" class="badge azul">—</span>
+          <div style="margin-top:6px">
+            <span id="perfilAdminStatus" class="badge verde">Ativo</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dados -->
+      <div style="display:grid;gap:10px;margin-bottom:18px">
+        <div style="background:#f8f8f8;border-radius:10px;padding:12px 14px">
+          <div style="font-size:.67rem;color:#aaa;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px">CPF</div>
+          <div style="font-family:monospace;font-size:.9rem;font-weight:600" id="perfilAdminCpf">—</div>
+        </div>
+        <div style="background:#f8f8f8;border-radius:10px;padding:12px 14px">
+          <div style="font-size:.67rem;color:#aaa;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px">E-mail</div>
+          <div style="font-size:.88rem" id="perfilAdminEmail">—</div>
+        </div>
+        <div style="background:#f8f8f8;border-radius:10px;padding:12px 14px">
+          <div style="font-size:.67rem;color:#aaa;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px">Telefone</div>
+          <div style="font-size:.88rem" id="perfilAdminTel">—</div>
+        </div>
+        <div style="background:#f8f8f8;border-radius:10px;padding:12px 14px">
+          <div style="font-size:.67rem;color:#aaa;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px">Cadastrado em</div>
+          <div style="font-size:.88rem" id="perfilAdminData">—</div>
+        </div>
+        <div style="background:#f8f8f8;border-radius:10px;padding:12px 14px">
+          <div style="font-size:.67rem;color:#aaa;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px">Documento Oficial (RG/CNH)</div>
+          <input type="text" id="perfilAdminDoc" placeholder="Número do documento"
+            style="width:100%;border:none;background:transparent;font-size:.88rem;outline:none;color:var(--cinza-esc);font-family:'DM Sans',sans-serif">
+        </div>
+        <div style="background:#f8f8f8;border-radius:10px;padding:12px 14px">
+          <div style="font-size:.67rem;color:#aaa;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px">Observações</div>
+          <textarea id="perfilAdminObs" rows="2" placeholder="Anotações internas..."
+            style="width:100%;border:none;background:transparent;font-size:.88rem;outline:none;resize:none;color:var(--cinza-esc);font-family:'DM Sans',sans-serif"></textarea>
+        </div>
+      </div>
+
+      <!-- Assinatura -->
+      <div id="perfilAdminAssinaturaWrap" style="display:none;margin-bottom:18px">
+        <div style="font-size:.67rem;color:#aaa;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Assinatura do Termo</div>
+        <div style="border:1.5px solid var(--cinza-cl);border-radius:10px;overflow:hidden;background:#fafafa;text-align:center;padding:8px">
+          <img id="perfilAdminAssinatura" src="" alt="Assinatura" style="max-width:100%;max-height:120px;object-fit:contain">
+        </div>
+        <div style="font-size:.69rem;color:#aaa;margin-top:4px" id="perfilAdminTermoTs">—</div>
+      </div>
+
+      <!-- Botões -->
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn btn-verde btn-sm" onclick="adminSalvarPerfil()" style="flex:1">💾 Salvar</button>
+        <button class="btn btn-sec btn-sm" id="perfilAdminBtnBloquear" onclick="adminBloquearDoPerfil()" style="flex:1">🚫 Bloquear</button>
+        <button class="btn btn-sec btn-sm" onclick="fecharModalPerfilAdmin()" style="flex:1">Fechar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <!-- MODAL AUDITORIA DE TERMO -->
@@ -3292,7 +3368,10 @@ async function adminCarregarUsuarios(busca='') {
         <td><span class="badge azul">${u.tipo}</span></td>
         <td><button class="btn btn-sec btn-xs" onclick="adminVerAssinatura('${u.id}','${u.nome.replace(/'/g,"\\'")}')">✍️ Ver Termo</button></td>
         <td><span class="badge ${u.ativo?'verde':'vermelho'}">${u.ativo?'Ativo':'Bloqueado'}</span></td>
-        <td><button class="btn btn-xs ${u.ativo?'btn-vermelho':'btn-verde'}" onclick="adminBloquearUsuario('${u.id}','${u.nome.replace(/'/g,"\\'")}',${ !u.ativo},this)">${u.ativo?'🚫 Bloquear':'✅ Ativar'}</button></td>
+        <td style="display:flex;gap:5px;flex-wrap:wrap">
+          <button class="btn btn-xs btn-azul" onclick="adminVerPerfil(${JSON.stringify(u).replace(/"/g,'&quot;')})">👤 Perfil</button>
+          <button class="btn btn-xs ${u.ativo?'btn-vermelho':'btn-verde'}" onclick="adminBloquearUsuario('${u.id}','${u.nome.replace(/'/g,"\\'")}',${ !u.ativo},this)">${u.ativo?'🚫 Bloquear':'✅ Ativar'}</button>
+        </td>
       </tr>
     `).join('') || '<tr><td colspan="6" style="text-align:center;color:#aaa">Nenhum usuário</td></tr>';
 
@@ -4245,6 +4324,99 @@ function verTermo(img, nome, data, ip) {
 
 function fecharTermo() {
   document.getElementById('modalTermo').classList.remove('ativo');
+}
+
+// ═══════════════════════════════════════════════════════════
+//  MODAL PERFIL ADMIN
+// ═══════════════════════════════════════════════════════════
+let _perfilUsuarioAtual = null;
+
+function adminVerPerfil(u) {
+  _perfilUsuarioAtual = u;
+
+  // Preenche dados
+  document.getElementById('perfilAdminNome').textContent   = u.nome || '—';
+  document.getElementById('perfilAdminLetra').textContent  = (u.nome || '?')[0].toUpperCase();
+  document.getElementById('perfilAdminCpf').textContent    = fmtCpf(u.cpf || '');
+  document.getElementById('perfilAdminEmail').textContent  = u.email || '—';
+  document.getElementById('perfilAdminTel').textContent    = u.telefone || '—';
+  document.getElementById('perfilAdminDoc').value          = u.documento_oficial || '';
+  document.getElementById('perfilAdminObs').value          = u.observacoes || '';
+  document.getElementById('perfilAdminData').textContent   = u.created_at
+    ? new Date(u.created_at).toLocaleDateString('pt-BR', { day:'2-digit', month:'2-digit', year:'numeric' })
+    : '—';
+
+  // Tipo e status
+  document.getElementById('perfilAdminTipo').textContent   = u.tipo || '—';
+  const statusEl = document.getElementById('perfilAdminStatus');
+  statusEl.textContent  = u.ativo ? 'Ativo' : 'Bloqueado';
+  statusEl.className    = `badge ${u.ativo ? 'verde' : 'vermelho'}`;
+
+  // Botão bloquear/ativar
+  const btnBloquear = document.getElementById('perfilAdminBtnBloquear');
+  btnBloquear.textContent = u.ativo ? '🚫 Bloquear' : '✅ Ativar';
+  btnBloquear.className   = `btn btn-sm ${u.ativo ? 'btn-vermelho' : 'btn-verde'}`;
+
+  // Foto
+  const fotoWrap = document.getElementById('perfilAdminFotoWrap');
+  if (u.foto_url) {
+    fotoWrap.innerHTML = `<img src="${u.foto_url}" alt="Foto" style="width:100%;height:100%;object-fit:cover">`;
+  } else {
+    fotoWrap.innerHTML = `<span id="perfilAdminLetra" style="font-size:2rem;font-weight:700;color:var(--verde)">${(u.nome||'?')[0].toUpperCase()}</span>`;
+  }
+
+  // Assinatura
+  const assinWrap = document.getElementById('perfilAdminAssinaturaWrap');
+  if (u.assinatura_svg) {
+    document.getElementById('perfilAdminAssinatura').src = u.assinatura_svg;
+    document.getElementById('perfilAdminTermoTs').textContent = u.termo_aceito_em
+      ? 'Assinado em ' + new Date(u.termo_aceito_em).toLocaleString('pt-BR')
+      : '';
+    assinWrap.style.display = 'block';
+  } else {
+    assinWrap.style.display = 'none';
+  }
+
+  document.getElementById('modalPerfilAdmin').classList.add('ativo');
+}
+
+function fecharModalPerfilAdmin() {
+  document.getElementById('modalPerfilAdmin').classList.remove('ativo');
+  _perfilUsuarioAtual = null;
+}
+
+async function adminSalvarPerfil() {
+  if (!_perfilUsuarioAtual) return;
+  const doc = document.getElementById('perfilAdminDoc').value.trim();
+  const obs = document.getElementById('perfilAdminObs').value.trim();
+  try {
+    await api.post('/usuarios?acao=atualizar', {
+      id: _perfilUsuarioAtual.id,
+      documento_oficial: doc,
+      observacoes: obs
+    });
+    toast('✅ Perfil salvo!');
+    adminCarregarUsuarios();
+  } catch(e) {
+    toast('❌ ' + e.message);
+  }
+}
+
+async function adminBloquearDoPerfil() {
+  if (!_perfilUsuarioAtual) return;
+  const novoStatus = !_perfilUsuarioAtual.ativo;
+  try {
+    await adminBloquearUsuario(_perfilUsuarioAtual.id, _perfilUsuarioAtual.nome, novoStatus, null);
+    _perfilUsuarioAtual.ativo = novoStatus;
+    const statusEl = document.getElementById('perfilAdminStatus');
+    statusEl.textContent = novoStatus ? 'Ativo' : 'Bloqueado';
+    statusEl.className   = `badge ${novoStatus ? 'verde' : 'vermelho'}`;
+    const btnBloquear = document.getElementById('perfilAdminBtnBloquear');
+    btnBloquear.textContent = novoStatus ? '🚫 Bloquear' : '✅ Ativar';
+    btnBloquear.className   = `btn btn-sm ${novoStatus ? 'btn-vermelho' : 'btn-verde'}`;
+  } catch(e) {
+    toast('❌ ' + e.message);
+  }
 }
 </script>
 
