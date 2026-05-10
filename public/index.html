@@ -1748,10 +1748,8 @@ async function loginUsuario() {
         sess.usuario.foto_url        = fresco.foto_url;
         sess.usuario.termo_aceito_em = fresco.sem_termo ? null : 'ok';
 
-        // Verifica se precisa completar cadastro
-        // IMPORTANTE: foto é opcional para quem já tem senha e termo assinado
-        const precisaCompletar = fresco.sem_senha || fresco.sem_termo;
-        if (precisaCompletar) {
+        // Verifica se precisa completar cadastro (sem senha, foto ou termo)
+        if (fresco.primeiro_acesso) {
           redirecionarCompletarCadastro(fresco);
           return;
         }
@@ -1768,11 +1766,11 @@ async function loginUsuario() {
       }
     } catch(e) {
       const semTermo = !res.usuario.termo_aceito_em;
-      const semSenha = !res.usuario.senha_hash;
-      if (semTermo || semSenha) {
+      const semFoto  = !res.usuario.foto_url;
+      if (semTermo || semFoto) {
         redirecionarCompletarCadastro({
-          ...res.usuario, sem_senha: semSenha,
-          sem_foto: false, sem_termo: semTermo, primeiro_acesso: true
+          ...res.usuario, sem_senha: false,
+          sem_foto: semFoto, sem_termo: semTermo, primeiro_acesso: true
         });
         return;
       }
@@ -1910,27 +1908,6 @@ function limparCanvas() {
   document.getElementById('assinaturaPlaceholder').style.display = 'flex';
 }
 
-// ─── COMPRESSÃO DE FOTO ───────────────────────────────────────
-// Reduz para máx 640x640px e ~15KB — adequado para Supabase e Control iD
-function comprimirFoto(dataUrl, maxPx, qualidade) {
-  maxPx     = maxPx     || 640;
-  qualidade = qualidade || 0.55;
-  return new Promise(function(resolve) {
-    const img = new Image();
-    img.onload = function() {
-      let w = img.width, h = img.height;
-      if (w > h) { if (w > maxPx) { h = Math.round(h * maxPx / w); w = maxPx; } }
-      else        { if (h > maxPx) { w = Math.round(w * maxPx / h); h = maxPx; } }
-      const c = document.createElement('canvas');
-      c.width = w; c.height = h;
-      c.getContext('2d').drawImage(img, 0, 0, w, h);
-      resolve(c.toDataURL('image/jpeg', qualidade));
-    };
-    img.onerror = function() { resolve(dataUrl); };
-    img.src = dataUrl;
-  });
-}
-
 // ─── CÂMERA CADASTRO APP (3 ETAPAS) ──────────────────────────
 let _cadFotoDataUrl = null;
 let _cadStream = null;
@@ -1968,16 +1945,15 @@ document.getElementById('btnCapturarFoto').addEventListener('click', () => {
   const c = document.getElementById('cadCanvas');
   c.width = v.videoWidth; c.height = v.videoHeight;
   c.getContext('2d').drawImage(v,0,0);
-  comprimirFoto(c.toDataURL('image/jpeg', 0.92)).then(function(compressed) {
-    _cadFotoDataUrl = compressed;
-    document.getElementById('cadFotoPreview').src = _cadFotoDataUrl;
-    document.getElementById('cadFotoPreview').style.display = 'block';
-    v.style.display = 'none';
-    document.getElementById('cadCameraControles').style.display = 'none';
-    document.getElementById('cadFotoFeitaControles').style.display = 'block';
-    _cadStream?.getTracks().forEach(t=>t.stop()); _cadStream=null;
-    _atualizarBotaoEtapa2();
-  });
+  _cadFotoDataUrl = c.toDataURL('image/jpeg',0.85);
+  document.getElementById('cadFotoPreview').src = _cadFotoDataUrl;
+  document.getElementById('cadFotoPreview').style.display = 'block';
+  v.style.display = 'none';
+  document.getElementById('cadCameraControles').style.display = 'none';
+  document.getElementById('cadFotoFeitaControles').style.display = 'block';
+  _cadStream?.getTracks().forEach(t=>t.stop()); _cadStream=null;
+  _atualizarBotaoEtapa2();
+});
 document.getElementById('btnFecharCamera').addEventListener('click', () => {
   _cadStream?.getTracks().forEach(t=>t.stop()); _cadStream=null;
   document.getElementById('cadVideo').style.display = 'none';
@@ -1995,14 +1971,12 @@ document.getElementById('cadFotoFile').addEventListener('change', e => {
   const f=e.target.files[0]; if(!f) return;
   const r=new FileReader();
   r.onload = ev => {
-    comprimirFoto(ev.target.result).then(function(compressed) {
-      _cadFotoDataUrl = compressed;
-      document.getElementById('cadFotoPreview').src = _cadFotoDataUrl;
-      document.getElementById('cadFotoPreview').style.display = 'block';
-      document.getElementById('cadFotoPlaceholder').style.display = 'none';
-      document.getElementById('cadFotoFeitaControles').style.display = 'block';
-      _atualizarBotaoEtapa2();
-    });
+    _cadFotoDataUrl = ev.target.result;
+    document.getElementById('cadFotoPreview').src = _cadFotoDataUrl;
+    document.getElementById('cadFotoPreview').style.display = 'block';
+    document.getElementById('cadFotoPlaceholder').style.display = 'none';
+    document.getElementById('cadFotoFeitaControles').style.display = 'block';
+    _atualizarBotaoEtapa2();
   };
   r.readAsDataURL(f);
 });
@@ -2113,15 +2087,13 @@ document.getElementById('btnMigCapturar').addEventListener('click',()=>{
   const v=document.getElementById('migVideo'),c=document.getElementById('migCanvas');
   c.width=v.videoWidth; c.height=v.videoHeight;
   c.getContext('2d').drawImage(v,0,0);
-  comprimirFoto(c.toDataURL('image/jpeg',0.92)).then(function(compressed) {
-    _migFotoDataUrl = compressed;
-    document.getElementById('migFotoPreview').src=_migFotoDataUrl;
-    document.getElementById('migFotoPreview').style.display='block';
-    v.style.display='none';
-    document.getElementById('migCameraControles').style.display='none';
-    document.getElementById('migFotoFeitaControles').style.display='block';
-    _migStream?.getTracks().forEach(t=>t.stop()); _migStream=null;
-  });
+  _migFotoDataUrl=c.toDataURL('image/jpeg',0.85);
+  document.getElementById('migFotoPreview').src=_migFotoDataUrl;
+  document.getElementById('migFotoPreview').style.display='block';
+  v.style.display='none';
+  document.getElementById('migCameraControles').style.display='none';
+  document.getElementById('migFotoFeitaControles').style.display='block';
+  _migStream?.getTracks().forEach(t=>t.stop()); _migStream=null;
 });
 document.getElementById('btnMigFecharCamera').addEventListener('click',()=>{
   _migStream?.getTracks().forEach(t=>t.stop()); _migStream=null;
@@ -2139,13 +2111,11 @@ document.getElementById('migFotoFile').addEventListener('change',e=>{
   const f=e.target.files[0]; if(!f) return;
   const r=new FileReader();
   r.onload=ev=>{
-    comprimirFoto(ev.target.result).then(function(compressed) {
-      _migFotoDataUrl=compressed;
-      document.getElementById('migFotoPreview').src=_migFotoDataUrl;
-      document.getElementById('migFotoPreview').style.display='block';
-      document.getElementById('migFotoPlaceholder').style.display='none';
-      document.getElementById('migFotoFeitaControles').style.display='block';
-    });
+    _migFotoDataUrl=ev.target.result;
+    document.getElementById('migFotoPreview').src=_migFotoDataUrl;
+    document.getElementById('migFotoPreview').style.display='block';
+    document.getElementById('migFotoPlaceholder').style.display='none';
+    document.getElementById('migFotoFeitaControles').style.display='block';
   };
   r.readAsDataURL(f);
 });
@@ -2460,16 +2430,16 @@ document.getElementById('btnPerfilCapturar').onclick = () => {
   canvas.width  = video.videoWidth  || 640;
   canvas.height = video.videoHeight || 480;
   canvas.getContext('2d').drawImage(video, 0, 0);
-  comprimirFoto(canvas.toDataURL('image/jpeg', 0.92)).then(function(compressed) {
-    _perfilFotoDataUrl = compressed;
-    const preview = document.getElementById('perfilFotoCapturada');
-    preview.src = _perfilFotoDataUrl;
-    preview.style.display = 'block';
-    video.style.display = 'none';
-    if (_perfilStream) { _perfilStream.getTracks().forEach(t => t.stop()); _perfilStream = null; }
-    document.getElementById('perfilCameraControles').style.display = 'none';
-    document.getElementById('perfilFotoFeitaControles').style.display = 'block';
-  });
+  _perfilFotoDataUrl = canvas.toDataURL('image/jpeg', 0.85);
+
+  const preview = document.getElementById('perfilFotoCapturada');
+  preview.src = _perfilFotoDataUrl;
+  preview.style.display = 'block';
+  video.style.display = 'none';
+  if (_perfilStream) { _perfilStream.getTracks().forEach(t => t.stop()); _perfilStream = null; }
+
+  document.getElementById('perfilCameraControles').style.display = 'none';
+  document.getElementById('perfilFotoFeitaControles').style.display = 'block';
 };
 
 document.getElementById('btnPerfilRefazerFoto').onclick = () => {
@@ -2521,15 +2491,13 @@ document.getElementById('modalFotoFile').addEventListener('change', function() {
   if (!file) return;
   const reader = new FileReader();
   reader.onload = e => {
-    comprimirFoto(e.target.result).then(function(compressed) {
-      _perfilFotoDataUrl = compressed;
-      const preview = document.getElementById('perfilFotoCapturada');
-      preview.src = _perfilFotoDataUrl;
-      preview.style.display = 'block';
-      document.getElementById('perfilCameraPlaceholder').style.display = 'none';
-      document.getElementById('perfilFotoOpcoes').style.display = 'none';
-      document.getElementById('perfilFotoFeitaControles').style.display = 'block';
-    });
+    _perfilFotoDataUrl = e.target.result;
+    const preview = document.getElementById('perfilFotoCapturada');
+    preview.src = _perfilFotoDataUrl;
+    preview.style.display = 'block';
+    document.getElementById('perfilCameraPlaceholder').style.display = 'none';
+    document.getElementById('perfilFotoOpcoes').style.display = 'none';
+    document.getElementById('perfilFotoFeitaControles').style.display = 'block';
   };
   reader.readAsDataURL(file);
   this.value = '';
