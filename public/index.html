@@ -1235,82 +1235,6 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
   </div>
 </div>
 
-<!-- MODAL PERFIL USUÁRIO (ADMIN) -->
-<div class="modal-bg" id="modalPerfilAdmin" style="align-items:flex-start;padding:16px;overflow-y:auto">
-  <div style="background:#fff;border-radius:20px;width:100%;max-width:500px;margin:auto;overflow:hidden;animation:fadeUp .3s ease">
-    <div style="background:linear-gradient(135deg,var(--verde-esc),var(--verde));color:#fff;padding:20px 24px">
-      <div style="display:flex;align-items:center;justify-content:space-between">
-        <div>
-          <div style="font-size:.7rem;text-transform:uppercase;letter-spacing:.8px;opacity:.7;margin-bottom:4px">Perfil do Usuário</div>
-          <div style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700" id="perfilAdminNome">—</div>
-        </div>
-        <button onclick="fecharModalPerfilAdmin()" style="background:rgba(255,255,255,.15);border:none;color:#fff;width:32px;height:32px;border-radius:50%;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center">✕</button>
-      </div>
-    </div>
-    <div style="padding:22px 24px">
-      <!-- Foto -->
-      <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px">
-        <div id="perfilAdminFotoWrap" style="width:72px;height:72px;border-radius:50%;background:var(--verde-suave);display:flex;align-items:center;justify-content:center;font-size:2rem;font-weight:700;color:var(--verde);overflow:hidden;flex-shrink:0">
-          <span id="perfilAdminLetra">?</span>
-        </div>
-        <div style="flex:1">
-          <div style="font-size:.72rem;color:#aaa;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px">Tipo de acesso</div>
-          <span id="perfilAdminTipo" class="badge azul">—</span>
-          <div style="margin-top:6px">
-            <span id="perfilAdminStatus" class="badge verde">Ativo</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Dados -->
-      <div style="display:grid;gap:10px;margin-bottom:18px">
-        <div style="background:#f8f8f8;border-radius:10px;padding:12px 14px">
-          <div style="font-size:.67rem;color:#aaa;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px">CPF</div>
-          <div style="font-family:monospace;font-size:.9rem;font-weight:600" id="perfilAdminCpf">—</div>
-        </div>
-        <div style="background:#f8f8f8;border-radius:10px;padding:12px 14px">
-          <div style="font-size:.67rem;color:#aaa;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px">E-mail</div>
-          <div style="font-size:.88rem" id="perfilAdminEmail">—</div>
-        </div>
-        <div style="background:#f8f8f8;border-radius:10px;padding:12px 14px">
-          <div style="font-size:.67rem;color:#aaa;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px">Telefone</div>
-          <div style="font-size:.88rem" id="perfilAdminTel">—</div>
-        </div>
-        <div style="background:#f8f8f8;border-radius:10px;padding:12px 14px">
-          <div style="font-size:.67rem;color:#aaa;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px">Cadastrado em</div>
-          <div style="font-size:.88rem" id="perfilAdminData">—</div>
-        </div>
-        <div style="background:#f8f8f8;border-radius:10px;padding:12px 14px">
-          <div style="font-size:.67rem;color:#aaa;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px">Documento Oficial (RG/CNH)</div>
-          <input type="text" id="perfilAdminDoc" placeholder="Número do documento"
-            style="width:100%;border:none;background:transparent;font-size:.88rem;outline:none;color:var(--cinza-esc);font-family:'DM Sans',sans-serif">
-        </div>
-        <div style="background:#f8f8f8;border-radius:10px;padding:12px 14px">
-          <div style="font-size:.67rem;color:#aaa;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px">Observações</div>
-          <textarea id="perfilAdminObs" rows="2" placeholder="Anotações internas..."
-            style="width:100%;border:none;background:transparent;font-size:.88rem;outline:none;resize:none;color:var(--cinza-esc);font-family:'DM Sans',sans-serif"></textarea>
-        </div>
-      </div>
-
-      <!-- Assinatura -->
-      <div id="perfilAdminAssinaturaWrap" style="display:none;margin-bottom:18px">
-        <div style="font-size:.67rem;color:#aaa;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Assinatura do Termo</div>
-        <div style="border:1.5px solid var(--cinza-cl);border-radius:10px;overflow:hidden;background:#fafafa;text-align:center;padding:8px">
-          <img id="perfilAdminAssinatura" src="" alt="Assinatura" style="max-width:100%;max-height:120px;object-fit:contain">
-        </div>
-        <div style="font-size:.69rem;color:#aaa;margin-top:4px" id="perfilAdminTermoTs">—</div>
-      </div>
-
-      <!-- Botões -->
-      <div style="display:flex;gap:8px;flex-wrap:wrap">
-        <button class="btn btn-verde btn-sm" onclick="adminSalvarPerfil()" style="flex:1">💾 Salvar</button>
-        <button class="btn btn-sec btn-sm" id="perfilAdminBtnBloquear" onclick="adminBloquearDoPerfil()" style="flex:1">🚫 Bloquear</button>
-        <button class="btn btn-sec btn-sm" onclick="fecharModalPerfilAdmin()" style="flex:1">Fechar</button>
-      </div>
-    </div>
-  </div>
-</div>
-
 <div class="toast" id="toast"></div>
 
 <!-- MODAL AUDITORIA DE TERMO -->
@@ -1824,8 +1748,10 @@ async function loginUsuario() {
         sess.usuario.foto_url        = fresco.foto_url;
         sess.usuario.termo_aceito_em = fresco.sem_termo ? null : 'ok';
 
-        // Verifica se precisa completar cadastro (sem senha, foto ou termo)
-        if (fresco.primeiro_acesso) {
+        // Verifica se precisa completar cadastro
+        // IMPORTANTE: foto é opcional para quem já tem senha e termo assinado
+        const precisaCompletar = fresco.sem_senha || fresco.sem_termo;
+        if (precisaCompletar) {
           redirecionarCompletarCadastro(fresco);
           return;
         }
@@ -1842,11 +1768,11 @@ async function loginUsuario() {
       }
     } catch(e) {
       const semTermo = !res.usuario.termo_aceito_em;
-      const semFoto  = !res.usuario.foto_url;
-      if (semTermo || semFoto) {
+      const semSenha = !res.usuario.senha_hash;
+      if (semTermo || semSenha) {
         redirecionarCompletarCadastro({
-          ...res.usuario, sem_senha: false,
-          sem_foto: semFoto, sem_termo: semTermo, primeiro_acesso: true
+          ...res.usuario, sem_senha: semSenha,
+          sem_foto: false, sem_termo: semTermo, primeiro_acesso: true
         });
         return;
       }
@@ -1985,26 +1911,22 @@ function limparCanvas() {
 }
 
 // ─── COMPRESSÃO DE FOTO ───────────────────────────────────────
-// Reduz para no máximo 200KB mantendo qualidade para reconhecimento facial
-function comprimirFoto(dataUrl, maxKB = 200) {
-  return new Promise((resolve) => {
+// Reduz para máx 640x640px e ~15KB — adequado para Supabase e Control iD
+function comprimirFoto(dataUrl, maxPx, qualidade) {
+  maxPx     = maxPx     || 640;
+  qualidade = qualidade || 0.55;
+  return new Promise(function(resolve) {
     const img = new Image();
-    img.onload = () => {
-      const canvas = document.createElement('canvas');
-      const maxW = 640;
+    img.onload = function() {
       let w = img.width, h = img.height;
-      if (w > maxW) { h = Math.round(h * maxW / w); w = maxW; }
-      canvas.width = w; canvas.height = h;
-      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-      let quality = 0.8;
-      let result  = canvas.toDataURL('image/jpeg', quality);
-      while (result.length > maxKB * 1024 * 1.37 && quality > 0.2) {
-        quality -= 0.1;
-        result = canvas.toDataURL('image/jpeg', quality);
-      }
-      resolve(result);
+      if (w > h) { if (w > maxPx) { h = Math.round(h * maxPx / w); w = maxPx; } }
+      else        { if (h > maxPx) { w = Math.round(w * maxPx / h); h = maxPx; } }
+      const c = document.createElement('canvas');
+      c.width = w; c.height = h;
+      c.getContext('2d').drawImage(img, 0, 0, w, h);
+      resolve(c.toDataURL('image/jpeg', qualidade));
     };
-    img.onerror = () => resolve(dataUrl);
+    img.onerror = function() { resolve(dataUrl); };
     img.src = dataUrl;
   });
 }
@@ -2041,20 +1963,21 @@ document.getElementById('btnAbrirCamera').addEventListener('click', async () => 
     document.querySelector('#cadEtapa2 .cam-btns')?.style.setProperty('display','none');
   } catch(e) { toast('⚠️ Câmera indisponível. Use a opção de arquivo.'); }
 });
-document.getElementById('btnCapturarFoto').addEventListener('click', async () => {
+document.getElementById('btnCapturarFoto').addEventListener('click', () => {
   const v = document.getElementById('cadVideo');
   const c = document.getElementById('cadCanvas');
   c.width = v.videoWidth; c.height = v.videoHeight;
   c.getContext('2d').drawImage(v,0,0);
-  _cadFotoDataUrl = await comprimirFoto(c.toDataURL('image/jpeg',0.85));
-  document.getElementById('cadFotoPreview').src = _cadFotoDataUrl;
-  document.getElementById('cadFotoPreview').style.display = 'block';
-  v.style.display = 'none';
-  document.getElementById('cadCameraControles').style.display = 'none';
-  document.getElementById('cadFotoFeitaControles').style.display = 'block';
-  _cadStream?.getTracks().forEach(t=>t.stop()); _cadStream=null;
-  _atualizarBotaoEtapa2();
-});
+  comprimirFoto(c.toDataURL('image/jpeg', 0.92)).then(function(compressed) {
+    _cadFotoDataUrl = compressed;
+    document.getElementById('cadFotoPreview').src = _cadFotoDataUrl;
+    document.getElementById('cadFotoPreview').style.display = 'block';
+    v.style.display = 'none';
+    document.getElementById('cadCameraControles').style.display = 'none';
+    document.getElementById('cadFotoFeitaControles').style.display = 'block';
+    _cadStream?.getTracks().forEach(t=>t.stop()); _cadStream=null;
+    _atualizarBotaoEtapa2();
+  });
 document.getElementById('btnFecharCamera').addEventListener('click', () => {
   _cadStream?.getTracks().forEach(t=>t.stop()); _cadStream=null;
   document.getElementById('cadVideo').style.display = 'none';
@@ -2071,13 +1994,15 @@ document.getElementById('btnRefazerFoto').addEventListener('click', () => {
 document.getElementById('cadFotoFile').addEventListener('change', e => {
   const f=e.target.files[0]; if(!f) return;
   const r=new FileReader();
-  r.onload = async ev => {
-    _cadFotoDataUrl = await comprimirFoto(ev.target.result);
-    document.getElementById('cadFotoPreview').src = _cadFotoDataUrl;
-    document.getElementById('cadFotoPreview').style.display = 'block';
-    document.getElementById('cadFotoPlaceholder').style.display = 'none';
-    document.getElementById('cadFotoFeitaControles').style.display = 'block';
-    _atualizarBotaoEtapa2();
+  r.onload = ev => {
+    comprimirFoto(ev.target.result).then(function(compressed) {
+      _cadFotoDataUrl = compressed;
+      document.getElementById('cadFotoPreview').src = _cadFotoDataUrl;
+      document.getElementById('cadFotoPreview').style.display = 'block';
+      document.getElementById('cadFotoPlaceholder').style.display = 'none';
+      document.getElementById('cadFotoFeitaControles').style.display = 'block';
+      _atualizarBotaoEtapa2();
+    });
   };
   r.readAsDataURL(f);
 });
@@ -2184,17 +2109,19 @@ document.getElementById('btnMigAbrirCamera').addEventListener('click', async()=>
     document.getElementById('migCameraControles').style.display='block';
   }catch(e){toast('⚠️ Câmera indisponível. Use a opção de arquivo.');}
 });
-document.getElementById('btnMigCapturar').addEventListener('click', async ()=>{
+document.getElementById('btnMigCapturar').addEventListener('click',()=>{
   const v=document.getElementById('migVideo'),c=document.getElementById('migCanvas');
   c.width=v.videoWidth; c.height=v.videoHeight;
   c.getContext('2d').drawImage(v,0,0);
-  _migFotoDataUrl=await comprimirFoto(c.toDataURL('image/jpeg',0.85));
-  document.getElementById('migFotoPreview').src=_migFotoDataUrl;
-  document.getElementById('migFotoPreview').style.display='block';
-  v.style.display='none';
-  document.getElementById('migCameraControles').style.display='none';
-  document.getElementById('migFotoFeitaControles').style.display='block';
-  _migStream?.getTracks().forEach(t=>t.stop()); _migStream=null;
+  comprimirFoto(c.toDataURL('image/jpeg',0.92)).then(function(compressed) {
+    _migFotoDataUrl = compressed;
+    document.getElementById('migFotoPreview').src=_migFotoDataUrl;
+    document.getElementById('migFotoPreview').style.display='block';
+    v.style.display='none';
+    document.getElementById('migCameraControles').style.display='none';
+    document.getElementById('migFotoFeitaControles').style.display='block';
+    _migStream?.getTracks().forEach(t=>t.stop()); _migStream=null;
+  });
 });
 document.getElementById('btnMigFecharCamera').addEventListener('click',()=>{
   _migStream?.getTracks().forEach(t=>t.stop()); _migStream=null;
@@ -2211,12 +2138,14 @@ document.getElementById('btnMigRefazerFoto').addEventListener('click',()=>{
 document.getElementById('migFotoFile').addEventListener('change',e=>{
   const f=e.target.files[0]; if(!f) return;
   const r=new FileReader();
-  r.onload=async ev=>{
-    _migFotoDataUrl=await comprimirFoto(ev.target.result);
-    document.getElementById('migFotoPreview').src=_migFotoDataUrl;
-    document.getElementById('migFotoPreview').style.display='block';
-    document.getElementById('migFotoPlaceholder').style.display='none';
-    document.getElementById('migFotoFeitaControles').style.display='block';
+  r.onload=ev=>{
+    comprimirFoto(ev.target.result).then(function(compressed) {
+      _migFotoDataUrl=compressed;
+      document.getElementById('migFotoPreview').src=_migFotoDataUrl;
+      document.getElementById('migFotoPreview').style.display='block';
+      document.getElementById('migFotoPlaceholder').style.display='none';
+      document.getElementById('migFotoFeitaControles').style.display='block';
+    });
   };
   r.readAsDataURL(f);
 });
@@ -2441,8 +2370,7 @@ async function carregarPerfil() {
   const img   = document.getElementById('perfilFotoImg');
   const letra = document.getElementById('perfilFotoLetra');
   if (img && letra) {
-    const fotoValida = u.foto_url && (u.foto_url.startsWith('http') || u.foto_url.startsWith('data:image'));
-    if (fotoValida) {
+    if (u.foto_url) {
       img.src = u.foto_url; img.style.display = 'block'; letra.style.display = 'none';
     } else {
       img.style.display = 'none';
@@ -2526,22 +2454,22 @@ document.getElementById('btnPerfilAbrirCamera').onclick = async () => {
   }
 };
 
-document.getElementById('btnPerfilCapturar').onclick = async () => {
+document.getElementById('btnPerfilCapturar').onclick = () => {
   const video  = document.getElementById('perfilVideo');
   const canvas = document.getElementById('perfilCanvas');
   canvas.width  = video.videoWidth  || 640;
   canvas.height = video.videoHeight || 480;
   canvas.getContext('2d').drawImage(video, 0, 0);
-  _perfilFotoDataUrl = await comprimirFoto(canvas.toDataURL('image/jpeg', 0.85));
-
-  const preview = document.getElementById('perfilFotoCapturada');
-  preview.src = _perfilFotoDataUrl;
-  preview.style.display = 'block';
-  video.style.display = 'none';
-  if (_perfilStream) { _perfilStream.getTracks().forEach(t => t.stop()); _perfilStream = null; }
-
-  document.getElementById('perfilCameraControles').style.display = 'none';
-  document.getElementById('perfilFotoFeitaControles').style.display = 'block';
+  comprimirFoto(canvas.toDataURL('image/jpeg', 0.92)).then(function(compressed) {
+    _perfilFotoDataUrl = compressed;
+    const preview = document.getElementById('perfilFotoCapturada');
+    preview.src = _perfilFotoDataUrl;
+    preview.style.display = 'block';
+    video.style.display = 'none';
+    if (_perfilStream) { _perfilStream.getTracks().forEach(t => t.stop()); _perfilStream = null; }
+    document.getElementById('perfilCameraControles').style.display = 'none';
+    document.getElementById('perfilFotoFeitaControles').style.display = 'block';
+  });
 };
 
 document.getElementById('btnPerfilRefazerFoto').onclick = () => {
@@ -2592,14 +2520,16 @@ document.getElementById('modalFotoFile').addEventListener('change', function() {
   const file = this.files[0];
   if (!file) return;
   const reader = new FileReader();
-  reader.onload = async e => {
-    _perfilFotoDataUrl = await comprimirFoto(e.target.result);
-    const preview = document.getElementById('perfilFotoCapturada');
-    preview.src = _perfilFotoDataUrl;
-    preview.style.display = 'block';
-    document.getElementById('perfilCameraPlaceholder').style.display = 'none';
-    document.getElementById('perfilFotoOpcoes').style.display = 'none';
-    document.getElementById('perfilFotoFeitaControles').style.display = 'block';
+  reader.onload = e => {
+    comprimirFoto(e.target.result).then(function(compressed) {
+      _perfilFotoDataUrl = compressed;
+      const preview = document.getElementById('perfilFotoCapturada');
+      preview.src = _perfilFotoDataUrl;
+      preview.style.display = 'block';
+      document.getElementById('perfilCameraPlaceholder').style.display = 'none';
+      document.getElementById('perfilFotoOpcoes').style.display = 'none';
+      document.getElementById('perfilFotoFeitaControles').style.display = 'block';
+    });
   };
   reader.readAsDataURL(file);
   this.value = '';
@@ -3394,10 +3324,7 @@ async function adminCarregarUsuarios(busca='') {
         <td><span class="badge azul">${u.tipo}</span></td>
         <td><button class="btn btn-sec btn-xs" onclick="adminVerAssinatura('${u.id}','${u.nome.replace(/'/g,"\\'")}')">✍️ Ver Termo</button></td>
         <td><span class="badge ${u.ativo?'verde':'vermelho'}">${u.ativo?'Ativo':'Bloqueado'}</span></td>
-        <td style="display:flex;gap:5px;flex-wrap:wrap">
-          <button class="btn btn-xs btn-azul" onclick="adminVerPerfilById('${u.id}')">👤 Perfil</button>
-          <button class="btn btn-xs ${u.ativo?'btn-vermelho':'btn-verde'}" onclick="adminBloquearUsuario('${u.id}','${u.nome.replace(/'/g,"\\'")}',${ !u.ativo},this)">${u.ativo?'🚫 Bloquear':'✅ Ativar'}</button>
-        </td>
+        <td><button class="btn btn-xs ${u.ativo?'btn-vermelho':'btn-verde'}" onclick="adminBloquearUsuario('${u.id}','${u.nome.replace(/'/g,"\\'")}',${ !u.ativo},this)">${u.ativo?'🚫 Bloquear':'✅ Ativar'}</button></td>
       </tr>
     `).join('') || '<tr><td colspan="6" style="text-align:center;color:#aaa">Nenhum usuário</td></tr>';
 
@@ -4350,110 +4277,6 @@ function verTermo(img, nome, data, ip) {
 
 function fecharTermo() {
   document.getElementById('modalTermo').classList.remove('ativo');
-}
-
-// ═══════════════════════════════════════════════════════════
-//  MODAL PERFIL ADMIN
-// ═══════════════════════════════════════════════════════════
-let _perfilUsuarioAtual = null;
-
-function adminVerPerfil(u) {
-  _perfilUsuarioAtual = u;
-
-  // Preenche dados
-  document.getElementById('perfilAdminNome').textContent   = u.nome || '—';
-  document.getElementById('perfilAdminLetra').textContent  = (u.nome || '?')[0].toUpperCase();
-  document.getElementById('perfilAdminCpf').textContent    = fmtCpf(u.cpf || '');
-  document.getElementById('perfilAdminEmail').textContent  = u.email || '—';
-  document.getElementById('perfilAdminTel').textContent    = u.telefone || '—';
-  document.getElementById('perfilAdminDoc').value          = u.documento_oficial || '';
-  document.getElementById('perfilAdminObs').value          = u.observacoes || '';
-  document.getElementById('perfilAdminData').textContent   = u.created_at
-    ? new Date(u.created_at).toLocaleDateString('pt-BR', { day:'2-digit', month:'2-digit', year:'numeric' })
-    : '—';
-
-  // Tipo e status
-  document.getElementById('perfilAdminTipo').textContent   = u.tipo || '—';
-  const statusEl = document.getElementById('perfilAdminStatus');
-  statusEl.textContent  = u.ativo ? 'Ativo' : 'Bloqueado';
-  statusEl.className    = `badge ${u.ativo ? 'verde' : 'vermelho'}`;
-
-  // Botão bloquear/ativar
-  const btnBloquear = document.getElementById('perfilAdminBtnBloquear');
-  btnBloquear.textContent = u.ativo ? '🚫 Bloquear' : '✅ Ativar';
-  btnBloquear.className   = `btn btn-sm ${u.ativo ? 'btn-vermelho' : 'btn-verde'}`;
-
-  // Foto
-  const fotoWrap = document.getElementById('perfilAdminFotoWrap');
-  const fotoValida = u.foto_url && (u.foto_url.startsWith('http') || u.foto_url.startsWith('data:image'));
-  if (fotoValida) {
-    fotoWrap.innerHTML = `<img src="${u.foto_url}" alt="Foto" style="width:100%;height:100%;object-fit:cover">`;
-  } else {
-    fotoWrap.innerHTML = `<span style="font-size:2rem;font-weight:700;color:var(--verde)">${(u.nome||'?')[0].toUpperCase()}</span>`;
-  }
-
-  // Assinatura
-  const assinWrap = document.getElementById('perfilAdminAssinaturaWrap');
-  if (u.assinatura_svg) {
-    document.getElementById('perfilAdminAssinatura').src = u.assinatura_svg;
-    document.getElementById('perfilAdminTermoTs').textContent = u.termo_aceito_em
-      ? 'Assinado em ' + new Date(u.termo_aceito_em).toLocaleString('pt-BR')
-      : '';
-    assinWrap.style.display = 'block';
-  } else {
-    assinWrap.style.display = 'none';
-  }
-
-  document.getElementById('modalPerfilAdmin').classList.add('ativo');
-}
-
-function fecharModalPerfilAdmin() {
-  document.getElementById('modalPerfilAdmin').classList.remove('ativo');
-  _perfilUsuarioAtual = null;
-}
-
-async function adminVerPerfilById(id) {
-  try {
-    const res = await api.get(`/usuarios?acao=buscar&id=${id}`);
-    if (res.usuario) adminVerPerfil(res.usuario);
-    else toast('⚠️ Usuário não encontrado');
-  } catch(e) {
-    toast('❌ Erro ao carregar perfil: ' + e.message);
-  }
-}
-
-async function adminSalvarPerfil() {
-  if (!_perfilUsuarioAtual) return;
-  const doc = document.getElementById('perfilAdminDoc').value.trim();
-  const obs = document.getElementById('perfilAdminObs').value.trim();
-  try {
-    await api.post('/usuarios?acao=atualizar', {
-      id: _perfilUsuarioAtual.id,
-      documento_oficial: doc,
-      observacoes: obs
-    });
-    toast('✅ Perfil salvo!');
-    adminCarregarUsuarios();
-  } catch(e) {
-    toast('❌ ' + e.message);
-  }
-}
-
-async function adminBloquearDoPerfil() {
-  if (!_perfilUsuarioAtual) return;
-  const novoStatus = !_perfilUsuarioAtual.ativo;
-  try {
-    await adminBloquearUsuario(_perfilUsuarioAtual.id, _perfilUsuarioAtual.nome, novoStatus, null);
-    _perfilUsuarioAtual.ativo = novoStatus;
-    const statusEl = document.getElementById('perfilAdminStatus');
-    statusEl.textContent = novoStatus ? 'Ativo' : 'Bloqueado';
-    statusEl.className   = `badge ${novoStatus ? 'verde' : 'vermelho'}`;
-    const btnBloquear = document.getElementById('perfilAdminBtnBloquear');
-    btnBloquear.textContent = novoStatus ? '🚫 Bloquear' : '✅ Ativar';
-    btnBloquear.className   = `btn btn-sm ${novoStatus ? 'btn-vermelho' : 'btn-verde'}`;
-  } catch(e) {
-    toast('❌ ' + e.message);
-  }
 }
 </script>
 
