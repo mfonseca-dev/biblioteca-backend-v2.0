@@ -1945,7 +1945,7 @@ document.getElementById('btnCapturarFoto').addEventListener('click', () => {
   const c = document.getElementById('cadCanvas');
   c.width = v.videoWidth; c.height = v.videoHeight;
   c.getContext('2d').drawImage(v,0,0);
-  _cadFotoDataUrl = c.toDataURL('image/jpeg',0.85);
+  _cadFotoDataUrl = c.toDataURL('image/jpeg',0.85); comprimirFoto(_cadFotoDataUrl).then(function(c){_cadFotoDataUrl=c;});
   document.getElementById('cadFotoPreview').src = _cadFotoDataUrl;
   document.getElementById('cadFotoPreview').style.display = 'block';
   v.style.display = 'none';
@@ -2087,7 +2087,7 @@ document.getElementById('btnMigCapturar').addEventListener('click',()=>{
   const v=document.getElementById('migVideo'),c=document.getElementById('migCanvas');
   c.width=v.videoWidth; c.height=v.videoHeight;
   c.getContext('2d').drawImage(v,0,0);
-  _migFotoDataUrl=c.toDataURL('image/jpeg',0.85);
+  _migFotoDataUrl=c.toDataURL('image/jpeg',0.85); comprimirFoto(_migFotoDataUrl).then(function(c){_migFotoDataUrl=c;});
   document.getElementById('migFotoPreview').src=_migFotoDataUrl;
   document.getElementById('migFotoPreview').style.display='block';
   v.style.display='none';
@@ -2111,11 +2111,13 @@ document.getElementById('migFotoFile').addEventListener('change',e=>{
   const f=e.target.files[0]; if(!f) return;
   const r=new FileReader();
   r.onload=ev=>{
-    _migFotoDataUrl=ev.target.result;
-    document.getElementById('migFotoPreview').src=_migFotoDataUrl;
-    document.getElementById('migFotoPreview').style.display='block';
-    document.getElementById('migFotoPlaceholder').style.display='none';
-    document.getElementById('migFotoFeitaControles').style.display='block';
+    comprimirFoto(ev.target.result).then(function(foto){
+      _migFotoDataUrl=foto;
+      document.getElementById('migFotoPreview').src=foto;
+      document.getElementById('migFotoPreview').style.display='block';
+      document.getElementById('migFotoPlaceholder').style.display='none';
+      document.getElementById('migFotoFeitaControles').style.display='block';
+    });
   };
   r.readAsDataURL(f);
 });
@@ -2430,7 +2432,7 @@ document.getElementById('btnPerfilCapturar').onclick = () => {
   canvas.width  = video.videoWidth  || 640;
   canvas.height = video.videoHeight || 480;
   canvas.getContext('2d').drawImage(video, 0, 0);
-  _perfilFotoDataUrl = canvas.toDataURL('image/jpeg', 0.85);
+  _perfilFotoDataUrl = canvas.toDataURL('image/jpeg', 0.85); comprimirFoto(_perfilFotoDataUrl).then(function(c){_perfilFotoDataUrl=c;});
 
   const preview = document.getElementById('perfilFotoCapturada');
   preview.src = _perfilFotoDataUrl;
@@ -2491,13 +2493,15 @@ document.getElementById('modalFotoFile').addEventListener('change', function() {
   if (!file) return;
   const reader = new FileReader();
   reader.onload = e => {
-    _perfilFotoDataUrl = e.target.result;
-    const preview = document.getElementById('perfilFotoCapturada');
-    preview.src = _perfilFotoDataUrl;
-    preview.style.display = 'block';
-    document.getElementById('perfilCameraPlaceholder').style.display = 'none';
-    document.getElementById('perfilFotoOpcoes').style.display = 'none';
-    document.getElementById('perfilFotoFeitaControles').style.display = 'block';
+    comprimirFoto(e.target.result).then(function(foto){
+      _perfilFotoDataUrl = foto;
+      const preview = document.getElementById('perfilFotoCapturada');
+      preview.src = foto;
+      preview.style.display = 'block';
+      document.getElementById('perfilCameraPlaceholder').style.display = 'none';
+      document.getElementById('perfilFotoOpcoes').style.display = 'none';
+      document.getElementById('perfilFotoFeitaControles').style.display = 'block';
+    });
   };
   reader.readAsDataURL(file);
   this.value = '';
@@ -2573,6 +2577,29 @@ function renderizarStatusAcesso() {
 let _pollPagamento = null;   // intervalo do poll de status
 let _pixTimerInterval = null; // countdown do timer Pix
 let _pixSegundos = 300;
+
+// ── Comprime imagem para economizar espaço no Supabase ──────
+// Max ~800px, qualidade 0.72 → ~10-20KB em vez de 45KB+
+function comprimirFoto(dataUrl, maxSize, quality) {
+  maxSize  = maxSize  || 800;
+  quality  = quality  || 0.72;
+  return new Promise(function(resolve) {
+    const img = new Image();
+    img.onload = function() {
+      let w = img.width, h = img.height;
+      if (w > maxSize || h > maxSize) {
+        if (w > h) { h = Math.round(h * maxSize / w); w = maxSize; }
+        else       { w = Math.round(w * maxSize / h); h = maxSize; }
+      }
+      const c = document.createElement('canvas');
+      c.width = w; c.height = h;
+      c.getContext('2d').drawImage(img, 0, 0, w, h);
+      resolve(c.toDataURL('image/jpeg', quality));
+    };
+    img.src = dataUrl;
+  });
+}
+// ────────────────────────────────────────────────────────────
 
 // ── Abre modal e já inicia a cobrança ──────────────────────
 async function abrirModalPagamento() {
@@ -3290,7 +3317,7 @@ async function adminCarregarUsuarios(busca='') {
         <td><div style="font-weight:600;font-size:.83rem">${u.nome}</div><div style="font-size:.69rem;color:#aaa">${u.email||''}</div></td>
         <td style="font-family:monospace;font-size:.79rem">${fmtCpf(u.cpf)}</td>
         <td><span class="badge azul">${u.tipo}</span></td>
-        <td><button class="btn btn-sec btn-xs" onclick="adminVerAssinatura('${u.id}','${u.nome.replace(/'/g,"\\'")}')">✍️ Ver Termo</button></td>
+        <td><button class="btn btn-sec btn-xs" onclick="adminVerAssinatura('${u.id}','${u.nome.replace(/'/g,"\\'")}')">✍️ Termo</button> <button class="btn btn-xs" style="background:#e8f0fe;color:#1a4a8a;border:none;border-radius:6px;padding:3px 8px;cursor:pointer;font-size:.75rem" onclick="adminVerPerfilUsuario('${u.id}')">👤 Perfil</button></td>
         <td><span class="badge ${u.ativo?'verde':'vermelho'}">${u.ativo?'Ativo':'Bloqueado'}</span></td>
         <td><button class="btn btn-xs ${u.ativo?'btn-vermelho':'btn-verde'}" onclick="adminBloquearUsuario('${u.id}','${u.nome.replace(/'/g,"\\'")}',${ !u.ativo},this)">${u.ativo?'🚫 Bloquear':'✅ Ativar'}</button></td>
       </tr>
@@ -4007,6 +4034,42 @@ ${u.foto_url ? `
   <p>Documento sigiloso gerado automaticamente. Uso restrito à instituição.</p>
   <p>© ${new Date().getFullYear()}</p>
 </div>
+  <!-- ── MODAL PERFIL ADMIN ──────────────────────────── -->
+  <div id="modalPerfilAdmin" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.55);align-items:flex-start;justify-content:center;overflow-y:auto;padding:20px 0">
+    <div style="background:#fff;border-radius:20px;width:90%;max-width:480px;margin:auto;padding:24px;position:relative">
+      <button onclick="fecharModalPerfilAdmin()" style="position:absolute;top:14px;right:16px;background:none;border:none;font-size:1.4rem;cursor:pointer;color:#aaa">✕</button>
+      <h3 style="margin:0 0 16px;color:var(--verde-esc);font-size:1rem">👤 Perfil do Usuário</h3>
+      <div style="display:flex;align-items:center;gap:16px;margin-bottom:16px">
+        <div style="width:72px;height:72px;border-radius:50%;background:var(--verde-suave);border:3px solid var(--verde);overflow:hidden;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <img id="adminPerfilFotoImg" src="" style="display:none;width:100%;height:100%;object-fit:cover">
+          <span id="adminPerfilLetra" style="font-size:2rem;font-weight:700;color:var(--verde)">?</span>
+        </div>
+        <div>
+          <div id="adminPerfilNome" style="font-weight:700;font-size:1rem;color:var(--verde-esc)">—</div>
+          <div id="adminPerfilCpf" style="font-size:.78rem;color:#888;margin-top:2px">—</div>
+          <div id="adminPerfilEmail" style="font-size:.78rem;color:#888;margin-top:1px">—</div>
+          <div id="adminPerfilTelefone" style="font-size:.78rem;color:#888;margin-top:1px">—</div>
+        </div>
+      </div>
+      <div id="adminPerfilStatus" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px"></div>
+      <div style="border:1.5px solid var(--cinza-cl);border-radius:12px;padding:14px;margin-bottom:14px">
+        <div style="font-weight:600;font-size:.85rem;color:var(--verde-esc);margin-bottom:10px">📄 Documento Oficial</div>
+        <div id="adminPerfilDocAtual" style="font-size:.8rem;color:#888;margin-bottom:10px">Nenhum documento enviado.</div>
+        <div id="adminPerfilDocPreview" style="display:none;margin-bottom:10px">
+          <img id="adminPerfilDocImg" src="" style="max-width:100%;border-radius:8px;border:1px solid var(--cinza-cl)">
+        </div>
+        <label style="display:block;cursor:pointer">
+          <input type="file" id="adminPerfilDocFile" accept="image/*" style="display:none" onchange="adminPerfilDocSelecionado(this)">
+          <div style="background:var(--verde-suave);color:var(--verde);border:1.5px dashed var(--verde);border-radius:10px;padding:10px;text-align:center;font-size:.82rem;font-weight:600">📎 Selecionar documento (foto do documento oficial)</div>
+        </label>
+        <button id="btnAdminSalvarDoc" onclick="adminSalvarDocumento()" style="display:none;width:100%;margin-top:8px;padding:10px;background:var(--verde);color:#fff;border:none;border-radius:10px;font-weight:600;cursor:pointer">✅ Salvar documento</button>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button onclick="fecharModalPerfilAdmin()" style="flex:1;padding:10px;background:#f5f5f5;color:#666;border:none;border-radius:10px;font-size:.82rem;font-weight:600;cursor:pointer">Fechar</button>
+      </div>
+    </div>
+  </div>
+
 </body>
 </html>
 `;
@@ -4222,6 +4285,76 @@ async function registrarSaidaUsuario() {
   }
 }
 
+// ── Perfil Admin ─────────────────────────────────────────────
+let _adminPerfilId   = null;
+let _adminPerfilNome = null;
+let _adminPerfilDocB64 = null;
+
+async function adminVerPerfilUsuario(id) {
+  _adminPerfilId = id; _adminPerfilDocB64 = null;
+  const btn = document.getElementById('btnAdminSalvarDoc');
+  const prev = document.getElementById('adminPerfilDocPreview');
+  if (btn) btn.style.display = 'none';
+  if (prev) prev.style.display = 'none';
+  try {
+    const res = await api.get('/api/usuarios?acao=buscar&id=' + id);
+    const u   = res.usuario;
+    _adminPerfilNome = u.nome;
+    const img   = document.getElementById('adminPerfilFotoImg');
+    const letra = document.getElementById('adminPerfilLetra');
+    if (u.foto_url) { img.src = u.foto_url; img.style.display = 'block'; letra.style.display = 'none'; }
+    else { img.style.display = 'none'; letra.style.display = 'block'; letra.textContent = u.nome[0].toUpperCase(); }
+    document.getElementById('adminPerfilNome').textContent     = u.nome;
+    document.getElementById('adminPerfilCpf').textContent      = 'CPF: ' + fmtCpf(u.cpf);
+    document.getElementById('adminPerfilEmail').textContent    = u.email || '—';
+    document.getElementById('adminPerfilTelefone').textContent = u.telefone || '—';
+    document.getElementById('adminPerfilStatus').innerHTML = [
+      `<span style="font-size:.72rem;padding:3px 9px;border-radius:20px;font-weight:600;background:${u.foto_url?'#e8f5ee':'#fff3e0'};color:${u.foto_url?'var(--verde)':'var(--laranja)'}">${u.foto_url?'✅ Foto':'⚠️ Sem foto'}</span>`,
+      `<span style="font-size:.72rem;padding:3px 9px;border-radius:20px;font-weight:600;background:${u.termo_aceito_em?'#e8f5ee':'#fff3e0'};color:${u.termo_aceito_em?'var(--verde)':'var(--laranja)'}">${u.termo_aceito_em?'✅ Termo':'⚠️ Sem termo'}</span>`,
+      `<span style="font-size:.72rem;padding:3px 9px;border-radius:20px;font-weight:600;background:${u.ativo?'#e8f5ee':'#fff5f5'};color:${u.ativo?'var(--verde)':'var(--vermelho)'}">${u.ativo?'✅ Ativo':'🚫 Bloqueado'}</span>`,
+    ].join('');
+    const docEl = document.getElementById('adminPerfilDocAtual');
+    if (u.documento_url) {
+      docEl.textContent = '✅ Documento enviado';
+      document.getElementById('adminPerfilDocImg').src = u.documento_url;
+      document.getElementById('adminPerfilDocPreview').style.display = 'block';
+    } else { docEl.textContent = '⚠️ Nenhum documento enviado.'; }
+    document.getElementById('modalPerfilAdmin').style.display = 'flex';
+  } catch(e) { toast('❌ Erro ao carregar perfil: ' + e.message); }
+}
+
+function fecharModalPerfilAdmin() {
+  document.getElementById('modalPerfilAdmin').style.display = 'none';
+  _adminPerfilId = null; _adminPerfilDocB64 = null;
+}
+
+function adminPerfilDocSelecionado(input) {
+  const file = input.files[0]; if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    comprimirFoto(e.target.result, 1200, 0.82).then(foto => {
+      _adminPerfilDocB64 = foto;
+      document.getElementById('adminPerfilDocImg').src = foto;
+      document.getElementById('adminPerfilDocPreview').style.display = 'block';
+      document.getElementById('adminPerfilDocAtual').textContent = '📎 ' + file.name + ' — pronto para salvar';
+      document.getElementById('btnAdminSalvarDoc').style.display = 'block';
+    });
+  };
+  reader.readAsDataURL(file);
+}
+
+async function adminSalvarDocumento() {
+  if (!_adminPerfilId || !_adminPerfilDocB64) return;
+  const btn = document.getElementById('btnAdminSalvarDoc');
+  btn.disabled = true; btn.textContent = '⏳ Salvando...';
+  try {
+    await api.post('/api/usuarios?acao=salvar-documento', { usuario_id: _adminPerfilId, documento_url: _adminPerfilDocB64 });
+    toast('✅ Documento salvo!');
+    document.getElementById('adminPerfilDocAtual').textContent = '✅ Documento enviado';
+    btn.style.display = 'none';
+  } catch(e) { toast('❌ Erro: ' + e.message); btn.disabled = false; btn.textContent = '✅ Salvar documento'; }
+}
+
 // ── Service Worker (PWA) ─────────────────────────────────────
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
@@ -4313,6 +4446,42 @@ function fecharTermo() {
 
   </div>
 </div>
+
+  <!-- ── MODAL PERFIL ADMIN ──────────────────────────── -->
+  <div id="modalPerfilAdmin" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.55);align-items:flex-start;justify-content:center;overflow-y:auto;padding:20px 0">
+    <div style="background:#fff;border-radius:20px;width:90%;max-width:480px;margin:auto;padding:24px;position:relative">
+      <button onclick="fecharModalPerfilAdmin()" style="position:absolute;top:14px;right:16px;background:none;border:none;font-size:1.4rem;cursor:pointer;color:#aaa">✕</button>
+      <h3 style="margin:0 0 16px;color:var(--verde-esc);font-size:1rem">👤 Perfil do Usuário</h3>
+      <div style="display:flex;align-items:center;gap:16px;margin-bottom:16px">
+        <div style="width:72px;height:72px;border-radius:50%;background:var(--verde-suave);border:3px solid var(--verde);overflow:hidden;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <img id="adminPerfilFotoImg" src="" style="display:none;width:100%;height:100%;object-fit:cover">
+          <span id="adminPerfilLetra" style="font-size:2rem;font-weight:700;color:var(--verde)">?</span>
+        </div>
+        <div>
+          <div id="adminPerfilNome" style="font-weight:700;font-size:1rem;color:var(--verde-esc)">—</div>
+          <div id="adminPerfilCpf" style="font-size:.78rem;color:#888;margin-top:2px">—</div>
+          <div id="adminPerfilEmail" style="font-size:.78rem;color:#888;margin-top:1px">—</div>
+          <div id="adminPerfilTelefone" style="font-size:.78rem;color:#888;margin-top:1px">—</div>
+        </div>
+      </div>
+      <div id="adminPerfilStatus" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px"></div>
+      <div style="border:1.5px solid var(--cinza-cl);border-radius:12px;padding:14px;margin-bottom:14px">
+        <div style="font-weight:600;font-size:.85rem;color:var(--verde-esc);margin-bottom:10px">📄 Documento Oficial</div>
+        <div id="adminPerfilDocAtual" style="font-size:.8rem;color:#888;margin-bottom:10px">Nenhum documento enviado.</div>
+        <div id="adminPerfilDocPreview" style="display:none;margin-bottom:10px">
+          <img id="adminPerfilDocImg" src="" style="max-width:100%;border-radius:8px;border:1px solid var(--cinza-cl)">
+        </div>
+        <label style="display:block;cursor:pointer">
+          <input type="file" id="adminPerfilDocFile" accept="image/*" style="display:none" onchange="adminPerfilDocSelecionado(this)">
+          <div style="background:var(--verde-suave);color:var(--verde);border:1.5px dashed var(--verde);border-radius:10px;padding:10px;text-align:center;font-size:.82rem;font-weight:600">📎 Selecionar documento (foto do documento oficial)</div>
+        </label>
+        <button id="btnAdminSalvarDoc" onclick="adminSalvarDocumento()" style="display:none;width:100%;margin-top:8px;padding:10px;background:var(--verde);color:#fff;border:none;border-radius:10px;font-weight:600;cursor:pointer">✅ Salvar documento</button>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button onclick="fecharModalPerfilAdmin()" style="flex:1;padding:10px;background:#f5f5f5;color:#666;border:none;border-radius:10px;font-size:.82rem;font-weight:600;cursor:pointer">Fechar</button>
+      </div>
+    </div>
+  </div>
 
 </body>
 </html>
