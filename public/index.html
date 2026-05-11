@@ -2526,6 +2526,8 @@ document.getElementById('modalFotoFile').addEventListener('change', function() {
 
 // ── Crop interativo ──────────────────────────────────────
 function abrirCropFoto(src, callback) {
+  // Fecha o modal de foto para o crop aparecer na frente
+  document.getElementById('modalFotoPerfil').classList.remove('ativo');
   let cropModal = document.getElementById('cropModal');
   if (!cropModal) {
     cropModal = document.createElement('div');
