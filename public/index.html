@@ -1071,11 +1071,9 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
           Execute uma vez para vincular automaticamente usuários já cadastrados no banco físico do Control iD com os registros do sistema, sem criar duplicatas. A biometria existente é preservada.
         </p>
         <div id="syncStatus" style="display:none;background:#f8fdf9;border:1.5px solid #a8d5b5;border-radius:8px;padding:12px;margin-bottom:10px;font-size:.8rem;line-height:1.8"></div>
-        <button class="btn btn-azul btn-sm" id="btnSincronizarControlId">🔄 Sincronizar com Control iD agora</button>
+      <button class="btn btn-azul btn-sm" id="btnSincronizarControlId">🔄 Sincronizar com Control iD agora</button>
       </div>
     </div>
-  </div>
-</div>
 
     <div id="adminPanelAcessosEspeciais" class="apanel">
       <div class="acrd" style="margin-bottom:12px">
@@ -1086,11 +1084,16 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
         <button class="btn btn-verde btn-sm" onclick="abrirModalNovoAcessoEspecial()">➕ Cadastrar Acesso Especial</button>
       </div>
       <div class="acrd" style="min-height:0;padding:0">
-  <div id="acessosEspeciaisLista">
-    <div class="sem"><span class="si">⏳</span>Carregando...</div>
-  </div>
-</div>
+        <div id="acessosEspeciaisLista">
+          <div class="sem"><span class="si">⏳</span>Carregando...</div>
+        </div>
+      </div>
     </div>
+
+  </div>  <!-- fecha admin-main -->
+</div>    <!-- fecha adminScreen -->
+
+
 <!-- MODAL PAGAMENTO -->
 <div class="modal-bg" id="modalPagamento">
   <div class="modal-pagto">
