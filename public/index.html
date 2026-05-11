@@ -2532,7 +2532,8 @@ function abrirCropFoto(src, callback) {
   if (!cropModal) {
     cropModal = document.createElement('div');
     cropModal.id = 'cropModal';
-    cropModal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px';
+    cropModal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:999999;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px';
+document.body.style.overflow = 'hidden';
     cropModal.innerHTML = `
       <div style="background:#fff;border-radius:16px;overflow:hidden;width:100%;max-width:360px">
         <div style="background:var(--verde-esc);color:#fff;padding:14px 18px;font-weight:700;font-size:.9rem">✂️ Ajustar foto — arraste para centralizar</div>
@@ -2591,7 +2592,7 @@ function abrirCropFoto(src, callback) {
   wrap.ontouchstart = e => { e.preventDefault(); sx=e.touches[0].clientX; sy=e.touches[0].clientY; spx=posX; spy=posY; };
   wrap.ontouchmove  = e => { e.preventDefault(); posX=spx+(e.touches[0].clientX-sx); posY=spy+(e.touches[0].clientY-sy); _aplicar(); };
 
-  document.getElementById('cropCancelar').onclick  = () => { cropModal.style.display='none'; };
+  document.getElementById('cropCancelar').onclick  = () => { cropModal.style.display='none'; document.body.style.overflow=''; };
   document.getElementById('cropConfirmar').onclick = () => {
     const size = Math.min(wrap.offsetWidth, wrap.offsetHeight);
     const canvas = document.createElement('canvas');
@@ -2600,6 +2601,7 @@ function abrirCropFoto(src, callback) {
     ctx.beginPath(); ctx.arc(size/2, size/2, size/2, 0, Math.PI*2); ctx.clip();
     ctx.drawImage(img, posX, posY, imgW*scale, imgH*scale);
     cropModal.style.display = 'none';
+    document.body.style.overflow = '';
     callback(canvas.toDataURL('image/jpeg', 0.9));
   };
 }
