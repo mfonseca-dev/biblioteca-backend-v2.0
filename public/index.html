@@ -2503,6 +2503,35 @@ document.getElementById('btnPerfilSalvarFoto').onclick = async () => {
 };
 
 // Galeria / arquivo
+document.getElementById('btnPerfilAbrirGaleria').onclick = () => {
+  const inp = document.createElement('input');
+  inp.type = 'file';
+  inp.accept = 'image/*';
+  inp.style.display = 'none';
+  document.body.appendChild(inp);
+  inp.onchange = function() {
+    const file = this.files[0];
+    if (!file) { document.body.removeChild(inp); return; }
+    const reader = new FileReader();
+    reader.onload = e => {
+      document.body.removeChild(inp);
+      abrirCropFoto(e.target.result, (fotoFinal) => {
+        comprimirFoto(fotoFinal).then(foto => {
+          _perfilFotoDataUrl = foto;
+          const preview = document.getElementById('perfilFotoCapturada');
+          preview.src = foto;
+          preview.style.display = 'block';
+          document.getElementById('perfilCameraPlaceholder').style.display = 'none';
+          document.getElementById('perfilFotoOpcoes').style.display = 'none';
+          document.getElementById('perfilFotoFeitaControles').style.display = 'block';
+        });
+      });
+    };
+    reader.readAsDataURL(file);
+  };
+  inp.click();
+};
+
 document.getElementById('modalFotoFile').addEventListener('change', function() {
   const file = this.files[0];
   if (!file) return;
@@ -2526,14 +2555,11 @@ document.getElementById('modalFotoFile').addEventListener('change', function() {
 
 // ── Crop interativo ──────────────────────────────────────
 function abrirCropFoto(src, callback) {
-  // Fecha o modal de foto para o crop aparecer na frente
-  document.getElementById('modalFotoPerfil').classList.remove('ativo');
   let cropModal = document.getElementById('cropModal');
   if (!cropModal) {
     cropModal = document.createElement('div');
     cropModal.id = 'cropModal';
-    cropModal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:999999;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px';
-document.body.style.overflow = 'hidden';
+    cropModal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px';
     cropModal.innerHTML = `
       <div style="background:#fff;border-radius:16px;overflow:hidden;width:100%;max-width:360px">
         <div style="background:var(--verde-esc);color:#fff;padding:14px 18px;font-weight:700;font-size:.9rem">✂️ Ajustar foto — arraste para centralizar</div>
@@ -2592,7 +2618,7 @@ document.body.style.overflow = 'hidden';
   wrap.ontouchstart = e => { e.preventDefault(); sx=e.touches[0].clientX; sy=e.touches[0].clientY; spx=posX; spy=posY; };
   wrap.ontouchmove  = e => { e.preventDefault(); posX=spx+(e.touches[0].clientX-sx); posY=spy+(e.touches[0].clientY-sy); _aplicar(); };
 
-  document.getElementById('cropCancelar').onclick  = () => { cropModal.style.display='none'; document.body.style.overflow=''; };
+  document.getElementById('cropCancelar').onclick  = () => { cropModal.style.display='none'; };
   document.getElementById('cropConfirmar').onclick = () => {
     const size = Math.min(wrap.offsetWidth, wrap.offsetHeight);
     const canvas = document.createElement('canvas');
@@ -2601,7 +2627,6 @@ document.body.style.overflow = 'hidden';
     ctx.beginPath(); ctx.arc(size/2, size/2, size/2, 0, Math.PI*2); ctx.clip();
     ctx.drawImage(img, posX, posY, imgW*scale, imgH*scale);
     cropModal.style.display = 'none';
-    document.body.style.overflow = '';
     callback(canvas.toDataURL('image/jpeg', 0.9));
   };
 }
