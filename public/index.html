@@ -2504,32 +2504,7 @@ document.getElementById('btnPerfilSalvarFoto').onclick = async () => {
 
 // Galeria / arquivo
 document.getElementById('btnPerfilAbrirGaleria').onclick = () => {
-  const inp = document.createElement('input');
-  inp.type = 'file';
-  inp.accept = 'image/*';
-  inp.style.display = 'none';
-  document.body.appendChild(inp);
-  inp.onchange = function() {
-    const file = this.files[0];
-    if (!file) { document.body.removeChild(inp); return; }
-    const reader = new FileReader();
-    reader.onload = e => {
-      document.body.removeChild(inp);
-      abrirCropFoto(e.target.result, (fotoFinal) => {
-        comprimirFoto(fotoFinal).then(foto => {
-          _perfilFotoDataUrl = foto;
-          const preview = document.getElementById('perfilFotoCapturada');
-          preview.src = foto;
-          preview.style.display = 'block';
-          document.getElementById('perfilCameraPlaceholder').style.display = 'none';
-          document.getElementById('perfilFotoOpcoes').style.display = 'none';
-          document.getElementById('perfilFotoFeitaControles').style.display = 'block';
-        });
-      });
-    };
-    reader.readAsDataURL(file);
-  };
-  inp.click();
+  document.getElementById('modalFotoFile').click();
 };
 
 document.getElementById('modalFotoFile').addEventListener('change', function() {
