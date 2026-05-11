@@ -706,6 +706,24 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
         <button class="btn btn-dourado btn-sm" style="margin-top:10px" onclick="perfilIrCompletarCadastro()">✅ Completar agora</button>
       </div>
 
+      <!-- Documento Oficial -->
+      <div class="crd" id="perfilDocCard">
+        <div class="crd-t">📄 Documento Oficial</div>
+        <div id="perfilDocStatus" style="font-size:.82rem;color:#888;margin-bottom:12px">⏳ Verificando...</div>
+        <div id="perfilDocPreview" style="display:none;margin-bottom:12px">
+          <img id="perfilDocImg" src="" style="max-width:100%;border-radius:10px;border:1px solid var(--cinza-cl)">
+        </div>
+        <label style="display:block;cursor:pointer">
+          <input type="file" id="perfilDocFile" accept="image/*" style="display:none" onchange="perfilDocSelecionado(this)">
+          <div style="background:var(--verde-suave);color:var(--verde);border:1.5px dashed var(--verde);border-radius:10px;padding:10px;text-align:center;font-size:.82rem;font-weight:600">
+            📎 Enviar foto do documento (RG, CNH, etc)
+          </div>
+        </label>
+        <button id="btnPerfilSalvarDoc" onclick="perfilSalvarDocumento()" style="display:none;width:100%;margin-top:8px;padding:11px;background:var(--verde);color:#fff;border:none;border-radius:10px;font-weight:600;cursor:pointer;font-size:.9rem">
+          ✅ Salvar documento
+        </button>
+      </div>
+
       <!-- Estatísticas -->
       <div class="plano-crd">
         <div class="plano-tipo">🎫 Acesso Diário</div>
@@ -2389,6 +2407,7 @@ async function carregarPerfil() {
 
   // Histórico
   carregarHistoricoUsuario();
+  carregarDocumentoPerfil();
 }
 
 // ── Modal câmera / galeria do Perfil ────────────────────────
@@ -4353,6 +4372,67 @@ async function adminSalvarDocumento() {
     document.getElementById('adminPerfilDocAtual').textContent = '✅ Documento enviado';
     btn.style.display = 'none';
   } catch(e) { toast('❌ Erro: ' + e.message); btn.disabled = false; btn.textContent = '✅ Salvar documento'; }
+}
+
+// ── Documento Oficial no Perfil ──────────────────────────────
+let _perfilDocBase64 = null;
+
+async function carregarDocumentoPerfil() {
+  if (!sess.usuario) return;
+  const statusEl = document.getElementById('perfilDocStatus');
+  const prevEl   = document.getElementById('perfilDocPreview');
+  const docImg   = document.getElementById('perfilDocImg');
+  try {
+    const res = await api.get('/api/usuarios?acao=buscar&id=' + sess.usuario.id);
+    const u   = res.usuario;
+    if (u.documento_url) {
+      statusEl.innerHTML = '✅ <b>Documento enviado</b> — visível apenas para a recepção e administração.';
+      statusEl.style.color = 'var(--verde)';
+      docImg.src = u.documento_url;
+      prevEl.style.display = 'block';
+    } else {
+      statusEl.textContent = '⚠️ Nenhum documento enviado. Envie uma foto do seu RG ou CNH.';
+      statusEl.style.color = 'var(--laranja)';
+      prevEl.style.display = 'none';
+    }
+  } catch(e) {
+    statusEl.textContent = '—';
+  }
+}
+
+function perfilDocSelecionado(input) {
+  const file = input.files[0]; if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    comprimirFoto(e.target.result, 1200, 0.82).then(foto => {
+      _perfilDocBase64 = foto;
+      document.getElementById('perfilDocImg').src = foto;
+      document.getElementById('perfilDocPreview').style.display = 'block';
+      document.getElementById('perfilDocStatus').textContent = '📎 ' + file.name + ' — pronto para salvar';
+      document.getElementById('btnPerfilSalvarDoc').style.display = 'block';
+    });
+  };
+  reader.readAsDataURL(file);
+}
+
+async function perfilSalvarDocumento() {
+  if (!_perfilDocBase64 || !sess.usuario) return;
+  const btn = document.getElementById('btnPerfilSalvarDoc');
+  btn.disabled = true; btn.textContent = '⏳ Salvando...';
+  try {
+    await api.post('/api/usuarios?acao=salvar-documento-usuario', {
+      usuario_id:    sess.usuario.id,
+      documento_url: _perfilDocBase64,
+    });
+    toast('✅ Documento salvo com sucesso!');
+    document.getElementById('perfilDocStatus').innerHTML = '✅ <b>Documento enviado</b> — visível apenas para a recepção e administração.';
+    document.getElementById('perfilDocStatus').style.color = 'var(--verde)';
+    btn.style.display = 'none';
+    _perfilDocBase64 = null;
+  } catch(e) {
+    toast('❌ Erro ao salvar: ' + e.message);
+    btn.disabled = false; btn.textContent = '✅ Salvar documento';
+  }
 }
 
 // ── Service Worker (PWA) ─────────────────────────────────────
