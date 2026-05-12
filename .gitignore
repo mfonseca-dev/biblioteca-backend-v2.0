@@ -52,3 +52,5 @@ agente.js
 iniciar-agente.bat
 .env*.local
 .env.vercel
+.env.production
+.env.local
