@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Política de Privacidade — Ala dos Estudantes Educador Paiva Netto</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --verde:       #1a7a4a;
+      --verde-claro: #e8f5ee;
+      --verde-mid:   #2d9e61;
+      --dourado:     #c8973a;
+      --texto:       #1c2b22;
+      --texto-soft:  #4a6055;
+      --borda:       #d4e8db;
+      --bg:          #f7fbf8;
+      --white:       #ffffff;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Source Sans 3', sans-serif;
+      background: var(--bg);
+      color: var(--texto);
+      line-height: 1.75;
+      font-size: 16px;
+    }
+
+    /* ── Header ── */
+    header {
+      background: var(--verde);
+      color: white;
+      padding: 48px 24px 40px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    header::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 70% 50%, rgba(255,255,255,.06) 0%, transparent 70%);
+    }
+    header .badge {
+      display: inline-block;
+      background: rgba(255,255,255,.15);
+      border: 1px solid rgba(255,255,255,.25);
+      border-radius: 20px;
+      padding: 4px 16px;
+      font-size: .75rem;
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    header h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 10px;
+    }
+    header p {
+      font-size: .9rem;
+      opacity: .8;
+    }
+
+    /* ── Layout ── */
+    .container {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 0 20px 80px;
+    }
+
+    /* ── Aviso LGPD destacado ── */
+    .aviso-lgpd {
+      background: var(--verde-claro);
+      border-left: 4px solid var(--verde);
+      border-radius: 0 8px 8px 0;
+      padding: 18px 22px;
+      margin: 36px 0 32px;
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+    }
+    .aviso-lgpd .icon { font-size: 1.4rem; flex-shrink: 0; margin-top: 2px; }
+    .aviso-lgpd p { font-size: .9rem; color: var(--texto-soft); }
+    .aviso-lgpd strong { color: var(--verde); }
+
+    /* ── Seções ── */
+    section {
+      background: var(--white);
+      border: 1px solid var(--borda);
+      border-radius: 12px;
+      padding: 28px 32px;
+      margin-bottom: 20px;
+    }
+    section h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      color: var(--verde);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    section h2 .num {
+      background: var(--verde);
+      color: white;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .72rem;
+      font-weight: 700;
+      font-family: 'Source Sans 3', sans-serif;
+      flex-shrink: 0;
+    }
+    section p { color: var(--texto-soft); margin-bottom: 10px; font-size: .95rem; }
+    section p:last-child { margin-bottom: 0; }
+    section ul {
+      list-style: none;
+      padding: 0;
+      margin: 8px 0 10px;
+    }
+    section ul li {
+      padding: 6px 0 6px 22px;
+      position: relative;
+      color: var(--texto-soft);
+      font-size: .95rem;
+      border-bottom: 1px solid var(--borda);
+    }
+    section ul li:last-child { border-bottom: none; }
+    section ul li::before {
+      content: '▸';
+      color: var(--verde-mid);
+      position: absolute;
+      left: 0;
+    }
+
+    /* ── Tabela de dados ── */
+    .tabela-dados {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0;
+      font-size: .88rem;
+    }
+    .tabela-dados th {
+      background: var(--verde-claro);
+      color: var(--verde);
+      padding: 10px 14px;
+      text-align: left;
+      font-weight: 600;
+      border-bottom: 2px solid var(--borda);
+    }
+    .tabela-dados td {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--borda);
+      color: var(--texto-soft);
+      vertical-align: top;
+    }
+    .tabela-dados tr:last-child td { border-bottom: none; }
+    .tabela-dados tr:hover td { background: var(--verde-claro); }
+
+    /* ── Direitos do titular ── */
+    .direitos-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 12px;
+      margin: 14px 0;
+    }
+    .direito-card {
+      background: var(--verde-claro);
+      border-radius: 8px;
+      padding: 14px 16px;
+      border: 1px solid var(--borda);
+    }
+    .direito-card .titulo {
+      font-weight: 600;
+      color: var(--verde);
+      font-size: .85rem;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .direito-card p {
+      font-size: .8rem;
+      margin: 0;
+      color: var(--texto-soft);
+    }
+
+    /* ── Contato DPO ── */
+    .contato-box {
+      background: linear-gradient(135deg, var(--verde) 0%, var(--verde-mid) 100%);
+      border-radius: 12px;
+      padding: 28px 32px;
+      color: white;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .contato-box h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.3rem;
+      margin-bottom: 10px;
+    }
+    .contato-box p { opacity: .85; font-size: .9rem; margin-bottom: 16px; }
+    .contato-box a {
+      display: inline-block;
+      background: white;
+      color: var(--verde);
+      font-weight: 700;
+      padding: 10px 28px;
+      border-radius: 24px;
+      text-decoration: none;
+      font-size: .9rem;
+      transition: transform .2s, box-shadow .2s;
+    }
+    .contato-box a:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0,0,0,.2);
+    }
+
+    /* ── Retenção ── */
+    .retencao-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--borda);
+      font-size: .9rem;
+    }
+    .retencao-item:last-child { border-bottom: none; }
+    .retencao-item .prazo {
+      background: var(--verde-claro);
+      color: var(--verde);
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 12px;
+      font-size: .8rem;
+      white-space: nowrap;
+    }
+
+    /* ── Rodapé ── */
+    footer {
+      text-align: center;
+      padding: 32px 20px;
+      border-top: 1px solid var(--borda);
+      color: var(--texto-soft);
+      font-size: .82rem;
+    }
+    footer strong { color: var(--verde); }
+
+    /* ── Atualização ── */
+    .atualizacao {
+      text-align: center;
+      font-size: .8rem;
+      color: var(--texto-soft);
+      padding: 16px;
+      background: var(--white);
+      border: 1px solid var(--borda);
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+
+    @media (max-width: 600px) {
+      section { padding: 20px 18px; }
+      .tabela-dados { font-size: .8rem; }
+      .tabela-dados th, .tabela-dados td { padding: 8px 10px; }
+      .direitos-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="badge">🔒 LGPD — Lei nº 13.709/2018</div>
+  <h1>Política de Privacidade</h1>
+  <p>Ala dos Estudantes Educador Paiva Netto &nbsp;·&nbsp; Biblioteca</p>
+</header>
+
+<div class="container">
+
+  <div class="aviso-lgpd">
+    <span class="icon">ℹ️</span>
+    <p>Esta política explica como coletamos, usamos e protegemos seus dados pessoais em conformidade com a <strong>Lei Geral de Proteção de Dados (LGPD — Lei nº 13.709/2018)</strong>. Ao utilizar nosso sistema de acesso, você concorda com estas práticas.</p>
+  </div>
+
+  <!-- 1. Controlador -->
+  <section>
+    <h2><span class="num">1</span> Identificação do Controlador</h2>
+    <p>O controlador dos dados pessoais coletados por este sistema é a <strong>Biblioteca Paiva Netto — Ala dos Estudantes</strong>, responsável pelas decisões sobre o tratamento de dados pessoais dos usuários.</p>
+    <p>Para questões relacionadas à privacidade e proteção de dados, entre em contato com nosso canal dedicado: <strong>privacybiblioteca@gmail.com</strong></p>
+  </section>
+
+  <!-- 2. Dados coletados -->
+  <section>
+    <h2><span class="num">2</span> Dados Pessoais Coletados</h2>
+    <p>Coletamos exclusivamente os dados necessários para o controle de acesso seguro ao ambiente:</p>
+    <table class="tabela-dados">
+      <thead>
+        <tr>
+          <th>Dado</th>
+          <th>Finalidade</th>
+          <th>Base legal (LGPD)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Nome completo</strong></td>
+          <td>Identificação do usuário</td>
+          <td>Art. 7º, V — execução de contrato</td>
+        </tr>
+        <tr>
+          <td><strong>CPF</strong></td>
+          <td>Identificação única e integração com catraca</td>
+          <td>Art. 7º, V — execução de contrato</td>
+        </tr>
+        <tr>
+          <td><strong>Fotografia facial</strong></td>
+          <td>Reconhecimento facial para acesso automatizado</td>
+          <td>Art. 11, I — consentimento explícito</td>
+        </tr>
+        <tr>
+          <td><strong>E-mail</strong></td>
+          <td>Comunicação e recuperação de acesso</td>
+          <td>Art. 7º, V — execução de contrato</td>
+        </tr>
+        <tr>
+          <td><strong>Telefone</strong></td>
+          <td>Contato em caso de necessidade</td>
+          <td>Art. 7º, V — execução de contrato</td>
+        </tr>
+        <tr>
+          <td><strong>Registros de acesso</strong></td>
+          <td>Controle de vagas e segurança do ambiente</td>
+          <td>Art. 7º, IX — legítimo interesse</td>
+        </tr>
+        <tr>
+          <td><strong>Assinatura digital</strong></td>
+          <td>Comprovante de aceite do Termo de Conduta</td>
+          <td>Art. 7º, V — execução de contrato</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>⚠️ <strong>Dados biométricos</strong> (fotografia facial para reconhecimento) são dados sensíveis nos termos do art. 5º, II da LGPD. Seu tratamento requer consentimento específico, coletado durante o cadastro.</p>
+  </section>
+
+  <!-- 3. Como usamos -->
+  <section>
+    <h2><span class="num">3</span> Como Usamos os Dados</h2>
+    <ul>
+      <li>Controle de acesso ao ambiente da Ala dos Estudantes</li>
+      <li>Reconhecimento facial pela catraca (equipamento Control iD)</li>
+      <li>Gerenciamento de vagas disponíveis em tempo real</li>
+      <li>Registro de histórico de acessos para segurança</li>
+      <li>Comunicação sobre o serviço quando necessário</li>
+      <li>Cumprimento de obrigações legais</li>
+    </ul>
+    <p>Seus dados <strong>não são utilizados</strong> para fins comerciais, publicidade ou compartilhados com terceiros fora da instituição.</p>
+  </section>
+
+  <!-- 4. Armazenamento -->
+  <section>
+    <h2><span class="num">4</span> Armazenamento e Segurança</h2>
+    <p>Os dados são armazenados em infraestrutura segura:</p>
+    <ul>
+      <li><strong>Banco de dados:</strong> Supabase (PostgreSQL) com criptografia em repouso e em trânsito (TLS/SSL)</li>
+      <li><strong>Controle de acesso:</strong> Sistema Control iD — equipamento físico instalado na própria instituição</li>
+      <li><strong>Backups:</strong> Realizados automaticamente com retenção de 30 dias</li>
+      <li><strong>Acesso restrito:</strong> Apenas administradores autorizados têm acesso aos dados</li>
+    </ul>
+    <p>Adotamos medidas técnicas e organizacionais adequadas para proteger seus dados contra acesso não autorizado, perda ou destruição.</p>
+  </section>
+
+  <!-- 5. Retenção -->
+  <section>
+    <h2><span class="num">5</span> Prazo de Retenção</h2>
+    <p>Os dados são mantidos pelos seguintes prazos, contados a partir do último acesso ao sistema:</p>
+    <div class="retencao-item">
+      <span>Dados cadastrais (nome, CPF, e-mail, telefone)</span>
+      <span class="prazo">24 meses</span>
+    </div>
+    <div class="retencao-item">
+      <span>Fotografia facial</span>
+      <span class="prazo">24 meses</span>
+    </div>
+    <div class="retencao-item">
+      <span>Registros de acesso (histórico)</span>
+      <span class="prazo">12 meses</span>
+    </div>
+    <div class="retencao-item">
+      <span>Assinatura digital do termo</span>
+      <span class="prazo">5 anos (obrigação legal)</span>
+    </div>
+    <div class="retencao-item">
+      <span>Registros de pagamento</span>
+      <span class="prazo">5 anos (obrigação fiscal)</span>
+    </div>
+    <p style="margin-top:14px">Após o prazo, os dados são excluídos automaticamente ou anonimizados, salvo obrigação legal de retenção.</p>
+  </section>
+
+  <!-- 6. Direitos -->
+  <section>
+    <h2><span class="num">6</span> Seus Direitos como Titular</h2>
+    <p>Nos termos da LGPD (art. 18), você tem os seguintes direitos:</p>
+    <div class="direitos-grid">
+      <div class="direito-card">
+        <div class="titulo">👁️ Acesso</div>
+        <p>Solicitar cópia de todos os seus dados armazenados</p>
+      </div>
+      <div class="direito-card">
+        <div class="titulo">✏️ Correção</div>
+        <p>Corrigir dados incompletos, inexatos ou desatualizados</p>
+      </div>
+      <div class="direito-card">
+        <div class="titulo">🗑️ Exclusão</div>
+        <p>Solicitar a eliminação dos seus dados pessoais</p>
+      </div>
+      <div class="direito-card">
+        <div class="titulo">🚫 Oposição</div>
+        <p>Opor-se ao tratamento em casos de não conformidade</p>
+      </div>
+      <div class="direito-card">
+        <div class="titulo">📦 Portabilidade</div>
+        <p>Receber seus dados em formato estruturado</p>
+      </div>
+      <div class="direito-card">
+        <div class="titulo">↩️ Revogação</div>
+        <p>Revogar o consentimento a qualquer momento</p>
+      </div>
+    </div>
+    <p>Para exercer qualquer um desses direitos, entre em contato através do canal abaixo. Responderemos em até <strong>15 dias úteis</strong>.</p>
+  </section>
+
+  <!-- 7. Cookies -->
+  <section>
+    <h2><span class="num">7</span> Cookies e Dados de Sessão</h2>
+    <p>Este sistema utiliza <strong>apenas cookies funcionais</strong> necessários para o funcionamento do serviço:</p>
+    <ul>
+      <li><strong>Cookie de sessão (JWT):</strong> Token de autenticação, válido por 24 horas, necessário para manter o login ativo</li>
+      <li><strong>Sem cookies analíticos</strong> — não utilizamos Google Analytics ou ferramentas similares</li>
+      <li><strong>Sem cookies de rastreamento</strong> — não compartilhamos dados com plataformas de publicidade</li>
+    </ul>
+    <p>Por serem estritamente necessários ao funcionamento, esses cookies não requerem consentimento separado nos termos do art. 7º, V da LGPD.</p>
+  </section>
+
+  <!-- 8. Compartilhamento -->
+  <section>
+    <h2><span class="num">8</span> Compartilhamento de Dados</h2>
+    <p>Seus dados <strong>não são vendidos, alugados ou compartilhados</strong> com terceiros para fins comerciais.</p>
+    <p>O único compartilhamento ocorre dentro da própria infraestrutura institucional:</p>
+    <ul>
+      <li><strong>Supabase:</strong> Banco de dados seguro (processador de dados conforme art. 5º, VII da LGPD)</li>
+      <li><strong>Control iD (iDSecure):</strong> Sistema de controle de acesso instalado fisicamente na instituição</li>
+      <li><strong>Vercel:</strong> Infraestrutura de hospedagem da API (sem acesso aos dados dos usuários)</li>
+    </ul>
+    <p>Poderemos compartilhar dados com autoridades competentes quando exigido por lei ou ordem judicial.</p>
+  </section>
+
+  <!-- 9. Menores -->
+  <section>
+    <h2><span class="num">9</span> Menores de Idade</h2>
+    <p>O sistema não é destinado a menores de 18 anos sem supervisão de responsável legal. Caso identificarmos o cadastro de menor de idade, solicitaremos consentimento do responsável legal nos termos do art. 14 da LGPD.</p>
+  </section>
+
+  <!-- 10. Alterações -->
+  <section>
+    <h2><span class="num">10</span> Alterações nesta Política</h2>
+    <p>Esta política pode ser atualizada periodicamente. Alterações relevantes serão comunicadas no momento do próximo acesso ao sistema. A versão mais recente estará sempre disponível nesta página.</p>
+  </section>
+
+  <!-- Contato DPO -->
+  <div class="contato-box">
+    <h2>📬 Fale com nosso Canal de Privacidade</h2>
+    <p>Para exercer seus direitos, esclarecer dúvidas ou solicitar a exclusão dos seus dados, entre em contato conosco.</p>
+    <a href="mailto:privacybiblioteca@gmail.com">privacybiblioteca@gmail.com</a>
+  </div>
+
+  <!-- Data de atualização -->
+  <div class="atualizacao">
+    📅 Última atualização: <strong>maio de 2026</strong> &nbsp;·&nbsp; Versão 1.0
+  </div>
+
+</div>
+
+<footer>
+  <p><strong>Ala dos Estudantes Educador Paiva Netto</strong> — Biblioteca</p>
+  <p style="margin-top:6px">Esta página é pública e não requer login para acesso.</p>
+</footer>
+
+</body>
+</html>

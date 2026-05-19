@@ -15,6 +15,7 @@
 <style>
 :root{--verde:#1a6b3a;--verde-esc:#0d3d20;--verde-cl:#2d9155;--verde-suave:#e8f5ee;--dourado:#c9a227;--dourado-cl:#f0d97a;--creme:#faf8f2;--cinza-esc:#1e1e1e;--cinza:#555;--cinza-cl:#e8e8e8;--vermelho:#c0392b;--azul:#1a4a8a;--laranja:#e67e22;--shadow:0 4px 24px rgba(0,0,0,.10);--shadow-lg:0 12px 48px rgba(0,0,0,.18);--r:16px;--r-sm:10px}
 *,::before,::after{box-sizing:border-box;margin:0;padding:0}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-esc);min-height:100vh}
 .screen{display:none;min-height:100vh}
 .screen.ativo{display:flex}
@@ -230,6 +231,7 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
 </style>
 </head>
 <body>
+<a href="#conteudoPrincipal" class="skip-link" style="position:absolute;top:-40px;left:0;background:var(--verde);color:#fff;padding:8px 16px;z-index:9999;border-radius:0 0 8px 0;font-weight:600;text-decoration:none;transition:top .2s" onfocus="this.style.top='0'" onblur="this.style.top='-40px'">Pular para o conteúdo principal</a>
 
 <!-- ═══════════ LOGIN ═══════════ -->
 <div id="loginScreen" class="screen bg-verde ativo">
@@ -575,7 +577,7 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
 </div>
 
 <!-- ═══════════ APP USUÁRIO ═══════════ -->
-<div id="appScreen" class="screen">
+<div id="conteudoPrincipal" role="main"><div id="appScreen" class="screen">
   <div class="topbar">
     <div class="topbar-logo">
       <span style="font-size:20px">📚</span>
@@ -699,6 +701,14 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
         <button class="btn btn-dourado btn-sm" style="margin-top:10px" onclick="perfilIrCompletarCadastro()">✅ Completar agora</button>
       </div>
 
+      <!-- Notificações Push -->
+      <div class="crd" id="cardNotificacoes">
+        <div class="crd-t">🔔 Notificações</div>
+        <div id="pushStatusTexto" style="font-size:.81rem;color:#666;margin-bottom:12px;line-height:1.6">⏳ Verificando...</div>
+        <button class="btn btn-verde btn-sm" id="btnAtivarPush" style="display:none" onclick="ativarPushPerfil()">🔔 Ativar notificações</button>
+        <button class="btn btn-sec btn-sm" id="btnDesativarPush" style="display:none" onclick="desativarPushPerfil()">🔕 Desativar notificações</button>
+      </div>
+
       <!-- Documento Oficial -->
       <div class="crd" id="perfilDocCard">
         <div class="crd-t">📄 Documento Oficial</div>
@@ -740,6 +750,11 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
           🚪 Sair do aplicativo
         </button>
         <p style="font-size:.73rem;color:#aaa;margin-top:8px;line-height:1.5">Seu acesso do dia continua válido até 19h45.<br>Você pode fazer login novamente a qualquer momento.</p>
+        <hr style="margin:16px 0;border:none;border-top:1px solid var(--cinza-cl)">
+        <button class="btn btn-sec btn-sm" style="max-width:280px;margin:0 auto;color:#999;border-color:#e0e0e0;font-size:.77rem" onclick="abrirModalExclusao()">
+          🗑️ Solicitar exclusão da conta e dados
+        </button>
+        <p style="font-size:.71rem;color:#bbb;margin-top:6px;line-height:1.5">Direito previsto na LGPD (art. 18, VI).<br>Seus dados serão eliminados em até 30 dias.</p>
       </div>
     </div>
 
@@ -760,6 +775,37 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
           <div class="info-texto"><h4>Wi-Fi Gratuito</h4><p>Alta velocidade em todas as áreas.</p></div></div>
         <div class="info-item"><div class="ii gold">🍽️</div>
           <div class="info-texto"><h4>Restaurante</h4><p>Térreo do prédio. Refeições e lanches disponíveis.</p></div></div>
+      </div>
+
+      <!-- LGPD / Privacidade -->
+      <div class="crd" id="cardPrivacidade">
+        <div class="crd-t">🔒 Privacidade & LGPD</div>
+        <p style="font-size:.83rem;color:#555;line-height:1.7;margin-bottom:12px">
+          Seus dados são tratados em conformidade com a <b>Lei nº 13.709/2018 (LGPD)</b>.
+        </p>
+        <div style="font-size:.82rem;color:#555;line-height:1.75">
+          <p style="margin-bottom:8px"><b>📋 Dados coletados:</b> Nome, CPF, e-mail, telefone e foto para reconhecimento facial.</p>
+          <p style="margin-bottom:8px"><b>🎯 Finalidade:</b> Controle de acesso, identificação e comunicação sobre serviços da Ala dos Estudantes.</p>
+          <p style="margin-bottom:8px"><b>🏢 Compartilhamento:</b> Dados não compartilhados com terceiros para fins comerciais. Apenas órgãos governamentais competentes mediante requisição formal.</p>
+          <p style="margin-bottom:8px"><b>⏳ Retenção:</b> Dados mantidos enquanto o cadastro estiver ativo. Após solicitação de exclusão, eliminados em até 30 dias, salvo obrigação legal.</p>
+          <p style="margin-bottom:8px"><b>⚖️ Base legal:</b> Consentimento (art. 7º, I) e legítimo interesse para controle de acesso (art. 7º, IX).</p>
+          <p style="margin-bottom:8px"><b>✅ Seus direitos (art. 18):</b> Acesso, correção, portabilidade, eliminação e revogação do consentimento.</p>
+          <p><b>📬 DPO / Encarregado de Dados:</b>
+            <a href="mailto:privacybiblioteca@gmail.com" style="color:var(--verde);font-weight:600">privacybiblioteca@gmail.com</a>
+            ou pessoalmente no Balcão de Atendimento.
+          </p>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:14px">
+          <a href="/privacidade.html" target="_blank" rel="noopener noreferrer"
+             class="btn btn-sec btn-sm"
+             style="text-decoration:none;display:inline-flex;align-items:center;gap:5px"
+             aria-label="Abrir página completa de Política de Privacidade">
+            🔒 Política de Privacidade completa
+          </a>
+          <button class="btn btn-sec btn-sm" style="color:var(--vermelho);border-color:#f5b5a8" onclick="abrirModalExclusao()">
+            🗑️ Solicitar exclusão dos meus dados
+          </button>
+        </div>
       </div>
     </div>
 
@@ -896,12 +942,13 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
       <button class="atab" data-apanel="adminPanelSugestoes">💬 Sugestões</button>
       <button class="atab" data-apanel="adminPanelConfig">⚙️ Config</button>
       <button class="atab" data-apanel="adminPanelAcessosEspeciais">🎟️ Acessos Especiais</button>
+      <button class="atab" data-apanel="adminPanelLGPD" id="tabLGPD">🗑️ Exclusões <span id="badgeLGPD" style="display:none;background:var(--vermelho);color:#fff;border-radius:99px;font-size:.7rem;padding:1px 6px;margin-left:4px">0</span></button>
     </div>
     <div id="adminPanelUsuarios" class="apanel ativo">
       <div class="acrd">
         <div class="acrd-t">👥 Usuários Cadastrados</div>
         <div class="fg" style="margin-bottom:10px">
-          <input type="text" id="adminBuscaUsuario" placeholder="🔍 Buscar por nome ou CPF...">
+          <label for="adminBuscaUsuario" class="sr-only">Buscar usuário por nome ou CPF</label><input type="text" id="adminBuscaUsuario" placeholder="🔍 Buscar por nome ou CPF..." aria-label="Buscar usuário por nome ou CPF">
         </div>
         <div style="overflow-x:auto">
           <table class="tabela">
@@ -915,7 +962,7 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
       <div class="acrd">
         <div class="acrd-t">📊 Histórico de Acessos</div>
         <div class="fg" style="margin-bottom:10px">
-          <input type="date" id="adminDataHistorico">
+          <label for="adminDataHistorico" class="sr-only">Filtrar histórico por data</label><input type="date" id="adminDataHistorico" aria-label="Filtrar histórico por data">
         </div>
         <div style="overflow-x:auto">
           <table class="tabela">
@@ -943,6 +990,25 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
       <div class="acrd">
         <div class="acrd-t">📋 Avisos Publicados</div>
         <div id="adminAvisosLista"><div class="sem"><span class="si">⏳</span>Carregando...</div></div>
+      </div>
+      <div class="acrd" style="border:1.5px solid #b0c4ef">
+        <div class="acrd-t">🔔 Enviar Notificação Push</div>
+        <p style="font-size:.79rem;color:#777;margin-bottom:12px;line-height:1.6">
+          Envia uma notificação instantânea para <b id="totalAssinantes">—</b> dispositivos cadastrados.
+        </p>
+        <div class="fg"><label for="pushTipo">Tipo</label>
+          <select id="pushTipo">
+            <option value="aviso">📢 Aviso geral</option>
+            <option value="urgente">🚨 Urgente</option>
+            <option value="lotado">🚫 Sala lotada</option>
+            <option value="manutencao">🔧 Manutenção</option>
+          </select></div>
+        <div class="fg"><label for="pushTitulo">Título</label>
+          <input type="text" id="pushTitulo" placeholder="Ex: Manutenção programada"></div>
+        <div class="fg"><label for="pushCorpo">Mensagem</label>
+          <textarea id="pushCorpo" rows="2" placeholder="Ex: O sistema ficará indisponível hoje às 18h por 30 minutos."></textarea></div>
+        <button class="btn btn-azul btn-sm" onclick="adminEnviarPush()">📤 Enviar para todos</button>
+        <div id="pushEnvioStatus" style="display:none;margin-top:8px;font-size:.79rem;padding:8px 10px;border-radius:6px"></div>
       </div>
     </div>
 
@@ -1083,12 +1149,27 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
       </div>
     </div>
 
+    <div id="adminPanelLGPD" class="apanel">
+      <div class="acrd">
+        <div class="acrd-t">🗑️ Solicitações de Exclusão (LGPD art. 18, VI)</div>
+        <p style="font-size:.81rem;color:#666;margin-bottom:12px;line-height:1.6">
+          Usuários que solicitaram exclusão dos dados. <b>Prazo legal: 30 dias</b> a partir da solicitação.<br>
+          Para cancelar (ex.: usuário voltou presencialmente), clique em <b>Reativar</b>. Para executar a exclusão definitiva, use <b>Executar</b> após 2 dias de carência.
+        </p>
+      </div>
+      <div class="acrd" style="min-height:0;padding:0">
+        <div id="lgpdListaExclusoes">
+          <div class="sem"><span class="si">⏳</span>Carregando...</div>
+        </div>
+      </div>
+    </div>
+
   </div>  <!-- fecha admin-main -->
 </div>    <!-- fecha adminScreen -->
 
 
 <!-- MODAL PAGAMENTO -->
-<div class="modal-bg" id="modalPagamento">
+<div class="modal-bg" id="modalPagamento" role="dialog" aria-modal="true" aria-label="Efetuar pagamento">
   <div class="modal-pagto">
     <div class="pagto-header">
       <div class="pi">💳</div>
@@ -1218,7 +1299,7 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
 </div>
 
 <!-- MODAL FOTO PERFIL -->
-<div class="modal-bg" id="modalFotoPerfil">
+<div class="modal-bg" id="modalFotoPerfil" role="dialog" aria-modal="true" aria-label="Atualizar foto de perfil">
   <div class="modal" style="max-width:360px">
     <div class="mi">📷</div>
     <h3>Atualizar Foto</h3>
@@ -1310,7 +1391,38 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
   </div>
 </div>
 
-
+<!-- ── MODAL EXCLUSÃO DE CONTA (LGPD art. 18) ──────────── -->
+<div class="modal-bg" id="modalExclusaoConta">
+  <div class="modal" style="max-width:420px;text-align:left">
+    <h3 style="font-size:1rem;color:var(--vermelho);margin-bottom:6px">🗑️ Solicitar exclusão de dados</h3>
+    <p style="font-size:.83rem;color:#555;line-height:1.6;margin-bottom:14px">
+      Direito garantido pelo <b>art. 18, VI da LGPD</b>. Após confirmação,
+      seus dados serão eliminados em até <b>30 dias</b>, salvo obrigação legal (ex.: registros fiscais).
+    </p>
+    <div style="background:#fff5f5;border:1.5px solid #f5b5a8;border-radius:10px;padding:12px;margin-bottom:14px;font-size:.82rem;color:var(--vermelho);line-height:1.6">
+      ⚠️ Esta ação é <b>irreversível</b>. Você perderá acesso ao sistema e todos os dados cadastrados serão apagados.
+    </div>
+    <div class="campo">
+      <label for="exclusaoMotivo">Motivo (opcional)</label>
+      <select id="exclusaoMotivo">
+        <option value="">Prefiro não informar</option>
+        <option value="nao_uso_mais">Não utilizo mais o serviço</option>
+        <option value="privacidade">Preocupação com privacidade</option>
+        <option value="dados_incorretos">Dados incorretos cadastrados</option>
+        <option value="outro">Outro motivo</option>
+      </select>
+    </div>
+    <div class="campo">
+      <label>Confirme digitando: <b>EXCLUIR MINHA CONTA</b></label>
+      <input type="text" id="exclusaoConfirmacao" placeholder="EXCLUIR MINHA CONTA" autocomplete="off">
+    </div>
+    <p id="exclusaoErro" style="color:var(--vermelho);font-size:.8rem;margin-bottom:10px;display:none"></p>
+    <div style="display:flex;gap:9px">
+      <button class="btn btn-sec" style="flex:1" onclick="fecharModalExclusao()">Cancelar</button>
+      <button class="btn btn-vermelho" style="flex:1" id="btnConfirmarExclusao" onclick="confirmarExclusaoConta()">🗑️ Solicitar exclusão</button>
+    </div>
+  </div>
+</div>
 
 <script>
 // ═══════════════════════════════════════════════════════════
@@ -1396,6 +1508,59 @@ function toast(msg, dur=2800) {
   setTimeout(() => t.classList.remove('show'), dur);
 }
 
+// ── Feedback sonoro via Web Audio API ──────────────────────
+function _beep(tipo = 'acesso') {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const master = ctx.createGain();
+    master.gain.value = 0.18;
+    master.connect(ctx.destination);
+
+    const tocar = (freq, inicio, duracao, forma = 'sine', vol = 1) => {
+      const osc  = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type      = forma;
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(vol, ctx.currentTime + inicio);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + inicio + duracao);
+      osc.connect(gain);
+      gain.connect(master);
+      osc.start(ctx.currentTime + inicio);
+      osc.stop(ctx.currentTime + inicio + duracao + 0.05);
+    };
+
+    if (tipo === 'acesso') {
+      // Dois bips ascendentes — liberação de acesso
+      tocar(660, 0,    0.12, 'sine', 1);
+      tocar(880, 0.15, 0.18, 'sine', 1);
+    } else if (tipo === 'erro') {
+      // Bip grave descendente — erro ou bloqueio
+      tocar(330, 0,    0.15, 'square', 0.6);
+      tocar(220, 0.18, 0.22, 'square', 0.5);
+    } else if (tipo === 'ok') {
+      // Bip simples curto — confirmação
+      tocar(700, 0, 0.1, 'sine', 0.8);
+    }
+
+    setTimeout(() => ctx.close(), 1000);
+  } catch(e) { /* Web Audio não disponível — silencioso */ }
+}
+
+// Anonimiza IP: mantém apenas os 2 primeiros octetos (IPv4) ou 3 blocos (IPv6)
+// Exemplo: "189.28.45.10" → "189.28.*.*" | "2804:14d:8484::1" → "2804:14d:8484:*:*:*"
+function anonimizarIp(ip) {
+  if (!ip) return 'Não registrado';
+  if (ip.includes(':')) {
+    // IPv6 — mantém 3 blocos
+    const partes = ip.split(':');
+    return partes.slice(0, 3).join(':') + ':*:*:*';
+  }
+  // IPv4 — mantém 2 octetos
+  const partes = ip.split('.');
+  if (partes.length !== 4) return '***.***.***';
+  return `${partes[0]}.${partes[1]}.*.*`;
+}
+
 function fmtCpf(v) {
   return v.replace(/\D/g,'').replace(/(\d{3})(\d{3})(\d{3})(\d{2})/,'$1.$2.$3-$4');
 }
@@ -1434,8 +1599,73 @@ function loading(btnId, sim) {
 
 function mostrarTela(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('ativo'));
+
   document.getElementById(id).classList.add('ativo');
 }
+
+
+// ── LGPD: Modal Exclusão de Conta ──────────────────────────
+function abrirModalExclusao() {
+  document.getElementById('exclusaoConfirmacao').value = '';
+  document.getElementById('exclusaoMotivo').value = '';
+  const err = document.getElementById('exclusaoErro');
+  err.style.display = 'none';
+  document.getElementById('modalExclusaoConta').style.display = 'flex';
+}
+
+function fecharModalExclusao() {
+  document.getElementById('modalExclusaoConta').style.display = 'none';
+}
+
+async function confirmarExclusaoConta() {
+  const confirmacao = document.getElementById('exclusaoConfirmacao').value.trim();
+  const motivo = document.getElementById('exclusaoMotivo').value;
+  const errEl = document.getElementById('exclusaoErro');
+
+  if (confirmacao !== 'EXCLUIR MINHA CONTA') {
+    errEl.textContent = 'Digite exatamente "EXCLUIR MINHA CONTA" para confirmar.';
+    errEl.style.display = 'block';
+    return;
+  }
+
+  const btn = document.getElementById('btnConfirmarExclusao');
+  btn.disabled = true;
+  btn._txt = btn.innerHTML;
+  btn.innerHTML = '<span class="spinner"></span> Enviando...';
+
+  try {
+    // Envia solicitação de exclusão para o backend
+    await fetch(API_BASE + '/api/usuarios?acao=solicitar-exclusao', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...(api.token ? { 'Authorization': `Bearer ${api.token}` } : {})
+      },
+      body: JSON.stringify({
+        usuario_id: sess.usuario?.id,
+        cpf:        sess.usuario?.cpf,
+        motivo:     motivo || 'Não informado'
+      })
+    });
+    fecharModalExclusao();
+    toast('✅ Solicitação enviada. Seus dados serão excluídos em até 30 dias.');
+    // Desloga o usuário
+    setTimeout(() => {
+      sess.usuario = null; sess.tipo = null; sess.acesso = null;
+      api.clearToken();
+      mostrarTela('loginScreen');
+    }, 2500);
+  } catch(e) {
+    // Mesmo com erro de rede, orienta o usuário para o canal de contato
+    fecharModalExclusao();
+    toast('⚠️ Solicitação registrada. Confirme pelo e-mail: privacidade@paivaNetto.org.br', 5000);
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = btn._txt;
+  }
+}
+// ──────────────────────────────────────────────────────────
+
 
 // ═══════════════════════════════════════════════════════════
 //  INICIALIZAÇÃO
@@ -1655,7 +1885,7 @@ function mudarTab(panelId) {
   document.querySelectorAll('.tab').forEach(b => b.classList.remove('ativo'));
   document.getElementById(panelId)?.classList.add('ativo');
   document.querySelector(`.tab[data-panel="${panelId}"]`)?.classList.add('ativo');
-  if(panelId === 'panelPerfil') carregarPerfil();
+  if(panelId === 'panelPerfil') { carregarPerfil(); carregarStatusPushPerfil(); }
   if(panelId === 'panelAvisos') carregarAvisos();
 }
 
@@ -1665,14 +1895,93 @@ function mudarATab(panelId, btn) {
   document.querySelectorAll('.atab').forEach(b => b.classList.remove('ativo'));
   document.getElementById(panelId)?.classList.add('ativo');
   btn.classList.add('ativo');
-  if(panelId === 'adminPanelAvisos')    { adminCarregarAvisos(); }
+  if(panelId === 'adminPanelAvisos')    { adminCarregarAvisos(); adminCarregarTotalAssinantes(); }
   if(panelId === 'recepPanelPendentes') { recepCarregarPendentes(); }
   if(panelId === 'recepPanelPagos')     { recepCarregarPagos(); }
   if(panelId === 'adminPanelHistorico') { adminCarregarHistorico(); }
   if(panelId === 'adminPanelSugestoes') { adminCarregarSugestoes(); }
   if(panelId === 'adminPanelConfig')    { adminCarregarConfigForm(); }
   if(panelId === 'adminPanelAcessosEspeciais') { carregarAcessosEspeciais(); }
+  if(panelId === 'adminPanelLGPD')            { adminCarregarExclusoes(); }
 }
+
+// ── LGPD: Painel de Exclusões (admin) ─────────────────────────────────────
+async function adminCarregarExclusoes() {
+  const el = document.getElementById('lgpdListaExclusoes');
+  el.innerHTML = '<div class="sem"><span class="si">⏳</span>Carregando...</div>';
+
+  try {
+    const res = await api.get('/api/usuarios?acao=listar&ativo=todos');
+    const pendentes = (res.usuarios || []).filter(u => u.exclusao_solicitada_em);
+
+    // Atualiza badge da aba
+    const badge = document.getElementById('badgeLGPD');
+    if (pendentes.length > 0) {
+      badge.textContent = pendentes.length;
+      badge.style.display = 'inline';
+    } else {
+      badge.style.display = 'none';
+    }
+
+    if (pendentes.length === 0) {
+      el.innerHTML = '<div class="sem"><span class="si">✅</span>Nenhuma solicitação pendente</div>';
+      return;
+    }
+
+    const linhas = pendentes.map(u => {
+      const dias = Math.floor((Date.now() - new Date(u.exclusao_solicitada_em).getTime()) / 86400000);
+      const podeExecutar = dias >= 2;
+      const prazoFim = new Date(new Date(u.exclusao_solicitada_em).getTime() + 30 * 86400000);
+      const prazoStr = prazoFim.toLocaleDateString('pt-BR');
+      return `<tr>
+        <td><b>${u.nome}</b><br><small style="color:#999">${fmtCpf(u.cpf)}</small></td>
+        <td style="font-size:.8rem">${new Date(u.exclusao_solicitada_em).toLocaleDateString('pt-BR')}<br><small style="color:#e07">prazo até ${prazoStr}</small></td>
+        <td style="font-size:.8rem;color:#888">${u.exclusao_motivo || '—'}</td>
+        <td style="font-size:.78rem"><b style="color:${dias < 2 ? '#e07' : '#e60'}">${dias}d atrás</b></td>
+        <td style="white-space:nowrap">
+          <button class="btn btn-verde btn-sm" style="margin-bottom:4px;width:100%" onclick="adminCancelarExclusao('${u.id}','${u.nome}')">↩️ Reativar</button>
+          <button class="btn btn-sec btn-sm" style="width:100%;color:${podeExecutar ? 'var(--vermelho)' : '#bbb'};border-color:${podeExecutar ? '#f5b5a8' : '#e0e0e0'}" ${podeExecutar ? '' : 'disabled title="Carência de 2 dias"'} onclick="adminExecutarExclusao('${u.id}','${u.nome}')">🗑️ Executar</button>
+        </td>
+      </tr>`;
+    }).join('');
+
+    el.innerHTML = `
+      <table class="tabela" style="font-size:.82rem">
+        <thead><tr>
+          <th>Usuário</th><th>Solicitado em</th><th>Motivo</th><th>Tempo</th><th>Ação</th>
+        </tr></thead>
+        <tbody>${linhas}</tbody>
+      </table>`;
+  } catch(e) {
+    el.innerHTML = '<div class="sem"><span class="si">⚠️</span>Erro ao carregar</div>';
+  }
+}
+
+async function adminCancelarExclusao(usuario_id, nome) {
+  if (!confirm(`Reativar a conta de ${nome}? A solicitação de exclusão será cancelada e o acesso restaurado.`)) return;
+  try {
+    await api.post('/api/usuarios?acao=cancelar-exclusao', { usuario_id });
+    toast(`✅ Conta de ${nome} reativada com sucesso`);
+    adminCarregarExclusoes();
+  } catch(e) {
+    toast('⚠️ Erro ao cancelar. Tente novamente.');
+  }
+}
+
+async function adminExecutarExclusao(usuario_id, nome) {
+  if (!confirm(`ATENÇÃO: Isso apagará PERMANENTEMENTE todos os dados de ${nome}. Esta ação é IRREVERSÍVEL. Confirmar?`)) return;
+  if (!confirm(`Segunda confirmação: excluir definitivamente os dados de ${nome}?`)) return;
+  try {
+    await api.post('/api/usuarios?acao=executar-exclusao', { usuario_id });
+    toast(`🗑️ Dados de ${nome} eliminados conforme LGPD`);
+    adminCarregarExclusoes();
+  } catch(e) {
+    const msg = e?.message || '';
+    toast(msg.includes('carência') ? '⏳ ' + msg : '⚠️ Erro ao executar exclusão.');
+  }
+}
+// ──────────────────────────────────────────────────────────────────────────
+
 
 async function adminCarregarConfigForm() {
   try {
@@ -2566,6 +2875,7 @@ function entrarApp() {
   atualizarVagas();
   carregarAvisos();
   verificarAvisosUrgentes();
+  inicializarPush();
 }
 
 async function verificarAcessoHoje() {
@@ -2821,6 +3131,7 @@ function _iniciarPollStatus() {
         clearInterval(_pixTimerInterval);
         document.getElementById('pagtoStatus').className = 'pagto-status pagto-ok';
         document.getElementById('pagtoStatus').textContent = '✅ Pagamento confirmado! Catraca liberada.';
+        _beep('acesso');
         toast('✅ Acesso liberado! Dirija-se à catraca.');
         await verificarAcessoHoje();
         setTimeout(() => {
@@ -2926,6 +3237,7 @@ async function confirmarPagamentoManual() {
       ? '✅ Acesso liberado! Dirija-se à catraca.'
       : '✅ Pagamento registrado!';
     toast(data.catraca_liberada ? '✅ Catraca liberada!' : '✅ Pago! ' + (data.motivo_catraca || ''));
+    if (data.catraca_liberada) _beep('acesso'); else _beep('ok');
     await verificarAcessoHoje();
     setTimeout(() => {
       document.getElementById('modalPagamento').classList.remove('ativo');
@@ -3246,6 +3558,7 @@ async function recepCobrarStone(usuarioId, nomeUsuario, btn) {
         if (st.status === 'confirmado') {
           clearInterval(poll);
           toast('✅ Pagamento confirmado! Catraca liberada.');
+          _beep('acesso');
           atualizarVagas();
           recepCarregarPresentes();
           document.getElementById('recepResultadoBusca').innerHTML =
@@ -3899,7 +4212,7 @@ async function adminVerAssinatura(usuarioId) {
     document.getElementById('auditNome').textContent  = u.nome;
     document.getElementById('auditCpf').textContent   = fmtCpf(u.cpf);
     document.getElementById('auditId').textContent    = u.id;
-    document.getElementById('auditIp').textContent    = u.termo_ip || 'Não registrado';
+    document.getElementById('auditIp').textContent    = anonimizarIp(u.termo_ip);
     document.getElementById('auditData').textContent  = u.termo_aceito_em
       ? new Date(u.termo_aceito_em).toLocaleString('pt-BR', { dateStyle:'full', timeStyle:'medium' })
       : 'Não registrada';
@@ -3974,7 +4287,7 @@ function auditBaixarHTML() {
   <div><b>E-mail:</b><br>${u.email || '—'}</div>
   <div><b>Telefone:</b><br>${u.telefone || '—'}</div>
   <div><b>ID do sistema:</b><br><code style="font-size:.8rem">${u.id}</code></div>
-  <div><b>IP do aceite:</b><br>${u.termo_ip || 'Não registrado'}</div>
+  <div><b>IP do aceite:</b><br>${anonimizarIp(u.termo_ip)}</div>
   <div><b>Data/Hora do aceite:</b><br>${u.termo_aceito_em ? new Date(u.termo_aceito_em).toLocaleString('pt-BR', {dateStyle:'full', timeStyle:'medium'}) : 'Não registrada'}</div>
   <div><b>Status do aceite:</b><br>${u.termo_aceito_em ? '✅ Aceite registrado' : '⚠️ Sem aceite registrado'}</div>
 </div>
@@ -4482,6 +4795,126 @@ function verTermo(img, nome, data, ip) {
 function fecharTermo() {
   document.getElementById('modalTermo').classList.remove('ativo');
 }
+
+// ═══════════════════════════════════════════════════════════
+//  PUSH NOTIFICATIONS
+// ═══════════════════════════════════════════════════════════
+
+const VAPID_PUBLIC_KEY = 'BN2InbBCIZ3yT8sPpEWY9g9pl0r8CKM9smF_XOAR26uDKb8D4dD0-I9HG55Y5SrArvKeMvxmET-Vu66BuDXZPoA';
+
+function _vapidKeyToUint8(base64) {
+  const raw = atob(base64.replace(/-/g, '+').replace(/_/g, '/'));
+  return Uint8Array.from([...raw].map(c => c.charCodeAt(0)));
+}
+
+async function inicializarPush() {
+  if (!('serviceWorker' in navigator) || !('PushManager' in window)) return;
+  const permissao = Notification.permission;
+  if (permissao === 'denied') return;
+  if (permissao === 'granted') { await _salvarAssinaturaPush(); return; }
+  setTimeout(async () => {
+    if (!sess.usuario) return;
+    const resultado = await Notification.requestPermission();
+    if (resultado === 'granted') {
+      await _salvarAssinaturaPush();
+      toast('🔔 Notificações ativadas!');
+    }
+  }, 5000);
+}
+
+async function _salvarAssinaturaPush() {
+  try {
+    const sw  = await navigator.serviceWorker.ready;
+    const sub = await sw.pushManager.subscribe({
+      userVisibleOnly:      true,
+      applicationServerKey: _vapidKeyToUint8(VAPID_PUBLIC_KEY)
+    });
+    await fetch(API_BASE + '/api/notificacoes?acao=assinar', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ subscription: sub.toJSON(), usuario_id: sess.usuario?.id })
+    });
+  } catch(e) {}
+}
+
+async function cancelarPush() {
+  try {
+    const sw  = await navigator.serviceWorker.ready;
+    const sub = await sw.pushManager.getSubscription();
+    if (!sub) return;
+    await fetch(API_BASE + '/api/notificacoes?acao=cancelar', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ endpoint: sub.endpoint })
+    });
+    await sub.unsubscribe();
+  } catch(e) {}
+}
+
+async function pushStatus() {
+  if (!('PushManager' in window)) return 'indisponivel';
+  const permissao = Notification.permission;
+  if (permissao === 'denied')  return 'negado';
+  if (permissao === 'default') return 'pendente';
+  try {
+    const sw  = await navigator.serviceWorker.ready;
+    const sub = await sw.pushManager.getSubscription();
+    return sub ? 'ativo' : 'pendente';
+  } catch(e) { return 'pendente'; }
+}
+
+async function carregarStatusPushPerfil() {
+  const el   = document.getElementById('pushStatusTexto');
+  const btn1 = document.getElementById('btnAtivarPush');
+  const btn2 = document.getElementById('btnDesativarPush');
+  if (!el) return;
+  const status = await pushStatus();
+  const msgs = {
+    ativo:        '✅ Notificações ativas — você será avisado sobre avisos urgentes, sala lotada e manutenções.',
+    pendente:     '🔕 Notificações desativadas. Ative para receber avisos importantes mesmo com o app fechado.',
+    negado:       '🚫 Notificações bloqueadas nas configurações do navegador.',
+    indisponivel: 'ℹ️ Seu dispositivo não suporta notificações push.'
+  };
+  el.textContent = msgs[status] || msgs.pendente;
+  if (btn1) btn1.style.display = status === 'pendente' ? 'inline-block' : 'none';
+  if (btn2) btn2.style.display = status === 'ativo'    ? 'inline-block' : 'none';
+}
+
+async function ativarPushPerfil() {
+  const resultado = await Notification.requestPermission();
+  if (resultado === 'granted') { await _salvarAssinaturaPush(); toast('🔔 Notificações ativadas!'); }
+  carregarStatusPushPerfil();
+}
+
+async function desativarPushPerfil() {
+  await cancelarPush();
+  toast('🔕 Notificações desativadas.');
+  carregarStatusPushPerfil();
+}
+
+async function adminCarregarTotalAssinantes() {
+  try {
+    const res = await api.get('/api/notificacoes?acao=status');
+    const el  = document.getElementById('totalAssinantes');
+    if (el) el.textContent = res.assinantes || 0;
+  } catch(e) {}
+}
+
+async function adminEnviarPush() {
+  const titulo   = document.getElementById('pushTitulo')?.value?.trim();
+  const corpo    = document.getElementById('pushCorpo')?.value?.trim();
+  const tipo     = document.getElementById('pushTipo')?.value || 'aviso';
+  const statusEl = document.getElementById('pushEnvioStatus');
+  if (!titulo || !corpo) { toast('⚠️ Preencha título e mensagem'); return; }
+  if (statusEl) { statusEl.style.display='block'; statusEl.style.background='#f0f7f0'; statusEl.style.color='var(--verde)'; statusEl.textContent='⏳ Enviando...'; }
+  try {
+    const res = await api.post('/api/notificacoes?acao=enviar', { titulo, corpo, tipo });
+    if (statusEl) statusEl.textContent = `✅ Enviado para ${res.enviados} dispositivo(s). Falhas: ${res.falhas}`;
+    toast(`✅ Push enviado para ${res.enviados} dispositivos!`);
+  } catch(e) {
+    if (statusEl) { statusEl.style.background='#fff5f5'; statusEl.style.color='var(--vermelho)'; statusEl.textContent='❌ Erro: '+e.message; }
+  }
+}
 </script>
 
 <!-- MODAL ACESSO ESPECIAL -->
@@ -4585,6 +5018,20 @@ function fecharTermo() {
       </div>
     </div>
   </div>
+
+<!-- VLibras - Acessibilidade em Libras (Gov Federal) -->
+<div vw class="enabled">
+  <div vw-access-button class="active"></div>
+  <div vw-plugin-wrapper>
+    <div class="vw-plugin-top-wrapper"></div>
+  </div>
+</div>
+<script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+<script>
+  if (typeof window.VLibras !== 'undefined') {
+    new window.VLibras.Widget('https://vlibras.gov.br/app');
+  }
+</script>
 
 </body>
 </html>
