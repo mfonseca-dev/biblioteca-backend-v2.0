@@ -54,3 +54,5 @@ iniciar-agente.bat
 .env.vercel
 .env.production
 .env.local
+fix_creditos.js
+fix_creditos2.js

@@ -2,9 +2,20 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Totem — Ala dos Estudantes">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#0d3d20">
+<meta name="description" content="Totem de acesso — Ala dos Estudantes Educador Paiva Netto">
+<meta property="og:title" content="Totem — Ala dos Estudantes">
+<meta property="og:type" content="website">
+<meta name="robots" content="noindex, nofollow">
 <title>Totem — Ala dos Estudantes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
 /* ═══════════════ BASE ═══════════════ */
@@ -19,6 +30,12 @@
   --shadow-lg:0 20px 80px rgba(0,0,0,.35);
 }
 *,::before,::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{overscroll-behavior:none;-webkit-overflow-scrolling:touch}
+:fullscreen body,:-webkit-full-screen body,:-moz-full-screen body{width:100vw;height:100vh}
+:fullscreen .totem-wrap,:-webkit-full-screen .totem-wrap{width:100vw;height:100vh}
+@media screen and (max-width:900px){.tk{min-width:52px!important;min-height:52px!important;font-size:1.4rem!important}}
+@media screen and (max-height:700px){.th-top{padding:5px 12px!important}.card-body{padding:10px!important}}
+@media screen and (orientation:portrait){body{font-size:95%}}
 html,body{
   width:100%;height:100%;overflow:hidden;
   font-family:"DM Sans",sans-serif;
@@ -282,7 +299,18 @@ body{-webkit-touch-callout:none}
 .spinner-t{width:20px;height:20px;border:3px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;display:inline-block;vertical-align:middle;margin-right:8px}
 @keyframes spin{to{transform:rotate(360deg)}}
 .mask-cpf{letter-spacing:4px}
+/* ── Narração ativa ── */
+#btnAudio.ativo{background:rgba(125,255,179,.2);border-color:rgba(125,255,179,.5);color:#7dffb3}
+/* ── Foco visível WCAG ── */
+*:focus-visible{outline:3px solid #7dffb3;outline-offset:3px;border-radius:6px;box-shadow:0 0 0 6px rgba(125,255,179,.2)}
+@supports selector(:focus-visible){*:focus:not(:focus-visible){outline:none;box-shadow:none}}
+/* ── Toast colorido ── */
+.toast-t.toast-ok{background:linear-gradient(135deg,#0d3d20,#1a6b3a)}
+.toast-t.toast-erro{background:linear-gradient(135deg,#7a0d0d,#c0392b)}
+.toast-t.toast-aviso{background:linear-gradient(135deg,#6b4a0d,#c9a227)}
+.toast-t.toast-info{background:linear-gradient(135deg,#0a1628,#1a4a8a)}
 </style>
+<script>document.documentElement.style.setProperty("--vh",window.innerHeight*.01+"px");</script>
 </head>
 <body>
 
@@ -296,11 +324,23 @@ body{-webkit-touch-callout:none}
     </div>
   </div>
   <div class="th-vagas">🟢 <span id="hdrVagas">-- vagas livres</span></div>
+  <button id="btnAudio" onclick="toggleAudio()" title="Ativar/desativar narração por voz"
+    style="background:rgba(255,255,255,.12);border:1.5px solid rgba(255,255,255,.25);border-radius:10px;
+           color:#fff;padding:6px 14px;font-size:.78rem;font-weight:700;cursor:pointer;
+           display:flex;align-items:center;gap:6px;transition:.2s;touch-action:manipulation"
+    aria-pressed="false" aria-label="Narração por voz desativada">
+    🔇 <span id="btnAudioLabel">Narração</span>
+  </button>
+  <button id="btnFullscreen" onclick="toggleFullscreen()"
+    style="background:rgba(255,255,255,.12);border:1.5px solid rgba(255,255,255,.25);border-radius:10px;
+           color:#fff;padding:6px 12px;font-size:.85rem;font-weight:700;cursor:pointer;
+           transition:.2s;touch-action:manipulation;line-height:1"
+    aria-label="Tela cheia" title="Tela cheia (F11)">⛶</button>
   <div class="th-clock" id="hdrClock">--:--</div>
 </div>
 
 <!-- ═══════════ TELA INICIAL ═══════════ -->
-<div id="screenInicio" class="screen ativo">
+<div id="screenInicio" class="screen ativo" role="main" aria-label="Tela inicial">
   <div class="card">
     <div class="card-header" style="padding:20px 28px">
       <span class="icon" style="font-size:40px">📚</span>
@@ -366,7 +406,7 @@ body{-webkit-touch-callout:none}
 </div>
 
 <!-- ═══════════ TELA CPF ═══════════ -->
-<div id="screenCpf" class="screen">
+<div id="screenCpf" class="screen" role="main" aria-label="Identificação por CPF">
   <div class="card">
     <div class="card-header" style="background:linear-gradient(135deg,#0a1628,#1a4a8a)">
       <span class="icon">👤</span>
@@ -399,7 +439,7 @@ body{-webkit-touch-callout:none}
 </div>
 
 <!-- ═══════════ TELA CADASTRO ═══════════ -->
-<div id="screenCadastro" class="screen">
+<div id="screenCadastro" class="screen" role="main" aria-label="Novo cadastro">
   <div class="card">
     <div class="card-header" style="background:linear-gradient(135deg,#6b4a0d,var(--dourado))">
       <span class="icon">📋</span>
@@ -506,7 +546,7 @@ body{-webkit-touch-callout:none}
 </div>
 
 <!-- ═══════════ TELA PAGAMENTO ═══════════ -->
-<div id="screenPagamento" class="screen">
+<div id="screenPagamento" class="screen" role="main" aria-label="Pagamento">
   <div class="card">
     <div class="card-header" style="background:linear-gradient(135deg,#1a3a6b,#2563eb)">
       <span class="icon">💳</span>
@@ -622,7 +662,7 @@ body{-webkit-touch-callout:none}
 </div>
 
 <!-- ═══════════ TELA ACESSO LIBERADO ═══════════ -->
-<div id="screenSucesso" class="screen">
+<div id="screenSucesso" class="screen" role="main" aria-label="Acesso liberado">
   <div class="card">
     <div class="card-body">
       <div class="acesso-ok">
@@ -645,7 +685,7 @@ body{-webkit-touch-callout:none}
 </div>
 
 <!-- ═══════════ TELA ERRO / JÁ TEM ACESSO ═══════════ -->
-<div id="screenErro" class="screen">
+<div id="screenErro" class="screen" role="main" aria-label="Atenção">
   <div class="card">
     <div class="card-header" style="background:linear-gradient(135deg,#7a0d0d,var(--vermelho))">
       <span class="icon" id="erroIcon">⚠️</span>
@@ -670,21 +710,21 @@ body{-webkit-touch-callout:none}
         <div class="teclado-label" id="tecladoLabel">Digite</div>
         <div class="teclado-valor" id="tecladoValor">_</div>
       </div>
-      <button class="tk apagar" onclick="tecladoApagar()" style="padding:10px 18px;border-radius:10px;font-size:1.4rem">⌫</button>
+      <button class="tk apagar" onclick="tecladoApagar()" style="padding:10px 18px;border-radius:10px;font-size:1.4rem" aria-label="Apagar último dígito">⌫</button>
     </div>
     <div class="teclado-grid" id="tecladoGrid">
       <!-- gerado por JS com embaralhamento -->
     </div>
     <div class="teclado-btns-extra">
-      <button class="tk cancelar-tk" onclick="fecharTeclado()">✕ Cancelar</button>
-      <button class="tk confirmar" onclick="confirmarTeclado()">✓ Confirmar</button>
-      <button class="tk especial" onclick="tecladoEspaco()">␣</button>
+      <button class="tk cancelar-tk" onclick="fecharTeclado()" aria-label="Cancelar e fechar teclado">✕ Cancelar</button>
+      <button class="tk confirmar" onclick="confirmarTeclado()" aria-label="Confirmar digitação">✓ Confirmar</button>
+      <button class="tk especial" onclick="tecladoEspaco()" aria-label="Espaço">␣</button>
     </div>
   </div>
 </div>
 
 <!-- ═══════════ IDLE OVERLAY ═══════════ -->
-<div class="idle-overlay" id="idleOverlay">
+<div class="idle-overlay" id="idleOverlay" role="dialog" aria-modal="true" aria-label="Sistema em espera">
   <span class="em">📚</span>
   <h2>Ala dos Estudantes</h2>
   <p>Educador Paiva Netto<br>Toque para iniciar</p>
@@ -695,7 +735,7 @@ body{-webkit-touch-callout:none}
 </div>
 
 <!-- ═══════════ BLOQUEIO ═══════════ -->
-<div class="bloqueio-overlay" id="bloqueioOverlay">
+<div class="bloqueio-overlay" id="bloqueioOverlay" role="alertdialog" aria-modal="true" aria-live="assertive">
   <span class="icon">🔒</span>
   <h2>Acesso bloqueado</h2>
   <p>Muitas tentativas inválidas de CPF.<br>Aguarde para tentar novamente.</p>
@@ -704,7 +744,7 @@ body{-webkit-touch-callout:none}
 </div>
 
 <!-- POP-UP AVISO URGENTE -->
-<div class="popup-urgente" id="popupUrgente">
+<div class="popup-urgente" id="popupUrgente" role="alertdialog" aria-modal="true" aria-labelledby="popupUrgenteT" aria-describedby="popupUrgenteMsg">
   <div class="popup-urgente-box">
     <span class="popup-urgente-icone">⚠️</span>
     <div class="popup-urgente-titulo" id="popupUrgenteT">Aviso Urgente</div>
@@ -714,13 +754,23 @@ body{-webkit-touch-callout:none}
 </div>
 
 <!-- TOAST -->
-<div class="toast-t" id="toastT"></div>
+<div class="toast-t" id="toastT" role="status" aria-live="polite" aria-atomic="true"></div>
+<div id="srTotemRegion" aria-live="assertive" aria-atomic="true" role="alert" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)"></div>
 
 <script>
 // ═══════════════════════════════════════════════════════════
 //  CONFIG
 // ═══════════════════════════════════════════════════════════
 const API_BASE = 'https://biblioteca-backend-v2-0.vercel.app';
+
+// ── Sanitizador HTML — previne XSS em innerHTML ─────────────
+function _esc(str) {
+  if (str == null) return '';
+  return String(str)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;').replace(/"/g, '&quot;')
+    .replace(/'/g, '&#x27;');
+}
 const IDLE_TIMEOUT   = 30000; // 30s sem interação → idle
 const IDLE_COUNTDOWN = 15;    // segundos no idle antes de limpar
 const BLOQUEIO_TENTATIVAS = 5;
@@ -784,9 +834,24 @@ function limparSessao() {
 //  NAVEGAÇÃO
 // ═══════════════════════════════════════════════════════════
 function irPara(screenId) {
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('ativo'));
-  document.getElementById(screenId).classList.add('ativo');
+  document.querySelectorAll('.screen').forEach(s => {
+    s.classList.remove('ativo');
+    s.setAttribute('aria-hidden', 'true');
+  });
+  const tela = document.getElementById(screenId);
+  tela.classList.add('ativo');
+  tela.removeAttribute('aria-hidden');
   resetarIdleTimer();
+  // Narração automática da tela
+  const narracoes = {
+    screenInicio:    'Tela inicial. Já tenho cadastro, ou primeiro acesso.',
+    screenCpf:       'Identificação. Digite seu CPF no teclado.',
+    screenCadastro:  'Novo cadastro. Preencha seus dados.',
+    screenPagamento: 'Pagamento. Escolha a forma de pagamento.',
+    screenSucesso:   'Acesso liberado! Dirija-se à catraca.',
+    screenErro:      'Atenção. Verifique a mensagem na tela.',
+  };
+  if (narracoes[screenId]) narrar(narracoes[screenId]);
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -879,6 +944,44 @@ async function carregarTermoT() {
 carregarTermoT();
 
 // ═══════════════════════════════════════════════════════════
+//  SOM — Web Audio API
+// ═══════════════════════════════════════════════════════════
+let _audioCtxT = null;
+function _getCtxT() {
+  if (!_audioCtxT || _audioCtxT.state === 'closed')
+    _audioCtxT = new (window.AudioContext || window.webkitAudioContext)();
+  if (_audioCtxT.state === 'suspended') _audioCtxT.resume();
+  return _audioCtxT;
+}
+function _beepT(tipo = 'ok') {
+  try {
+    const ctx = _getCtxT();
+    const seqs = {
+      ok:      [[523, .10, .04], [784, .15, 0]],
+      erro:    [[330, .18, .08], [220, .22, 0]],
+      digito:  [[880, .06, 0]],
+      sucesso: [[523, .10, .04], [659, .10, .04], [784, .10, .04], [1047, .2, 0]],
+      aviso:   [[660, .12, .05], [440, .18, 0]],
+    };
+    let t = ctx.currentTime + 0.05;
+    (seqs[tipo] || seqs.ok).forEach(([freq, dur, pausa]) => {
+      const osc = ctx.createOscillator(), gain = ctx.createGain();
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.frequency.value = freq; osc.type = 'sine';
+      gain.gain.setValueAtTime(0, t);
+      gain.gain.linearRampToValueAtTime(0.3, t + .01);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + dur);
+      osc.start(t); osc.stop(t + dur);
+      t += dur + pausa;
+    });
+  } catch(e) {}
+}
+// Desbloqueia AudioContext na primeira interação
+document.addEventListener('touchstart', () => {
+  if (_audioCtxT && _audioCtxT.state === 'suspended') _audioCtxT.resume();
+}, { once: false, passive: true });
+
+// ═══════════════════════════════════════════════════════════
 //  IDLE SYSTEM
 // ═══════════════════════════════════════════════════════════
 let _idleTimer=null, _idleCountTimer=null;
@@ -931,6 +1034,8 @@ function registrarTentativaInvalida(){
 }
 
 function ativarBloqueio(){
+  _beepT('erro');
+  narrar('Acesso bloqueado por muitas tentativas inválidas. Aguarde 60 segundos.', true);
   const overlay=document.getElementById('bloqueioOverlay');
   overlay.classList.add('ativo');
   let t=BLOQUEIO_TEMPO;
@@ -1021,6 +1126,8 @@ function tecladoDigito(v){
   if(_tecladoValorBruto.length>=max) return;
   _tecladoValorBruto+=v;
   atualizarDisplayTeclado();
+  _beepT('digito');
+  if (_audioAtivo && isNum) narrar(_tecladoValorBruto.length + ' dígitos digitados');
   resetarIdleTimer();
 }
 
@@ -1114,6 +1221,8 @@ async function buscarCpf(){
 
     if(!usuario){
       registrarTentativaInvalida();
+      _beepT('erro');
+      narrar('CPF não encontrado. Você pode se cadastrar na opção primeiro acesso.');
       document.getElementById('cpfErroMsg').textContent='CPF não encontrado. Você pode realizar o cadastro na opção "Primeiro acesso".';
       erroEl.style.display='flex';
       return;
@@ -1122,9 +1231,11 @@ async function buscarCpf(){
       mostrarErroTela('🚫','Conta suspensa','Seu cadastro está suspenso.','Entre em contato com a recepção: (61) 3114-1027.');
       return;
     }
-    _tentativasInvalidas=0; // Reset tentativas
+    _tentativasInvalidas=0;
     sess.usuario=usuario;
     sess.novoUsuario=false;
+    _beepT('ok');
+    narrar('Cadastro encontrado. Indo para pagamento.');
     irParaPagamento();
   }catch(e){
     document.getElementById('cpfErroMsg').textContent='Erro de conexão. Tente novamente.';
@@ -1291,6 +1402,8 @@ async function irParaPagamento(){
     ]);
 
     if(rv.lotado){
+      _beepT('aviso');
+      narrar('Sala lotada. Não há vagas disponíveis no momento. Aguarde a saída de outro usuário.');
       mostrarErroTela('🔴','Sala lotada','Não há vagas disponíveis no momento.','Aguarde a saída de outro usuário ou tente mais tarde.');
       return;
     }
@@ -1456,6 +1569,8 @@ function mostrarSucesso(tipo){
   document.getElementById('sucessoNome').textContent=display;
   document.getElementById('sucessoTipo').textContent=tipo==='pix'?'💠 Pix':'💳 Cartão';
   document.getElementById('sucessoHora').textContent=new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+  _beepT('sucesso');
+  narrar(`Acesso liberado! Bem-vindo, ${document.getElementById('sucessoNome').textContent}. Dirija-se à catraca.`);
   irPara('screenSucesso');
   // Conta regressiva para reiniciar
   let c=15;
@@ -1481,10 +1596,24 @@ function mostrarErroTela(icon,titulo,subtitulo,msg){
 // ═══════════════════════════════════════════════════════════
 //  TOAST
 // ═══════════════════════════════════════════════════════════
-function toastT(msg,dur=3000){
-  const t=document.getElementById('toastT');
-  t.textContent=msg; t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),dur);
+function toastT(msg, dur=3000, tipo='') {
+  const t = document.getElementById('toastT');
+  if (!tipo) {
+    if (msg.startsWith('✅')) tipo = 'ok';
+    else if (msg.startsWith('❌')) tipo = 'erro';
+    else if (msg.startsWith('⚠️')) tipo = 'aviso';
+    else if (msg.startsWith('ℹ️')) tipo = 'info';
+  }
+  t.textContent = msg;
+  t.className = 'toast-t' + (tipo ? ' toast-' + tipo : '');
+  t.classList.add('show');
+  if (navigator.vibrate) {
+    if (tipo === 'erro') navigator.vibrate([200, 100, 200]);
+    else if (tipo === 'ok') navigator.vibrate([100]);
+    else if (tipo === 'aviso') navigator.vibrate([150, 80, 150]);
+  }
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.classList.remove('show'), dur);
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -1502,9 +1631,11 @@ async function verificarAvisosUrgentesT(){
     // Só mostra se for diferente do último exibido (evita repetição em loop)
     if(aviso.id===_ultimoAvisoUrgenteId) return;
     _ultimoAvisoUrgenteId=aviso.id;
-    document.getElementById('popupUrgenteT').textContent=aviso.titulo||'Aviso Urgente';
+    document.getElementById('popupUrgenteT').textContent = aviso.titulo || 'Aviso Urgente';
     document.getElementById('popupUrgenteMsg').textContent=aviso.conteudo||'';
     document.getElementById('popupUrgente').classList.add('ativo');
+    narrar('Aviso urgente: ' + (aviso.titulo || '') + '. ' + (aviso.conteudo || ''), true);
+    _beepT('aviso');
   }catch(e){}
 }
 
@@ -1518,17 +1649,135 @@ verificarAvisosUrgentesT();
 setInterval(verificarAvisosUrgentesT, 180000);
 
 // ═══════════════════════════════════════════════════════════
+//  ÁUDIO DESCRIÇÃO — speechSynthesis
+// ═══════════════════════════════════════════════════════════
+let _audioAtivo = false;
+let _vozPtBR = null;
+
+// Pré-carrega a voz pt-BR
+function _carregarVoz() {
+  const vozes = speechSynthesis.getVoices();
+  _vozPtBR = vozes.find(v => v.lang === 'pt-BR') ||
+             vozes.find(v => v.lang.startsWith('pt')) ||
+             vozes[0] || null;
+}
+speechSynthesis.onvoiceschanged = _carregarVoz;
+_carregarVoz();
+
+function narrar(texto, prioridade = false) {
+  // Anuncia na live region sempre (para leitores de tela)
+  const lr = document.getElementById('srTotemRegion');
+  if (lr) { lr.textContent = ''; setTimeout(() => { lr.textContent = texto; }, 60); }
+  // Só sintetiza voz se áudio ativo
+  if (!_audioAtivo && !prioridade) return;
+  if (!('speechSynthesis' in window)) return;
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(texto);
+  u.lang = 'pt-BR';
+  u.rate = 0.92;
+  u.pitch = 1.0;
+  u.volume = 1.0;
+  if (_vozPtBR) u.voice = _vozPtBR;
+  speechSynthesis.speak(u);
+}
+
+function toggleAudio() {
+  _audioAtivo = !_audioAtivo;
+  const btn = document.getElementById('btnAudio');
+  const label = document.getElementById('btnAudioLabel');
+  btn.classList.toggle('ativo', _audioAtivo);
+  btn.setAttribute('aria-pressed', String(_audioAtivo));
+  btn.setAttribute('aria-label', _audioAtivo ? 'Narração por voz ativada' : 'Narração por voz desativada');
+  btn.querySelector('span:first-child') && (btn.innerHTML = (_audioAtivo ? '🔊' : '🔇') + ' <span id="btnAudioLabel">Narração</span>');
+  if (_audioAtivo) {
+    narrar('Narração por voz ativada. Toque nos botões para ouvir as instruções.', true);
+    _beepT('ok');
+  } else {
+    speechSynthesis.cancel();
+  }
+  resetarIdleTimer();
+}
+
+// ═══════════════════════════════════════════════════════════
+//  TELA CHEIA — cross-browser completo
+// ═══════════════════════════════════════════════════════════
+function toggleFullscreen() {
+  const el = document.documentElement;
+  const isFs = document.fullscreenElement || document.webkitFullscreenElement
+             || document.mozFullScreenElement || document.msFullscreenElement;
+  if (!isFs) {
+    const req = el.requestFullscreen || el.webkitRequestFullscreen
+             || el.mozRequestFullScreen || el.msRequestFullscreen;
+    if (req) req.call(el).catch(() => {});
+  } else {
+    const ex = document.exitFullscreen || document.webkitExitFullscreen
+             || document.mozCancelFullScreen || document.msExitFullscreen;
+    if (ex) ex.call(document).catch(() => {});
+  }
+}
+
+// Atualiza ícone e estilo do botão ao mudar estado
+['fullscreenchange','webkitfullscreenchange','mozfullscreenchange','msfullscreenchange']
+  .forEach(ev => document.addEventListener(ev, () => {
+    const isFs = !!(document.fullscreenElement || document.webkitFullscreenElement
+                  || document.mozFullScreenElement);
+    const btn = document.getElementById('btnFullscreen');
+    if (btn) {
+      btn.textContent = isFs ? '⛶' : '⛶';
+      btn.title = isFs ? 'Sair da tela cheia (F11)' : 'Tela cheia (F11)';
+      btn.setAttribute('aria-label', isFs ? 'Sair da tela cheia' : 'Entrar em tela cheia');
+      btn.style.background = isFs ? 'rgba(125,255,179,.25)' : 'rgba(255,255,255,.12)';
+      btn.style.borderColor = isFs ? 'rgba(125,255,179,.5)' : 'rgba(255,255,255,.25)';
+    }
+  }));
+
+// Ativa tela cheia automaticamente no primeiro toque (modo kiosk)
+let _fsAtivado = false;
+document.addEventListener('click', () => {
+  if (_fsAtivado) return;
+  _fsAtivado = true;
+  const el = document.documentElement;
+  const req = el.requestFullscreen || el.webkitRequestFullscreen
+           || el.mozRequestFullScreen || el.msRequestFullscreen;
+  if (req) req.call(el).catch(() => {});
+}, { once: true });
+
+// ═══════════════════════════════════════════════════════════
+//  EVENTOS DO SISTEMA
+// ═══════════════════════════════════════════════════════════
+
+// Pausa idle timer quando aba fica oculta
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) clearTimeout(_idleTimer);
+  else resetarIdleTimer();
+});
+
+// Conexão de rede
+window.addEventListener('online',  () => { toastT('✅ Conexão restabelecida.', 3000, 'ok');    atualizarVagas(); });
+window.addEventListener('offline', () => { toastT('⚠️ Sem conexão com a internet.', 5000, 'aviso'); });
+
+// Orientação e resize
+window.addEventListener('orientationchange', () => setTimeout(() => window.scrollTo(0,0), 200));
+window.addEventListener('resize', () => {
+  document.documentElement.style.setProperty('--vh', window.innerHeight * .01 + 'px');
+});
+
+// ═══════════════════════════════════════════════════════════
 //  BLOQUEIO DE CONTEXTO (MODO KIOSK)
 // ═══════════════════════════════════════════════════════════
 document.addEventListener('contextmenu',e=>e.preventDefault());
 document.addEventListener('keydown',e=>{
   // Bloqueia F5, F11, Alt+F4, Ctrl+W, etc.
-  if(['F5','F11','F1','F3'].includes(e.key)) e.preventDefault();
+  if(['F1','F2','F3','F4','F5','F6','F7','F8','F9','F10','F12'].includes(e.key)){e.preventDefault();return;}
+  if(e.key==='F11'){e.preventDefault();toggleFullscreen();return;}
   if(e.altKey&&(e.key==='F4'||e.key==='Tab')) e.preventDefault();
   if(e.ctrlKey&&['w','r','p','s','a','f','j','u'].includes(e.key.toLowerCase())) e.preventDefault();
 });
 // Desabilita drag
 document.addEventListener('dragstart',e=>e.preventDefault());
+document.addEventListener('selectstart',e=>e.preventDefault());
+document.addEventListener('gesturestart',e=>e.preventDefault());
+document.addEventListener('gesturechange',e=>e.preventDefault());
 </script>
 </body>
 </html>

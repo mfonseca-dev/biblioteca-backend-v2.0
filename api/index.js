@@ -1,9 +1,11 @@
 const acessosEspeciais = require('../lib/handlers/acessos-especiais.js');
+const auditoria         = require('../lib/handlers/auditoria.js');
 const acessos          = require('../lib/handlers/acessos.js');
 const auth             = require('../lib/handlers/auth.js');
 const avisos           = require('../lib/handlers/avisos.js');
 const configuracoes    = require('../lib/handlers/configuracoes.js');
 const liberarAcesso    = require('../lib/handlers/liberar-acesso.js');
+const notificacoes     = require('../lib/handlers/notificacoes.js');
 const pagamentos       = require('../lib/handlers/pagamentos.js');
 const sugestoes        = require('../lib/handlers/sugestoes.js');
 const totem            = require('../lib/handlers/totem.js');
@@ -15,11 +17,13 @@ const agenteSalvarPerson = require('../lib/handlers/agente/salvar-person-id.js')
 
 const rotas = {
   '/api/acessos-especiais': acessosEspeciais,
+  '/api/auditoria':          auditoria,
   '/api/acessos':           acessos,
   '/api/auth':              auth,
   '/api/avisos':            avisos,
   '/api/configuracoes':     configuracoes,
   '/api/liberar-acesso':    liberarAcesso,
+  '/api/notificacoes':      notificacoes,
   '/api/pagamentos':        pagamentos,
   '/api/sugestoes':         sugestoes,
   '/api/totem':             totem,
