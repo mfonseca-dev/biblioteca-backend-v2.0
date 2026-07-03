@@ -2,8 +2,14 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
+sed -i "5s#.*#<meta http-equiv=\"Content-Security-Policy\" content=\"default-src 'self'; script-src 'self' 'unsafe-inline' https://vlibras.gov.br https://www.vlibras.gov.br https://cdn.handtalk.me https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://vlibras.gov.br https://www.vlibras.gov.br https://cdn.handtalk.me; font-src 'self' https://fonts.gstatic.com https://vlibras.gov.br https://www.vlibras.gov.br https://cdn.handtalk.me data:; img-src 'self' data: blob: https:; connect-src 'self' https://biblioteca-backend-v2-0.vercel.app https://fonts.googleapis.com https://vlibras.gov.br https://www.vlibras.gov.br https://cdn.handtalk.me https://cdn.jsdelivr.net; media-src 'self' blob: https://vlibras.gov.br https://www.vlibras.gov.br https://cdn.handtalk.me; worker-src 'self' blob:; frame-ancestors 'none'; object-src 'none'; base-uri 'self';\">#" public/index.html
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#1a6b3a">
+  <meta name="description" content="Ala dos Estudantes — Gerencie seu acesso, pagamentos e histórico de visitas.">
+  <meta property="og:title" content="Ala dos Estudantes">
+  <meta property="og:description" content="Acesso à biblioteca com pagamento via Pix e notificações em tempo real.">
+  <meta property="og:type" content="website">
+  <meta name="robots" content="noindex, nofollow">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -13,7 +19,9 @@
 <title>Ala dos Estudantes — Paiva Netto</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
-:root{--verde:#1a6b3a;--verde-esc:#0d3d20;--verde-cl:#2d9155;--verde-suave:#e8f5ee;--dourado:#c9a227;--dourado-cl:#f0d97a;--creme:#faf8f2;--cinza-esc:#1e1e1e;--cinza:#555;--cinza-cl:#e8e8e8;--vermelho:#c0392b;--azul:#1a4a8a;--laranja:#e67e22;--shadow:0 4px 24px rgba(0,0,0,.10);--shadow-lg:0 12px 48px rgba(0,0,0,.18);--r:16px;--r-sm:10px}
+:root{--verde:#1a6b3a;--verde-esc:#0d3d20;--verde-cl:#2d9155;--verde-suave:#e8f5ee;--dourado:#c9a227;--dourado-cl:#f0d97a;--creme:#faf8f2;--cinza-esc:#1e1e1e;--cinza:#555;--cinza-cl:#e8e8e8;--vermelho:#c0392b;--azul:#1a4a8a;--laranja:#e67e22;--shadow:0 4px 24px rgba(0,0,0,.10);--shadow-lg:0 12px 48px rgba(0,0,0,.18);--r:16px;--r-sm:10px;
+--bg-page:var(--creme);--bg-card:#fff;--bg-input:#fff;--txt-main:var(--cinza-esc);--txt-sub:var(--cinza);--border:var(--cinza-cl);--nav-bg:#fff;--nav-border:var(--cinza-cl)}
+[data-tema="escuro"]{--creme:#121212;--bg-page:#121212;--bg-card:#1e1e1e;--bg-input:#1a1a1a;--txt-main:#f0f0f0;--txt-sub:#aaa;--border:#2a2a2a;--nav-bg:#1a1a1a;--nav-border:#2a2a2a;--cinza-esc:#f0f0f0;--cinza:#aaa;--cinza-cl:#2a2a2a;--shadow:0 4px 24px rgba(0,0,0,.4)}
 *,::before,::after{box-sizing:border-box;margin:0;padding:0}
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-esc);min-height:100vh}
@@ -50,6 +58,13 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
 .btn-azul{background:linear-gradient(135deg,#2563eb,var(--azul));color:#fff}
 .btn-sec{background:#fff;border:2px solid var(--cinza-cl);color:var(--cinza)}
 .btn-sec:hover{border-color:var(--cinza)}
+*:focus-visible{outline:3px solid var(--verde);outline-offset:3px;border-radius:4px}
+button:focus-visible,a:focus-visible{outline:3px solid var(--verde);outline-offset:3px;border-radius:6px;box-shadow:0 0 0 6px rgba(26,107,58,.18)}
+.btn:focus-visible{outline:3px solid var(--verde-esc);outline-offset:2px;box-shadow:0 0 0 5px rgba(26,107,58,.28)}
+@supports selector(:focus-visible){*:focus:not(:focus-visible){outline:none;box-shadow:none}}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+#srLiveRegion{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;pointer-events:none}
+.ni{background:none!important;border:none!important;font-family:inherit;cursor:pointer}
 .btn-sm{padding:8px 15px;font-size:.79rem;width:auto}
 .btn-xs{padding:5px 11px;font-size:.72rem;width:auto;border-radius:6px}
 .btn:disabled{opacity:.55;cursor:not-allowed;transform:none!important}
@@ -169,8 +184,25 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
 .pagto-status{text-align:center;font-size:.88rem;font-weight:600;min-height:22px;margin-bottom:10px;transition:.3s}
 .pagto-processando{color:var(--laranja)}
 .pagto-ok{color:var(--verde)}
-.toast{position:fixed;bottom:83px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--cinza-esc);color:#fff;padding:10px 22px;border-radius:28px;font-size:.82rem;font-weight:600;opacity:0;transition:.3s;z-index:1000;white-space:nowrap;pointer-events:none;max-width:90vw;text-align:center}
+.toast{position:fixed;bottom:83px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--cinza-esc);color:#fff;padding:10px 22px;border-radius:28px;font-size:.82rem;font-weight:600;opacity:0;transition:.35s cubic-bezier(.34,1.56,.64,1);z-index:1000;white-space:nowrap;pointer-events:none;max-width:90vw;text-align:center;box-shadow:0 6px 24px rgba(0,0,0,.25)}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast.toast-ok{background:linear-gradient(135deg,var(--verde-esc),var(--verde-cl))}
+.toast.toast-erro{background:linear-gradient(135deg,#c0392b,#e74c3c)}
+.toast.toast-aviso{background:linear-gradient(135deg,#a07a00,#c9a227)}
+.toast.toast-info{background:linear-gradient(135deg,var(--azul),#2563eb)}
+/* ── PWA Install Banner ── */
+#pwaBanner{display:none;position:fixed;bottom:80px;left:12px;right:12px;background:#fff;
+  border:1.5px solid var(--verde);border-radius:16px;padding:14px 16px;
+  box-shadow:0 8px 32px rgba(0,0,0,.18);z-index:900;
+  flex-direction:row;align-items:center;gap:12px;animation:fadeUp .3s ease}
+#pwaBanner.show{display:flex}
+#pwaBanner .pwa-icon{font-size:2rem;flex-shrink:0}
+#pwaBanner .pwa-txt{flex:1;min-width:0}
+#pwaBanner .pwa-txt b{display:block;font-size:.88rem;color:var(--cinza-esc);margin-bottom:2px}
+#pwaBanner .pwa-txt span{font-size:.76rem;color:var(--cinza)}
+#pwaBanner .pwa-btns{display:flex;flex-direction:column;gap:6px;flex-shrink:0}
+[data-tema="escuro"] #pwaBanner{background:#1e1e1e;border-color:var(--verde-cl)}
+[data-tema="escuro"] #pwaBanner .pwa-txt b{color:#f0f0f0}
 .sem{text-align:center;padding:22px;color:#aaa;font-size:.85rem}
 .sem .si{font-size:32px;display:block;margin-bottom:6px}
 .aviso{border-left:4px solid var(--dourado);background:#fffdf0;border-radius:0 var(--r-sm) var(--r-sm) 0;padding:11px 13px;margin-bottom:9px}
@@ -228,6 +260,72 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
 .erro-api{background:#fff5f5;border:1.5px solid #f5b5a8;border-radius:var(--r-sm);padding:10px 14px;font-size:.82rem;color:var(--vermelho);margin-bottom:10px;display:none}
 @media(min-width:768px){.main{padding:20px 20px 100px}.cf{padding:42px 40px}}
 @media(min-width:1024px){.main{padding:24px 24px 80px}.bnav{max-width:900px;left:50%;transform:translateX(-50%);border-radius:20px 20px 0 0}.toast{bottom:90px}}
+
+/* ── Tema Escuro (data-tema="escuro") ── */
+[data-tema="escuro"] body{background:#121212!important;color:#f0f0f0}
+[data-tema="escuro"] .crd,[data-tema="escuro"] .acrd,[data-tema="escuro"] .astat,[data-tema="escuro"] .presenca-card{background:#1e1e1e;border-color:#2a2a2a}
+[data-tema="escuro"] .cf{background:#1e1e1e}
+[data-tema="escuro"] .tabela th{background:#2a2a2a;color:#aaa}
+[data-tema="escuro"] .tabela td{border-color:#2a2a2a;color:#ddd}
+[data-tema="escuro"] .tabela tr:hover td{background:#252525}
+[data-tema="escuro"] .bnav{background:#1a1a1a!important;border-top-color:#2a2a2a}
+[data-tema="escuro"] .ni .lb{color:#888}
+[data-tema="escuro"] .topbar{background:linear-gradient(135deg,#060f0a,#0d3d20)}
+[data-tema="escuro"] .barra{background:#2a2a2a}
+[data-tema="escuro"] .fg select,[data-tema="escuro"] .fg input,[data-tema="escuro"] .fg textarea,
+[data-tema="escuro"] .campo input,[data-tema="escuro"] .campo select,[data-tema="escuro"] .campo textarea{background:#1e1e1e;color:#f0f0f0;border-color:#333}
+[data-tema="escuro"] .btn-sec{background:#2a2a2a;border-color:#3a3a3a;color:#ddd}
+[data-tema="escuro"] .modal,[data-tema="escuro"] .modal-pagto{background:#1e1e1e}
+[data-tema="escuro"] .modal h3{color:#2d9155}
+[data-tema="escuro"] .modal p{color:#aaa}
+[data-tema="escuro"] .termos-box{background:#1a1a1a;border-color:#333;color:#bbb}
+[data-tema="escuro"] .pagto-header{background:linear-gradient(135deg,#060f0a,#0d3d20)}
+[data-tema="escuro"] .pix-box{background:#1a2e1a;border-color:#2d6b3a}
+[data-tema="escuro"] .pagto-aviso{background:#2a2000;border-color:#5a4000;color:#f0d97a}
+[data-tema="escuro"] .vs.livres{background:linear-gradient(135deg,#1a2e1a,#1e3a1e)}
+[data-tema="escuro"] .vs.ocupadas{background:linear-gradient(135deg,#2e1a1a,#3a1e1e)}
+[data-tema="escuro"] .aviso{background:#1a1800;border-left-color:#8a6200}
+[data-tema="escuro"] .aviso.urgente{background:#2e1a1a}
+[data-tema="escuro"] .aviso.info{background:#1a1e2e}
+[data-tema="escuro"] .aviso p{color:#ddd}
+[data-tema="escuro"] #adminScreen,[data-tema="escuro"] #recepScreen{background:#111}
+[data-tema="escuro"] .tab{background:#1e1e1e;border-color:#333;color:#aaa}
+[data-tema="escuro"] .atab{background:#1e1e1e;border-color:#333;color:#aaa}
+[data-tema="escuro"] .badge.cinza{background:#2a2a2a;color:#aaa}
+[data-tema="escuro"] .admin-top{background:linear-gradient(135deg,#030807,#0a2010)}
+[data-tema="escuro"] .st-box.ausente{background:#1e1e1e;border-color:#333;color:#888}
+[data-tema="escuro"] .plano-crd{background:linear-gradient(135deg,#060f0a,#0d3d20)}
+[data-tema="escuro"] .bv{background:linear-gradient(135deg,#0d3d20,#1a6b3a)}
+[data-tema="escuro"] .bg-verde{background:linear-gradient(145deg,#050e0a,#0a2814 40%,#0d3d20 70%,#0a2814 100%)}
+/* Tema claro forçado mesmo se sistema for escuro */
+[data-tema="claro"] body{background:var(--creme)!important;color:var(--cinza-esc)!important}
+[data-tema="claro"] .crd{background:#fff!important;color:var(--cinza-esc)!important}
+[data-tema="claro"] .modal,[data-tema="claro"] .modal-pagto{background:#fff!important;color:var(--cinza-esc)!important}
+/* Auto = segue o sistema */
+@media(prefers-color-scheme:dark){
+  html:not([data-tema="claro"]) body{background:#121212;color:#f0f0f0}
+  html:not([data-tema="claro"]) .crd,html:not([data-tema="claro"]) .acrd,html:not([data-tema="claro"]) .astat,html:not([data-tema="claro"]) .presenca-card,html:not([data-tema="claro"]) .cf{background:#1e1e1e;border-color:#2a2a2a}
+  html:not([data-tema="claro"]) .bnav{background:#1a1a1a!important;border-top-color:#2a2a2a}
+  html:not([data-tema="claro"]) .fg select,html:not([data-tema="claro"]) .fg input,html:not([data-tema="claro"]) .fg textarea{background:#1e1e1e;color:#f0f0f0;border-color:#333}
+  html:not([data-tema="claro"]) .btn-sec{background:#2a2a2a;border-color:#3a3a3a;color:#ddd}
+  html:not([data-tema="claro"]) .modal,html:not([data-tema="claro"]) .modal-pagto{background:#1e1e1e}
+  html:not([data-tema="claro"]) #adminScreen,html:not([data-tema="claro"]) #recepScreen{background:#111}
+  html:not([data-tema="claro"]) .tabela th{background:#2a2a2a;color:#aaa}
+  html:not([data-tema="claro"]) .tab{background:#1e1e1e;border-color:#333;color:#aaa}
+}
+
+/* ── Toggle tema — botão no perfil ── */
+.tema-toggle{display:flex;gap:4px;background:#f0f0f0;border-radius:30px;padding:4px}
+[data-tema="escuro"] .tema-toggle{background:#2a2a2a}
+.tema-btn{flex:1;padding:6px 10px;border:none;border-radius:24px;font-size:.72rem;font-weight:600;cursor:pointer;background:transparent;color:#888;transition:.2s;white-space:nowrap}
+.tema-btn.ativo{background:#fff;color:var(--verde-esc);box-shadow:0 2px 8px rgba(0,0,0,.12)}
+[data-tema="escuro"] .tema-btn.ativo{background:#3a3a3a;color:#fff}
+
+/* ── Animações extra ── */
+@keyframes pulso-btn{0%,100%{box-shadow:0 0 0 0 rgba(26,107,58,.4)}70%{box-shadow:0 0 0 12px rgba(26,107,58,0)}}
+.btn-pulso{animation:pulso-btn 1.8s ease infinite}
+@keyframes shimmer{0%{background-position:-468px 0}100%{background-position:468px 0}}
+.skeleton{background:linear-gradient(90deg,#f0f0f0 25%,#e0e0e0 50%,#f0f0f0 75%);background-size:936px 100%;animation:shimmer 1.2s ease infinite;border-radius:6px;height:14px;margin-bottom:6px}
 </style>
 </head>
 <body>
@@ -253,8 +351,23 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
       </div>
     </div>
     <div class="campo" id="campoSenhaLogin"><label for="loginSenha">Senha</label>
-      <input type="password" id="loginSenha" placeholder="••••••••"></div>
+      <input type="password" id="loginSenha" placeholder="••••••••" autocomplete="current-password"></div>
     <button class="btn btn-verde" id="btnLogin">🔐 Entrar</button>
+    <div style="margin-top:16px;text-align:center;font-size:.8rem">
+
+  <button id="btnPrivacidadeLogin"
+          style="background:none;border:none;color:var(--verde);cursor:pointer;font-weight:600">
+    🔒 Política de Privacidade
+  </button>
+
+  <span style="color:#bbb;margin:0 6px">•</span>
+
+  <button id="btnExclusaoLogin"
+          style="background:none;border:none;color:var(--vermelho);cursor:pointer">
+    🗑️ Exclusão de Dados
+  </button>
+
+</div>
     <div class="linktxt">Não tem cadastro? <span id="irCadastro">Cadastre-se aqui</span></div>
     <div class="linktxt" style="margin-top:6px">
       <span id="irAdminLogin" style="color:#bbb;font-size:.75rem">⚙️ Acesso Administrativo</span>
@@ -679,7 +792,7 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
       <div class="crd" style="text-align:center;padding-bottom:16px">
         <div style="position:relative;display:inline-block;margin-bottom:10px">
           <div id="perfilFotoWrap" style="width:90px;height:90px;border-radius:50%;background:var(--verde-suave);border:3px solid var(--verde);overflow:hidden;margin:0 auto;display:flex;align-items:center;justify-content:center">
-            <img id="perfilFotoImg" src="" style="display:none;width:100%;height:100%;object-fit:cover">
+            <img id="perfilFotoImg" alt="Foto de perfil" src="" style="display:none;width:100%;height:100%;object-fit:cover">
             <span id="perfilFotoLetra" style="font-size:2.2rem;font-weight:700;color:var(--verde)">?</span>
           </div>
           <label id="perfilFotoBtnLabel" title="Atualizar foto" style="position:absolute;bottom:0;right:0;width:28px;height:28px;border-radius:50%;background:var(--verde);display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.2)" onclick="abrirModalFotoPerfil()">
@@ -699,6 +812,17 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
         <div style="font-weight:700;font-size:.85rem;color:var(--laranja);margin-bottom:8px">⚠️ Complete seu cadastro</div>
         <div id="perfilAlertasLista" style="font-size:.8rem;color:#555;line-height:1.8"></div>
         <button class="btn btn-dourado btn-sm" style="margin-top:10px" onclick="perfilIrCompletarCadastro()">✅ Completar agora</button>
+      </div>
+
+      <!-- Aparência / Tema -->
+      <div class="crd">
+        <div class="crd-t">🎨 Aparência</div>
+        <p style="font-size:.8rem;color:#888;margin-bottom:12px">Escolha o tema da interface. "Automático" segue o seu sistema.</p>
+        <div class="tema-toggle" id="temaToggle">
+          <button class="tema-btn" data-tema-val="claro" onclick="definirTema('claro')">☀️ Claro</button>
+          <button class="tema-btn" data-tema-val="auto" onclick="definirTema('auto')">🌓 Auto</button>
+          <button class="tema-btn" data-tema-val="escuro" onclick="definirTema('escuro')">🌙 Escuro</button>
+        </div>
       </div>
 
       <!-- Notificações Push -->
@@ -835,12 +959,12 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
     </div>
   </div>
 
-  <nav class="bnav">
-    <div class="ni ativo" data-panel="panelInicio"><span class="ic">🏠</span><span class="lb">Início</span></div>
-    <div class="ni" data-panel="panelAvisos"><span class="ic">📢</span><span class="lb">Avisos</span></div>
-    <div class="ni" data-panel="panelPerfil"><span class="ic">👤</span><span class="lb">Perfil</span></div>
-    <div class="ni" data-panel="panelInformacoes"><span class="ic">ℹ️</span><span class="lb">Info</span></div>
-    <div class="ni" data-panel="panelSugestoes"><span class="ic">💬</span><span class="lb">Sugestões</span></div>
+  <nav class="bnav" role="navigation" aria-label="Menu principal">
+    <button class="ni ativo" data-panel="panelInicio" aria-label="Início" aria-current="page"><span class="ic" aria-hidden="true">🏠</span><span class="lb">Início</span></button>
+    <button class="ni" data-panel="panelAvisos" aria-label="Avisos"><span class="ic" aria-hidden="true">📢</span><span class="lb">Avisos</span></button>
+    <button class="ni" data-panel="panelPerfil" aria-label="Perfil"><span class="ic" aria-hidden="true">👤</span><span class="lb">Perfil</span></button>
+    <button class="ni" data-panel="panelInformacoes" aria-label="Informações"><span class="ic" aria-hidden="true">ℹ️</span><span class="lb">Info</span></button>
+    <button class="ni" data-panel="panelSugestoes" aria-label="Sugestões e Feedback"><span class="ic" aria-hidden="true">💬</span><span class="lb">Sugestões</span></button>
   </nav>
 </div>
 
@@ -861,6 +985,7 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
       <button class="atab ativo" data-apanel="recepPanelPresentes">✅ Presentes</button>
       <button class="atab" data-apanel="recepPanelPendentes">⏳ Aguardando <span id="badgePendentes" style="background:var(--vermelho);color:#fff;border-radius:10px;padding:1px 6px;font-size:.65rem;margin-left:3px;display:none">0</span></button>
       <button class="atab" data-apanel="recepPanelPagos">💳 Pagos Hoje</button>
+      <button class="atab" data-apanel="recepPanelCreditos">🎫 Créditos</button>
       <button class="atab" data-apanel="recepPanelVagas">🅿️ Vagas</button>
       <button class="atab" data-apanel="recepPanelCadastro">➕ Cadastrar</button>
     </div>
@@ -909,6 +1034,27 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
         </div>
       </div>
     </div>
+    <!-- ── PAINEL CRÉDITOS ──────────────────────────────────── -->
+    <div id="recepPanelCreditos" class="apanel">
+      <div class="acrd">
+        <div class="acrd-t">🎫 Créditos por Pagamento Não Utilizado</div>
+        <p style="font-size:.79rem;color:#777;margin-bottom:12px">
+          Usuários que pagaram mas não acessaram a catraca no prazo. A recepção libera o acesso manualmente ao crédito.
+        </p>
+        <div class="fg" style="margin-bottom:10px">
+          <input type="text" id="creditoBusca" placeholder="🔍 Buscar por nome ou CPF..."
+            oninput="recepBuscarCredito(this.value)"
+            aria-label="Buscar usuário com crédito">
+        </div>
+        <div id="creditoResultados"></div>
+        <div style="margin-top:16px">
+          <div class="acrd-t" style="font-size:.82rem;margin-bottom:8px">📋 Créditos pendentes</div>
+          <div id="creditosLista"><div class="sem"><span class="si">⏳</span>Carregando...</div></div>
+        </div>
+      </div>
+    </div>
+    <!-- ── fim PAINEL CRÉDITOS ──────────────────────────────── -->
+
     <div id="recepPanelCadastro" class="apanel">
       <div class="acrd">
         <div class="acrd-t">➕ Registrar Entrada Avulsa</div>
@@ -938,11 +1084,13 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
     <div class="atabs">
       <button class="atab ativo" data-apanel="adminPanelUsuarios">👥 Usuários</button>
       <button class="atab" data-apanel="adminPanelHistorico">📊 Histórico</button>
+      <button class="atab" data-apanel="adminPanelDashboard">📈 Dashboard</button>
       <button class="atab" data-apanel="adminPanelAvisos">📢 Avisos</button>
       <button class="atab" data-apanel="adminPanelSugestoes">💬 Sugestões</button>
       <button class="atab" data-apanel="adminPanelConfig">⚙️ Config</button>
       <button class="atab" data-apanel="adminPanelAcessosEspeciais">🎟️ Acessos Especiais</button>
       <button class="atab" data-apanel="adminPanelLGPD" id="tabLGPD">🗑️ Exclusões <span id="badgeLGPD" style="display:none;background:var(--vermelho);color:#fff;border-radius:99px;font-size:.7rem;padding:1px 6px;margin-left:4px">0</span></button>
+      <button class="atab" data-apanel="adminPanelAuditoria">🔐 Auditoria</button>
     </div>
     <div id="adminPanelUsuarios" class="apanel ativo">
       <div class="acrd">
@@ -969,6 +1117,58 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
             <thead><tr><th>Usuário</th><th>Entrada</th><th>Saída</th><th>Status</th><th>Pagamento</th></tr></thead>
             <tbody id="tbodyHistorico"></tbody>
           </table>
+        </div>
+      </div>
+    </div>
+        <div id="adminPanelDashboard" class="apanel">
+      <div class="acrd">
+        <div class="acrd-t">📈 Dashboard — Visão Geral</div>
+
+        <!-- Filtro de período -->
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:16px">
+          <select id="dashPeriodo" onchange="adminCarregarDashboard()" style="padding:8px 12px;border:2px solid var(--cinza-cl);border-radius:var(--r-sm);font-size:.83rem;color:var(--cinza-esc)">
+            <option value="7">Últimos 7 dias</option>
+            <option value="30" selected>Últimos 30 dias</option>
+            <option value="90">Últimos 90 dias</option>
+          </select>
+          <button class="btn btn-sec btn-sm" onclick="adminCarregarDashboard()">🔄 Atualizar</button>
+          <button class="btn btn-verde btn-sm" onclick="exportarDashboardCSV()">📥 Exportar CSV</button>
+        </div>
+
+        <!-- KPIs -->
+        <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:16px" id="dashKpis">
+          <div class="astat verde"><div class="av" id="dashTotalAcessos">--</div><div class="ak">Acessos no período</div></div>
+          <div class="astat dourado"><div class="av" id="dashReceitaTotal">--</div><div class="ak">Receita estimada</div></div>
+          <div class="astat azul"><div class="av" id="dashMediaDia">--</div><div class="ak">Média por dia</div></div>
+          <div class="astat vermelho"><div class="av" id="dashNovosUsuarios">--</div><div class="ak">Novos cadastros</div></div>
+        </div>
+
+        <!-- Gráfico: Acessos por dia -->
+        <div style="margin-bottom:20px">
+          <div style="font-weight:700;font-size:.85rem;color:var(--verde-esc);margin-bottom:10px">📅 Acessos por dia</div>
+          <div style="position:relative;height:160px;background:#f8f8f8;border-radius:var(--r-sm);padding:12px 8px 28px;overflow:hidden">
+            <div id="dashBarras" style="display:flex;align-items:flex-end;gap:3px;height:100%;width:100%"></div>
+          </div>
+        </div>
+
+        <!-- Gráfico: Horários de pico -->
+        <div style="margin-bottom:20px">
+          <div style="font-weight:700;font-size:.85rem;color:var(--verde-esc);margin-bottom:10px">⏰ Horários de pico (entradas)</div>
+          <div style="position:relative;height:120px;background:#f8f8f8;border-radius:var(--r-sm);padding:12px 8px 28px;overflow:hidden">
+            <div id="dashHorarios" style="display:flex;align-items:flex-end;gap:2px;height:100%;width:100%"></div>
+          </div>
+        </div>
+
+        <!-- Gráfico: Dia da semana -->
+        <div style="margin-bottom:20px">
+          <div style="font-weight:700;font-size:.85rem;color:var(--verde-esc);margin-bottom:10px">📆 Acessos por dia da semana</div>
+          <div id="dashSemana" style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px"></div>
+        </div>
+
+        <!-- Gráfico: Formas de pagamento -->
+        <div>
+          <div style="font-weight:700;font-size:.85rem;color:var(--verde-esc);margin-bottom:10px">💳 Formas de pagamento</div>
+          <div id="dashPagamentos" style="display:flex;flex-direction:column;gap:8px"></div>
         </div>
       </div>
     </div>
@@ -1063,7 +1263,7 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
         <hr style="border:none;border-top:1px solid #eee;margin:13px 0">
         <div class="acrd-t" style="font-size:.87rem;margin-bottom:9px">🔐 Control iD</div>
         <div class="fg"><label for="cfgControlIdUrl">URL da API</label>
-          <input type="text" id="cfgControlIdUrl" placeholder="http://10.161.9.102"></div>
+          <input type="text" id="cfgControlIdUrl" placeholder=""></div>
         <div class="fg"><label for="cfgControlIdToken">Token</label>
           <input type="password" id="cfgControlIdToken" placeholder="Bearer token"></div>
         <hr style="border:none;border-top:1px solid #eee;margin:13px 0">
@@ -1164,6 +1364,40 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
       </div>
     </div>
 
+    <!-- ── PAINEL AUDITORIA ─────────────────────────────────────── -->
+    <div id="adminPanelAuditoria" class="apanel">
+      <div class="acrd">
+        <div class="acrd-t">🔐 Logs de Auditoria — Segurança</div>
+        <p style="font-size:.79rem;color:#777;margin-bottom:12px">Registro de logins, alterações de senha, bloqueios e exclusões LGPD.</p>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:14px">
+          <select id="auditFiltroAcao" onchange="adminCarregarAuditoria()" style="padding:8px 12px;border:2px solid var(--cinza-cl);border-radius:var(--r-sm);font-size:.83rem;color:var(--cinza-esc)">
+            <option value="">Todas as ações</option>
+            <option value="login_usuario">Login (sucesso)</option>
+            <option value="login_usuario_falha">Login (falha)</option>
+            <option value="login_staff">Login admin/recepção</option>
+            <option value="login_staff_falha">Login admin/recepção (falha)</option>
+            <option value="redefinir_senha">Senha redefinida</option>
+            <option value="senha_definida_primeiro_acesso">Senha definida (1º acesso)</option>
+            <option value="usuario_bloqueado">Usuário bloqueado</option>
+            <option value="usuario_ativado">Usuário ativado</option>
+            <option value="termo_assinado">Termo assinado</option>
+            <option value="exclusao_solicitada">Exclusão solicitada (LGPD)</option>
+            <option value="exclusao_executada">Exclusão executada (LGPD)</option>
+          </select>
+          <input type="date" id="auditFiltroData" onchange="adminCarregarAuditoria()" style="padding:8px 12px;border:2px solid var(--cinza-cl);border-radius:var(--r-sm);font-size:.83rem" aria-label="Filtrar por data">
+          <button class="btn btn-sec btn-sm" onclick="adminCarregarAuditoria()">🔄 Atualizar</button>
+          <button class="btn btn-verde btn-sm" onclick="exportarAuditoriaCSV()">📥 Exportar CSV</button>
+        </div>
+        <div style="overflow-x:auto">
+          <table class="tabela">
+            <thead><tr><th>Data/Hora</th><th>Ação</th><th>IP</th><th>Detalhes</th></tr></thead>
+            <tbody id="tbodyAuditoria"><tr><td colspan="4" style="text-align:center;color:#999;padding:20px">Carregando...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <!-- ── fim PAINEL AUDITORIA ─────────────────────────────────── -->
+
   </div>  <!-- fecha admin-main -->
 </div>    <!-- fecha adminScreen -->
 
@@ -1234,6 +1468,11 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
           <div class="pagto-aviso">
             🔄 Após pagar, a confirmação é automática — a catraca abre sem mais ações.
           </div>
+          <div class="pagto-aviso" style="background:#fff3f3;border-color:#f5b5a8;color:#8a2a1a" id="avisoTimeoutPagamento">
+            ⏳ <b>Atenção:</b> após a confirmação do pagamento, você terá um tempo limitado para realizar o primeiro acesso pela catraca.
+            Se esse prazo expirar sem que o acesso seja realizado, a vaga será liberada automaticamente para outro usuário
+            e um <b>crédito</b> ficará registrado em seu cadastro para uso na próxima visita.
+          </div>
         </div>
         <!-- Modo manual (gateway não configurado) -->
         <div id="pixManual" style="display:none">
@@ -1248,6 +1487,10 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
           <div class="pagto-aviso" style="background:#fff5e0;border-color:var(--dourado-cl)">
             ⚠️ Gateway não configurado. Pague na chave acima e toque em "Já Paguei".<br>
             <span style="font-size:.72rem;color:#888">Configure o gateway no painel Admin para confirmação automática.</span>
+          </div>
+          <div class="pagto-aviso" style="background:#fff3f3;border-color:#f5b5a8;color:#8a2a1a">
+            ⏳ <b>Atenção:</b> após confirmar o pagamento, você terá um tempo limitado para acessar pela catraca.
+            Se expirar, um <b>crédito</b> ficará registrado para sua próxima visita.
           </div>
         </div>
       </div>
@@ -1268,6 +1511,10 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
         <div class="pagto-aviso" style="background:#eef3ff;border-color:#b0c4ef;color:#1a4a8a;display:none" id="cartaoAvisoAguardo">
           🔄 Link aberto! Após pagar no site do gateway, a catraca abre automaticamente.
         </div>
+        <div class="pagto-aviso" style="background:#fff3f3;border-color:#f5b5a8;color:#8a2a1a">
+          ⏳ <b>Atenção:</b> após o pagamento, você terá um tempo limitado para acessar pela catraca.
+          Se expirar, um <b>crédito</b> ficará registrado para sua próxima visita.
+        </div>
       </div>
 
       <div class="pagto-status" id="pagtoStatus"></div>
@@ -1286,10 +1533,10 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
 </div>
 
 <!-- MODAL SAÍDA -->
-<div class="modal-bg" id="modalSair">
+<div class="modal-bg" id="modalSair" role="dialog" aria-modal="true" aria-labelledby="modalSairTitulo">
   <div class="modal">
     <div class="mi">👋</div>
-    <h3>Sair do aplicativo?</h3>
+    <h3 id="modalSairTitulo">Sair do aplicativo?</h3>
     <p>Se você tiver acesso pago hoje, ele continua válido até 19h45.</p>
     <div class="modal-btns">
       <button class="btn btn-sec" id="btnCancelarSaida" style="flex:1">Cancelar</button>
@@ -1328,10 +1575,11 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
   </div>
 </div>
 
-<div class="toast" id="toast"></div>
+<div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true"></div>
+<div id="srLiveRegion" aria-live="assertive" aria-atomic="true" role="alert"></div>
 
 <!-- MODAL AUDITORIA DE TERMO -->
-<div class="modal-bg" id="modalAssinatura" style="align-items:flex-start;padding:16px;overflow-y:auto">
+<div class="modal-bg" id="modalAssinatura" role="dialog" aria-modal="true" aria-label="Documento de assinatura" style="align-items:flex-start;padding:16px;overflow-y:auto">
   <div style="background:#fff;border-radius:20px;width:100%;max-width:620px;margin:auto;overflow:hidden;animation:fadeUp .3s ease">
     <div style="background:linear-gradient(135deg,var(--verde-esc),var(--verde));color:#fff;padding:20px 24px">
       <div style="display:flex;align-items:center;justify-content:space-between">
@@ -1361,7 +1609,7 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
       <div id="auditFotoWrap" style="display:none;margin-bottom:14px">
         <div style="font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--cinza);margin-bottom:8px">📸 Foto de Cadastro</div>
         <div style="display:flex;align-items:center;gap:12px">
-          <img id="auditFoto" src="" style="width:72px;height:72px;object-fit:cover;border-radius:50%;border:3px solid var(--verde-suave)">
+          <img id="auditFoto" alt="Foto do usuário" src="" style="width:72px;height:72px;object-fit:cover;border-radius:50%;border:3px solid var(--verde-suave)">
           <div style="font-size:.77rem;color:#666">Foto para reconhecimento facial via Control iD.</div>
         </div>
       </div>
@@ -1377,7 +1625,7 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
 </div>
 
 <!-- MODAL AVISO URGENTE -->
-<div class="modal-bg" id="modalAvisoUrgente">
+<div class="modal-bg" id="modalAvisoUrgente" role="alertdialog" aria-modal="true" aria-labelledby="modalAvisoTitulo" aria-describedby="modalAvisoConteudo">
   <div class="modal" style="max-width:420px;text-align:left">
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
       <span style="font-size:2rem" id="modalAvisoIcon">⚠️</span>
@@ -1392,9 +1640,9 @@ body{font-family:"DM Sans",sans-serif;background:var(--creme);color:var(--cinza-
 </div>
 
 <!-- ── MODAL EXCLUSÃO DE CONTA (LGPD art. 18) ──────────── -->
-<div class="modal-bg" id="modalExclusaoConta">
+<div class="modal-bg" id="modalExclusaoConta" role="dialog" aria-modal="true" aria-labelledby="modalExclusaoTitulo">
   <div class="modal" style="max-width:420px;text-align:left">
-    <h3 style="font-size:1rem;color:var(--vermelho);margin-bottom:6px">🗑️ Solicitar exclusão de dados</h3>
+    <h3 id="modalExclusaoTitulo" style="font-size:1rem;color:var(--vermelho);margin-bottom:6px">🗑️ Solicitar exclusão de dados</h3>
     <p style="font-size:.83rem;color:#555;line-height:1.6;margin-bottom:14px">
       Direito garantido pelo <b>art. 18, VI da LGPD</b>. Após confirmação,
       seus dados serão eliminados em até <b>30 dias</b>, salvo obrigação legal (ex.: registros fiscais).
@@ -1501,14 +1749,90 @@ let _pollRealtimeRecep = null;  // polling em tempo real recep/admin
 // ═══════════════════════════════════════════════════════════
 //  UTILITÁRIOS
 // ═══════════════════════════════════════════════════════════
-function toast(msg, dur=2800) {
+function toast(msg, dur=2800, tipo='') {
   const t = document.getElementById('toast');
+  if (!tipo) {
+    if (msg.startsWith('✅')) tipo='ok';
+    else if (msg.startsWith('❌')) tipo='erro';
+    else if (msg.startsWith('⚠️')) tipo='aviso';
+    else if (msg.startsWith('ℹ️')) tipo='info';
+  }
   t.textContent = msg;
+  t.className = 'toast' + (tipo ? ' toast-' + tipo : '');
   t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), dur);
+  if (navigator.vibrate) {
+    if (tipo==='erro') navigator.vibrate([150,80,150]);
+    else if (tipo==='ok') navigator.vibrate([100]);
+    else if (tipo==='aviso') navigator.vibrate([200,100,100]);
+  }
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.classList.remove('show'), dur);
 }
 
 // ── Feedback sonoro via Web Audio API ──────────────────────
+// ── Escape HTML para prevenir XSS em innerHTML ─────────────
+function _esc(str) {
+  if (str == null) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#x27;');
+}
+
+// ── Rate limit login ────────────────────────────────────────
+const _rlLogin = { tentativas: 0, bloqueadoAte: 0 };
+const _rlAdmin = { tentativas: 0, bloqueadoAte: 0 };
+function _checarRL(rl, elErro) {
+  const agora = Date.now();
+  if (rl.bloqueadoAte > agora) {
+    const seg = Math.ceil((rl.bloqueadoAte - agora) / 1000);
+    mostrarErro(elErro, `⏳ Muitas tentativas. Aguarde ${seg}s.`);
+    if (navigator.vibrate) navigator.vibrate([200,100,200]);
+    return false;
+  }
+  return true;
+}
+function _falhaRL(rl, elErro, msg) {
+  rl.tentativas++;
+  if      (rl.tentativas >= 10) rl.bloqueadoAte = Date.now() + 120_000;
+  else if (rl.tentativas >=  8) rl.bloqueadoAte = Date.now() +  60_000;
+  else if (rl.tentativas >=  5) rl.bloqueadoAte = Date.now() +  30_000;
+  if (rl.tentativas >= 3 && rl.bloqueadoAte === 0) {
+    const restam = Math.max(0, 5 - rl.tentativas);
+    mostrarErro(elErro, restam > 0 ? `${msg} — ${restam} tentativa${restam>1?'s':''} restante${restam>1?'s':''}.` : msg);
+  } else { mostrarErro(elErro, msg); }
+}
+function _resetRL(rl) { rl.tentativas = 0; rl.bloqueadoAte = 0; }
+
+// ── Validação de upload de imagem ────────────────────────────
+const _UPLOAD_MAX_MB = 5;
+async function _validarImagem(file) {
+  if (!file) return 'Nenhum arquivo selecionado.';
+  if (file.size > _UPLOAD_MAX_MB * 1024 * 1024)
+    return `Imagem muito grande. Máximo ${_UPLOAD_MAX_MB}MB (atual: ${(file.size/1024/1024).toFixed(1)}MB).`;
+  const allowed = ['image/jpeg','image/png','image/webp','image/gif'];
+  const mime = await _lerMime(file);
+  if (!allowed.includes(mime)) return `Tipo inválido (${mime}). Envie JPEG, PNG ou WebP.`;
+  return null;
+}
+async function _lerMime(file) {
+  return new Promise(res => {
+    const r = new FileReader();
+    r.onloadend = () => {
+      const arr = new Uint8Array(r.result).subarray(0,4);
+      const hex = [...arr].map(b => b.toString(16).padStart(2,'0')).join('');
+      if (hex.startsWith('ffd8ff'))   return res('image/jpeg');
+      if (hex.startsWith('89504e47')) return res('image/png');
+      if (hex.startsWith('52494646')) return res('image/webp');
+      if (hex.startsWith('47494638')) return res('image/gif');
+      res(file.type || 'application/octet-stream');
+    };
+    r.readAsArrayBuffer(file.slice(0,4));
+  });
+}
+
 function _beep(tipo = 'acesso') {
   try {
     const ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -1695,7 +2019,18 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   bindEventos();
+// LGPD - tela login
+const btnPrivacidade = document.getElementById('btnPrivacidadeLogin');
+if (btnPrivacidade) {
+  btnPrivacidade.onclick = () => {
+    window.open('/privacidade.html', '_blank');
+  };
+}
 
+const btnExclusao = document.getElementById('btnExclusaoLogin');
+if (btnExclusao) {
+  btnExclusao.onclick = abrirModalExclusao;
+}
   // Carregar vagas públicas
   setTimeout(atualizarVagas, 500);
   setInterval(atualizarVagas, 30000);
@@ -1881,10 +2216,12 @@ function debounce(fn, ms) {
 }
 
 function mudarTab(panelId) {
-  document.querySelectorAll('.panel').forEach(p => p.classList.remove('ativo'));
-  document.querySelectorAll('.tab').forEach(b => b.classList.remove('ativo'));
-  document.getElementById(panelId)?.classList.add('ativo');
-  document.querySelector(`.tab[data-panel="${panelId}"]`)?.classList.add('ativo');
+  document.querySelectorAll('.panel').forEach(p => { p.classList.remove('ativo'); p.setAttribute('aria-hidden','true'); });
+  document.querySelectorAll('.tab,.ni').forEach(b => { b.classList.remove('ativo'); b.removeAttribute('aria-current'); });
+  const panel = document.getElementById(panelId);
+  if (panel) { panel.classList.add('ativo'); panel.removeAttribute('aria-hidden'); }
+  const tab = document.querySelector(`.tab[data-panel="${panelId}"],.ni[data-panel="${panelId}"]`);
+  if (tab) { tab.classList.add('ativo'); tab.setAttribute('aria-current','page'); }
   if(panelId === 'panelPerfil') { carregarPerfil(); carregarStatusPushPerfil(); }
   if(panelId === 'panelAvisos') carregarAvisos();
 }
@@ -1898,11 +2235,14 @@ function mudarATab(panelId, btn) {
   if(panelId === 'adminPanelAvisos')    { adminCarregarAvisos(); adminCarregarTotalAssinantes(); }
   if(panelId === 'recepPanelPendentes') { recepCarregarPendentes(); }
   if(panelId === 'recepPanelPagos')     { recepCarregarPagos(); }
+  if(panelId === 'recepPanelCreditos')   { recepCarregarCreditos(); }
   if(panelId === 'adminPanelHistorico') { adminCarregarHistorico(); }
   if(panelId === 'adminPanelSugestoes') { adminCarregarSugestoes(); }
   if(panelId === 'adminPanelConfig')    { adminCarregarConfigForm(); }
   if(panelId === 'adminPanelAcessosEspeciais') { carregarAcessosEspeciais(); }
+  if(panelId === 'adminPanelDashboard') { adminCarregarDashboard(); }
   if(panelId === 'adminPanelLGPD')            { adminCarregarExclusoes(); }
+  if(panelId === 'adminPanelAuditoria')        { adminCarregarAuditoria(); }
 }
 
 // ── LGPD: Painel de Exclusões (admin) ─────────────────────────────────────
@@ -1982,6 +2322,85 @@ async function adminExecutarExclusao(usuario_id, nome) {
 }
 // ──────────────────────────────────────────────────────────────────────────
 
+// ═══════════════════════════════════════════════════════════
+//  AUDITORIA
+// ═══════════════════════════════════════════════════════════
+const _AUDIT_LABELS = {
+  login_usuario:                  { label: '✅ Login (usuário)',          cor: 'verde'   },
+  login_usuario_falha:            { label: '❌ Login falhou (usuário)',    cor: 'vermelho'},
+  login_staff:                    { label: '✅ Login (admin/recepção)',    cor: 'verde'   },
+  login_staff_falha:              { label: '❌ Login falhou (staff)',      cor: 'vermelho'},
+  redefinir_senha:                { label: '🔑 Senha redefinida',          cor: 'azul'    },
+  senha_definida_primeiro_acesso: { label: '🔑 Senha definida (1º acesso)',cor: 'azul'    },
+  usuario_bloqueado:              { label: '🚫 Usuário bloqueado',         cor: 'vermelho'},
+  usuario_ativado:                { label: '✅ Usuário ativado',           cor: 'verde'   },
+  termo_assinado:                 { label: '📝 Termo assinado',            cor: 'gold'    },
+  exclusao_solicitada:            { label: '🗑️ Exclusão solicitada',      cor: 'vermelho'},
+  exclusao_executada:             { label: '🗑️ Exclusão executada',       cor: 'vermelho'},
+};
+
+async function adminCarregarAuditoria() {
+  const tbody = document.getElementById('tbodyAuditoria');
+  if (!tbody) return;
+  tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#aaa">⏳ Carregando...</td></tr>';
+  const acao = document.getElementById('auditFiltroAcao')?.value || '';
+  const data = document.getElementById('auditFiltroData')?.value || '';
+  try {
+    const params = new URLSearchParams({ acao: 'listar' });
+    if (acao) params.set('filtro_acao', acao);
+    if (data) params.set('data', data);
+    const res = await api.get(`/api/auditoria?${params.toString()}`);
+    const lista = res.logs || [];
+    if (!lista.length) {
+      tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#aaa">Nenhum registro encontrado</td></tr>';
+      return;
+    }
+    tbody.innerHTML = lista.map(log => {
+      const info = _AUDIT_LABELS[log.acao] || { label: log.acao, cor: 'cinza' };
+      const det = log.detalhes && typeof log.detalhes === 'object'
+        ? Object.entries(log.detalhes).map(([k,v]) => `<b>${_esc(k)}:</b> ${_esc(String(v))}`).join(' · ')
+        : '—';
+      return `<tr>
+        <td style="font-size:.78rem;white-space:nowrap">${new Date(log.criado_em).toLocaleString('pt-BR')}</td>
+        <td><span class="badge ${info.cor}">${info.label}</span></td>
+        <td style="font-size:.78rem;color:#888">${_esc(log.ip || '—')}</td>
+        <td style="font-size:.76rem;color:#666">${det}</td>
+      </tr>`;
+    }).join('');
+  } catch(e) {
+    tbody.innerHTML = `<tr><td colspan="4" style="color:var(--vermelho)">Erro: ${_esc(e.message)}</td></tr>`;
+  }
+}
+
+async function exportarAuditoriaCSV() {
+  const acao = document.getElementById('auditFiltroAcao')?.value || '';
+  const data = document.getElementById('auditFiltroData')?.value || '';
+  try {
+    const params = new URLSearchParams({ acao: 'listar' });
+    if (acao) params.set('filtro_acao', acao);
+    if (data) params.set('data', data);
+    const res = await api.get(`/api/auditoria?${params.toString()}`);
+    const lista = res.logs || [];
+    if (!lista.length) { toast('⚠️ Nenhum registro para exportar'); return; }
+    const linhas = [
+      ['Data/Hora','Ação','IP','Detalhes'],
+      ...lista.map(log => [
+        new Date(log.criado_em).toLocaleString('pt-BR'),
+        (_AUDIT_LABELS[log.acao]?.label || log.acao).replace(/[✅❌🔑🚫📝🗑️]/g,'').trim(),
+        log.ip || '—',
+        JSON.stringify(log.detalhes || {})
+      ])
+    ];
+    const csv = linhas.map(l => l.map(v => `"${String(v).replace(/"/g,'""')}"`).join(';')).join('\n');
+    const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = url;
+    a.download = `auditoria_${hojeISO()}.csv`; a.click();
+    URL.revokeObjectURL(url);
+    toast('✅ CSV exportado!');
+  } catch(e) { toast('❌ Erro ao exportar: ' + e.message); }
+}
+// ──────────────────────────────────────────────────────────────────────────
 
 async function adminCarregarConfigForm() {
   try {
@@ -2040,23 +2459,24 @@ async function atualizarVagas() {
 // ═══════════════════════════════════════════════════════════
 async function loginUsuario() {
   mostrarErro('loginErro','');
+  if (!_checarRL(_rlLogin, 'loginErro')) return;
   const cpf   = document.getElementById('loginCpf').value.replace(/\D/g,'');
   const senha = document.getElementById('loginSenha').value;
-
   if(cpf.length !== 11) { mostrarErro('loginErro','CPF inválido'); return; }
   if(!senha)             { mostrarErro('loginErro','Informe a senha'); return; }
-
   loading('btnLogin', true);
   try {
     const res = await api.post('/api/auth?acao=login-usuario', { cpf, senha });
+    _resetRL(_rlLogin);
     api.setToken(res.token);
     sess.usuario = res.usuario;
     sess.tipo    = 'app';
-
-    // ── Busca dados frescos + versão do termo ──────────────────
     try {
       const [fresco, cfgRes] = await Promise.all([
-        fetch(`${API_BASE}/api/usuarios?acao=verificar-primeiro-acesso&cpf=${cpf}`).then(r => r.json()),
+        fetch(`${API_BASE}/api/usuarios?acao=verificar-primeiro-acesso`, {
+          method:'POST', headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({ cpf })
+        }).then(r => r.json()),
         fetch(`${API_BASE}/api/configuracoes`).then(r => r.json())
       ]);
 
@@ -2099,7 +2519,8 @@ async function loginUsuario() {
 
     entrarApp();
   } catch(e) {
-    mostrarErro('loginErro', e.message || 'CPF ou senha incorretos');
+    _falhaRL(_rlLogin, 'loginErro', 'Dados inválidos. Verifique e tente novamente.');
+    if (navigator.vibrate) navigator.vibrate([100,50,100]);
   } finally {
     loading('btnLogin', false);
   }
@@ -2111,15 +2532,15 @@ const _tkSalvo = sessionStorage.getItem('_tk'); if (_tkSalvo) api.setToken(_tkSa
 // ═══════════════════════════════════════════════════════════
 async function loginAdmin() {
   mostrarErro('adminLoginErro','');
+  if (!_checarRL(_rlAdmin, 'adminLoginErro')) return;
   const tipo  = document.getElementById('adminUser').value.trim();
   const senha = document.getElementById('adminSenha').value;
-
   if(!tipo || !senha) { mostrarErro('adminLoginErro','Preencha usuário e senha'); return; }
-  if(!['admin','recepcao'].includes(tipo)) { mostrarErro('adminLoginErro','Usuário inválido. Use: admin ou recepcao'); return; }
-
+  if(!['admin','recepcao'].includes(tipo)) { mostrarErro('adminLoginErro','Usuário inválido.'); return; }
   loading('btnAdminLogin', true);
   try {
     const res = await api.login(tipo, senha);
+    _resetRL(_rlAdmin);
     api.setToken(res.token);
     sess.tipo = tipo;
 
@@ -2158,7 +2579,8 @@ async function loginAdmin() {
       }, 30000);
     }
   } catch(e) {
-    mostrarErro('adminLoginErro', e.message || 'Senha incorreta');
+    _falhaRL(_rlAdmin, 'adminLoginErro', 'Credenciais inválidas.');
+    if (navigator.vibrate) navigator.vibrate([100,50,100]);
   } finally {
     loading('btnAdminLogin', false);
   }
@@ -2868,8 +3290,15 @@ function perfilIrCompletarCadastro() {
 function entrarApp() {
   const u = sess.usuario;
   document.getElementById('nomeUser').textContent = u.nome.split(' ')[0];
-  document.getElementById('avatarLetra').textContent = u.nome[0].toUpperCase();
-  document.getElementById('msgBV').textContent = `Olá, ${u.nome.split(' ')[0]}! 👋`;
+  const _avatarEl = document.getElementById('avatarLetra');
+  if (u.foto_url) {
+    _avatarEl.innerHTML = `<img src="${u.foto_url}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
+  } else {
+    _avatarEl.textContent = u.nome[0].toUpperCase();
+  }
+  const _h = new Date().getHours();
+  const saudacao = _h < 12 ? 'Bom dia' : _h < 18 ? 'Boa tarde' : 'Boa noite';
+  document.getElementById('msgBV').textContent = `${saudacao}, ${u.nome.split(' ')[0]}! 👋`;
   mostrarTela('appScreen');
   verificarAcessoHoje();
   atualizarVagas();
@@ -2999,8 +3428,11 @@ async function abrirModalPagamento() {
     ]);
 
     if (v.lotado) {
+      _beep('erro');
+      if (navigator.vibrate) navigator.vibrate([300,100,300]);
       document.getElementById('pagtoStatus').className = 'pagto-status';
-      document.getElementById('pagtoStatus').textContent = '⚠️ Sala lotada no momento — aguarde uma saída.';
+      document.getElementById('pagtoStatus').textContent = '🚫 Sala lotada — verificando vagas automaticamente...';
+      _iniciarContadorLotado();
       return;
     }
 
@@ -3260,6 +3692,7 @@ function fecharModalPagamento() {
   document.getElementById('btnGerarLinkApp').style.display = 'none';
 }
 
+let _recepPendentesAnterior = 0;
 async function recepCarregarPendentes() {
   const grid = document.getElementById('rGridPendentes');
   try {
@@ -3269,28 +3702,37 @@ async function recepCarregarPendentes() {
     if (lista.length > 0) {
       badge.textContent = lista.length;
       badge.style.display = 'inline';
+      if (lista.length > _recepPendentesAnterior) {
+        _beep('acesso');
+        if (navigator.vibrate) navigator.vibrate([100,60,100,60,200]);
+        toast('⏳ Novo pagamento aguardando confirmação!', 3500, 'aviso');
+      }
     } else {
       badge.style.display = 'none';
     }
+    _recepPendentesAnterior = lista.length;
     if (!lista.length) {
       grid.innerHTML = '<div class="sem"><span class="si">✅</span>Nenhum pagamento aguardando.</div>';
       return;
     }
-    grid.innerHTML = lista.map(p => `
-      <div class="presenca-card" style="border-color:#f0d97a;background:#fffdf0">
+    grid.innerHTML = lista.map(p => {
+      const fotoHtml = p.usuarios?.foto_url
+        ? `<img src="${p.usuarios.foto_url}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`
+        : `<span style="font-size:1.1rem;font-weight:700;color:var(--dourado)">${(p.usuarios?.nome||'?')[0].toUpperCase()}</span>`;
+      return `<div class="presenca-card" style="border-color:#f0d97a;background:#fffdf0">
         <div class="pc-header">
-          <div class="pc-avatar" style="background:#fff8e0;color:var(--dourado)">${(p.usuarios?.nome||'?')[0].toUpperCase()}</div>
-          <div>
+          <div class="pc-avatar" style="background:#fff8e0;width:46px;height:46px;flex-shrink:0">${fotoHtml}</div>
+          <div style="flex:1;min-width:0">
             <div class="pc-nome">${p.usuarios?.nome||'—'}</div>
-            <div class="pc-tempo">CPF: ${fmtCpf(p.usuarios?.cpf||'')} • R$ ${parseFloat(p.valor).toFixed(2)} • ${fmtHora(p.created_at)}</div>
+            <div class="pc-tempo">CPF: ${fmtCpf(p.usuarios?.cpf||'')} • <b style="color:var(--verde)">R$ ${parseFloat(p.valor).toFixed(2)}</b> • ${fmtHora(p.created_at)}</div>
+            <div style="font-size:.7rem;color:#aaa;margin-top:2px">via ${p.tipo||'pix'} • aguardando ${Math.round((Date.now()-new Date(p.created_at))/60000)} min</div>
           </div>
         </div>
         <div class="pc-btns">
-          <button class="btn btn-verde btn-xs" onclick="recepConfirmarPagamento('${p.id}', this)">✅ Confirmar Pagamento</button>
+          <button class="btn btn-verde btn-xs" onclick="recepConfirmarPagamento('${p.id}', this)">✅ Confirmar</button>
           <button class="btn btn-vermelho btn-xs" onclick="recepRecusarPagamento('${p.id}', this)">❌ Recusar</button>
         </div>
-      </div>
-    `).join('');
+      </div>`}).join('');
   } catch(e) {
     grid.innerHTML = '<div class="sem"><span class="si">⚠️</span>Erro ao carregar.</div>';
   }
@@ -3300,6 +3742,8 @@ async function recepConfirmarPagamento(pagamentoId, btn) {
   btn.disabled = true;
   try {
     await api.post('/api/pagamentos?acao=confirmar', { pagamento_id: pagamentoId });
+    _beep('acesso');
+    if (navigator.vibrate) navigator.vibrate([100,50,100]);
     toast('✅ Pagamento confirmado! Entrada registrada.');
     atualizarVagas();
     recepCarregarPresentes();
@@ -3319,7 +3763,9 @@ async function recepRecusarPagamento(pagamentoId, btn) {
       headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${api.token}` },
       body: JSON.stringify({ pagamento_id: pagamentoId })
     });
-    toast('Pagamento recusado.');
+    _beep('erro');
+    if (navigator.vibrate) navigator.vibrate([200,100,200]);
+    toast('⚠️ Pagamento recusado.');
     recepCarregarPendentes();
   } catch(e) {
     toast('❌ ' + e.message);
@@ -3360,29 +3806,154 @@ async function carregarHistoricoUsuario() {
       return;
     }
 
+    // ── Helpers ──────────────────────────────────────────────
+    const toDateStr = dt => {
+      const d = new Date(dt);
+      return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+    };
+
+    // Conjunto de dias distintos com visita (string YYYY-MM-DD)
+    const diasComVisita = new Set(meus.map(a => toDateStr(a.entrada_em)));
+
+    // ── Mini gráfico dos últimos 30 dias ─────────────────────
+    const hoje = new Date();
+    const hojeStr = toDateStr(hoje);
+    const dias30 = [];
+    for(let i = 29; i >= 0; i--) {
+      const d = new Date(hoje);
+      d.setDate(hoje.getDate() - i);
+      const s = toDateStr(d);
+      dias30.push({ str: s, isHoje: s === hojeStr, temVisita: diasComVisita.has(s) });
+    }
+
+    const barras = dias30.map(d => {
+      let cor, title;
+      if(d.isHoje && d.temVisita) { cor = '#c9a227'; title = 'Hoje ✓'; }
+      else if(d.isHoje)           { cor = 'rgba(201,162,39,.35)'; title = 'Hoje'; }
+      else if(d.temVisita)        { cor = '#2d9155'; title = 'Visita'; }
+      else                        { cor = '#e0e0e0'; title = 'Sem visita'; }
+      return `<div style="flex:1;height:28px;background:${cor};border-radius:3px;min-width:0;cursor:default;transition:opacity .15s" title="${title}"></div>`;
+    }).join('');
+
+    const graficoHTML = `
+      <div style="margin-bottom:16px">
+        <div style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:#aaa;margin-bottom:7px">Últimos 30 dias</div>
+        <div style="display:flex;gap:2px;align-items:flex-end;height:28px">${barras}</div>
+        <div style="display:flex;justify-content:space-between;font-size:.66rem;color:#bbb;margin-top:4px">
+          <span>${dias30[0].str.slice(5).replace('-','/')}</span>
+          <div style="display:flex;gap:10px;align-items:center">
+            <span style="display:inline-flex;align-items:center;gap:4px"><span style="width:8px;height:8px;border-radius:2px;background:#2d9155;display:inline-block"></span>visita</span>
+            <span style="display:inline-flex;align-items:center;gap:4px"><span style="width:8px;height:8px;border-radius:2px;background:#c9a227;display:inline-block"></span>hoje</span>
+            <span style="display:inline-flex;align-items:center;gap:4px"><span style="width:8px;height:8px;border-radius:2px;background:#e0e0e0;display:inline-block"></span>sem visita</span>
+          </div>
+          <span>${hojeStr.slice(5).replace('-','/')}</span>
+        </div>
+      </div>`;
+
+    // ── Sequência atual 🔥 ───────────────────────────────────
+    let sequenciaAtual = 0;
+    {
+      const d = new Date(hoje);
+      // Começa de hoje ou ontem (caso ainda não tenha vindo hoje)
+      if(!diasComVisita.has(toDateStr(d))) d.setDate(d.getDate() - 1);
+      while(diasComVisita.has(toDateStr(d))) {
+        sequenciaAtual++;
+        d.setDate(d.getDate() - 1);
+      }
+    }
+
+    // ── Melhor sequência 🏆 ──────────────────────────────────
+    let melhorSequencia = 0;
+    {
+      const sorted = [...diasComVisita].sort();
+      let seq = 1, melhor = sorted.length ? 1 : 0;
+      for(let i = 1; i < sorted.length; i++) {
+        const prev = new Date(sorted[i-1]);
+        const cur  = new Date(sorted[i]);
+        const diffDias = Math.round((cur - prev) / 86400000);
+        if(diffDias === 1) { seq++; if(seq > melhor) melhor = seq; }
+        else seq = 1;
+      }
+      melhorSequencia = melhor;
+    }
+
+    // ── Dia favorito 📆 ──────────────────────────────────────
+    const nomesDia = ['domingo','segunda','terça','quarta','quinta','sexta','sábado'];
+    const contagemDia = [0,0,0,0,0,0,0];
+    diasComVisita.forEach(s => { contagemDia[new Date(s).getDay()]++; });
+    const idxFav = contagemDia.indexOf(Math.max(...contagemDia));
+    const favContagem = contagemDia[idxFav];
+    const diaFavHTML = favContagem > 0
+      ? `<div style="background:linear-gradient(135deg,#fff8e0,#fffdf5);border:1.5px solid #f0d97a;border-radius:10px;padding:10px 14px;font-size:.8rem;color:#a07a00;display:flex;align-items:center;gap:8px;margin-bottom:12px">
+           <span style="font-size:1.2rem">📆</span>
+           <span>Seu dia favorito é <b>${nomesDia[idxFav]}</b> — você veio <b>${favContagem}x</b>!</span>
+         </div>`
+      : '';
+
+    // ── Cards de streak ──────────────────────────────────────
+    const streakHTML = `
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:14px">
+        <div style="background:linear-gradient(135deg,#fff5e0,#fff8f0);border:1.5px solid #f5c87a;border-radius:10px;padding:11px;text-align:center">
+          <div style="font-size:1.5rem;margin-bottom:2px">🔥</div>
+          <div style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900;color:#e67e22;line-height:1">${sequenciaAtual}</div>
+          <div style="font-size:.66rem;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:#c87e22;margin-top:3px">Sequência atual</div>
+        </div>
+        <div style="background:linear-gradient(135deg,#f5f0ff,#f0f5ff);border:1.5px solid #c8b0f0;border-radius:10px;padding:11px;text-align:center">
+          <div style="font-size:1.5rem;margin-bottom:2px">🏆</div>
+          <div style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900;color:#6b3aab;line-height:1">${melhorSequencia}</div>
+          <div style="font-size:.66rem;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:#6b3aab;margin-top:3px">Melhor sequência</div>
+        </div>
+      </div>`;
+
+    // ── Lista de acessos com paginação ──────────────────────────
     const tipoPag = { pix:'💠 Pix', credito:'💳 Crédito', debito:'🏦 Débito', cartao:'💳 Cartão' };
-    lista.innerHTML = meus.slice(0, 30).map(a => {
+    const POR_PAGINA = 10;
+    let _histPagina = 0;
+
+    function _renderItemHistorico(a) {
       const entrada  = fmtHora(a.entrada_em);
       const saida    = a.saida_em ? fmtHora(a.saida_em) : 'em curso';
       const duracaoH = a.saida_em
         ? ((new Date(a.saida_em) - new Date(a.entrada_em)) / 3600000).toFixed(1) + 'h'
-        : '—';
-      const pag      = tipoPag[a.pagamentos?.tipo] || '—';
-      const val      = a.pagamentos?.valor ? `R$ ${parseFloat(a.pagamentos.valor).toFixed(2).replace('.',',')}` : '';
-      const stClass  = a.status==='ativo' ? 'verde' : a.status==='encerrado' ? 'cinza' : 'gold';
-      return `
-        <div style="padding:10px 0;border-bottom:1px solid #f0f0f0">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px">
-            <div style="font-weight:600;font-size:.84rem">${new Date(a.entrada_em).toLocaleDateString('pt-BR',{weekday:'short',day:'2-digit',month:'2-digit'})}</div>
-            <span class="badge ${stClass}" style="font-size:.68rem">${a.status}</span>
-          </div>
-          <div style="font-size:.77rem;color:#888;display:flex;gap:12px;flex-wrap:wrap">
-            <span>⏰ ${entrada} → ${saida}</span>
-            <span>⏱️ ${duracaoH}</span>
-            <span>${pag}${val ? ' · '+val : ''}</span>
-          </div>
-        </div>`;
-    }).join('');
+        : null;
+      const pag     = tipoPag[a.pagamentos?.tipo] || '—';
+      const val     = a.pagamentos?.valor ? `R$ ${parseFloat(a.pagamentos.valor).toFixed(2).replace('.',',')}` : '';
+      const stClass = a.status==='ativo' ? 'verde' : a.status==='encerrado' ? 'cinza' : 'gold';
+      return `<div style="padding:10px 0;border-bottom:1px solid #f0f0f0">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px">
+          <div style="font-weight:600;font-size:.84rem">${new Date(a.entrada_em).toLocaleDateString('pt-BR',{weekday:'short',day:'2-digit',month:'2-digit'})}</div>
+          <span class="badge ${stClass}" style="font-size:.68rem">${a.status}</span>
+        </div>
+        <div style="font-size:.77rem;color:#888;display:flex;gap:12px;flex-wrap:wrap">
+          <span>⏰ ${entrada} → ${saida}</span>
+          ${duracaoH ? `<span>⏱️ ${duracaoH}</span>` : ''}
+          <span>${pag}${val ? ' · '+val : ''}</span>
+        </div>
+      </div>`;
+    }
+
+    function _renderListaHistorico() {
+      const container = document.getElementById('histListaItens');
+      const btnMais   = document.getElementById('btnHistVerMais');
+      if (!container) return;
+      const ate = (_histPagina + 1) * POR_PAGINA;
+      container.innerHTML = meus.slice(0, ate).map(_renderItemHistorico).join('');
+      if (btnMais) {
+        btnMais.style.display = ate < meus.length ? 'block' : 'none';
+        btnMais.textContent = `Ver mais (${Math.min(POR_PAGINA, meus.length - ate)} de ${meus.length - ate} restantes)`;
+      }
+    }
+
+    const listaHTML = `
+      <div id="histListaItens"></div>
+      <button id="btnHistVerMais" class="btn btn-sec btn-sm" style="width:100%;margin-top:10px;display:none"
+        onclick="_histPagina++;_renderListaHistorico()">Ver mais</button>`;
+
+    lista.innerHTML = graficoHTML + streakHTML + diaFavHTML +
+      `<div style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:#aaa;margin-bottom:8px">Últimas visitas</div>` +
+      listaHTML;
+    _renderListaHistorico();
+
   } catch(e) {
     lista.innerHTML = '<div class="sem"><span class="si">⚠️</span>Erro ao carregar histórico</div>';
   }
@@ -3460,6 +4031,99 @@ async function recepCarregarPagos() {
   }
 }
 
+// ═══════════════════════════════════════════════════════════
+//  CRÉDITOS — Pagamento não utilizado
+// ═══════════════════════════════════════════════════════════
+async function recepCarregarCreditos() {
+  const el = document.getElementById('creditosLista');
+  if (!el) return;
+  el.innerHTML = '<div class="sem"><span class="si">⏳</span>Carregando...</div>';
+  try {
+    const res = await api.get('/api/pagamentos?acao=listar-creditos');
+    const lista = res.creditos || [];
+    if (!lista.length) {
+      el.innerHTML = '<div class="sem"><span class="si">🎫</span>Nenhum crédito pendente</div>';
+      return;
+    }
+    el.innerHTML = lista.map(cr => `
+      <div class="presenca-card" style="border-color:#f0d97a;background:#fffdf0;margin-bottom:8px">
+        <div class="pc-header">
+          <div class="pc-avatar" style="background:#fff8e0;color:var(--dourado);font-weight:700">
+            ${_esc((cr.usuarios?.nome||'?')[0].toUpperCase())}
+          </div>
+          <div style="flex:1;min-width:0">
+            <div class="pc-nome">${_esc(cr.usuarios?.nome||'—')}</div>
+            <div class="pc-tempo">
+              CPF: ${_esc(fmtCpf(cr.usuarios?.cpf||''))} •
+              <b style="color:var(--verde)">R$ ${parseFloat(cr.valor).toFixed(2)}</b> •
+              pago em ${new Date(cr.criado_em).toLocaleString('pt-BR')}
+            </div>
+            <div style="font-size:.7rem;color:#888;margin-top:2px">
+              Motivo: ${_esc(cr.motivo||'pagamento não utilizado')}
+            </div>
+          </div>
+        </div>
+        <div class="pc-btns">
+          <button class="btn btn-verde btn-xs" onclick="recepLiberarCredito('${_esc(cr.id)}','${_esc(cr.usuario_id)}','${_esc(cr.usuarios?.nome||'')}',this)">
+            ✅ Liberar Acesso
+          </button>
+        </div>
+      </div>
+    `).join('');
+  } catch(e) {
+    el.innerHTML = `<div class="sem"><span class="si">⚠️</span>Erro: ${_esc(e.message)}</div>`;
+  }
+}
+
+async function recepBuscarCredito(busca) {
+  const el = document.getElementById('creditoResultados');
+  if (!busca || busca.length < 3) { el.innerHTML = ''; return; }
+  try {
+    const cpfLimpo = busca.replace(/\D/g,'');
+    const res = await api.get(`/api/pagamentos?acao=listar-creditos&busca=${encodeURIComponent(cpfLimpo || busca)}`);
+    const lista = res.creditos || [];
+    if (!lista.length) {
+      el.innerHTML = '<p style="font-size:.82rem;color:var(--vermelho)">❌ Nenhum crédito encontrado</p>';
+      return;
+    }
+    el.innerHTML = lista.map(cr => `
+      <div style="background:#fffdf0;border:1.5px solid #f0d97a;border-radius:10px;padding:12px;margin-bottom:8px">
+        <div style="font-weight:700;font-size:.88rem">${_esc(cr.usuarios?.nome||'—')}</div>
+        <div style="font-size:.78rem;color:#888">
+          R$ ${parseFloat(cr.valor).toFixed(2)} • ${new Date(cr.criado_em).toLocaleDateString('pt-BR')}
+        </div>
+        <button class="btn btn-verde btn-sm" style="margin-top:8px"
+          onclick="recepLiberarCredito('${_esc(cr.id)}','${_esc(cr.usuario_id)}','${_esc(cr.usuarios?.nome||'')}',this)">
+          ✅ Liberar Acesso com este Crédito
+        </button>
+      </div>
+    `).join('');
+  } catch(e) {
+    el.innerHTML = `<p style="color:var(--vermelho)">${_esc(e.message)}</p>`;
+  }
+}
+
+async function recepLiberarCredito(creditoId, usuarioId, nome, btn) {
+  if (!confirm(`Liberar acesso para ${nome} usando o crédito disponível?`)) return;
+  btn.disabled = true;
+  btn.textContent = '⏳ Liberando...';
+  try {
+    await api.post('/api/pagamentos?acao=utilizar-credito', { credito_id: creditoId, usuario_id: usuarioId });
+    _beep('acesso');
+    if (navigator.vibrate) navigator.vibrate([100,50,200]);
+    toast(`✅ Acesso liberado para ${nome}!`, 3000, 'ok');
+    srAnunciar(`Acesso liberado para ${nome} usando crédito.`);
+    recepCarregarCreditos();
+    atualizarVagas();
+  } catch(e) {
+    _beep('erro');
+    toast('❌ ' + e.message, 4000, 'erro');
+    btn.disabled = false;
+    btn.textContent = '✅ Liberar Acesso';
+  }
+}
+// ──────────────────────────────────────────────────────────
+
 async function recepBuscarUsuario() {
   const cpf = document.getElementById('recepCpfBusca').value.replace(/\D/g,'');
   const div = document.getElementById('recepResultadoBusca');
@@ -3500,7 +4164,7 @@ async function recepBuscarUsuario() {
       </div>
     `).join('');
   } catch(e) {
-    div.innerHTML = `<p style="font-size:.82rem;color:var(--vermelho)">Erro: ${e.message}</p>`;
+    div.innerHTML = `<p style="font-size:.82rem;color:var(--vermelho)">Erro: ${_esc(e.message)}</p>`;
   }
 }
 
@@ -3596,7 +4260,8 @@ async function recepRedefinirSenha(usuarioId, nomeUsuario, btn) {
 async function recepEnviarFoto(usuarioId, nomeUsuario, input) {
   const file = input.files[0];
   if (!file) return;
-
+  const erroUpload = await _validarImagem(file);
+  if (erroUpload) { toast('⚠️ ' + erroUpload, 4000, 'aviso'); input.value = ''; return; }
   const label = input.closest('label');
   const textoOriginal = label.textContent.trim();
   label.style.opacity = '.6';
@@ -3642,6 +4307,7 @@ async function recepEnviarFoto(usuarioId, nomeUsuario, input) {
 //  ADMIN
 // ═══════════════════════════════════════════════════════════
 async function adminCarregarStats() {
+  if (sess.tipo !== 'admin') return;
   try {
     // Busca total real (sem limite de 200) via acao=total
     const res = await fetch(API_BASE + '/api/usuarios?acao=total', {
@@ -3653,6 +4319,7 @@ async function adminCarregarStats() {
 }
 
 async function adminCarregarUsuarios(busca='') {
+  if (sess.tipo !== 'admin') return;
   const tbody = document.getElementById('tbodyUsuarios');
   tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#aaa">⏳ Carregando...</td></tr>';
   try {
@@ -3685,7 +4352,7 @@ async function adminCarregarUsuarios(busca='') {
       </td></tr>`;
     }
   } catch(e) {
-    tbody.innerHTML = `<tr><td colspan="5" style="color:var(--vermelho)">Erro: ${e.message}</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="5" style="color:var(--vermelho)">Erro: ${_esc(e.message)}</td></tr>`;
   }
 }
 
@@ -3706,10 +4373,215 @@ async function adminCarregarHistorico(dataFiltro='') {
       </tr>
     `).join('') || '<tr><td colspan="5" style="text-align:center;color:#aaa">Nenhum registro</td></tr>';
   } catch(e) {
-    tbody.innerHTML = `<tr><td colspan="5" style="color:var(--vermelho)">Erro: ${e.message}</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="5" style="color:var(--vermelho)">Erro: ${_esc(e.message)}</td></tr>`;
+  }
+}
+// ── Exportar histórico como CSV ─────────────────────────────
+async function exportarHistoricoCSV() {
+  const dataFiltro = document.getElementById('adminDataHistorico').value || hojeISO();
+  try {
+    const res = await api.listarAcessos(dataFiltro, '');
+    const lista = res.acessos || [];
+    if (!lista.length) { toast('⚠️ Nenhum registro para exportar'); return; }
+
+    const linhas = [
+      ['Nome', 'CPF', 'Entrada', 'Saída', 'Status', 'Pagamento', 'Valor (R$)'],
+      ...lista.map(a => [
+        a.usuarios?.nome || '—',
+        fmtCpf(a.usuarios?.cpf || ''),
+        a.entrada_em ? new Date(a.entrada_em).toLocaleString('pt-BR') : '—',
+        a.saida_em   ? new Date(a.saida_em).toLocaleString('pt-BR')   : '—',
+        a.status || '—',
+        a.pagamentos?.tipo || '—',
+        a.pagamentos?.valor ? parseFloat(a.pagamentos.valor).toFixed(2).replace('.', ',') : '—'
+      ])
+    ];
+
+    const csv = linhas.map(l => l.map(c => `"${String(c).replace(/"/g,'""')}"`).join(';')).join('\n');
+    const bom  = '\uFEFF'; // UTF-8 BOM para Excel
+    const blob = new Blob([bom + csv], { type: 'text/csv;charset=utf-8;' });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href     = url;
+    a.download = `acessos_${dataFiltro}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast(`✅ CSV exportado — ${lista.length} registros`);
+  } catch(e) {
+    toast('❌ Erro ao exportar: ' + e.message);
   }
 }
 
+// ── Dashboard ───────────────────────────────────────────────
+let _dashDados = null;
+
+async function adminCarregarDashboard() {
+  const dias = parseInt(document.getElementById('dashPeriodo')?.value || '30');
+
+  // Carrega histórico dos últimos N dias
+  const hoje = new Date();
+  const datas = [];
+  for (let i = dias - 1; i >= 0; i--) {
+    const d = new Date(hoje);
+    d.setDate(d.getDate() - i);
+    datas.push(d.toISOString().split('T')[0]);
+  }
+
+  // Busca acessos de cada dia (paraleliza em lotes de 7)
+  let todosAcessos = [];
+  for (let i = 0; i < datas.length; i += 7) {
+    const lote = datas.slice(i, i + 7);
+    const resultados = await Promise.allSettled(
+      lote.map(d => api.listarAcessos(d, '').then(r => r.acessos || []))
+    );
+    resultados.forEach(r => { if (r.status === 'fulfilled') todosAcessos = todosAcessos.concat(r.value); });
+  }
+
+  _dashDados = { acessos: todosAcessos, datas, dias };
+
+  // KPIs
+  const totalAcessos = todosAcessos.length;
+  const receita = todosAcessos.reduce((s, a) => s + (parseFloat(a.pagamentos?.valor) || 0), 0);
+  const mediaD  = totalAcessos / dias;
+
+  // Novos usuários no período
+  let novos = 0;
+  try {
+    const res = await api.get('/api/usuarios?acao=listar');
+    const usuarios = res.usuarios || [];
+    const inicio = new Date(hoje);
+    inicio.setDate(inicio.getDate() - dias);
+    novos = usuarios.filter(u => new Date(u.created_at) >= inicio).length;
+  } catch(e) {}
+
+  const set = (id, v) => { const el = document.getElementById(id); if(el) el.textContent = v; };
+  set('dashTotalAcessos', totalAcessos.toLocaleString('pt-BR'));
+  set('dashReceitaTotal', 'R$ ' + receita.toFixed(2).replace('.', ','));
+  set('dashMediaDia',     mediaD.toFixed(1).replace('.', ','));
+  set('dashNovosUsuarios', novos);
+
+  // Gráfico: Acessos por dia
+  const porDia = {};
+  datas.forEach(d => porDia[d] = 0);
+  todosAcessos.forEach(a => {
+    const d = (a.entrada_em || '').split('T')[0];
+    if (porDia[d] !== undefined) porDia[d]++;
+  });
+  const valoresDia = Object.values(porDia);
+  const maxDia = Math.max(...valoresDia, 1);
+  const barrasEl = document.getElementById('dashBarras');
+  if (barrasEl) {
+    barrasEl.innerHTML = datas.map((d, i) => {
+      const v   = porDia[d] || 0;
+      const pct = Math.round((v / maxDia) * 100);
+      const label = d.split('-').slice(1).join('/'); // MM/DD
+      return `<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;min-width:0" title="${d}: ${v} acessos">
+        <div style="font-size:.55rem;color:#999;margin-bottom:2px;white-space:nowrap;overflow:hidden;max-width:100%;text-overflow:ellipsis">${v||''}</div>
+        <div style="width:100%;background:linear-gradient(180deg,var(--verde-cl),var(--verde));border-radius:3px 3px 0 0;height:${pct}%;min-height:${v?3:0}px;transition:.4s"></div>
+        <div style="font-size:.52rem;color:#aaa;margin-top:3px;white-space:nowrap;overflow:hidden">${dias<=14?label:''}</div>
+      </div>`;
+    }).join('');
+  }
+
+  // Gráfico: Horários de pico
+  const porHora = Array(24).fill(0);
+  todosAcessos.forEach(a => {
+    if (a.entrada_em) porHora[new Date(a.entrada_em).getHours()]++;
+  });
+  const maxHora = Math.max(...porHora, 1);
+  const horariosEl = document.getElementById('dashHorarios');
+  if (horariosEl) {
+    horariosEl.innerHTML = porHora.map((v, h) => {
+      const pct = Math.round((v / maxHora) * 100);
+      const cor = h >= 8 && h <= 19 ? 'var(--dourado)' : '#ccc';
+      return `<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%" title="${h}h: ${v}">
+        <div style="width:100%;background:${cor};border-radius:2px 2px 0 0;height:${pct}%;min-height:${v?2:0}px"></div>
+        <div style="font-size:.5rem;color:#aaa;margin-top:2px">${h%4===0?h+'h':''}</div>
+      </div>`;
+    }).join('');
+  }
+
+  // Gráfico: Dia da semana
+  const diasSem = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+  const porSemana = Array(7).fill(0);
+  todosAcessos.forEach(a => { if (a.entrada_em) porSemana[new Date(a.entrada_em).getDay()]++; });
+  const maxSem = Math.max(...porSemana, 1);
+  const semanaEl = document.getElementById('dashSemana');
+  if (semanaEl) {
+    semanaEl.innerHTML = diasSem.map((nome, i) => {
+      const v   = porSemana[i];
+      const pct = Math.round((v / maxSem) * 100);
+      const cor = pct > 66 ? 'var(--verde)' : pct > 33 ? 'var(--dourado)' : '#ddd';
+      return `<div style="text-align:center">
+        <div style="font-size:.7rem;font-weight:700;color:var(--cinza-esc);margin-bottom:4px">${nome}</div>
+        <div style="height:6px;border-radius:3px;background:${cor};margin-bottom:3px"></div>
+        <div style="font-size:.68rem;color:#888">${v}</div>
+      </div>`;
+    }).join('');
+  }
+
+  // Gráfico: Formas de pagamento
+  const pagTipos = {};
+  todosAcessos.forEach(a => {
+    const t = a.pagamentos?.tipo || 'sem_pagamento';
+    pagTipos[t] = (pagTipos[t] || 0) + 1;
+  });
+  const pagLabels = { pix:'💠 Pix', credito:'💳 Crédito', debito:'🏦 Débito', manual:'🤝 Manual', sem_pagamento:'— Sem pagamento' };
+  const totalPag = Object.values(pagTipos).reduce((s, v) => s + v, 0) || 1;
+  const pagEl = document.getElementById('dashPagamentos');
+  if (pagEl) {
+    pagEl.innerHTML = Object.entries(pagTipos)
+      .sort((a, b) => b[1] - a[1])
+      .map(([tipo, qtd]) => {
+        const pct = Math.round((qtd / totalPag) * 100);
+        const label = pagLabels[tipo] || tipo;
+        return `<div>
+          <div style="display:flex;justify-content:space-between;font-size:.77rem;margin-bottom:3px">
+            <span>${label}</span><span style="font-weight:600">${qtd} (${pct}%)</span>
+          </div>
+          <div style="height:8px;background:#eee;border-radius:4px;overflow:hidden">
+            <div style="height:100%;width:${pct}%;background:linear-gradient(90deg,var(--verde),var(--verde-cl));border-radius:4px;transition:.5s"></div>
+          </div>
+        </div>`;
+      }).join('');
+  }
+}
+
+// ── Exportar dashboard como CSV ─────────────────────────────
+async function exportarDashboardCSV() {
+  if (!_dashDados) { toast('⚠️ Carregue o dashboard primeiro'); return; }
+  const { acessos } = _dashDados;
+  if (!acessos.length) { toast('⚠️ Nenhum dado para exportar'); return; }
+
+  const linhas = [
+    ['Nome', 'CPF', 'Data', 'Hora Entrada', 'Hora Saída', 'Status', 'Pagamento', 'Valor (R$)'],
+    ...acessos.map(a => {
+      const entrada = a.entrada_em ? new Date(a.entrada_em) : null;
+      const saida   = a.saida_em   ? new Date(a.saida_em)   : null;
+      return [
+        a.usuarios?.nome || '—',
+        fmtCpf(a.usuarios?.cpf || ''),
+        entrada ? entrada.toLocaleDateString('pt-BR') : '—',
+        entrada ? entrada.toLocaleTimeString('pt-BR') : '—',
+        saida   ? saida.toLocaleTimeString('pt-BR')   : '—',
+        a.status || '—',
+        a.pagamentos?.tipo || '—',
+        a.pagamentos?.valor ? parseFloat(a.pagamentos.valor).toFixed(2).replace('.', ',') : '—'
+      ];
+    })
+  ];
+
+  const csv  = linhas.map(l => l.map(c => `"${String(c).replace(/"/g,'""')}"`).join(';')).join('\n');
+  const bom  = '\uFEFF';
+  const blob = new Blob([bom + csv], { type: 'text/csv;charset=utf-8;' });
+  const url  = URL.createObjectURL(blob);
+  const el   = document.createElement('a');
+  el.href    = url;
+  el.download = `dashboard_${_dashDados.dias}dias_${hojeISO()}.csv`;
+  el.click();
+  URL.revokeObjectURL(url);
+  toast(`✅ CSV exportado — ${acessos.length} registros`);
+}
 async function adminSalvarConfig() {
   const config = {
     total_vagas:          document.getElementById('cfgVagas').value,
@@ -3760,14 +4632,14 @@ async function adminResetDiario() {
     status.style.display = 'block';
     status.style.background = '#f8fdf9';
     status.style.borderColor = '#a8d5b5';
-    status.innerHTML = `<span style="color:var(--verde);font-weight:700">✅ ${res.mensagem}</span>`;
+    status.innerHTML = `<span style="color:var(--verde);font-weight:700">✅ ${_esc(res.mensagem)}</span>`;
     toast('✅ Reset diário executado!');
     atualizarVagas();
   } catch(e) {
     status.style.display = 'block';
     status.style.background = '#fff5f5';
     status.style.borderColor = '#f5b5a8';
-    status.innerHTML = `<span style="color:var(--vermelho)">❌ Erro: ${e.message}</span>`;
+    status.innerHTML = `<span style="color:var(--vermelho)">❌ Erro: ${_esc(e.message)}</span>`;
   } finally {
     btn.disabled = false;
     btn.textContent = '🔄 Executar Reset Diário agora';
@@ -3790,7 +4662,7 @@ async function adminSincronizarControlId() {
 
     status.style.display = 'block';
     status.innerHTML = `
-      <div style="font-weight:700;color:var(--verde);margin-bottom:8px">✅ ${res.mensagem}</div>
+      <div style="font-weight:700;color:var(--verde);margin-bottom:8px">✅ ${_esc(res.mensagem)}</div>
       <div>🔗 Vinculados agora: <b>${res.vinculados}</b></div>
       <div>✅ Já estavam vinculados: <b>${res.ja_vinculados}</b></div>
       <div>❓ Não encontrados no Control iD: <b>${res.sem_correspondencia_controlid}</b>
@@ -3807,7 +4679,7 @@ async function adminSincronizarControlId() {
     status.style.display = 'block';
     status.style.background = '#fff5f5';
     status.style.borderColor = '#f5b5a8';
-    status.innerHTML = `<span style="color:var(--vermelho)">❌ Erro: ${e.message}</span>`;
+    status.innerHTML = `<span style="color:var(--vermelho)">❌ Erro: ${_esc(e.message)}</span>`;
   } finally {
     btn.disabled = false;
     btn.innerHTML = '🔄 Sincronizar com Control iD agora';
@@ -3854,7 +4726,7 @@ async function carregarAvisos() {
     lista.innerHTML = avisos.map(a => `
       <div class="aviso ${a.tipo}">
         <div class="tag">${icones[a.tipo] || '📌 Aviso'}</div>
-        <p>${a.conteudo}</p>
+        <p>${_esc(a.conteudo)}</p>
         <div class="data">📅 ${new Date(a.created_at).toLocaleDateString('pt-BR')}</div>
       </div>
     `).join('');
@@ -3880,6 +4752,8 @@ async function verificarAvisosUrgentes() {
     document.getElementById('modalAvisoConteudo').textContent = aviso.conteudo;
     document.getElementById('modalAvisoUrgente').dataset.avisoId = aviso.id;
     document.getElementById('modalAvisoUrgente').classList.add('ativo');
+    _beep('erro');
+    if (navigator.vibrate) navigator.vibrate([200,100,200,100,200]);
   } catch(e) { /* silencioso */ }
 }
 
@@ -3901,10 +4775,10 @@ async function adminCarregarAvisos() {
       <div style="display:flex;justify-content:space-between;align-items:flex-start;padding:10px 0;border-bottom:1px solid #f0f0f0;gap:10px">
         <div style="flex:1">
           <div style="display:flex;align-items:center;gap:6px;margin-bottom:2px">
-            <span style="font-size:.82rem;font-weight:700;color:#333">${icones[a.tipo]||'📌'} ${a.titulo}</span>
+            <span style="font-size:.82rem;font-weight:700;color:#333">${icones[a.tipo]||'📌'} ${_esc(a.titulo)}</span>
             ${a.tipo==='urgente' ? '<span style="background:#fff5f5;color:var(--vermelho);font-size:.65rem;font-weight:700;padding:1px 6px;border-radius:8px;border:1px solid #f5b5a8">POP-UP ATIVO</span>' : ''}
           </div>
-          <div style="font-size:.78rem;color:#777;margin-top:2px">${a.conteudo}</div>
+          <div style="font-size:.78rem;color:#777;margin-top:2px">${_esc(a.conteudo)}</div>
           <div style="font-size:.7rem;color:#aaa;margin-top:3px">📅 ${new Date(a.created_at).toLocaleDateString('pt-BR')}</div>
         </div>
         <button class="btn btn-vermelho btn-xs" onclick="adminDeletarAviso('${a.id}', this)" title="Remover aviso — remove o pop-up para todos os usuários">🗑️ Remover</button>
@@ -3969,7 +4843,7 @@ async function adminCarregarSugestoes() {
             ${!s.lida ? `<button class="btn btn-verde btn-xs" onclick="adminMarcarLida('${s.id}',this)">✓ Lida</button>` : '<span style="font-size:.7rem;color:#aaa">✓ Lida</span>'}
           </div>
         </div>
-        <div style="font-size:.82rem;color:#444;line-height:1.5">${s.mensagem}</div>
+        <div style="font-size:.82rem;color:#444;line-height:1.5">${_esc(s.mensagem)}</div>
         <div style="font-size:.7rem;color:#aaa;margin-top:4px">
           ${s.usuarios?.nome || 'Usuário anônimo'} • 📅 ${new Date(s.created_at).toLocaleDateString('pt-BR')}
         </div>
@@ -4425,6 +5299,18 @@ ${u.foto_url ? `
     </div>
   </div>
 
+<!-- PWA Install Banner -->
+<div id="pwaBanner" role="dialog" aria-label="Instalar aplicativo" aria-live="polite">
+  <span class="pwa-icon">📲</span>
+  <div class="pwa-txt">
+    <b>Adicionar à tela inicial</b>
+    <span>Acesse mais rápido, como um app nativo</span>
+  </div>
+  <div class="pwa-btns">
+    <button class="btn btn-verde btn-sm" id="pwaBtnInstalar" style="white-space:nowrap">Instalar</button>
+    <button class="btn btn-sec btn-sm" id="pwaBtnFechar" style="white-space:nowrap;font-size:.7rem">Agora não</button>
+  </div>
+</div>
 </body>
 </html>
 `;
@@ -4507,7 +5393,7 @@ function buscarUsuarioAE(q) {
              onmouseover="this.style.borderColor='var(--verde)'" onmouseout="this.style.borderColor='var(--cinza-cl)'">
           <b>${u.nome}</b> <span style="color:#888">${fmtCpf(u.cpf)}</span>
         </div>`).join('');
-    } catch(e) { el.innerHTML=`<div style="font-size:.75rem;color:var(--vermelho)">${e.message}</div>`; }
+    } catch(e) { el.innerHTML=`<div style="font-size:.75rem;color:var(--vermelho)">${_esc(e.message)}</div>`; }
   }, 400);
 }
 
@@ -4517,7 +5403,7 @@ function selecionarUsuarioAE(id, nome, cpf) {
   document.getElementById('aeBuscaResultados').innerHTML = '';
   const box = document.getElementById('aeUsuarioSelecionado');
   box.style.display = 'block';
-  box.innerHTML = `✅ <b>${nome}</b> — ${fmtCpf(cpf)}`;
+  box.innerHTML = `✅ <b>${_esc(nome)}</b> — ${_esc(fmtCpf(cpf))}`;
 }
 
 function abrirModalNovoAcessoEspecial() {
@@ -4685,17 +5571,20 @@ function fecharModalPerfilAdmin() {
 
 function adminPerfilDocSelecionado(input) {
   const file = input.files[0]; if (!file) return;
-  const reader = new FileReader();
-  reader.onload = e => {
-    comprimirFoto(e.target.result, 1200, 0.82).then(foto => {
-      _adminPerfilDocB64 = foto;
-      document.getElementById('adminPerfilDocImg').src = foto;
-      document.getElementById('adminPerfilDocPreview').style.display = 'block';
-      document.getElementById('adminPerfilDocAtual').textContent = '📎 ' + file.name + ' — pronto para salvar';
-      document.getElementById('btnAdminSalvarDoc').style.display = 'block';
-    });
-  };
-  reader.readAsDataURL(file);
+  _validarImagem(file).then(erro => {
+    if (erro) { toast('⚠️ ' + erro, 4000, 'aviso'); input.value = ''; return; }
+    const reader = new FileReader();
+    reader.onload = e => {
+      comprimirFoto(e.target.result, 1200, 0.82).then(foto => {
+        _adminPerfilDocB64 = foto;
+        document.getElementById('adminPerfilDocImg').src = foto;
+        document.getElementById('adminPerfilDocPreview').style.display = 'block';
+        document.getElementById('adminPerfilDocAtual').textContent = '📎 ' + file.name + ' — pronto para salvar';
+        document.getElementById('btnAdminSalvarDoc').style.display = 'block';
+      });
+    };
+    reader.readAsDataURL(file);
+  });
 }
 
 async function adminSalvarDocumento() {
@@ -4738,17 +5627,20 @@ async function carregarDocumentoPerfil() {
 
 function perfilDocSelecionado(input) {
   const file = input.files[0]; if (!file) return;
-  const reader = new FileReader();
-  reader.onload = e => {
-    comprimirFoto(e.target.result, 1200, 0.82).then(foto => {
-      _perfilDocBase64 = foto;
-      document.getElementById('perfilDocImg').src = foto;
-      document.getElementById('perfilDocPreview').style.display = 'block';
-      document.getElementById('perfilDocStatus').textContent = '📎 ' + file.name + ' — pronto para salvar';
-      document.getElementById('btnPerfilSalvarDoc').style.display = 'block';
-    });
-  };
-  reader.readAsDataURL(file);
+  _validarImagem(file).then(erro => {
+    if (erro) { toast('⚠️ ' + erro, 4000, 'aviso'); input.value = ''; return; }
+    const reader = new FileReader();
+    reader.onload = e => {
+      comprimirFoto(e.target.result, 1200, 0.82).then(foto => {
+        _perfilDocBase64 = foto;
+        document.getElementById('perfilDocImg').src = foto;
+        document.getElementById('perfilDocPreview').style.display = 'block';
+        document.getElementById('perfilDocStatus').textContent = '📎 ' + file.name + ' — pronto para salvar';
+        document.getElementById('btnPerfilSalvarDoc').style.display = 'block';
+      });
+    };
+    reader.readAsDataURL(file);
+  });
 }
 
 async function perfilSalvarDocumento() {
@@ -4771,12 +5663,184 @@ async function perfilSalvarDocumento() {
   }
 }
 
+// ═══════════════════════════════════════════════════════════
+//  TEMA — Claro / Escuro / Automático
+// ═══════════════════════════════════════════════════════════
+function definirTema(val) {
+  localStorage.setItem('tema', val);
+  _aplicarTema(val);
+  _atualizarBotoesTema(val);
+}
+
+function _aplicarTema(val) {
+  const html = document.documentElement;
+  if (val === 'escuro') {
+    html.setAttribute('data-tema', 'escuro');
+  } else if (val === 'claro') {
+    html.setAttribute('data-tema', 'claro');
+  } else {
+    // auto — remove atributo e deixa a media query decidir
+    html.removeAttribute('data-tema');
+  }
+}
+
+function _atualizarBotoesTema(val) {
+  document.querySelectorAll('.tema-btn').forEach(b => {
+    b.classList.toggle('ativo', b.dataset.temaVal === val);
+  });
+}
+
+function _inicializarTema() {
+  const salvo = localStorage.getItem('tema') || 'auto';
+  _aplicarTema(salvo);
+  // Atualiza botões quando perfil abrir (DOM pode não estar pronto antes)
+  document.addEventListener('DOMContentLoaded', () => _atualizarBotoesTema(salvo));
+  // Re-aplica ao entrar no perfil
+  const origMudarTab = window.mudarTab;
+  if (origMudarTab) {
+    window.mudarTab = function(id) {
+      origMudarTab(id);
+      if (id === 'panelPerfil') _atualizarBotoesTema(localStorage.getItem('tema') || 'auto');
+    };
+  }
+}
+_inicializarTema();
+
+// ── Contador regressivo sala lotada ─────────────────────────
+let _contadorLotadoTimer = null;
+function _iniciarContadorLotado() {
+  clearInterval(_contadorLotadoTimer);
+  let tentativas = 0;
+  _contadorLotadoTimer = setInterval(async () => {
+    tentativas++;
+    if (tentativas > 40) { clearInterval(_contadorLotadoTimer); return; }
+    try {
+      const v = await api.vagas();
+      if (!v.lotado) {
+        clearInterval(_contadorLotadoTimer);
+        _beep('acesso');
+        if (navigator.vibrate) navigator.vibrate([100,50,100]);
+        document.getElementById('pagtoStatus').textContent = '✅ Vaga disponível! Abrindo pagamento...';
+        toast('✅ Vaga liberada! Pode pagar agora.', 4000, 'ok');
+        setTimeout(() => abrirModalPagamento(), 1800);
+      } else {
+        document.getElementById('pagtoStatus').textContent =
+          `🚫 Sala lotada — verificando vagas... (${tentativas * 15}s)`;
+      }
+    } catch(e) {}
+  }, 15000);
+}
+
+// ── Timeout de sessão por inatividade (30 minutos) ──────────
+(function _sessaoTimeout() {
+  let _timer = null;
+  const LIMITE = 30 * 60 * 1000; // 30 min
+
+  function _resetar() {
+    clearTimeout(_timer);
+    if (!sess?.usuario) return;
+    _timer = setTimeout(() => {
+      if (!sess?.usuario) return;
+      sess.usuario = null; sess.tipo = null; sess.acesso = null;
+      if (typeof api?.clearToken === 'function') api.clearToken();
+      mostrarTela('loginScreen');
+      toast('⏱️ Sessão encerrada por inatividade.', 4000, 'aviso');
+      srAnunciar('Sessão encerrada por inatividade. Faça login novamente.');
+    }, LIMITE);
+  }
+
+  // Reinicia o timer a cada interação do usuário
+  ['click','keydown','touchstart','scroll'].forEach(ev =>
+    document.addEventListener(ev, _resetar, { passive: true })
+  );
+})();
+
+// ══════════════════════════════════════════════════════════
+//  ACESSIBILIDADE — srAnunciar · Focus Trap · Esc
+// ══════════════════════════════════════════════════════════
+function srAnunciar(msg) {
+  const el = document.getElementById('srLiveRegion');
+  if (!el) return;
+  el.textContent = '';
+  setTimeout(() => { el.textContent = msg; }, 60);
+}
+function _focusTrap(modal) {
+  const els = [...modal.querySelectorAll('button:not([disabled]),a[href],input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])')];
+  if (!els.length) return;
+  const primeiro = els[0], ultimo = els[els.length-1];
+  setTimeout(() => primeiro.focus(), 80);
+  modal._trap = e => {
+    if (e.key !== 'Tab') return;
+    if (e.shiftKey) { if (document.activeElement===primeiro){e.preventDefault();ultimo.focus();} }
+    else            { if (document.activeElement===ultimo)  {e.preventDefault();primeiro.focus();} }
+  };
+  modal.addEventListener('keydown', modal._trap);
+}
+function _liberarTrap(modal) {
+  if (modal._trap) { modal.removeEventListener('keydown', modal._trap); delete modal._trap; }
+}
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Escape') return;
+  const ativo = document.querySelector('.modal-bg.ativo');
+  if (!ativo || ativo.getAttribute('role') === 'alertdialog') return;
+  _liberarTrap(ativo); ativo.classList.remove('ativo');
+  srAnunciar('Modal fechado.');
+});
+document.querySelectorAll('.modal-bg').forEach(modal => {
+  new MutationObserver(() => {
+    if (modal.classList.contains('ativo')) _focusTrap(modal);
+    else _liberarTrap(modal);
+  }).observe(modal, { attributes: true, attributeFilter: ['class'] });
+});
+
+// ── PWA Install Prompt ───────────────────────────────────────
+let _pwaEvento = null;
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  _pwaEvento = e;
+  const jaInstalou = localStorage.getItem('pwaInstalado');
+  const jaRecusou  = localStorage.getItem('pwaRecusadoEm');
+  const recusaExpirou = !jaRecusou || (Date.now() - parseInt(jaRecusou)) > 7*24*60*60*1000;
+  if (!jaInstalou && recusaExpirou) {
+    setTimeout(() => { if (sess?.usuario) document.getElementById('pwaBanner')?.classList.add('show'); }, 3000);
+  }
+});
+document.getElementById('pwaBtnInstalar')?.addEventListener('click', async () => {
+  if (!_pwaEvento) return;
+  document.getElementById('pwaBanner')?.classList.remove('show');
+  const { outcome } = await _pwaEvento.prompt();
+  if (outcome === 'accepted') { localStorage.setItem('pwaInstalado','1'); toast('✅ App instalado!',3000,'ok'); }
+  else { localStorage.setItem('pwaRecusadoEm', Date.now().toString()); }
+  _pwaEvento = null;
+});
+document.getElementById('pwaBtnFechar')?.addEventListener('click', () => {
+  document.getElementById('pwaBanner')?.classList.remove('show');
+  localStorage.setItem('pwaRecusadoEm', Date.now().toString());
+});
+window.addEventListener('appinstalled', () => {
+  localStorage.setItem('pwaInstalado','1');
+  document.getElementById('pwaBanner')?.classList.remove('show');
+  toast('✅ Ala dos Estudantes instalado!',3000,'ok');
+});
+if (window.matchMedia('(display-mode: standalone)').matches) localStorage.setItem('pwaInstalado','1');
+
 // ── Service Worker (PWA) ─────────────────────────────────────
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('/sw.js')
       .then(() => console.log('PWA: Service Worker registrado'))
       .catch(e => console.log('PWA: erro', e));
+  });
+}
+
+// ── Som ao receber push ──────────────────────────────────────
+const _pushChannel = new BroadcastChannel('ala-push');
+_pushChannel.onmessage = e => {
+  if (e.data?.tipo === 'PUSH_RECEBIDO') _beep(e.data.somTipo || 'acesso');
+};
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.addEventListener('message', e => {
+    if (e.data?.tipo === 'PUSH_RECEBIDO') _beep(e.data.somTipo || 'acesso');
   });
 }
 
@@ -4918,7 +5982,7 @@ async function adminEnviarPush() {
 </script>
 
 <!-- MODAL ACESSO ESPECIAL -->
-<div class="modal-bg" id="modalAcessoEspecial">
+<div class="modal-bg" id="modalAcessoEspecial" role="dialog" aria-modal="true" aria-labelledby="modalAEtitulo">
   <div class="modal" style="max-width:440px;text-align:left">
     <h3 id="modalAEtitulo">🎟️ Novo Acesso Especial</h3>
     <input type="hidden" id="aeId">
@@ -4964,7 +6028,7 @@ async function adminEnviarPush() {
 
 
 <!-- MODAL (FORA DO SCRIPT) -->
-<div class="modal-bg" id="modalTermo">
+<div class="modal-bg" id="modalTermo" role="dialog" aria-modal="true" aria-label="Termos de uso">
   <div class="modal" style="max-width:500px">
 
     <h3>✍️ Termo Assinado</h3>
