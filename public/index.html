@@ -3443,7 +3443,7 @@ async function abrirModalPagamento() {
       ? parseFloat(cfg.valor_diaria.replace(',','.')).toFixed(2).replace('.',',')
       : '10,00';
     document.getElementById('pagtoValor').textContent = 'R$ ' + valorDiaria;
-    window._gatewayConfigurado = !!(cfg.gateway_tipo && cfg.gateway_tipo !== 'manual' && cfg.gateway_chave);
+    window._gatewayConfigurado = !!(cfg.gateway_tipo && cfg.gateway_tipo !== 'manual');
 
     // Inicia cobrança Pix automaticamente
     await _iniciarCobrancaPix();
