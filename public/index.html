@@ -1457,9 +1457,14 @@ button:focus-visible,a:focus-visible{outline:3px solid var(--verde);outline-offs
           <div class="pix-box" style="margin-bottom:10px">
             <div class="pix-label">Pix Copia e Cola</div>
             <div class="pix-chave" id="pagtoCopiaCola" style="font-size:.72rem;word-break:break-all">—</div>
-            <button class="btn btn-sec" id="btnCopiarPix" style="margin-top:8px;font-size:.77rem;padding:7px 14px;width:auto">
-              📋 Copiar código
-            </button>
+<div style="display:flex;gap:8px;justify-content:center;margin-top:8px;flex-wrap:wrap">
+              <button class="btn btn-sec" id="btnCopiarPix" style="font-size:.77rem;padding:7px 14px;width:auto">
+                📋 Copiar código
+              </button>
+              <button class="btn btn-sec" id="btnCompartilharPix" style="font-size:.77rem;padding:7px 14px;width:auto">
+                📤 Compartilhar
+              </button>
+            </div>
           </div>
           <!-- Timer -->
           <div style="text-align:center;font-size:.78rem;color:var(--cinza);margin-bottom:10px">
@@ -3492,13 +3497,26 @@ async function _iniciarCobrancaPix() {
 
     // Gateway configurado — exibe QR Code
     document.getElementById('pixConteudo').style.display = 'block';
-    document.getElementById('pagtoCopiaCola').textContent = data.copia_cola || '—';
+    const codigoCompleto = data.copia_cola || '';
+const el = document.getElementById('pagtoCopiaCola');
+el.dataset.full = codigoCompleto;
+el.textContent = codigoCompleto
+  ? (codigoCompleto.length > 40
+      ? codigoCompleto.substring(0, 20) + ' ... ' + codigoCompleto.substring(codigoCompleto.length - 14)
+      : codigoCompleto)
+  : '—';
 
     // QR Code — exibe imagem base64 se disponível
-    const qrContainer = document.getElementById('pixQrContainer');
+const qrContainer = document.getElementById('pixQrContainer');
     if (data.qr_code) {
-      const src = data.qr_code.startsWith('data:') ? data.qr_code : `data:image/png;base64,${data.qr_code}`;
-      qrContainer.innerHTML = `<img src="${src}" style="width:100%;height:100%;object-fit:contain">`;
+      // qr_code pode vir como: URL completa (Pagar.me), data URI já pronta, ou base64 puro (EfiBank)
+      let src;
+      if (data.qr_code.startsWith('http') || data.qr_code.startsWith('data:')) {
+        src = data.qr_code;
+      } else {
+        src = `data:image/png;base64,${data.qr_code}`;
+      }
+      qrContainer.innerHTML = `<img src="${src}" style="width:100%;height:100%;object-fit:contain" onerror="this.parentElement.innerHTML='<span style=\\'font-size:3rem\\'>📲</span>'">`;
     } else {
       qrContainer.innerHTML = '<span style="font-size:3rem">📲</span>';
     }
@@ -3510,9 +3528,9 @@ async function _iniciarCobrancaPix() {
     _iniciarTimerPix();
     _iniciarPollStatus();
 
-    // Botão copiar
+// Botão copiar
     document.getElementById('btnCopiarPix').onclick = () => {
-      const codigo = document.getElementById('pagtoCopiaCola').textContent;
+      const codigo = document.getElementById('pagtoCopiaCola').dataset.full || '';
       navigator.clipboard?.writeText(codigo).catch(() => {
         const el = document.createElement('input'); el.value = codigo;
         document.body.appendChild(el); el.select(); document.execCommand('copy');
@@ -3522,6 +3540,21 @@ async function _iniciarCobrancaPix() {
       document.getElementById('btnCopiarPix').textContent = '✅ Copiado!';
       setTimeout(() => { document.getElementById('btnCopiarPix').textContent = '📋 Copiar código'; }, 2500);
     };
+    // Botão compartilhar
+    const btnCompartilhar = document.getElementById('btnCompartilharPix');
+    if (btnCompartilhar) {
+      if (navigator.share) {
+        btnCompartilhar.onclick = () => {
+          const codigo = document.getElementById('pagtoCopiaCola').dataset.full || '';
+          navigator.share({
+            title: 'Pix — Ala dos Estudantes',
+            text: codigo
+          }).catch(() => {});
+        };
+      } else {
+        btnCompartilhar.style.display = 'none';
+      }
+    }
 
   } catch(e) {
     document.getElementById('pixCarregando').style.display = 'none';
