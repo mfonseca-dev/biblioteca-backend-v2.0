@@ -21,7 +21,7 @@ module.exports = async function handler(req, res) {
 
   const { data, error } = await supabase
     .from('acessos')
-    .update({ status: 'encerrado', saida_em: new Date().toISOString() })
+    .update({ status: 'encerrado', saida_em: new Date().toISOString(), motivo_saida: 'manual' })
     .eq('id', acesso_id)
     .eq('status', 'ativo')
     .select()
