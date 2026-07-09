@@ -1539,8 +1539,9 @@ async function confirmarPixManualTotem(){
       method:'POST', headers:{'Content-Type':'application/json'},
       body:JSON.stringify({usuario_id:sess.usuario.id,tipo:'pix',origem:'totem_manual'})
     });
-    const d=await r.json();
+   const d=await r.json();
     if(!r.ok&&r.status!==409) throw new Error(d.erro||'Erro');
+    if(d.status==='bloqueado') throw new Error(d.mensagem||d.motivo||'Não foi possível liberar o acesso');
     clearInterval(_pollStatusT); clearInterval(_pixTimerT);
     mostrarSucesso('pix');
   }catch(e){

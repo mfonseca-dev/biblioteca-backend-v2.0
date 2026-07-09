@@ -3476,11 +3476,17 @@ async function _iniciarCobrancaPix() {
     });
     const data = await res.json();
 
-    if (data.status === 'confirmado') {
-      // Já tem acesso hoje
+   if (data.status === 'confirmado') {
+      // Já tem acesso hoje (ou acabou de reabrir o acesso)
       await verificarAcessoHoje();
       document.getElementById('modalPagamento').classList.remove('ativo');
-      toast('✅ Você já tem acesso ativo para hoje!');
+      toast(data.reentrada ? '✅ Bem-vindo de volta! Catraca liberada.' : '✅ Você já tem acesso ativo para hoje!');
+      return;
+    }
+    if (data.status === 'bloqueado') {
+      document.getElementById('pixCarregando').style.display = 'none';
+      document.getElementById('modalPagamento').classList.remove('ativo');
+      toast('❌ ' + (data.mensagem || 'Não foi possível liberar o acesso agora.'));
       return;
     }
 
@@ -3697,6 +3703,7 @@ async function confirmarPagamentoManual() {
     });
     const data = await res.json();
     if (!res.ok && res.status !== 409) throw new Error(data.erro || 'Erro');
+    if (data.status === 'bloqueado') throw new Error(data.mensagem || data.motivo || 'Não foi possível liberar o acesso');
     document.getElementById('pagtoStatus').className = 'pagto-status pagto-ok';
     document.getElementById('pagtoStatus').textContent = data.catraca_liberada
       ? '✅ Acesso liberado! Dirija-se à catraca.'
