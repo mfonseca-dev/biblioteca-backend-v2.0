@@ -531,7 +531,7 @@ button:focus-visible,a:focus-visible{outline:3px solid var(--verde);outline-offs
 
         <p><b>9. DO ACESSO E VAGAS:</b></p>
         <p>• O pagamento garante acesso pelo período integral do dia (até 19h45), via reconhecimento facial.</p>
-        <p>• Saída temporária não configura encerramento do acesso. A saída definitiva é registrada pela recepção.</p>
+        <p>• A saída temporária não encerra o acesso. A saída definitiva é registrada somente ao clicar em "Sair e Liberar Vaga".</p>
         <p>• O sistema controla vagas rotativas. A vaga é reservada no pagamento e liberada após saída definitiva.</p>
         <p>• Não há reembolso após o pagamento. O acesso é pessoal e intransferível.</p><br>
 
@@ -703,9 +703,9 @@ button:focus-visible,a:focus-visible{outline:3px solid var(--verde);outline-offs
   </div>
   <div class="main">
     <div class="alerta bloqueado" id="alertaBloq" style="display:none">
-      <span class="ai">🚫</span>
-      <p><b>Conta suspensa.</b> Entre em contato com a recepção: (61) 3114-1027.</p>
-    </div>
+  <span class="ai">🚫</span>
+  <p><b>Conta suspensa.</b> Procure a recepção para regularizar sua situação.</p>
+</div>
     <div class="bv">
       <h2 id="msgBV">Olá! 👋</h2>
       <p id="msgData">—</p>
@@ -1408,7 +1408,8 @@ button:focus-visible,a:focus-visible{outline:3px solid var(--verde);outline-offs
     <div class="pagto-header">
       <div class="pi">💳</div>
       <h3>Pagar Acesso Diário</h3>
-      <p>Válido até 19h45 de hoje — pode sair e voltar</p>
+      <p>Válido até 19h45 de hoje — pode sair e voltar pela catraca</p>
+      <p style="font-size:.72rem;color:var(--cinza);margin-top:2px">Se você liberar sua vaga no app, será necessário pagar novamente para retornar</p>
     </div>
     <div class="pagto-body">
       <div class="pagto-preco">
@@ -1432,12 +1433,7 @@ button:focus-visible,a:focus-visible{outline:3px solid var(--verde);outline-offs
               <div style="font-size:1.2rem">💳</div><div style="font-size:.72rem;font-weight:700;color:var(--cinza)">Crédito</div>
             </div>
           </label>
-          <label for="pagtoDebito" style="flex:1;cursor:pointer">
-            <input type="radio" id="pagtoDebito" name="pagtoTipo" value="debito" style="display:none">
-            <div class="pagto-tipo-btn" data-tipo="debito" style="border:2px solid var(--cinza-cl);border-radius:10px;padding:10px 6px;text-align:center;background:#fff;transition:.2s">
-              <div style="font-size:1.2rem">🏦</div><div style="font-size:.72rem;font-weight:700;color:var(--cinza)">Débito</div>
-            </div>
-          </label>
+        
         </div>
       </div>
 
