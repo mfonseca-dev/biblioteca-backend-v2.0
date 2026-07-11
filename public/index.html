@@ -1651,6 +1651,10 @@ button:focus-visible,a:focus-visible{outline:3px solid var(--verde);outline-offs
     <div style="background:#fff5f5;border:1.5px solid #f5b5a8;border-radius:10px;padding:12px;margin-bottom:14px;font-size:.82rem;color:var(--vermelho);line-height:1.6">
       ⚠️ Esta ação é <b>irreversível</b>. Você perderá acesso ao sistema e todos os dados cadastrados serão apagados.
     </div>
+    <div class="campo" id="exclusaoCampoCpf" style="display:none">
+      <label for="exclusaoCpf">Confirme seu CPF</label>
+      <input type="text" id="exclusaoCpf" placeholder="000.000.000-00" maxlength="14">
+    </div>
     <div class="campo">
       <label for="exclusaoMotivo">Motivo (opcional)</label>
       <select id="exclusaoMotivo">
@@ -1933,8 +1937,11 @@ function mostrarTela(id) {
 function abrirModalExclusao() {
   document.getElementById('exclusaoConfirmacao').value = '';
   document.getElementById('exclusaoMotivo').value = '';
+  document.getElementById('exclusaoCpf').value = '';
   const err = document.getElementById('exclusaoErro');
   err.style.display = 'none';
+  const campoCpf = document.getElementById('exclusaoCampoCpf');
+  campoCpf.style.display = sess.usuario ? 'none' : 'block';
   document.getElementById('modalExclusaoConta').style.display = 'flex';
 }
 
@@ -1946,32 +1953,61 @@ async function confirmarExclusaoConta() {
   const confirmacao = document.getElementById('exclusaoConfirmacao').value.trim();
   const motivo = document.getElementById('exclusaoMotivo').value;
   const errEl = document.getElementById('exclusaoErro');
-
   if (confirmacao !== 'EXCLUIR MINHA CONTA') {
     errEl.textContent = 'Digite exatamente "EXCLUIR MINHA CONTA" para confirmar.';
     errEl.style.display = 'block';
     return;
   }
 
+  let usuarioId = sess.usuario?.id;
+  let cpf       = sess.usuario?.cpf;
+
+  // Sem sessão ativa (tela de login) — precisa localizar o usuário pelo CPF
+  if (!usuarioId) {
+    const cpfDigitado = document.getElementById('exclusaoCpf').value.replace(/\D/g, '');
+    if (cpfDigitado.length !== 11) {
+      errEl.textContent = 'Informe um CPF válido.';
+      errEl.style.display = 'block';
+      return;
+    }
+    try {
+      const r = await fetch(`${API_BASE}/api/usuarios?acao=verificar-primeiro-acesso&cpf=${cpfDigitado}`);
+      const d = await r.json();
+      if (!r.ok || !d.encontrado) {
+        errEl.textContent = 'CPF não encontrado no sistema.';
+        errEl.style.display = 'block';
+        return;
+      }
+      usuarioId = d.id;
+      cpf       = d.cpf;
+    } catch(e) {
+      errEl.textContent = 'Erro ao verificar CPF. Tente novamente.';
+      errEl.style.display = 'block';
+      return;
+    }
+  }
+
+  errEl.style.display = 'none';
   const btn = document.getElementById('btnConfirmarExclusao');
   btn.disabled = true;
   btn._txt = btn.innerHTML;
   btn.innerHTML = '<span class="spinner"></span> Enviando...';
-
   try {
     // Envia solicitação de exclusão para o backend
-    await fetch(API_BASE + '/api/usuarios?acao=solicitar-exclusao', {
+    const r = await fetch(API_BASE + '/api/usuarios?acao=solicitar-exclusao', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         ...(api.token ? { 'Authorization': `Bearer ${api.token}` } : {})
       },
-      body: JSON.stringify({
-        usuario_id: sess.usuario?.id,
-        cpf:        sess.usuario?.cpf,
-        motivo:     motivo || 'Não informado'
-      })
+      body: JSON.stringify({ usuario_id: usuarioId, cpf, motivo: motivo || 'Não informado' })
     });
+    const d = await r.json();
+    if (!r.ok) {
+      errEl.textContent = d.erro || 'Erro ao registrar solicitação.';
+      errEl.style.display = 'block';
+      return;
+    }
     fecharModalExclusao();
     toast('✅ Solicitação enviada. Seus dados serão excluídos em até 30 dias.');
     // Desloga o usuário
@@ -1981,16 +2017,13 @@ async function confirmarExclusaoConta() {
       mostrarTela('loginScreen');
     }, 2500);
   } catch(e) {
-    // Mesmo com erro de rede, orienta o usuário para o canal de contato
-    fecharModalExclusao();
-    toast('⚠️ Solicitação registrada. Confirme pelo e-mail: privacidade@paivaNetto.org.br', 5000);
+    errEl.textContent = 'Erro de conexão. Tente novamente ou envie e-mail para privacidade@paivaNetto.org.br';
+    errEl.style.display = 'block';
   } finally {
     btn.disabled = false;
     btn.innerHTML = btn._txt;
   }
 }
-// ──────────────────────────────────────────────────────────
-
 
 // ═══════════════════════════════════════════════════════════
 //  INICIALIZAÇÃO
