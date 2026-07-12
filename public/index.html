@@ -2017,7 +2017,7 @@ async function confirmarExclusaoConta() {
       mostrarTela('loginScreen');
     }, 2500);
   } catch(e) {
-    errEl.textContent = 'Erro de conexão. Tente novamente ou envie e-mail para privacidade@paivaNetto.org.br';
+    errEl.textContent = 'Erro de conexão. Tente novamente ou envie e-mail para privacybiblioteca@gmail.com';
     errEl.style.display = 'block';
   } finally {
     btn.disabled = false;
@@ -2285,8 +2285,8 @@ async function adminCarregarExclusoes() {
   el.innerHTML = '<div class="sem"><span class="si">⏳</span>Carregando...</div>';
 
   try {
-    const res = await api.get('/api/usuarios?acao=listar&ativo=todos');
-    const pendentes = (res.usuarios || []).filter(u => u.exclusao_solicitada_em);
+    const res = await api.get('/api/usuarios?acao=listar-exclusoes-pendentes');
+const pendentes = res.usuarios || [];
 
     // Atualiza badge da aba
     const badge = document.getElementById('badgeLGPD');
