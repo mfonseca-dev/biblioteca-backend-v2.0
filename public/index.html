@@ -4814,12 +4814,14 @@ async function verificarAvisosUrgentes() {
     if (!urgentes.length) return;
     const hoje = new Date().toISOString().split('T')[0];
     const lidos = JSON.parse(localStorage.getItem('avisos_lidos') || '{}');
-    const naoLidos = urgentes.filter(a => lidos[a.id] !== hoje);
+    const chave = a => `${a.id}::${a.updated_at || a.created_at}`;
+    const naoLidos = urgentes.filter(a => lidos[chave(a)] !== hoje);
     if (!naoLidos.length) return;
     const aviso = naoLidos[0];
     document.getElementById('modalAvisoTitulo').textContent   = aviso.titulo;
     document.getElementById('modalAvisoConteudo').textContent = aviso.conteudo;
-    document.getElementById('modalAvisoUrgente').dataset.avisoId = aviso.id;
+    document.getElementById('modalAvisoUrgente').dataset.avisoId    = aviso.id;
+    document.getElementById('modalAvisoUrgente').dataset.avisoChave = chave(aviso);
     document.getElementById('modalAvisoUrgente').classList.add('ativo');
     _beep('erro');
     if (navigator.vibrate) navigator.vibrate([200,100,200,100,200]);
@@ -5079,13 +5081,13 @@ async function adminMarcarLida(id, btn) {
 //  POPUP DE AVISO URGENTE — listener fechar
 // ═══════════════════════════════════════════════════════════
 document.getElementById('btnFecharAvisoUrgente').addEventListener('click', () => {
-  const modal  = document.getElementById('modalAvisoUrgente');
-  const avisoId = modal.dataset.avisoId;
+  const modal = document.getElementById('modalAvisoUrgente');
+  const chave = modal.dataset.avisoChave;
   // Marca como lido hoje para não mostrar novamente até amanhã
-  if (avisoId) {
+  if (chave) {
     const hoje  = new Date().toISOString().split('T')[0];
     const lidos = JSON.parse(localStorage.getItem('avisos_lidos') || '{}');
-    lidos[avisoId] = hoje;
+    lidos[chave] = hoje;
     // Limpa lidos antigos (mantém só os últimos 30 dias)
     Object.keys(lidos).forEach(k => { if(lidos[k] < hoje) delete lidos[k]; });
     localStorage.setItem('avisos_lidos', JSON.stringify(lidos));
