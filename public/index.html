@@ -1186,6 +1186,7 @@ button:focus-visible,a:focus-visible{outline:3px solid var(--verde);outline-offs
         <div class="fg"><label for="adminAvisoConteudo">Conteúdo</label>
           <textarea id="adminAvisoConteudo" rows="3" placeholder="Descreva o comunicado..."></textarea></div>
         <button class="btn btn-verde btn-sm" id="btnPublicarAviso">📢 Publicar Aviso</button>
+        <button class="btn btn-sm" id="btnCancelarEdicaoAviso" style="display:none;background:#eee;color:#666">✖ Cancelar edição</button>
       </div>
       <div class="acrd">
         <div class="acrd-t">📋 Avisos Publicados</div>
@@ -1733,8 +1734,9 @@ const api = {
   listarAcessos(data, status){ return this.get(`/api/acessos?acao=listar&data=${data||''}&status=${status||''}`); },
   encerrarAcesso(id)         { return this.post('/api/acessos?acao=encerrar', { acesso_id: id }); },
   // Avisos e Sugestoes
-  listarAvisos()             { return this.get('/api/avisos'); },
+listarAvisos()             { return this.get('/api/avisos'); },
   criarAviso(dados)          { return this.post('/api/avisos', dados); },
+  atualizarAviso(id, dados)  { return this.req('PUT', '/api/avisos', { id, ...dados }); },
   deletarAviso(id)           { return this.req('DELETE', '/api/avisos', { id }); },
   enviarSugestao(dados)      { return this.post('/api/sugestoes', dados); },
   listarSugestoes()          { return this.get('/api/sugestoes'); },
@@ -2238,7 +2240,8 @@ function bindEventos() {
 
   // Admin — salvar config
   document.getElementById('btnSalvarConfig').onclick = adminSalvarConfig;
-  document.getElementById('btnPublicarAviso').onclick = adminPublicarAviso;
+document.getElementById('btnPublicarAviso').onclick = adminPublicarAviso;
+  document.getElementById('btnCancelarEdicaoAviso').onclick = adminCancelarEdicaoAviso;
   document.getElementById('btnSincronizarControlId').onclick = adminSincronizarControlId;
 
   // Sugestões
@@ -4814,14 +4817,12 @@ async function verificarAvisosUrgentes() {
     if (!urgentes.length) return;
     const hoje = new Date().toISOString().split('T')[0];
     const lidos = JSON.parse(localStorage.getItem('avisos_lidos') || '{}');
-    const chave = a => `${a.id}::${a.updated_at || a.created_at}`;
-    const naoLidos = urgentes.filter(a => lidos[chave(a)] !== hoje);
+    const naoLidos = urgentes.filter(a => lidos[a.id] !== hoje);
     if (!naoLidos.length) return;
     const aviso = naoLidos[0];
     document.getElementById('modalAvisoTitulo').textContent   = aviso.titulo;
     document.getElementById('modalAvisoConteudo').textContent = aviso.conteudo;
-    document.getElementById('modalAvisoUrgente').dataset.avisoId    = aviso.id;
-    document.getElementById('modalAvisoUrgente').dataset.avisoChave = chave(aviso);
+    document.getElementById('modalAvisoUrgente').dataset.avisoId = aviso.id;
     document.getElementById('modalAvisoUrgente').classList.add('ativo');
     _beep('erro');
     if (navigator.vibrate) navigator.vibrate([200,100,200,100,200]);
@@ -5081,13 +5082,13 @@ async function adminMarcarLida(id, btn) {
 //  POPUP DE AVISO URGENTE — listener fechar
 // ═══════════════════════════════════════════════════════════
 document.getElementById('btnFecharAvisoUrgente').addEventListener('click', () => {
-  const modal = document.getElementById('modalAvisoUrgente');
-  const chave = modal.dataset.avisoChave;
+  const modal  = document.getElementById('modalAvisoUrgente');
+  const avisoId = modal.dataset.avisoId;
   // Marca como lido hoje para não mostrar novamente até amanhã
-  if (chave) {
+  if (avisoId) {
     const hoje  = new Date().toISOString().split('T')[0];
     const lidos = JSON.parse(localStorage.getItem('avisos_lidos') || '{}');
-    lidos[chave] = hoje;
+    lidos[avisoId] = hoje;
     // Limpa lidos antigos (mantém só os últimos 30 dias)
     Object.keys(lidos).forEach(k => { if(lidos[k] < hoje) delete lidos[k]; });
     localStorage.setItem('avisos_lidos', JSON.stringify(lidos));
