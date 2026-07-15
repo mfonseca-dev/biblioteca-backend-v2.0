@@ -6058,8 +6058,14 @@ async function adminEnviarPush() {
     const res = await api.post('/api/notificacoes?acao=enviar', { titulo, corpo, tipo });
     if (statusEl) statusEl.textContent = `✅ Enviado para ${res.enviados} dispositivo(s). Falhas: ${res.falhas}`;
     toast(`✅ Push enviado para ${res.enviados} dispositivos!`);
+    setTimeout(() => {
+      if (statusEl) statusEl.style.display = 'none';
+      document.getElementById('pushTitulo').value = '';
+      document.getElementById('pushCorpo').value  = '';
+    }, 4000);
   } catch(e) {
     if (statusEl) { statusEl.style.background='#fff5f5'; statusEl.style.color='var(--vermelho)'; statusEl.textContent='❌ Erro: '+e.message; }
+    setTimeout(() => { if (statusEl) statusEl.style.display = 'none'; }, 5000);
   }
 }
 </script>
