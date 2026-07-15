@@ -772,7 +772,8 @@ button:focus-visible,a:focus-visible{outline:3px solid var(--verde);outline-offs
           <span style="background:#eef3ff;color:var(--azul);padding:2px 8px;border-radius:10px;font-weight:600;margin-right:6px">💳 Pague no app</span> Confirma vaga e libera catraca<br>
           <span style="background:#e8f5ee;color:var(--verde);padding:2px 8px;border-radius:10px;font-weight:600;margin-right:6px">🚦 Catraca libera</span> Reconhecimento facial — acesso direto<br>
 <span style="background:#e8f5ee;color:var(--verde);padding:2px 8px;border-radius:10px;font-weight:600;margin-right:6px">🟢 Acesso até 19h45</span> Pode sair e voltar à vontade<br>
-          <span style="background:#f0f0f0;color:#777;padding:2px 8px;border-radius:10px;font-weight:600;margin-right:6px">🚪 Sair e Liberar Vaga</span> Encerra o acesso — próxima entrada exige novo pagamento
+         <span style="background:#f0f0f0;color:#777;padding:2px 8px;border-radius:10px;font-weight:600;margin-right:6px">🚪 Sair e Liberar Vaga</span> Encerra o acesso — próxima entrada exige novo pagamento<br>
+          <span style="background:#fff3e0;color:#e65100;padding:2px 8px;border-radius:10px;font-weight:600;margin-right:6px">⚠️ Atenção</span> Novos acessos somente até as 19h — após esse horário não é possível realizar pagamento e ingressar
         </div>
       </div>
     </div>
@@ -3507,6 +3508,14 @@ async function _iniciarCobrancaPix() {
       body: JSON.stringify({ usuario_id: sess.usuario.id, origem: 'app' })
     });
     const data = await res.json();
+
+    // ── Trata erros HTTP (403 bloqueado/horário, 429 rate limit, etc) ──
+    if (!res.ok) {
+      document.getElementById('pixCarregando').style.display = 'none';
+      document.getElementById('modalPagamento').classList.remove('ativo');
+      toast('❌ ' + (data.erro || 'Não foi possível processar o pagamento.'));
+      return;
+    }
 
    if (data.status === 'confirmado') {
       // Já tem acesso hoje (ou acabou de reabrir o acesso)
