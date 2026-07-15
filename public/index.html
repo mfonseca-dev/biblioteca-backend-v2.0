@@ -1187,7 +1187,6 @@ button:focus-visible,a:focus-visible{outline:3px solid var(--verde);outline-offs
         <div class="fg"><label for="adminAvisoConteudo">Conteúdo</label>
           <textarea id="adminAvisoConteudo" rows="3" placeholder="Descreva o comunicado..."></textarea></div>
         <button class="btn btn-verde btn-sm" id="btnPublicarAviso">📢 Publicar Aviso</button>
-        <button class="btn btn-sm" id="btnCancelarEdicaoAviso" style="display:none;background:#eee;color:#666">✖ Cancelar edição</button>
       </div>
       <div class="acrd">
         <div class="acrd-t">📋 Avisos Publicados</div>
@@ -2244,7 +2243,6 @@ function bindEventos() {
   // Admin — salvar config
   document.getElementById('btnSalvarConfig').onclick = adminSalvarConfig;
 document.getElementById('btnPublicarAviso').onclick = adminPublicarAviso;
-  document.getElementById('btnCancelarEdicaoAviso').onclick = adminCancelarEdicaoAviso;
   document.getElementById('btnSincronizarControlId').onclick = adminSincronizarControlId;
 
   // Sugestões
