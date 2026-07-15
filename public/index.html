@@ -1230,6 +1230,8 @@ button:focus-visible,a:focus-visible{outline:3px solid var(--verde);outline-offs
           <input type="text" id="cfgTaxa" placeholder="Ex: 10,00"></div>
         <div class="fg"><label for="cfgTimeout">Timeout vaga ociosa (minutos)</label>
           <input type="number" id="cfgTimeout" value="30" min="5"></div>
+        <div class="fg"><label for="cfgHoraLimite">Horário limite para novos acessos</label>
+          <input type="time" id="cfgHoraLimite" value="19:00"></div>
         <hr style="border:none;border-top:1px solid #eee;margin:13px 0">
         <div class="acrd-t" style="font-size:.87rem;margin-bottom:9px">💳 Dados Pix</div>
         <div class="fg"><label for="cfgPixChave">Chave Pix</label>
@@ -2450,6 +2452,7 @@ async function adminCarregarConfigForm() {
     set('cfgVagas',         cfg.total_vagas);
     set('cfgTaxa',          cfg.valor_diaria);
     set('cfgTimeout',       cfg.timeout_vaga_minutos);
+    set('cfgHoraLimite',    cfg.hora_limite_acesso);
     set('cfgPixChave',      cfg.pix_chave);
     set('cfgPixNome',       cfg.pix_nome);
     set('cfgGatewayTipo',   cfg.gateway_tipo);
@@ -4670,6 +4673,7 @@ async function adminSalvarConfig() {
     taxa_credito:         document.getElementById('cfgTaxaCredito')?.value || '',
     taxa_debito:          document.getElementById('cfgTaxaDebito')?.value || '',
     timeout_vaga_minutos: document.getElementById('cfgTimeout').value,
+    hora_limite_acesso:   document.getElementById('cfgHoraLimite').value,
     pix_chave:            document.getElementById('cfgPixChave').value,
     pix_nome:             document.getElementById('cfgPixNome').value,
     gateway_tipo:         document.getElementById('cfgGatewayTipo')?.value || '',
