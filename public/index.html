@@ -1220,7 +1220,7 @@ button:focus-visible,a:focus-visible{outline:3px solid var(--verde);outline-offs
       </div>
     </div>
 
-    <div id="adminPanelConfig" class="apanel">
+<div id="adminPanelConfig" class="apanel">
       <div class="acrd">
         <div class="acrd-t">⚙️ Configurações</div>
         <div class="fg"><label for="cfgVagas">Total de vagas</label>
@@ -1237,6 +1237,19 @@ button:focus-visible,a:focus-visible{outline:3px solid var(--verde);outline-offs
           <input type="text" id="cfgPixChave" placeholder="CNPJ, CPF, e-mail ou telefone"></div>
         <div class="fg"><label for="cfgPixNome">Nome do Beneficiário</label>
         <input type="text" id="cfgPixNome" name="cfg-pix-nome-x7f2" autocomplete="off" placeholder="Ala dos Estudantes Educador Paiva Netto"></div>
+        <hr style="border:none;border-top:1px solid #eee;margin:13px 0">
+        <div class="acrd-t" style="font-size:.87rem;margin-bottom:9px">📍 Geolocalização (bloqueio por distância)</div>
+        <div class="fg"><label for="cfgGeolocAtivo">Bloqueio por localização</label>
+          <select id="cfgGeolocAtivo">
+            <option value="false">Desativado</option>
+            <option value="true">Ativado</option>
+          </select></div>
+        <div class="fg"><label for="cfgGeolocLat">Latitude da biblioteca</label>
+          <input type="text" id="cfgGeolocLat" placeholder="Ex: -15.823776"></div>
+        <div class="fg"><label for="cfgGeolocLng">Longitude da biblioteca</label>
+          <input type="text" id="cfgGeolocLng" placeholder="Ex: -47.929757"></div>
+        <div class="fg"><label for="cfgGeolocRaio">Raio permitido (metros)</label>
+          <input type="number" id="cfgGeolocRaio" value="200" min="10"></div>
         <hr style="border:none;border-top:1px solid #eee;margin:13px 0">
         <div class="acrd-t" style="font-size:.87rem;margin-bottom:9px">🏦 Gateway de Pagamento</div>
         <div style="background:#f0f7f0;border:1.5px solid #a8d5b5;border-radius:8px;padding:10px;font-size:.78rem;color:#1a6b3a;margin-bottom:10px;line-height:1.6">
@@ -2447,6 +2460,10 @@ async function adminCarregarConfigForm() {
     (res.configuracoes || []).forEach(c => cfg[c.chave] = c.valor);
 
     const set = (id, val) => { const el = document.getElementById(id); if(el && val !== undefined) el.value = val; };
+    set('cfgGeolocAtivo',   cfg.geoloc_ativo);
+    set('cfgGeolocLat',     cfg.geoloc_lat);
+    set('cfgGeolocLng',     cfg.geoloc_lng);
+    set('cfgGeolocRaio',    cfg.geoloc_raio_metros);
     set('cfgVagas',         cfg.total_vagas);
     set('cfgTaxa',          cfg.valor_diaria);
     set('cfgTimeout',       cfg.timeout_vaga_minutos);
@@ -3420,7 +3437,109 @@ function comprimirFoto(dataUrl, maxSize, quality) {
   });
 }
 // ────────────────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════
+//  GEOLOCALIZAÇÃO — bloqueia pagamento se o usuário estiver
+//  fisicamente longe da biblioteca.
+//
+//  COMO INSTALAR:
+//  1. Cole este bloco inteiro em public/index.html, logo ANTES
+//     da função abrirModalPagamento() (procure por essa linha
+//     no seu arquivo: "async function abrirModalPagamento()").
+//
+//  2. Dentro de abrirModalPagamento(), localize este trecho:
+//
+//   const cfg = {};
+    (cfgRes.configuracoes || []).forEach(c => { cfg[c.chave] = c.valor; });
 
+    const loc = await verificarLocalizacaoPermitida(cfg);
+    if (!loc.ok) {
+      document.getElementById('modalPagamento').classList.remove('ativo');
+      toast('📍 ' + loc.motivo);
+      return;
+    }
+//
+//  3. Rode o arquivo 01-config-geolocalizacao.sql no Supabase
+//     (uma vez só) para criar as configurações.
+//
+//  4. No painel Admin, em Configurações, adicione 4 campos
+//     (mesmo padrão dos outros campos de configuração já existentes):
+//       - geoloc_ativo        (true/false)
+//       - geoloc_lat          (latitude da biblioteca)
+//       - geoloc_lng          (longitude da biblioteca)
+//       - geoloc_raio_metros  (raio permitido, ex: 150)
+//
+//     Como pegar a latitude/longitude exata:
+//       a) Abra o Google Maps no celular, dentro da biblioteca
+//       b) Segure o dedo no ponto exato até aparecer um pino
+//       c) As coordenadas aparecem na barra de busca (ex: -15.79xxx, -47.88xxx)
+//       d) Copie e cole nos campos geoloc_lat / geoloc_lng
+//
+//  IMPORTANTE: enquanto geoloc_lat/geoloc_lng estiverem vazios,
+//  ou geoloc_ativo = 'false', a checagem NÃO bloqueia ninguém —
+//  é seguro fazer o deploy antes de configurar as coordenadas.
+// ═══════════════════════════════════════════════════════════
+
+function _calcularDistanciaMetros(lat1, lon1, lat2, lon2) {
+  const R = 6371000; // raio da Terra em metros
+  const toRad = deg => deg * Math.PI / 180;
+  const dLat = toRad(lat2 - lat1);
+  const dLon = toRad(lon2 - lon1);
+  const a = Math.sin(dLat / 2) ** 2 +
+            Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2;
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c;
+}
+
+function _obterLocalizacaoAtual() {
+  return new Promise((resolve, reject) => {
+    if (!navigator.geolocation) {
+      reject(new Error('Geolocalização não suportada neste navegador'));
+      return;
+    }
+    navigator.geolocation.getCurrentPosition(
+      pos => resolve({
+        lat: pos.coords.latitude,
+        lng: pos.coords.longitude,
+        precisao: pos.coords.accuracy
+      }),
+      err => reject(err),
+      { enableHighAccuracy: true, timeout: 8000, maximumAge: 30000 }
+    );
+  });
+}
+
+// Retorna { ok: true } se pode pagar, ou { ok: false, motivo } se está longe.
+// Decisão de produto: se a localização falhar (permissão negada, timeout,
+// GPS ruim dentro do prédio), o pagamento é LIBERADO mesmo assim — para não
+// bloquear gente que está fisicamente lá dentro por causa de sinal fraco.
+// A checagem só bloqueia quando CONSEGUE confirmar que a pessoa está longe.
+async function verificarLocalizacaoPermitida(cfg) {
+  if (cfg.geoloc_ativo !== 'true') return { ok: true };
+
+  const libLat = parseFloat(cfg.geoloc_lat);
+  const libLng = parseFloat(cfg.geoloc_lng);
+  const raio   = parseFloat(cfg.geoloc_raio_metros || '150');
+
+  if (isNaN(libLat) || isNaN(libLng)) return { ok: true }; // não configurado ainda
+
+  try {
+    const pos  = await _obterLocalizacaoAtual();
+    const dist = _calcularDistanciaMetros(pos.lat, pos.lng, libLat, libLng);
+
+    if (dist > raio) {
+      return {
+        ok: false,
+        motivo: `Você parece estar a ${Math.round(dist)}m da biblioteca. Aproxime-se para efetuar o pagamento.`
+      };
+    }
+    return { ok: true };
+
+  } catch (e) {
+    // Permissão negada, timeout, ou GPS indisponível — não bloqueia.
+    console.warn('[geolocalizacao] Não foi possível confirmar localização:', e.message);
+    return { ok: true };
+  }
+}
 // ── Abre modal e já inicia a cobrança ──────────────────────
 async function abrirModalPagamento() {
   // ── Verifica acesso especial ativo ──────────────────────────
@@ -4674,6 +4793,10 @@ async function adminSalvarConfig() {
     hora_limite_acesso:   document.getElementById('cfgHoraLimite').value,
     pix_chave:            document.getElementById('cfgPixChave').value,
     pix_nome:             document.getElementById('cfgPixNome').value,
+    geoloc_ativo:         document.getElementById('cfgGeolocAtivo')?.value || 'false',
+    geoloc_lat:           document.getElementById('cfgGeolocLat')?.value || '',
+    geoloc_lng:           document.getElementById('cfgGeolocLng')?.value || '',
+    geoloc_raio_metros:   document.getElementById('cfgGeolocRaio')?.value || '200',
     gateway_tipo:         document.getElementById('cfgGatewayTipo')?.value || '',
     gateway_chave:        document.getElementById('cfgGatewayChave')?.value || '',
     gateway_chave_pix:    document.getElementById('cfgGatewayChavePix')?.value || '',
