@@ -1,11 +1,31 @@
 {
   "outputDirectory": "public",
   "routes": [
-    { "src": "/api/agente/(.*)", "dest": "/api/index" },
-    { "src": "/api/(.*)", "dest": "/api/index" },
-    { "src": "/totem", "dest": "/totem.html" },
-    { "handle": "filesystem" },
-    { "src": "/(.*)", "dest": "/index.html" }
+    {
+      "src": "/api/agente/(.*)",
+      "dest": "/api/index"
+    },
+    {
+      "src": "/api/(.*)",
+      "dest": "/api/index"
+    },
+    {
+      "src": "/totem",
+      "dest": "/totem.html",
+      "headers": {
+        "Cache-Control": "no-cache, no-store, must-revalidate"
+      }
+    },
+    {
+      "handle": "filesystem"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html",
+      "headers": {
+        "Cache-Control": "no-cache, no-store, must-revalidate"
+      }
+    }
   ],
   "crons": [
     {
