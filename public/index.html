@@ -3449,14 +3449,14 @@ function comprimirFoto(dataUrl, maxSize, quality) {
 //  2. Dentro de abrirModalPagamento(), localize este trecho:
 //
 //   const cfg = {};
-    (cfgRes.configuracoes || []).forEach(c => { cfg[c.chave] = c.valor; });
-
-    const loc = await verificarLocalizacaoPermitida(cfg);
-    if (!loc.ok) {
-      document.getElementById('modalPagamento').classList.remove('ativo');
-      toast('📍 ' + loc.motivo);
-      return;
-    }
+//   (cfgRes.configuracoes || []).forEach(c => { cfg[c.chave] = c.valor; });
+//   const loc = await verificarLocalizacaoPermitida(cfg);
+//   if (!loc.ok) {
+//     document.getElementById('modalPagamento').classList.remove('ativo');
+//     toast('📍 ' + loc.motivo);
+//     return;
+//   }
+ 
 //
 //  3. Rode o arquivo 01-config-geolocalizacao.sql no Supabase
 //     (uma vez só) para criar as configurações.
