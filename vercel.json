@@ -31,6 +31,11 @@
     {
       "path": "/api/acessos?acao=reset-diario&token=edb8d8926d28bb2d540456fdc558e4df08d4447cda57750f2b4355774890dccf",
       "schedule": "45 22 * * *"
+    },
+    {
+      "path": "/api/acessos?acao=processar-garantias&token=edb8d8926d28bb2d540456fdc558e4df08d4447cda57750f2b4355774890dccf",
+      "schedule": "*/5 * * * *"
     }
   ]
 }
+
