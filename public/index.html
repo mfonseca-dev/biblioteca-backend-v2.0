@@ -1238,18 +1238,15 @@ button:focus-visible,a:focus-visible{outline:3px solid var(--verde);outline-offs
         <div class="fg"><label for="cfgPixNome">Nome do Beneficiário</label>
         <input type="text" id="cfgPixNome" name="cfg-pix-nome-x7f2" autocomplete="off" placeholder="Ala dos Estudantes Educador Paiva Netto"></div>
         <hr style="border:none;border-top:1px solid #eee;margin:13px 0">
-        <div class="acrd-t" style="font-size:.87rem;margin-bottom:9px">📍 Geolocalização (bloqueio por distância)</div>
-        <div class="fg"><label for="cfgGeolocAtivo">Bloqueio por localização</label>
-          <select id="cfgGeolocAtivo">
-            <option value="false">Desativado</option>
-            <option value="true">Ativado</option>
-          </select></div>
-        <div class="fg"><label for="cfgGeolocLat">Latitude da biblioteca</label>
-          <input type="text" id="cfgGeolocLat" placeholder="Ex: -15.823776"></div>
-        <div class="fg"><label for="cfgGeolocLng">Longitude da biblioteca</label>
-          <input type="text" id="cfgGeolocLng" placeholder="Ex: -47.929757"></div>
-        <div class="fg"><label for="cfgGeolocRaio">Raio permitido (metros)</label>
-          <input type="number" id="cfgGeolocRaio" value="200" min="10"></div>
+        <div class="acrd-t" style="font-size:.87rem;margin-bottom:9px">🅿️ Garantia de Vaga</div>
+        <div class="fg"><label for="cfgTravaAuto">Garantia automática após saída (minutos)</label>
+          <input type="number" id="cfgTravaAuto" value="60" min="1"></div>
+        <div class="fg"><label for="cfgTravaManual">Garantia manual — botão "travar vaga" (minutos)</label>
+          <input type="number" id="cfgTravaManual" value="180" min="1"></div>
+        <div class="fg"><label for="cfgPrazoPosPagamento">Prazo para acessar a catraca após pagar (minutos)</label>
+          <input type="number" id="cfgPrazoPosPagamento" value="30" min="1"></div>
+        <div class="fg"><label for="cfgToleranciaCatraca">Tolerância extra da catraca (minutos)</label>
+          <input type="number" id="cfgToleranciaCatraca" value="5" min="0"></div>
         <hr style="border:none;border-top:1px solid #eee;margin:13px 0">
         <div class="acrd-t" style="font-size:.87rem;margin-bottom:9px">🏦 Gateway de Pagamento</div>
         <div style="background:#f0f7f0;border:1.5px solid #a8d5b5;border-radius:8px;padding:10px;font-size:.78rem;color:#1a6b3a;margin-bottom:10px;line-height:1.6">
@@ -2460,10 +2457,10 @@ async function adminCarregarConfigForm() {
     (res.configuracoes || []).forEach(c => cfg[c.chave] = c.valor);
 
     const set = (id, val) => { const el = document.getElementById(id); if(el && val !== undefined) el.value = val; };
-    set('cfgGeolocAtivo',   cfg.geoloc_ativo);
-    set('cfgGeolocLat',     cfg.geoloc_lat);
-    set('cfgGeolocLng',     cfg.geoloc_lng);
-    set('cfgGeolocRaio',    cfg.geoloc_raio_metros);
+    set('cfgTravaAuto',     cfg.trava_vaga_automatica_minutos);
+    set('cfgTravaManual',   cfg.trava_vaga_manual_minutos);
+    set('cfgPrazoPosPagamento', cfg.prazo_acesso_pos_pagamento_minutos);
+    set('cfgToleranciaCatraca', cfg.tolerancia_catraca_minutos);
     set('cfgVagas',         cfg.total_vagas);
     set('cfgTaxa',          cfg.valor_diaria);
     set('cfgTimeout',       cfg.timeout_vaga_minutos);
@@ -4797,10 +4794,10 @@ async function adminSalvarConfig() {
     hora_limite_acesso:   document.getElementById('cfgHoraLimite').value,
     pix_chave:            document.getElementById('cfgPixChave').value,
     pix_nome:             document.getElementById('cfgPixNome').value,
-    geoloc_ativo:         document.getElementById('cfgGeolocAtivo')?.value || 'false',
-    geoloc_lat:           document.getElementById('cfgGeolocLat')?.value || '',
-    geoloc_lng:           document.getElementById('cfgGeolocLng')?.value || '',
-    geoloc_raio_metros:   document.getElementById('cfgGeolocRaio')?.value || '200',
+    trava_vaga_automatica_minutos:      document.getElementById('cfgTravaAuto')?.value || '60',
+    trava_vaga_manual_minutos:          document.getElementById('cfgTravaManual')?.value || '180',
+    prazo_acesso_pos_pagamento_minutos: document.getElementById('cfgPrazoPosPagamento')?.value || '30',
+    tolerancia_catraca_minutos:         document.getElementById('cfgToleranciaCatraca')?.value || '5',
     gateway_tipo:         document.getElementById('cfgGatewayTipo')?.value || '',
     gateway_chave:        document.getElementById('cfgGatewayChave')?.value || '',
     gateway_chave_pix:    document.getElementById('cfgGatewayChavePix')?.value || '',
