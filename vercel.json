@@ -29,9 +29,8 @@
   ],
   "crons": [
     {
-      "path": "/api/acessos?acao=reset-diario&token=COLE_SEU_CRON_TOKEN_AQUI",
+      "path": "/api/acessos?acao=reset-diario",
       "schedule": "45 22 * * *"
     }
   ]
 }
-
