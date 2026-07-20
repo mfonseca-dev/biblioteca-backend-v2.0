@@ -3756,7 +3756,9 @@ function _iniciarPollStatus() {
   _pollPagamento = setInterval(async () => {
     if (!sess.usuario) { clearInterval(_pollPagamento); return; }
     try {
-      const r = await fetch(`${API_BASE}/api/pagamentos?acao=status-hoje&usuario_id=${sess.usuario.id}`);
+      const r = await fetch(`${API_BASE}/api/pagamentos?acao=status-hoje&usuario_id=${sess.usuario.id}`, {
+        headers: { 'Authorization': `Bearer ${api.token}` }
+      });
       const d = await r.json();
       if (d.status === 'confirmado') {
         clearInterval(_pollPagamento);
@@ -4419,7 +4421,9 @@ async function recepCobrarStone(usuarioId, nomeUsuario, btn) {
       tentativas++;
       if (tentativas > 60) { clearInterval(poll); return; }
       try {
-        const st = await fetch(`${API_BASE}/api/pagamentos?acao=status-hoje&usuario_id=${usuarioId}`).then(r=>r.json());
+        const st = await fetch(`${API_BASE}/api/pagamentos?acao=status-hoje&usuario_id=${usuarioId}`, {
+          headers: { 'Authorization': `Bearer ${api.token}` }
+        }).then(r=>r.json());
         if (st.status === 'confirmado') {
           clearInterval(poll);
           toast('✅ Pagamento confirmado! Catraca liberada.');
