@@ -1029,9 +1029,15 @@ button:focus-visible,a:focus-visible{outline:3px solid var(--verde);outline-offs
           <div class="vs livres"><div class="num" id="rVL2">--</div><div class="lbl">Livres</div></div>
           <div class="vs ocupadas"><div class="num" id="rVO2">--</div><div class="lbl">Ocupadas</div></div>
         </div>
-        <div class="barra-w">
+     <div class="barra-w">
           <div class="barra-lbl"><span>Ocupação</span><span id="rPct">0%</span></div>
           <div class="barra"><div class="barra-fill" id="rBarraFill" style="width:0%"></div></div>
+        </div>
+        <div style="margin-top:14px">
+        <button class="btn btn-sec btn-sm" id="btnToggleOcupantes" onclick="toggleListaOcupantes('recepcao')">▾ Ver quem está aqui</button>
+          <div id="listaOcupantesWrap" style="display:none;margin-top:10px">
+            <div id="listaOcupantes" style="max-height:320px;overflow-y:auto"></div>
+          </div>
         </div>
       </div>
     </div>
@@ -1076,11 +1082,17 @@ button:focus-visible,a:focus-visible{outline:3px solid var(--verde);outline-offs
     <button class="btn btn-sec btn-sm" id="btnSairAdmin" style="color:#fff;border-color:rgba(255,255,255,.3);background:rgba(255,255,255,.1)">← Sair</button>
   </div>
   <div class="admin-main">
-    <div class="admin-stats">
+  <div class="admin-stats">
       <div class="astat verde"><div class="av" id="aVL">--</div><div class="ak">Vagas Livres</div></div>
       <div class="astat vermelho"><div class="av" id="aVO">--</div><div class="ak">Ocupadas</div></div>
       <div class="astat azul"><div class="av" id="aPresentes">--</div><div class="ak">Presentes</div></div>
       <div class="astat dourado"><div class="av" id="aTotalU">--</div><div class="ak">Usuários</div></div>
+    </div>
+    <div style="margin-bottom:14px">
+      <button class="btn btn-sec btn-sm" id="btnToggleOcupantesAdmin" onclick="toggleListaOcupantes('admin')">▾ Ver quem está aqui</button>
+      <div id="listaOcupantesWrapAdmin" style="display:none;margin-top:10px">
+        <div id="listaOcupantesAdmin" style="max-height:320px;overflow-y:auto"></div>
+      </div>
     </div>
     <div class="atabs">
       <button class="atab ativo" data-apanel="adminPanelUsuarios">👥 Usuários</button>
@@ -1734,8 +1746,9 @@ const api = {
   // Auth
   login(tipo, senha)         { return this.post('/api/auth?acao=login-staff', { tipo, senha }); },
 
-  // Vagas
+// Vagas
   vagas()                    { return this.get('/api/vagas?acao=status'); },
+  listarOcupando()           { return this.get('/api/acessos?acao=listar&status=ocupando'); },
 
   // Usuários
   cadastrar(dados)           { return this.post('/api/usuarios?acao=cadastrar', dados); },
@@ -2501,12 +2514,67 @@ async function atualizarVagas() {
     document.getElementById('barraFill').style.width = pct+'%';
     document.getElementById('rPct').textContent = pct+'%';
     document.getElementById('rBarraFill').style.width = pct+'%';
-    document.getElementById('totalVagasInfo').textContent = `${d.total} vagas rotativas`;
+document.getElementById('totalVagasInfo').textContent = `${d.total} vagas rotativas`;
   } catch(e) {
     // silencioso — pode estar offline
   }
+  // Se a lista de "quem está aqui" estiver aberta (recepção ou admin), atualiza
+  const wrapRecep = document.getElementById('listaOcupantesWrap');
+  if (wrapRecep && wrapRecep.style.display !== 'none') {
+    carregarListaOcupantes('recepcao');
+  }
+  const wrapAdmin = document.getElementById('listaOcupantesWrapAdmin');
+  if (wrapAdmin && wrapAdmin.style.display !== 'none') {
+    carregarListaOcupantes('admin');
+  }
 }
 
+function _escapeHtml(s) {
+  const d = document.createElement('div');
+  d.textContent = s || '';
+  return d.innerHTML;
+}
+
+function _sufixoOcupantes(contexto) {
+  return contexto === 'admin' ? 'Admin' : '';
+}
+
+async function toggleListaOcupantes(contexto) {
+  const suf  = _sufixoOcupantes(contexto);
+  const wrap = document.getElementById('listaOcupantesWrap' + suf);
+  const btn  = document.getElementById('btnToggleOcupantes' + suf);
+  if (!wrap || !btn) return;
+  const abrir = wrap.style.display === 'none';
+  wrap.style.display = abrir ? 'block' : 'none';
+  btn.textContent = abrir ? '▴ Recolher' : '▾ Ver quem está aqui';
+  if (abrir) await carregarListaOcupantes(contexto);
+}
+
+async function carregarListaOcupantes(contexto) {
+  const suf = _sufixoOcupantes(contexto);
+  const el  = document.getElementById('listaOcupantes' + suf);
+  if (!el) return;
+  el.innerHTML = '<div class="sem"><span class="si">⏳</span>Carregando...</div>';
+  try {
+    const d = await api.listarOcupando();
+    if (!d.acessos || !d.acessos.length) {
+      el.innerHTML = '<div class="sem">Ninguém no momento</div>';
+      return;
+    }
+    el.innerHTML = d.acessos.map(a => {
+      const nome    = _escapeHtml(a.usuarios?.nome || 'Desconhecido');
+      const dentro  = a.status === 'ativo';
+      const hora    = new Date(a.entrada_em).toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'});
+      const status  = dentro ? `entrou ${hora}` : 'fora — vaga garantida';
+      const ponto   = dentro ? '🟢' : '🟡';
+      return `<div style="display:flex;justify-content:space-between;padding:6px 4px;border-bottom:1px solid rgba(0,0,0,.06);font-size:.85rem">
+        <span>${ponto} ${nome}</span><span style="color:#888">${status}</span>
+      </div>`;
+    }).join('');
+  } catch(e) {
+    el.innerHTML = '<div class="sem">Erro ao carregar</div>';
+  }
+}
 // ═══════════════════════════════════════════════════════════
 //  LOGIN USUÁRIO
 // ═══════════════════════════════════════════════════════════
