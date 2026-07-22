@@ -764,6 +764,10 @@ button:focus-visible,a:focus-visible{outline:3px solid var(--verde);outline-offs
         <button class="btn btn-vermelho" id="btnSairLiberar" style="display:none;margin-top:9px">
           🚪 Sair e Liberar Vaga
         </button>
+        <div id="garantiaInfo" style="display:none;margin-top:9px;text-align:center;font-size:.78rem;color:var(--azul);font-weight:600"></div>
+        <button class="btn btn-azul" id="btnTravarVaga" style="display:none;margin-top:9px">
+          🔒 Travar Vaga
+        </button>
         <p style="font-size:.71rem;color:#aaa;margin-top:9px;text-align:center">⏰ Funcionamento: todos os dias — 8h às 19h45</p>
       </div>
   <div class="crd" style="padding:14px 16px">
@@ -3491,6 +3495,7 @@ async function verificarAcessoHoje() {
     // FIX: usa endpoint dedicado ao próprio usuário (não exige auth admin)
     const res = await api.get(`/api/acessos?acao=meu&usuario_id=${sess.usuario.id}`);
     sess.acesso = res.acesso || null;
+    sess.garantia = res.garantia || null;
     renderizarStatusAcesso();
   } catch(e) {
     renderizarStatusAcesso();
@@ -3505,6 +3510,8 @@ function renderizarStatusAcesso() {
   const lblBtn       = document.getElementById('lblBtn');
   const ticket       = document.getElementById('blocoTicket');
   const btnSairLib   = document.getElementById('btnSairLiberar');
+  const btnTravar    = document.getElementById('btnTravarVaga');
+  const garantiaInfo = document.getElementById('garantiaInfo');
 
   if(sess.acesso) {
     box.className = 'st-box presente';
@@ -3513,9 +3520,31 @@ function renderizarStatusAcesso() {
     lblBtn.textContent = '✅ Acesso Ativo';
     btn.disabled = true;
     if (btnSairLib) btnSairLib.style.display = 'block';
+    if (btnTravar) btnTravar.style.display = 'none';
+    if (garantiaInfo) garantiaInfo.style.display = 'none';
     ticket.style.display = 'block';
     document.getElementById('ticketNome').textContent = sess.usuario.nome;
     document.getElementById('ticketDetalhe').textContent = `CPF: ${fmtCpf(sess.usuario.cpf)} • Entrada: ${fmtHora(sess.acesso.entrada_em)}`;
+  } else if (sess.garantia) {
+    box.className = 'st-box presente';
+    dot.className = 'dot azul';
+    txt.textContent = 'Fora da biblioteca — vaga garantida';
+    lblBtn.textContent = '💳 Pagar e Garantir Acesso';
+    btn.disabled = false;
+    if (btnSairLib) btnSairLib.style.display = 'none';
+    ticket.style.display = 'none';
+
+    if (garantiaInfo) {
+      garantiaInfo.style.display = 'block';
+      garantiaInfo.textContent = `🔒 Vaga garantida até ${fmtHora(sess.garantia.vaga_garantida_ate)}`;
+    }
+    if (btnTravar) {
+      btnTravar.style.display = 'block';
+      btnTravar.disabled = !!sess.garantia.trava_manual;
+      btnTravar.textContent = sess.garantia.trava_manual
+        ? '🔒 Vaga já travada'
+        : '🔒 Travar Vaga';
+    }
   } else {
     box.className = 'st-box ausente';
     dot.className = 'dot cinza';
@@ -3523,6 +3552,8 @@ function renderizarStatusAcesso() {
     lblBtn.textContent = '💳 Pagar e Garantir Acesso';
     btn.disabled = false;
     if (btnSairLib) btnSairLib.style.display = 'none';
+    if (btnTravar) btnTravar.style.display = 'none';
+    if (garantiaInfo) garantiaInfo.style.display = 'none';
     ticket.style.display = 'none';
   }
 }
@@ -5827,6 +5858,34 @@ async function excluirAcessoEspecial(id, nome) {
 //  SAÍDA VOLUNTÁRIA — Usuário libera a própria vaga pelo app
 // ═══════════════════════════════════════════════════════════
 document.getElementById('btnSairLiberar').addEventListener('click', registrarSaidaUsuario);
+document.getElementById('btnTravarVaga').addEventListener('click', travarVagaUsuario);
+
+async function travarVagaUsuario() {
+  const btn = document.getElementById('btnTravarVaga');
+  btn.disabled = true;
+  const textoOriginal = btn.textContent;
+  btn.textContent = '⏳ Travando vaga...';
+
+  try {
+    const res = await fetch(API_BASE + '/api/acessos?acao=travar-vaga', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + api.token
+      },
+      body: JSON.stringify({ usuario_id: sess.usuario.id })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.erro || 'Erro ao travar vaga');
+
+    toast('🔒 ' + data.mensagem);
+    await verificarAcessoHoje();
+  } catch(e) {
+    toast('❌ ' + e.message);
+    btn.disabled = false;
+    btn.textContent = textoOriginal;
+  }
+}
 
 async function registrarSaidaUsuario() {
   if (!sess.acesso) return;
