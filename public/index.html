@@ -3778,7 +3778,7 @@ async function _iniciarCobrancaPix() {
   try {
     const res = await fetch(API_BASE + '/api/pagamentos?acao=criar-cobranca-pix', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${api.token}` },
       body: JSON.stringify({ usuario_id: sess.usuario.id, origem: 'app' })
     });
     const data = await res.json();
@@ -3984,7 +3984,7 @@ async function gerarLinkApp() {
   try {
     const res = await fetch(API_BASE + '/api/pagamentos?acao=gerar-link', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${api.token}` },
       body: JSON.stringify({ usuario_id: sess.usuario.id, tipo, origem: 'app' })
     });
     const data = await res.json();
