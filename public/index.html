@@ -3795,7 +3795,14 @@ async function _iniciarCobrancaPix() {
       // Já tem acesso hoje (ou acabou de reabrir o acesso)
       await verificarAcessoHoje();
       document.getElementById('modalPagamento').classList.remove('ativo');
-      toast(data.reentrada ? '✅ Bem-vindo de volta! Catraca liberada.' : '✅ Você já tem acesso ativo para hoje!');
+      const prazoMin = data.prazo_entrada_minutos;
+      if (data.reentrada) {
+        toast('✅ Bem-vindo de volta! Catraca liberada.');
+      } else if (prazoMin) {
+        toast(`✅ Acesso confirmado! Você tem ${prazoMin} min para passar pela catraca.`);
+      } else {
+        toast('✅ Você já tem acesso ativo para hoje!');
+      }
       return;
     }
     if (data.status === 'bloqueado') {
@@ -3920,7 +3927,10 @@ function _iniciarPollStatus() {
         document.getElementById('pagtoStatus').className = 'pagto-status pagto-ok';
         document.getElementById('pagtoStatus').textContent = '✅ Pagamento confirmado! Catraca liberada.';
         _beep('acesso');
-        toast('✅ Acesso liberado! Dirija-se à catraca.');
+        const prazoMin = d.prazo_entrada_minutos;
+        toast(prazoMin
+          ? `✅ Acesso liberado! Você tem ${prazoMin} min para passar pela catraca.`
+          : '✅ Acesso liberado! Dirija-se à catraca.');
         await verificarAcessoHoje();
         setTimeout(() => {
           document.getElementById('modalPagamento').classList.remove('ativo');
