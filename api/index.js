@@ -16,6 +16,7 @@ const agenteFila         = require('../lib/handlers/agente/fila.js');
 const agenteSalvarPerson = require('../lib/handlers/agente/salvar-person-id.js');
 const agenteCursorCatraca  = require('../lib/handlers/agente/cursor-catraca.js');
 const agenteCursorIDSecure = require('../lib/handlers/agente/cursor-idsecure.js');
+const agenteAlerta = require('../lib/handlers/agente/alerta.js');
 const rotas = {
   '/api/acessos-especiais': acessosEspeciais,
   '/api/auditoria':          auditoria,
@@ -35,6 +36,7 @@ const rotas = {
   '/api/agente/salvar-person-id': agenteSalvarPerson,
   '/api/agente/cursor-catraca':  agenteCursorCatraca,
   '/api/agente/cursor-idsecure': agenteCursorIDSecure,
+  '/api/agente/alerta': agenteAlerta,
 };
 
 module.exports = function handler(req, res) {
