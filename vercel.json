@@ -27,10 +27,15 @@
       }
     }
   ],
-  "crons": [
+ "crons": [
     {
       "path": "/api/acessos?acao=reset-diario",
       "schedule": "45 22 * * *"
+    },
+    {
+      "path": "/api/acessos?acao=processar-garantias",
+      "schedule": "0 23 * * *" }
     }
   ]
 }
+

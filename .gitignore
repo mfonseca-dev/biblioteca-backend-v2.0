@@ -56,3 +56,4 @@ iniciar-agente.bat
 .env.local
 fix_creditos.js
 fix_creditos2.js
+.env.production
