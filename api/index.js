@@ -13,6 +13,8 @@ const usuarios         = require('../lib/handlers/usuarios.js');
 const vagas            = require('../lib/handlers/vagas.js');
 const agenteConfirmar    = require('../lib/handlers/agente/confirmar.js');
 const agenteFila         = require('../lib/handlers/agente/fila.js');
+const agenteVinculosParaVerificar = require('../lib/handlers/agente/vinculos-para-verificar.js');
+const agenteVerificarVinculo      = require('../lib/handlers/agente/verificar-vinculo.js');
 const agenteSalvarPerson = require('../lib/handlers/agente/salvar-person-id.js');
 const agenteCursorCatraca  = require('../lib/handlers/agente/cursor-catraca.js');
 const agenteCursorIDSecure = require('../lib/handlers/agente/cursor-idsecure.js');
@@ -31,6 +33,8 @@ const rotas = {
   '/api/totem':             totem,
   '/api/usuarios':          usuarios,
   '/api/vagas':             vagas,
+  '/api/agente/vinculos-para-verificar': agenteVinculosParaVerificar,
+  '/api/agente/verificar-vinculo':       agenteVerificarVinculo,
   '/api/agente/confirmar':       agenteConfirmar,
   '/api/agente/fila':            agenteFila,
   '/api/agente/salvar-person-id': agenteSalvarPerson,
