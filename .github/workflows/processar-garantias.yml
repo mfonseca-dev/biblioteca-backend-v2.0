@@ -1,0 +1,14 @@
+name: Processar garantias
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch: {}
+
+jobs:
+  chamar-endpoint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Chamar processar-garantias
+        run: |
+          curl -sS -f "https://biblioteca-backend-v2-0.vercel.app/api/acessos?acao=processar-garantias&token=${{ secrets.CRON_TOKEN }}"
