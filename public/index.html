@@ -3502,6 +3502,26 @@ async function verificarAcessoHoje() {
   }
 }
 
+let _garantiaInterval = null;
+
+function _atualizarGarantiaCountdown() {
+  const garantiaInfo = document.getElementById('garantiaInfo');
+  if (!garantiaInfo || !sess.garantia) return;
+
+  const alvo = new Date(sess.garantia.vaga_garantida_ate).getTime();
+  const restanteMin = Math.round((alvo - Date.now()) / 60000);
+
+  if (restanteMin <= 0) {
+    garantiaInfo.textContent = `🔒 Vaga garantida até ${fmtHora(sess.garantia.vaga_garantida_ate)} · prazo encerrado`;
+    garantiaInfo.style.color = 'var(--vermelho)';
+    clearInterval(_garantiaInterval);
+    return;
+  }
+
+  garantiaInfo.textContent = `🔒 Vaga garantida até ${fmtHora(sess.garantia.vaga_garantida_ate)} · faltam ${restanteMin} min`;
+  garantiaInfo.style.color = restanteMin <= 10 ? 'var(--laranja)' : 'var(--azul)';
+}
+
 function renderizarStatusAcesso() {
   const box          = document.getElementById('statusBox');
   const dot          = document.getElementById('dotSt');
@@ -3512,6 +3532,8 @@ function renderizarStatusAcesso() {
   const btnSairLib   = document.getElementById('btnSairLiberar');
   const btnTravar    = document.getElementById('btnTravarVaga');
   const garantiaInfo = document.getElementById('garantiaInfo');
+
+  clearInterval(_garantiaInterval);
 
   if(sess.acesso) {
     box.className = 'st-box presente';
@@ -3536,7 +3558,8 @@ function renderizarStatusAcesso() {
 
     if (garantiaInfo) {
       garantiaInfo.style.display = 'block';
-      garantiaInfo.textContent = `🔒 Vaga garantida até ${fmtHora(sess.garantia.vaga_garantida_ate)}`;
+      _atualizarGarantiaCountdown();
+      _garantiaInterval = setInterval(_atualizarGarantiaCountdown, 30000);
     }
     if (btnTravar) {
       btnTravar.style.display = 'block';
