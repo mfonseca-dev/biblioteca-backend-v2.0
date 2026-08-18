@@ -49,9 +49,9 @@ self.addEventListener('push', event => {
     if (event.data) dados.corpo = event.data.text();
   }
 
-  const icones = { acesso:'✅', urgente:'🚨', manutencao:'🔧', lotado:'🚫', aviso:'📢' };
+  const icones = { acesso:'✅', urgente:'🚨', manutencao:'🔧', lotado:'🚫', aviso:'📢', vaga_expirando:'⏰' };
   const emoji  = icones[dados.tipo] || '📢';
-  const somMap = { urgente:'erro', lotado:'erro', manutencao:'acesso', acesso:'acesso', aviso:'acesso' };
+  const somMap = { urgente:'erro', lotado:'erro', manutencao:'acesso', acesso:'acesso', aviso:'acesso', vaga_expirando:'erro' };
   const somTipo = somMap[dados.tipo] || 'acesso';
 
   const opcoes = {
@@ -59,8 +59,8 @@ self.addEventListener('push', event => {
     icon:     '/icon-192.png',
     badge:    '/icon-192.png',
     tag:      dados.tipo || 'geral',
-    renotify: dados.tipo === 'urgente',
-    vibrate:  dados.tipo === 'urgente' ? [200, 100, 200, 100, 200] : [100],
+    renotify: dados.tipo === 'urgente' || dados.tipo === 'vaga_expirando',
+    vibrate:  (dados.tipo === 'urgente' || dados.tipo === 'vaga_expirando') ? [200, 100, 200, 100, 200] : [100],
     data:     { url: dados.url || '/', tipo: dados.tipo },
     actions:  dados.tipo === 'lotado'
       ? [{ action: 'verificar', title: '🔍 Ver vagas' }]
