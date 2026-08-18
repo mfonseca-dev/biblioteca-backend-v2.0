@@ -1295,38 +1295,40 @@ button:focus-visible,a:focus-visible{outline:3px solid var(--verde);outline-offs
     </div>
 
 <div id="adminPanelConfig" class="apanel">
-      <div class="acrd">
-        <div class="acrd-t">⚙️ Configurações</div>
-        <div class="fg"><label for="cfgVagas">Total de vagas</label>
-          <input type="number" id="cfgVagas" value="30" min="1" max="500"></div>
-        <div class="fg"><label for="cfgTaxa">Valor do acesso diário (R$)</label>
-          <input type="text" id="cfgTaxa" placeholder="Ex: 10,00"></div>
-        <div class="fg"><label for="cfgTimeout">Timeout vaga ociosa (minutos)</label>
-          <input type="number" id="cfgTimeout" value="30" min="5"></div>
-        <div class="fg"><label for="cfgHoraLimite">Horário limite para novos acessos</label>
-          <input type="time" id="cfgHoraLimite" value="19:00"></div>
-        <hr style="border:none;border-top:1px solid #eee;margin:13px 0">
-        <div class="acrd-t" style="font-size:.87rem;margin-bottom:9px">💳 Dados Pix</div>
-        <div class="fg"><label for="cfgPixChave">Chave Pix</label>
-          <input type="text" id="cfgPixChave" placeholder="CNPJ, CPF, e-mail ou telefone"></div>
-        <div class="fg"><label for="cfgPixNome">Nome do Beneficiário</label>
-        <input type="text" id="cfgPixNome" name="cfg-pix-nome-x7f2" autocomplete="off" placeholder="Ala dos Estudantes Educador Paiva Netto"></div>
-        <hr style="border:none;border-top:1px solid #eee;margin:13px 0">
-        <div class="acrd-t" style="font-size:.87rem;margin-bottom:9px">🅿️ Garantia de Vaga</div>
-        <div class="fg"><label for="cfgTravaAuto">Garantia automática após saída (minutos)</label>
-          <input type="number" id="cfgTravaAuto" value="60" min="1"></div>
-        <div class="fg"><label for="cfgTravaManual">Garantia manual — botão "travar vaga" (minutos)</label>
-          <input type="number" id="cfgTravaManual" value="180" min="1"></div>
-        <div class="fg"><label for="cfgPrazoPosPagamento">Prazo para acessar a catraca após pagar (minutos)</label>
-          <input type="number" id="cfgPrazoPosPagamento" value="30" min="1"></div>
-        <div class="fg"><label for="cfgToleranciaCatraca">Tolerância extra da catraca (minutos)</label>
-          <input type="number" id="cfgToleranciaCatraca" value="5" min="0"></div>
-        <hr style="border:none;border-top:1px solid #eee;margin:13px 0">
-        <div class="acrd-t" style="font-size:.87rem;margin-bottom:9px">🏦 Gateway de Pagamento</div>
-        <div style="background:#f0f7f0;border:1.5px solid #a8d5b5;border-radius:8px;padding:10px;font-size:.78rem;color:#1a6b3a;margin-bottom:10px;line-height:1.6">
-          ✅ Configure o gateway para pagamentos automáticos via Pix e cartão.<br>
-          Sem gateway: sistema usa chave Pix estática com confirmação manual (fallback).
-        </div>
+  <div class="acrd">
+    <div class="acrd-t">⚙️ Configurações</div>
+    <div class="fg"><label for="cfgVagas">Total de vagas</label>
+      <input type="number" id="cfgVagas" value="30" min="1" max="500"></div>
+    <div class="fg"><label for="cfgTaxa">Valor do acesso diário (R$)</label>
+      <input type="text" id="cfgTaxa" placeholder="Ex: 10,00"></div>
+    <div class="fg"><label for="cfgTimeout">Timeout vaga ociosa (minutos)</label>
+      <input type="number" id="cfgTimeout" value="30" min="5"></div>
+    <div class="fg"><label for="cfgHoraLimite">Horário limite para novos acessos</label>
+      <input type="time" id="cfgHoraLimite" value="19:00"></div>
+    <button class="btn btn-verde btn-sm" id="btnSalvarConfigBasico" style="margin-top:6px">💾 Salvar</button>
+    <div id="salvarConfigBasicoStatus" style="display:none;margin-top:8px;font-size:.79rem;padding:8px 10px;border-radius:6px"></div>
+    <hr style="border:none;border-top:1px solid #eee;margin:13px 0">
+    <div class="acrd-t" style="font-size:.87rem;margin-bottom:9px">💳 Dados Pix</div>
+    <div class="fg"><label for="cfgPixChave">Chave Pix</label>
+      <input type="text" id="cfgPixChave" placeholder="CNPJ, CPF, e-mail ou telefone"></div>
+    <div class="fg"><label for="cfgPixNome">Nome do Beneficiário</label>
+    <input type="text" id="cfgPixNome" name="cfg-pix-nome-x7f2" autocomplete="off" placeholder="Ala dos Estudantes Educador Paiva Netto"></div>
+    <hr style="border:none;border-top:1px solid #eee;margin:13px 0">
+    <div class="acrd-t" style="font-size:.87rem;margin-bottom:9px">🅿️ Garantia de Vaga</div>
+    <div class="fg"><label for="cfgTravaAuto">Garantia automática após saída (minutos)</label>
+      <input type="number" id="cfgTravaAuto" value="60" min="1"></div>
+    <div class="fg"><label for="cfgTravaManual">Garantia manual — botão "travar vaga" (minutos)</label>
+      <input type="number" id="cfgTravaManual" value="180" min="1"></div>
+    <div class="fg"><label for="cfgPrazoPosPagamento">Prazo para acessar a catraca após pagar (minutos)</label>
+      <input type="number" id="cfgPrazoPosPagamento" value="30" min="1"></div>
+    <div class="fg"><label for="cfgToleranciaCatraca">Tolerância extra da catraca (minutos)</label>
+      <input type="number" id="cfgToleranciaCatraca" value="5" min="0"></div>
+    <hr style="border:none;border-top:1px solid #eee;margin:13px 0">
+    <div class="acrd-t" style="font-size:.87rem;margin-bottom:9px">🏦 Gateway de Pagamento</div>
+    <div style="background:#f0f7f0;border:1.5px solid #a8d5b5;border-radius:8px;padding:10px;font-size:.78rem;color:#1a6b3a;margin-bottom:10px;line-height:1.6">
+      ✅ Configure o gateway para pagamentos automáticos via Pix e cartão.<br>
+      Sem gateway: sistema usa chave Pix estática com confirmação manual (fallback).
+    </div>
         <div class="fg"><label for="cfgGatewayTipo">Tipo de Gateway</label>
           <select id="cfgGatewayTipo">
             <option value="manual">Sem gateway (manual — fallback)</option>
@@ -5012,6 +5014,30 @@ async function adminSalvarConfig() {
     loading('btnSalvarConfig', false);
   }
 }
+
+// ── SALVAR CONFIG BÁSICA (vagas, valor, timeout, horário) ──
+async function adminSalvarConfigBasico() {
+  const config = {
+    total_vagas:          document.getElementById('cfgVagas').value,
+    valor_diaria:         document.getElementById('cfgTaxa').value,
+    timeout_vaga_minutos: document.getElementById('cfgTimeout').value,
+    hora_limite_acesso:   document.getElementById('cfgHoraLimite').value,
+  };
+
+  loading('btnSalvarConfigBasico', true);
+  try {
+    for (const [chave, valor] of Object.entries(config)) {
+      if (valor) await api.post('/api/configuracoes?acao=salvar', { chave, valor });
+    }
+    toast('✅ Configurações salvas!');
+    atualizarVagas();
+  } catch (e) {
+    toast('❌ Erro: ' + e.message);
+  } finally {
+    loading('btnSalvarConfigBasico', false);
+  }
+}
+document.getElementById('btnSalvarConfigBasico').addEventListener('click', adminSalvarConfigBasico);
 
 // ── RESET DIÁRIO DE VAGAS ──────────────────────────────────
 async function adminResetDiario() {
