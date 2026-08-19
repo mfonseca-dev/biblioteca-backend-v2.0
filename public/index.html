@@ -3724,7 +3724,8 @@ async function abrirModalPagamento() {
   // ── Verifica acesso especial ativo ──────────────────────────
   try {
   const ae = await api.get(`/api/acessos-especiais?acao=verificar&uid=${sess.usuario.id}&_=${Date.now()}`);
-    if (ae.tem_acesso) {
+    if (ae.tem_acesso && ae.desconto_percentual === 100) {
+      // Isenção total — pula pagamento e libera direto (comportamento atual)
       toast('🔓 Acesso especial ativo — liberando catraca...');
       try {
         await api.post('/api/liberar-acesso', {
@@ -3740,6 +3741,8 @@ async function abrirModalPagamento() {
       await verificarAcessoHoje();
       return; // não abre o modal de pagamento
     }
+    // Desconto parcial (ou sem acesso especial) — segue pro modal normal.
+    // O backend já aplica o desconto sozinho via obterValorComDesconto().
   } catch(e) {
     // falha silenciosa — segue para o fluxo normal de pagamento
   }
