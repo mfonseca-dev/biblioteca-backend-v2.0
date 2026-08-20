@@ -5841,6 +5841,9 @@ function abrirModalNovoAcessoEspecial() {
   document.getElementById('aePerfil').value = 'funcionario';
   document.getElementById('aeMotivo').value = '';
   document.getElementById('aeValidadeTipo').value = 'permanente';
+  document.getElementById('aeDescontoPercentual').value = '100';
+  document.getElementById('aeDescontoPersonalizado').style.display = 'none';
+  document.getElementById('aeDescontoPersonalizado').value = '';
   document.getElementById('aeValidadeData').style.display = 'none';
   document.getElementById('modalAEtitulo').textContent = '🎟️ Novo Acesso Especial';
   atualizarOcupaVagaAE();
@@ -5854,6 +5857,17 @@ function fecharModalAE() {
 function toggleValidadeAE() {
   document.getElementById('aeValidadeData').style.display =
     document.getElementById('aeValidadeTipo').value === 'data' ? 'block' : 'none';
+}
+
+function toggleDescontoPersonalizadoAE() {
+  document.getElementById('aeDescontoPersonalizado').style.display =
+    document.getElementById('aeDescontoPercentual').value === 'custom' ? 'block' : 'none';
+}
+
+function obterDescontoPercentualAE() {
+  const sel = document.getElementById('aeDescontoPercentual').value;
+  if (sel !== 'custom') return parseInt(sel, 10);
+  return parseInt(document.getElementById('aeDescontoPersonalizado').value, 10);
 }
 
 function atualizarOcupaVagaAE() {
@@ -5876,12 +5890,16 @@ async function salvarAcessoEspecial() {
   const motivo     = document.getElementById('aeMotivo').value.trim();
   const validade   = document.getElementById('aeValidadeTipo').value === 'data'
                      ? document.getElementById('aeValidadeData').value : null;
+  const desconto_percentual = obterDescontoPercentualAE();
   if (!id && !usuario_id) return toast('⚠️ Selecione um usuário');
+  if (isNaN(desconto_percentual) || desconto_percentual < 0 || desconto_percentual > 100) {
+    return toast('⚠️ Desconto inválido — use um valor entre 0 e 100');
+  }
   try {
     const acao = id ? 'atualizar' : 'criar';
     const body = id
-      ? { id: parseInt(id), perfil, motivo, validade }
-      : { usuario_id, perfil, motivo, validade };
+      ? { id: parseInt(id), perfil, motivo, validade, desconto_percentual }
+      : { usuario_id, perfil, motivo, validade, desconto_percentual };
     const resp = await fetch(API_BASE+`/api/acessos-especiais?acao=${acao}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer '+api.token },
@@ -6475,6 +6493,18 @@ async function adminEnviarPush() {
         <option value="data">📅 Data específica</option>
       </select>
       <input type="date" id="aeValidadeData" style="display:none;margin-top:6px">
+    </div>
+    <div class="fg">
+      <label for="aeDescontoPercentual">Desconto</label>
+      <select id="aeDescontoPercentual" onchange="toggleDescontoPersonalizadoAE()">
+        <option value="100">🔓 Isenção total (100%)</option>
+        <option value="50">🎫 Meia entrada (50%)</option>
+        <option value="0">💳 Sem desconto (0%) — paga valor cheio</option>
+        <option value="custom">✏️ Personalizado...</option>
+      </select>
+      <input type="number" id="aeDescontoPersonalizado" min="0" max="100" step="1"
+             placeholder="Digite um valor de 0 a 100"
+             style="display:none;margin-top:6px">
     </div>
     <div id="aeOcupaVagaBox" style="background:#e8f5ee;border:1.5px solid #a8d5b5;border-radius:8px;padding:10px 12px;margin-bottom:12px;font-size:.81rem">
       <b id="aeOcupaVagaTexto" style="color:var(--verde-esc)">✨ Este perfil não ocupa vaga — não conta no limite da sala</b>
