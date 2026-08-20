@@ -913,6 +913,11 @@ button:focus-visible,a:focus-visible{outline:3px solid var(--verde);outline-offs
           ✅ Salvar documento
         </button>
       </div>
+            <!-- Acesso Especial -->
+      <div class="crd" id="perfilAECard">
+        <div class="crd-t">🎟️ Acesso Especial</div>
+        <div id="perfilAEConteudo" style="font-size:.82rem;color:#888">⏳ Verificando...</div>
+      </div>
 
       <!-- Estatísticas -->
       <div class="plano-crd">
@@ -2341,14 +2346,39 @@ function debounce(fn, ms) {
 }
 
 function mudarTab(panelId) {
-  document.querySelectorAll('.panel').forEach(p => { p.classList.remove('ativo'); p.setAttribute('aria-hidden','true'); });
-  document.querySelectorAll('.tab,.ni').forEach(b => { b.classList.remove('ativo'); b.removeAttribute('aria-current'); });
+  document.querySelectorAll('.panel').forEach(p => {
+    p.classList.remove('ativo');
+    p.setAttribute('aria-hidden','true');
+  });
+
+  document.querySelectorAll('.tab,.ni').forEach(b => {
+    b.classList.remove('ativo');
+    b.removeAttribute('aria-current');
+  });
+
   const panel = document.getElementById(panelId);
-  if (panel) { panel.classList.add('ativo'); panel.removeAttribute('aria-hidden'); }
-  const tab = document.querySelector(`.tab[data-panel="${panelId}"],.ni[data-panel="${panelId}"]`);
-  if (tab) { tab.classList.add('ativo'); tab.setAttribute('aria-current','page'); }
-  if(panelId === 'panelPerfil') { carregarPerfil(); carregarStatusPushPerfil(); }
-  if(panelId === 'panelAvisos') carregarAvisos();
+
+  if (panel) {
+    panel.classList.add('ativo');
+    panel.removeAttribute('aria-hidden');
+  }
+
+  const tab = document.querySelector(
+    `.tab[data-panel="${panelId}"],.ni[data-panel="${panelId}"]`
+  );
+
+  if (panelId === 'panelPerfil') {
+    carregarPerfil();
+    carregarStatusPushPerfil();
+    carregarStatusAcessoEspecial();
+  }
+
+  if (tab) {
+    tab.classList.add('ativo');
+    tab.setAttribute('aria-current','page');
+  }
+
+  if (panelId === 'panelAvisos') carregarAvisos();
 }
 
 function mudarATab(panelId, btn) {
@@ -5785,7 +5815,9 @@ async function carregarAcessosEspeciais() {
           <div style="font-weight:700;font-size:.87rem;color:var(--cinza-esc)">${ae.nome||'—'}</div>
           <div style="font-size:.75rem;color:#888">${fmtCpf(ae.cpf||'')}</div>
           <div style="display:flex;gap:5px;margin-top:4px;flex-wrap:wrap">
-            <span class="badge ${ae.ativo?'verde':'cinza'}">${ae.ativo?'✅ Ativo':'🚫 Bloqueado'}</span>
+            ${ae.status === 'pendente'
+              ? '<span class="badge laranja">⏳ Pendente</span>'
+              : `<span class="badge ${ae.ativo?'verde':'cinza'}">${ae.ativo?'✅ Ativo':'🚫 Bloqueado'}</span>`}
             <span class="badge azul">${ae.perfil_label||ae.perfil}</span>
             <span class="badge ${ae.ocupa_vaga?'gold':'verde'}">${ae.ocupa_vaga?'🅿️ Ocupa vaga':'✨ Sem vaga'}</span>
             ${ae.validade?`<span class="badge cinza">📅 ${new Date(ae.validade).toLocaleDateString('pt-BR')}</span>`:'<span class="badge cinza">♾️ Permanente</span>'}
@@ -5793,15 +5825,49 @@ async function carregarAcessosEspeciais() {
           ${ae.motivo?`<div style="font-size:.73rem;color:#999;margin-top:3px">📝 ${ae.motivo}</div>`:''}
         </div>
         <div style="display:flex;flex-direction:column;gap:5px;flex-shrink:0">
-          <button class="btn btn-xs ${ae.ativo?'btn-laranja':'btn-verde'}" onclick="toggleAcessoEspecial(${ae.id},'${(ae.nome||'').replace(/'/g,'')}',${ae.ativo})">${ae.ativo?'🚫':'✅'}</button>
-          <button class="btn btn-vermelho btn-xs" onclick="excluirAcessoEspecial(${ae.id},'${(ae.nome||'').replace(/'/g,'')}')">🗑️</button>
+          ${ae.status === 'pendente' ? `
+            <button class="btn btn-verde btn-xs" onclick="aprovarAcessoEspecial(${ae.id},'${(ae.nome||'').replace(/'/g,'')}')">✅</button>
+            <button class="btn btn-vermelho btn-xs" onclick="recusarAcessoEspecial(${ae.id},'${(ae.nome||'').replace(/'/g,'')}')">❌</button>
+          ` : `
+            <button class="btn btn-xs ${ae.ativo?'btn-laranja':'btn-verde'}" onclick="toggleAcessoEspecial(${ae.id},'${(ae.nome||'').replace(/'/g,'')}',${ae.ativo})">${ae.ativo?'🚫':'✅'}</button>
+            <button class="btn btn-vermelho btn-xs" onclick="excluirAcessoEspecial(${ae.id},'${(ae.nome||'').replace(/'/g,'')}')">🗑️</button>
+          `}
         </div>
       </div>`).join('');
   } catch(err) {
     el.innerHTML = `<div class="sem"><span class="si">❌</span>Erro: ${err.message}</div>`;
   }
 }
+async function aprovarAcessoEspecial(id, nome) {
+  if (!confirm(`✅ Aprovar acesso especial de ${nome}?`)) return;
+  try {
+    const resp = await fetch(API_BASE+'/api/acessos-especiais?acao=atualizar', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json','Authorization':'Bearer '+api.token},
+      body: JSON.stringify({ id })
+    });
+    const data = await resp.json();
+    if (!resp.ok) return toast(`❌ ${data.erro}`);
+    toast('✅ Acesso especial aprovado!');
+    carregarAcessosEspeciais();
+  } catch(err) { toast(`❌ ${err.message}`); }
+}
 
+async function recusarAcessoEspecial(id, nome) {
+  const motivo = prompt(`Motivo da recusa para ${nome} (opcional):`);
+  if (motivo === null) return; // cancelou
+  try {
+    const resp = await fetch(API_BASE+'/api/acessos-especiais?acao=recusar', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json','Authorization':'Bearer '+api.token},
+      body: JSON.stringify({ id, motivo_recusa: motivo || null })
+    });
+    const data = await resp.json();
+    if (!resp.ok) return toast(`❌ ${data.erro}`);
+    toast('⚠️ Solicitação recusada.');
+    carregarAcessosEspeciais();
+  } catch(err) { toast(`❌ ${err.message}`); }
+}
 let _buscaAETimer;
 function buscarUsuarioAE(q) {
   clearTimeout(_buscaAETimer);
@@ -6094,6 +6160,86 @@ async function carregarDocumentoPerfil() {
     }
   } catch(e) {
     statusEl.textContent = '—';
+  }
+}
+// ── Acesso Especial no Perfil ────────────────────────────────
+const AE_PERFIS_LABELS = {
+  funcionario: '👔 Funcionário',
+  voluntario:  '🤝 Voluntário',
+  parceiro:    '🤲 Parceiro',
+  convidado:   '🎟️ Convidado',
+  pcd:         '♿ PCD',
+  outro:       '⭐ Outro',
+};
+
+async function carregarStatusAcessoEspecial() {
+  const el = document.getElementById('perfilAEConteudo');
+  el.innerHTML = '⏳ Verificando...';
+  try {
+    const res = await api.get('/api/acessos-especiais?acao=minha-solicitacao');
+
+    if (!res.existe) {
+      el.innerHTML = _htmlFormSolicitarAE();
+      return;
+    }
+
+    if (res.status === 'pendente') {
+      el.innerHTML = `<div style="color:var(--laranja);font-weight:600">⏳ Solicitação em análise</div>
+        <p style="font-size:.78rem;color:#888;margin-top:6px">Perfil: ${AE_PERFIS_LABELS[res.perfil] || res.perfil}</p>`;
+      return;
+    }
+
+    if (res.status === 'aprovado' && res.ativo) {
+      el.innerHTML = `<div style="color:var(--verde);font-weight:600">✅ Acesso especial ativo</div>
+        <p style="font-size:.78rem;color:#888;margin-top:6px">Perfil: ${AE_PERFIS_LABELS[res.perfil] || res.perfil}</p>`;
+      return;
+    }
+
+    if (res.status === 'recusado') {
+      el.innerHTML = `<div style="color:var(--vermelho);font-weight:600">❌ Solicitação recusada</div>
+        ${res.motivo_recusa ? `<p style="font-size:.78rem;color:#888;margin-top:6px">Motivo: ${res.motivo_recusa}</p>` : ''}
+        <button class="btn btn-dourado btn-sm" style="margin-top:10px" onclick="carregarStatusAcessoEspecial(); mostrarFormSolicitarAE()">🎟️ Solicitar novamente</button>`;
+      return;
+    }
+
+    el.innerHTML = _htmlFormSolicitarAE();
+  } catch (e) {
+    el.innerHTML = '<span style="color:var(--vermelho)">⚠️ Erro ao verificar</span>';
+  }
+}
+
+function _htmlFormSolicitarAE() {
+  return `<button class="btn btn-dourado btn-sm" onclick="mostrarFormSolicitarAE()">🎟️ Solicitar Acesso Especial</button>`;
+}
+
+function mostrarFormSolicitarAE() {
+  const el = document.getElementById('perfilAEConteudo');
+  const opcoes = Object.entries(AE_PERFIS_LABELS)
+    .map(([val, label]) => `<option value="${val}">${label}</option>`).join('');
+  el.innerHTML = `
+    <p style="font-size:.78rem;color:#666;line-height:1.6;margin-bottom:10px">
+      Acesso especial é destinado a funcionários, voluntários, parceiros, pessoas com deficiência (PCD) ou convidados.
+      Conte pra gente sua situação — a solicitação passa por análise da equipe.
+    </p>
+    <label style="display:block;font-size:.78rem;color:#666;margin-bottom:4px">Categoria</label>
+    <select id="aeSelectPerfil" class="fg" style="width:100%;margin-bottom:10px">${opcoes}</select>
+    <label style="display:block;font-size:.78rem;color:#666;margin-bottom:4px">Conte um pouco mais (opcional)</label>
+    <textarea id="aeTextareaMotivo" class="fg" style="width:100%;min-height:70px;margin-bottom:10px" placeholder="Ex: sou voluntário do projeto X às terças-feiras"></textarea>
+    <button class="btn btn-verde btn-sm" style="width:100%" onclick="enviarSolicitacaoAE(this)">📨 Enviar solicitação</button>
+  `;
+}
+
+async function enviarSolicitacaoAE(btn) {
+  btn.disabled = true;
+  const perfil = document.getElementById('aeSelectPerfil').value;
+  const motivo = document.getElementById('aeTextareaMotivo').value.trim();
+  try {
+    await api.post('/api/acessos-especiais?acao=solicitar', { perfil, motivo });
+    toast('✅ Solicitação enviada! Você será avisado da decisão.');
+    carregarStatusAcessoEspecial();
+  } catch (e) {
+    toast('❌ ' + e.message);
+    btn.disabled = false;
   }
 }
 
