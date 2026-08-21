@@ -1300,8 +1300,10 @@ button:focus-visible,a:focus-visible{outline:3px solid var(--verde);outline-offs
     </div>
 
 <div id="adminPanelConfig" class="apanel">
+
+  <!-- ═══════════ OPERAÇÃO DA SALA ═══════════ -->
   <div class="acrd">
-    <div class="acrd-t">⚙️ Configurações</div>
+    <div class="acrd-t">🅿️ Operação da Sala</div>
     <div class="fg"><label for="cfgVagas">Total de vagas</label>
       <input type="number" id="cfgVagas" value="30" min="1" max="500"></div>
     <div class="fg"><label for="cfgTaxa">Valor do acesso diário (R$)</label>
@@ -1310,14 +1312,6 @@ button:focus-visible,a:focus-visible{outline:3px solid var(--verde);outline-offs
       <input type="number" id="cfgTimeout" value="30" min="5"></div>
     <div class="fg"><label for="cfgHoraLimite">Horário limite para novos acessos</label>
       <input type="time" id="cfgHoraLimite" value="19:00"></div>
-    <button class="btn btn-verde btn-sm" id="btnSalvarConfigBasico" style="margin-top:6px">💾 Salvar</button>
-    <div id="salvarConfigBasicoStatus" style="display:none;margin-top:8px;font-size:.79rem;padding:8px 10px;border-radius:6px"></div>
-    <hr style="border:none;border-top:1px solid #eee;margin:13px 0">
-    <div class="acrd-t" style="font-size:.87rem;margin-bottom:9px">💳 Dados Pix</div>
-    <div class="fg"><label for="cfgPixChave">Chave Pix</label>
-      <input type="text" id="cfgPixChave" placeholder="CNPJ, CPF, e-mail ou telefone"></div>
-    <div class="fg"><label for="cfgPixNome">Nome do Beneficiário</label>
-    <input type="text" id="cfgPixNome" name="cfg-pix-nome-x7f2" autocomplete="off" placeholder="Ala dos Estudantes Educador Paiva Netto"></div>
     <hr style="border:none;border-top:1px solid #eee;margin:13px 0">
     <div class="acrd-t" style="font-size:.87rem;margin-bottom:9px">🅿️ Garantia de Vaga</div>
     <div class="fg"><label for="cfgTravaAuto">Garantia automática após saída (minutos)</label>
@@ -1328,105 +1322,146 @@ button:focus-visible,a:focus-visible{outline:3px solid var(--verde);outline-offs
       <input type="number" id="cfgPrazoPosPagamento" value="30" min="1"></div>
     <div class="fg"><label for="cfgToleranciaCatraca">Tolerância extra da catraca (minutos)</label>
       <input type="number" id="cfgToleranciaCatraca" value="5" min="0"></div>
+    <button class="btn btn-verde btn-sm" id="btnSalvarConfigBasico" style="margin-top:6px">💾 Salvar</button>
+    <div id="salvarConfigBasicoStatus" style="display:none;margin-top:8px;font-size:.79rem;padding:8px 10px;border-radius:6px"></div>
+  </div>
+
+  <!-- ═══════════ PAGAMENTOS ═══════════ -->
+  <div class="acrd">
+    <div class="acrd-t">💳 Pagamentos</div>
+
+    <div class="acrd-t" style="font-size:.87rem;margin-bottom:9px">💳 Dados Pix</div>
+    <div class="fg"><label for="cfgPixChave">Chave Pix</label>
+      <input type="text" id="cfgPixChave" placeholder="CNPJ, CPF, e-mail ou telefone"></div>
+    <div class="fg"><label for="cfgPixNome">Nome do Beneficiário</label>
+    <input type="text" id="cfgPixNome" name="cfg-pix-nome-x7f2" autocomplete="off" placeholder="Ala dos Estudantes Educador Paiva Netto"></div>
     <hr style="border:none;border-top:1px solid #eee;margin:13px 0">
+
     <div class="acrd-t" style="font-size:.87rem;margin-bottom:9px">🏦 Gateway de Pagamento</div>
     <div style="background:#f0f7f0;border:1.5px solid #a8d5b5;border-radius:8px;padding:10px;font-size:.78rem;color:#1a6b3a;margin-bottom:10px;line-height:1.6">
       ✅ Configure o gateway para pagamentos automáticos via Pix e cartão.<br>
       Sem gateway: sistema usa chave Pix estática com confirmação manual (fallback).
     </div>
-        <div class="fg"><label for="cfgGatewayTipo">Tipo de Gateway</label>
-          <select id="cfgGatewayTipo">
-            <option value="manual">Sem gateway (manual — fallback)</option>
-            <option value="efi">EfiBank / Gerencianet</option>
-            <option value="mercadopago">Mercado Pago</option>
-            <option value="pagarme">Pagar.me</option>
-          </select></div>
-        <div class="fg"><label for="cfgGatewayChave">Chave / Token do Gateway</label>
-        <input type="password" id="cfgGatewayChave" name="cfg-gateway-chave-x7f2" autocomplete="new-password" placeholder="Client ID:Secret ou Bearer Token"></div>
-        <div class="fg"><label for="cfgGatewayChavePix">Chave Pix do Gateway (CNPJ/CPF/e-mail)</label>
-          <input type="text" id="cfgGatewayChavePix" name="cfg-gateway-chave-pix-x7f2" autocomplete="off" placeholder="Chave Pix cadastrada no gateway"></div>
-        <hr style="border:none;border-top:1px solid #eee;margin:13px 0">
-        <div class="acrd-t" style="font-size:.87rem;margin-bottom:9px">💳 Cartão de Crédito / Débito</div>
-        <div style="background:#fff8e0;border:1.5px solid var(--dourado-cl);border-radius:8px;padding:10px;font-size:.78rem;color:#a07a00;margin-bottom:10px">
-          💳 Cartão pode ser pago no totem (maquininha integrada) ou na recepção. Configure as taxas para fins de relatório e faturamento.
-        </div>
-        <div class="fg"><label for="cfgTaxaCredito">Taxa Cartão de Crédito (%)</label>
-          <input type="text" id="cfgTaxaCredito" placeholder="Ex: 3,5"></div>
-        <div class="fg"><label for="cfgTaxaDebito">Taxa Cartão de Débito (%)</label>
-          <input type="text" id="cfgTaxaDebito" placeholder="Ex: 1,5"></div>
-        <hr style="border:none;border-top:1px solid #eee;margin:13px 0">
-        <div class="acrd-t" style="font-size:.87rem;margin-bottom:9px">🔐 Control iD</div>
-        <div class="fg"><label for="cfgControlIdUrl">URL da API</label>
-          <input type="text" id="cfgControlIdUrl" placeholder=""></div>
-        <div class="fg"><label for="cfgControlIdToken">Token</label>
-          <input type="password" id="cfgControlIdToken" placeholder="Bearer token"></div>
-        <hr style="border:none;border-top:1px solid #eee;margin:13px 0">
-        <div class="acrd-t" style="font-size:.87rem;margin-bottom:6px">💳 Stone EYE PRO</div>
-        <p style="font-size:.78rem;color:#777;line-height:1.6;margin-bottom:10px">
-          Integração com a maquininha Stone para cobrança automática na recepção.
-          As credenciais abaixo devem ser configuradas nas <b>variáveis de ambiente do Vercel</b> — não aqui.
-          Use este campo apenas para confirmar a URL do webhook a cadastrar no portal Stone.
-        </p>
-        <div style="background:#f0f4ff;border:1.5px solid #b0c4ef;border-radius:8px;padding:12px;margin-bottom:12px;font-size:.79rem;line-height:1.8">
-          <div style="font-weight:700;color:var(--azul);margin-bottom:6px">📋 Checklist Stone</div>
-          <div id="stoneCheckEnv" style="color:#888">⏳ Verificando variáveis de ambiente...</div>
-          <div style="margin-top:8px;color:#555">
-            <b>URL do Webhook</b> — cadastre no portal Stone:<br>
-            <code style="font-size:.75rem;background:#e8eeff;padding:3px 7px;border-radius:4px;word-break:break-all">
-              https://biblioteca-backend-v2-0.vercel.app/api/pagamentos?acao=webhook-stone
-            </code>
-          </div>
-          <div style="margin-top:8px;color:#555">
-            <b>Portal Stone:</b>
-            <a href="https://dashboard.stone.com.br" target="_blank" style="color:var(--azul)">dashboard.stone.com.br</a>
-            → API → Webhooks → Adicionar URL acima
-          </div>
-        </div>
-        <button class="btn btn-azul btn-sm" id="btnTestarStone" onclick="adminTestarStone()">🔌 Testar conexão Stone</button>
-        <div id="stoneTestStatus" style="display:none;margin-top:8px;font-size:.79rem;padding:8px 10px;border-radius:6px"></div>
-        <button class="btn btn-verde btn-sm" id="btnSalvarConfig" style="margin-top:13px">💾 Salvar Configurações</button>
-
-        <hr style="border:none;border-top:1px solid #eee;margin:16px 0">
-        <div class="acrd-t" style="font-size:.87rem;margin-bottom:6px">📜 Termo de Conduta</div>
-        <p style="font-size:.78rem;color:#777;line-height:1.6;margin-bottom:10px">
-          Publique uma nova versão do termo quando houver alterações. Todos os usuários serão solicitados a reler e assinar novamente no próximo login.
-        </p>
-        <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px;flex-wrap:wrap">
-          <div style="font-size:.78rem;color:#555">Versão atual:</div>
-          <div id="termoVersaoAtual" style="font-size:.78rem;font-weight:700;color:var(--verde);background:#e8f5ee;padding:3px 10px;border-radius:20px">carregando...</div>
-          <div id="termoTotalPendentes" style="font-size:.78rem;color:var(--laranja);display:none">⚠️ <span id="termoNrPendentes">0</span> usuário(s) ainda não assinaram</div>
-        </div>
-        <div class="fg">
-          <label for="termoNovaVersao">Número da nova versão <span style="color:#aaa;font-weight:400">(ex: 2025-05 ou 2.0)</span></label>
-          <input type="text" id="termoNovaVersao" placeholder="ex: 2025-05">
-        </div>
-        <div class="fg">
-          <label for="termoConteudo">Conteúdo do novo termo <span style="color:#aaa;font-weight:400">(HTML básico permitido: &lt;b&gt;, &lt;br&gt;, &lt;p&gt;)</span></label>
-          <textarea id="termoConteudo" rows="10" style="width:100%;font-size:.78rem;padding:8px;border:1px solid var(--cinza-cl);border-radius:var(--r-sm);resize:vertical;font-family:var(--font-sans);line-height:1.6" placeholder="Cole ou edite o texto do termo aqui..."></textarea>
-        </div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:4px">
-          <button class="btn btn-azul btn-sm" onclick="adminCarregarTermoAtual()">📥 Carregar versão atual</button>
-          <button class="btn btn-verde btn-sm" id="btnPublicarTermo" onclick="adminPublicarTermo()">📢 Publicar novo termo</button>
-        </div>
-        <div id="termoPublicarStatus" style="display:none;margin-top:8px;font-size:.79rem;padding:8px 10px;border-radius:6px"></div>
-        <hr style="border:none;border-top:1px solid #eee;margin:16px 0">
-        <hr style="border:none;border-top:1px solid #eee;margin:16px 0">
-        <div class="acrd-t" style="font-size:.87rem;margin-bottom:6px">🔄 Reset Diário de Vagas</div>
-        <p style="font-size:.78rem;color:#777;line-height:1.6;margin-bottom:10px">
-          Encerra todos os acessos ativos e zera as vagas. Executado automaticamente às 20h via cron job.
-          Use manualmente apenas se necessário (ex: após reinicialização do sistema).
-        </p>
-        <div id="resetStatus" style="display:none;background:#f8fdf9;border:1.5px solid #a8d5b5;border-radius:8px;padding:10px;margin-bottom:10px;font-size:.8rem"></div>
-        <button class="btn btn-laranja btn-sm" id="btnResetDiario" onclick="adminResetDiario()">🔄 Executar Reset Diário agora</button>
-        <hr style="border:none;border-top:1px solid #eee;margin:16px 0">
-        <div class="acrd-t" style="font-size:.87rem;margin-bottom:6px">🔄 Sincronização com Control iD</div>
-        <p style="font-size:.78rem;color:#777;line-height:1.6;margin-bottom:10px">
-          Execute uma vez para vincular automaticamente usuários já cadastrados no banco físico do Control iD com os registros do sistema, sem criar duplicatas. A biometria existente é preservada.
-        </p>
-        <div id="syncStatus" style="display:none;background:#f8fdf9;border:1.5px solid #a8d5b5;border-radius:8px;padding:12px;margin-bottom:10px;font-size:.8rem;line-height:1.8"></div>
-      <button class="btn btn-azul btn-sm" id="btnSincronizarControlId">🔄 Sincronizar com Control iD agora</button>
+    <div class="fg"><label for="cfgGatewayTipo">Tipo de Gateway</label>
+      <select id="cfgGatewayTipo">
+        <option value="manual">Sem gateway (manual — fallback)</option>
+        <option value="efi">EfiBank / Gerencianet</option>
+        <option value="mercadopago">Mercado Pago</option>
+        <option value="pagarme">Pagar.me</option>
+      </select></div>
+    <div class="fg"><label for="cfgGatewayChave">Chave / Token do Gateway</label>
+      <div style="display:flex;gap:6px">
+        <input type="password" id="cfgGatewayChave" name="cfg-gateway-chave-x7f2" autocomplete="new-password" placeholder="Client ID:Secret ou Bearer Token" style="flex:1">
+        <button type="button" class="btn btn-sec btn-sm" onclick="toggleSenhaVisivel('cfgGatewayChave', this)" title="Mostrar/ocultar">👁️</button>
       </div>
     </div>
+    <div class="fg"><label for="cfgGatewayChavePix">Chave Pix do Gateway (CNPJ/CPF/e-mail)</label>
+      <input type="text" id="cfgGatewayChavePix" name="cfg-gateway-chave-pix-x7f2" autocomplete="off" placeholder="Chave Pix cadastrada no gateway"></div>
+    <hr style="border:none;border-top:1px solid #eee;margin:13px 0">
+
+    <div class="acrd-t" style="font-size:.87rem;margin-bottom:9px">💳 Cartão de Crédito / Débito</div>
+    <div style="background:#fff8e0;border:1.5px solid var(--dourado-cl);border-radius:8px;padding:10px;font-size:.78rem;color:#a07a00;margin-bottom:10px">
+      💳 Cartão pode ser pago no totem (maquininha integrada) ou na recepção. Configure as taxas para fins de relatório e faturamento.
+    </div>
+    <div class="fg"><label for="cfgTaxaCredito">Taxa Cartão de Crédito (%)</label>
+      <input type="text" id="cfgTaxaCredito" placeholder="Ex: 3,5"></div>
+        <div class="fg"><label for="cfgTaxaDebito">Taxa Cartão de Débito (%)</label>
+      <input type="text" id="cfgTaxaDebito" placeholder="Ex: 1,5"></div>
+
+    <button class="btn btn-verde btn-sm" id="btnSalvarPagamentos" style="margin-top:13px">💾 Salvar Pagamentos</button>
+    <div id="salvarPagamentosStatus" style="display:none;margin-top:8px;font-size:.79rem;padding:8px 10px;border-radius:6px"></div>
+  </div>
+
+  <!-- ═══════════ INTEGRAÇÕES DE HARDWARE/SERVIÇO ═══════════ -->
+  <div class="acrd">
+    <div class="acrd-t">🔌 Integrações</div>
+
+    <div class="acrd-t" style="font-size:.87rem;margin-bottom:9px">🔐 Control iD</div>
+    <div class="fg"><label for="cfgControlIdUrl">URL da API</label>
+      <input type="text" id="cfgControlIdUrl" placeholder=""></div>
+        <div class="fg"><label for="cfgControlIdToken">Token</label>
+      <div style="display:flex;gap:6px">
+        <input type="password" id="cfgControlIdToken" placeholder="Bearer token" style="flex:1">
+        <button type="button" class="btn btn-sec btn-sm" onclick="toggleSenhaVisivel('cfgControlIdToken', this)" title="Mostrar/ocultar">👁️</button>
+      </div>
+    </div>
+    <button class="btn btn-verde btn-sm" id="btnSalvarIntegracoes" style="margin-top:6px">💾 Salvar Integrações</button>
+    <div id="salvarIntegracoesStatus" style="display:none;margin-top:8px;font-size:.79rem;padding:8px 10px;border-radius:6px"></div>
+    <hr style="border:none;border-top:1px solid #eee;margin:13px 0">
+
+    <div class="acrd-t" style="font-size:.87rem;margin-bottom:6px">💳 Stone EYE PRO</div>
+    <p style="font-size:.78rem;color:#777;line-height:1.6;margin-bottom:10px">
+      Integração com a maquininha Stone para cobrança automática na recepção.
+      As credenciais abaixo devem ser configuradas nas <b>variáveis de ambiente do Vercel</b> — não aqui.
+      Use este campo apenas para confirmar a URL do webhook a cadastrar no portal Stone.
+    </p>
+    <div style="background:#f0f4ff;border:1.5px solid #b0c4ef;border-radius:8px;padding:12px;margin-bottom:12px;font-size:.79rem;line-height:1.8">
+      <div style="font-weight:700;color:var(--azul);margin-bottom:6px">📋 Checklist Stone</div>
+      <div id="stoneCheckEnv" style="color:#888">⏳ Verificando variáveis de ambiente...</div>
+      <div style="margin-top:8px;color:#555">
+        <b>URL do Webhook</b> — cadastre no portal Stone:<br>
+        <code style="font-size:.75rem;background:#e8eeff;padding:3px 7px;border-radius:4px;word-break:break-all">
+          https://biblioteca-backend-v2-0.vercel.app/api/pagamentos?acao=webhook-stone
+        </code>
+      </div>
+      <div style="margin-top:8px;color:#555">
+        <b>Portal Stone:</b>
+        <a href="https://dashboard.stone.com.br" target="_blank" style="color:var(--azul)">dashboard.stone.com.br</a>
+        → API → Webhooks → Adicionar URL acima
+      </div>
+    </div>
+        <button class="btn btn-azul btn-sm" id="btnTestarStone" onclick="adminTestarStone()">🔌 Testar conexão Stone</button>
+    <div id="stoneTestStatus" style="display:none;margin-top:8px;font-size:.79rem;padding:8px 10px;border-radius:6px"></div>
+  </div>
+
+  <!-- ═══════════ TERMO DE CONDUTA ═══════════ -->
+  <div class="acrd">
+    <div class="acrd-t">📜 Termo de Conduta</div>
+    <p style="font-size:.78rem;color:#777;line-height:1.6;margin-bottom:10px">
+      Publique uma nova versão do termo quando houver alterações. Todos os usuários serão solicitados a reler e assinar novamente no próximo login.
+    </p>
+    <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px;flex-wrap:wrap">
+      <div style="font-size:.78rem;color:#555">Versão atual:</div>
+      <div id="termoVersaoAtual" style="font-size:.78rem;font-weight:700;color:var(--verde);background:#e8f5ee;padding:3px 10px;border-radius:20px">carregando...</div>
+      <div id="termoTotalPendentes" style="font-size:.78rem;color:var(--laranja);display:none">⚠️ <span id="termoNrPendentes">0</span> usuário(s) ainda não assinaram</div>
+    </div>
+    <div class="fg">
+      <label for="termoNovaVersao">Número da nova versão <span style="color:#aaa;font-weight:400">(ex: 2025-05 ou 2.0)</span></label>
+      <input type="text" id="termoNovaVersao" placeholder="ex: 2025-05">
+    </div>
+    <div class="fg">
+      <label for="termoConteudo">Conteúdo do novo termo <span style="color:#aaa;font-weight:400">(HTML básico permitido: &lt;b&gt;, &lt;br&gt;, &lt;p&gt;)</span></label>
+      <textarea id="termoConteudo" rows="10" style="width:100%;font-size:.78rem;padding:8px;border:1px solid var(--cinza-cl);border-radius:var(--r-sm);resize:vertical;font-family:var(--font-sans);line-height:1.6" placeholder="Cole ou edite o texto do termo aqui..."></textarea>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:4px">
+      <button class="btn btn-azul btn-sm" onclick="adminCarregarTermoAtual()">📥 Carregar versão atual</button>
+      <button class="btn btn-verde btn-sm" id="btnPublicarTermo" onclick="adminPublicarTermo()">📢 Publicar novo termo</button>
+    </div>
+    <div id="termoPublicarStatus" style="display:none;margin-top:8px;font-size:.79rem;padding:8px 10px;border-radius:6px"></div>
+  </div>
+
+  <!-- ═══════════ AÇÕES ADMINISTRATIVAS (RISCO) ═══════════ -->
+  <div class="acrd" style="border:1.5px solid var(--laranja, #e8a33d)">
+    <div class="acrd-t" style="color:var(--laranja, #a05a00)">⚠️ Ações Administrativas</div>
+
+    <div class="acrd-t" style="font-size:.87rem;margin-bottom:6px">🔄 Reset Diário de Vagas</div>
+    <p style="font-size:.78rem;color:#777;line-height:1.6;margin-bottom:10px">
+      Encerra todos os acessos ativos e zera as vagas. Executado automaticamente às 20h via cron job.
+      Use manualmente apenas se necessário (ex: após reinicialização do sistema).
+    </p>
+    <div id="resetStatus" style="display:none;background:#f8fdf9;border:1.5px solid #a8d5b5;border-radius:8px;padding:10px;margin-bottom:10px;font-size:.8rem"></div>
+    <button class="btn btn-laranja btn-sm" id="btnResetDiario" onclick="adminResetDiario()">🔄 Executar Reset Diário agora</button>
+    <hr style="border:none;border-top:1px solid #eee;margin:16px 0">
+
+    <div class="acrd-t" style="font-size:.87rem;margin-bottom:6px">🔄 Sincronização com Control iD</div>
+    <p style="font-size:.78rem;color:#777;line-height:1.6;margin-bottom:10px">
+      Execute uma vez para vincular automaticamente usuários já cadastrados no banco físico do Control iD com os registros do sistema, sem criar duplicatas. A biometria existente é preservada.
+    </p>
+    <div id="syncStatus" style="display:none;background:#f8fdf9;border:1.5px solid #a8d5b5;border-radius:8px;padding:12px;margin-bottom:10px;font-size:.8rem;line-height:1.8"></div>
+    <button class="btn btn-azul btn-sm" id="btnSincronizarControlId">🔄 Sincronizar com Control iD agora</button>
+  </div>
+
+</div>
 
     <div id="adminPanelAcessosEspeciais" class="apanel">
       <div class="acrd" style="margin-bottom:12px">
@@ -2333,7 +2368,8 @@ function bindEventos() {
   if(dh) dh.onchange = () => adminCarregarHistorico(dh.value);
 
   // Admin — salvar config
-  document.getElementById('btnSalvarConfig').onclick = adminSalvarConfig;
+  document.getElementById('btnSalvarPagamentos').onclick = adminSalvarPagamentos;
+document.getElementById('btnSalvarIntegracoes').onclick = adminSalvarIntegracoes;
 document.getElementById('btnPublicarAviso').onclick = adminPublicarAviso;
   document.getElementById('btnSincronizarControlId').onclick = adminSincronizarControlId;
 
@@ -5009,42 +5045,56 @@ async function exportarDashboardCSV() {
   URL.revokeObjectURL(url);
   toast(`✅ CSV exportado — ${acessos.length} registros`);
 }
-async function adminSalvarConfig() {
+async function adminSalvarPagamentos() {
   const config = {
-    total_vagas:          document.getElementById('cfgVagas').value,
-    valor_diaria:         document.getElementById('cfgTaxa').value,
-    taxa_credito:         document.getElementById('cfgTaxaCredito')?.value || '',
-    taxa_debito:          document.getElementById('cfgTaxaDebito')?.value || '',
-    timeout_vaga_minutos: document.getElementById('cfgTimeout').value,
-    hora_limite_acesso:   document.getElementById('cfgHoraLimite').value,
     pix_chave:            document.getElementById('cfgPixChave').value,
     pix_nome:             document.getElementById('cfgPixNome').value,
-    trava_vaga_automatica_minutos:      document.getElementById('cfgTravaAuto')?.value || '60',
-    trava_vaga_manual_minutos:          document.getElementById('cfgTravaManual')?.value || '180',
-    prazo_acesso_pos_pagamento_minutos: document.getElementById('cfgPrazoPosPagamento')?.value || '30',
-    tolerancia_catraca_minutos:         document.getElementById('cfgToleranciaCatraca')?.value || '5',
     gateway_tipo:         document.getElementById('cfgGatewayTipo')?.value || '',
     gateway_chave:        document.getElementById('cfgGatewayChave')?.value || '',
     gateway_chave_pix:    document.getElementById('cfgGatewayChavePix')?.value || '',
-    controlid_url:        document.getElementById('cfgControlIdUrl').value,
-    controlid_token:      document.getElementById('cfgControlIdToken').value,
-    controlid_db_host:    document.getElementById('cfgCidDbHost')?.value||'',
-    controlid_db_port:    document.getElementById('cfgCidDbPort')?.value||'',
-    controlid_db_name:    document.getElementById('cfgCidDbName')?.value||'',
-    controlid_db_user:    document.getElementById('cfgCidDbUser')?.value||'',
-    controlid_db_pass:    document.getElementById('cfgCidDbPass')?.value||'',
+    taxa_credito:         document.getElementById('cfgTaxaCredito')?.value || '',
+    taxa_debito:          document.getElementById('cfgTaxaDebito')?.value || '',
   };
-  loading('btnSalvarConfig', true);
+  loading('btnSalvarPagamentos', true);
   try {
-    for(const [chave, valor] of Object.entries(config)) {
-      if(valor) await api.post('/api/configuracoes?acao=salvar', { chave, valor });
+    for (const [chave, valor] of Object.entries(config)) {
+      if (valor) await api.post('/api/configuracoes?acao=salvar', { chave, valor });
     }
-    toast('✅ Configurações salvas!');
-    atualizarVagas();
-  } catch(e) {
-    toast('❌ Erro: '+e.message);
+    toast('✅ Pagamentos salvos!');
+  } catch (e) {
+    toast('❌ Erro: ' + e.message);
   } finally {
-    loading('btnSalvarConfig', false);
+    loading('btnSalvarPagamentos', false);
+  }
+}
+
+async function adminSalvarIntegracoes() {
+  const config = {
+    controlid_url:   document.getElementById('cfgControlIdUrl').value,
+    controlid_token: document.getElementById('cfgControlIdToken').value,
+  };
+  loading('btnSalvarIntegracoes', true);
+  try {
+    for (const [chave, valor] of Object.entries(config)) {
+      if (valor) await api.post('/api/configuracoes?acao=salvar', { chave, valor });
+    }
+    toast('✅ Integrações salvas!');
+  } catch (e) {
+    toast('❌ Erro: ' + e.message);
+  } finally {
+    loading('btnSalvarIntegracoes', false);
+  }
+}
+
+// ── Mostrar/ocultar campos sensíveis (token/senha) ──────────
+function toggleSenhaVisivel(inputId, btn) {
+  const input = document.getElementById(inputId);
+  if (input.type === 'password') {
+    input.type = 'text';
+    btn.textContent = '🙈';
+  } else {
+    input.type = 'password';
+    btn.textContent = '👁️';
   }
 }
 
@@ -5055,6 +5105,10 @@ async function adminSalvarConfigBasico() {
     valor_diaria:         document.getElementById('cfgTaxa').value,
     timeout_vaga_minutos: document.getElementById('cfgTimeout').value,
     hora_limite_acesso:   document.getElementById('cfgHoraLimite').value,
+    trava_vaga_automatica_minutos:      document.getElementById('cfgTravaAuto')?.value || '60',
+    trava_vaga_manual_minutos:          document.getElementById('cfgTravaManual')?.value || '180',
+    prazo_acesso_pos_pagamento_minutos: document.getElementById('cfgPrazoPosPagamento')?.value || '30',
+    tolerancia_catraca_minutos:         document.getElementById('cfgToleranciaCatraca')?.value || '5',
   };
 
   loading('btnSalvarConfigBasico', true);
