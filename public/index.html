@@ -3660,9 +3660,14 @@ if(sess.acesso) {
   box.className = 'st-box presente';
   dot.className = 'dot azul';
   txt.textContent = 'Fora da biblioteca — vaga garantida';
-  lblBtn.textContent = '💳 Pagar e Garantir Acesso';
-  btn.disabled = false;
-  if (btnSairLib) btnSairLib.style.display = 'none';
+  lblBtn.textContent = '🔒 Vaga Garantida';
+  btn.disabled = true;
+  btn.style.display = 'none';
+  if (btnSairLib) {
+    btnSairLib.style.display = 'block';
+    btnSairLib.textContent = '🚪 Sair e Liberar Vaga';
+    btnSairLib.disabled = false;
+  }
   ticket.style.display = 'none';
   const prazoInfo1 = document.getElementById('prazoEntradaInfo'); // NOVO: evita a caixa de prazo ficar presa visível ao mudar de estado
   if (prazoInfo1) prazoInfo1.style.display = 'none';               // NOVO
@@ -6148,33 +6153,65 @@ async function travarVagaUsuario() {
 }
 
 async function registrarSaidaUsuario() {
-  if (!sess.acesso) return;
-  if (!confirm('🚪 Tem certeza que vai embora?\n\nSua vaga será liberada e o acesso de hoje encerrado.')) return;
-
   const btn = document.getElementById('btnSairLiberar');
-  btn.disabled = true;
-  btn.textContent = '⏳ Registrando saída...';
 
-  try {
-    const res = await fetch(API_BASE + '/api/acessos?acao=registrar-saida', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + api.token
-      },
-      body: JSON.stringify({ acesso_id: sess.acesso.id, usuario_id: sess.usuario.id })
-    });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.erro || 'Erro ao registrar saída');
+  if (sess.acesso) {
+    // Cenário atual: usuário ainda com acesso ativo, quer sair
+    // voluntariamente pelo app antes de passar pela catraca.
+    if (!confirm('🚪 Tem certeza que vai embora?\n\nSua vaga será liberada e o acesso de hoje encerrado.')) return;
+    btn.disabled = true;
+    btn.textContent = '⏳ Registrando saída...';
+    try {
+      const res = await fetch(API_BASE + '/api/acessos?acao=registrar-saida', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + api.token
+        },
+        body: JSON.stringify({ acesso_id: sess.acesso.id, usuario_id: sess.usuario.id })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.erro || 'Erro ao registrar saída');
+      sess.acesso = null;
+      renderizarStatusAcesso();
+      atualizarVagas();
+      toast('✅ Saída registrada! Vaga liberada.');
+    } catch(e) {
+      toast('❌ ' + e.message);
+      btn.disabled = false;
+      btn.textContent = '🚪 Sair e Liberar Vaga';
+    }
+    return;
+  }
 
-    sess.acesso = null;
-    renderizarStatusAcesso();
-    atualizarVagas();
-    toast('✅ Saída registrada! Vaga liberada.');
-  } catch(e) {
-    toast('❌ ' + e.message);
-    btn.disabled = false;
-    btn.textContent = '🚪 Sair e Liberar Vaga';
+  if (sess.garantia) {
+    // Novo cenário: usuário já saiu fisicamente e está no período de
+    // garantia, mas decidiu não voltar. Desiste da vaga antes do prazo,
+    // revogando o acesso na hora — para voltar, precisa pagar de novo.
+    if (!confirm('🚪 Tem certeza que não vai voltar hoje?\n\nSeu acesso será encerrado agora e, para entrar novamente, será necessário um novo pagamento.')) return;
+    btn.disabled = true;
+    btn.textContent = '⏳ Liberando vaga...';
+    try {
+      const res = await fetch(API_BASE + '/api/acessos?acao=liberar-garantia', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + api.token
+        },
+        body: JSON.stringify({ usuario_id: sess.usuario.id })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.erro || 'Erro ao liberar vaga');
+      sess.garantia = null;
+      renderizarStatusAcesso();
+      atualizarVagas();
+      toast('✅ ' + data.mensagem);
+    } catch(e) {
+      toast('❌ ' + e.message);
+      btn.disabled = false;
+      btn.textContent = '🚪 Sair e Liberar Vaga';
+    }
+    return;
   }
 }
 
