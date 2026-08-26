@@ -1601,8 +1601,8 @@ button:focus-visible,a:focus-visible{outline:3px solid var(--verde);outline-offs
           </div>
           <div class="pagto-aviso" style="background:#fff3f3;border-color:#f5b5a8;color:#8a2a1a" id="avisoTimeoutPagamento">
             ⏳ <b>Atenção:</b> após a confirmação do pagamento, você terá um tempo limitado para realizar o primeiro acesso pela catraca.
-            Se esse prazo expirar sem que o acesso seja realizado, a vaga será liberada automaticamente para outro usuário
-            e um <b>crédito</b> ficará registrado em seu cadastro para uso na próxima visita.
+            Se esse prazo expirar sem que o acesso seja realizado, a vaga será liberada automaticamente para outro usuário.
+            Se isso acontecer, entre em contato pelo canal de <b>Sugestões</b> informando o ocorrido — a administração irá avaliar e orientar sobre os próximos passos.
           </div>
         </div>
         <!-- Modo manual (gateway não configurado) -->
@@ -1621,11 +1621,10 @@ button:focus-visible,a:focus-visible{outline:3px solid var(--verde);outline-offs
           </div>
           <div class="pagto-aviso" style="background:#fff3f3;border-color:#f5b5a8;color:#8a2a1a">
             ⏳ <b>Atenção:</b> após confirmar o pagamento, você terá um tempo limitado para acessar pela catraca.
-            Se expirar, um <b>crédito</b> ficará registrado para sua próxima visita.
+            Se expirar, entre em contato pelo canal de <b>Sugestões</b> informando o ocorrido.
           </div>
         </div>
       </div>
-
       <!-- SEÇÃO CARTÃO (crédito / débito) -->
       <div id="cartaoSection" style="display:none">
         <div style="background:#eef3ff;border:1.5px solid #b0c4ef;border-radius:var(--r-sm);padding:14px;text-align:center;margin-bottom:10px">
@@ -1644,7 +1643,7 @@ button:focus-visible,a:focus-visible{outline:3px solid var(--verde);outline-offs
         </div>
         <div class="pagto-aviso" style="background:#fff3f3;border-color:#f5b5a8;color:#8a2a1a">
           ⏳ <b>Atenção:</b> após o pagamento, você terá um tempo limitado para acessar pela catraca.
-          Se expirar, um <b>crédito</b> ficará registrado para sua próxima visita.
+          Se expirar, entre em contato pelo canal de <b>Sugestões</b> informando o ocorrido.
         </div>
       </div>
 
@@ -3695,6 +3694,7 @@ if(sess.acesso) {
   const prazoInfo2 = document.getElementById('prazoEntradaInfo'); // NOVO: mesma correção pro estado "sem acesso"
   if (prazoInfo2) prazoInfo2.style.display = 'none';               // NOVO
 }
+}
 
 // ═══════════════════════════════════════════════════════════
 //  PAGAMENTO — FLUXO AUTOMÁTICO SEM CONFIRMAÇÃO MANUAL
@@ -4053,34 +4053,47 @@ function _iniciarTimerPix() {
 }
 
 // ── Poll de status — detecta webhook sem refresh manual ────
+async function _verificarStatusPagamentoAgora() {
+  if (!sess.usuario) { clearInterval(_pollPagamento); return; }
+  try {
+    const r = await fetch(`${API_BASE}/api/pagamentos?acao=status-hoje&usuario_id=${sess.usuario.id}`, {
+      headers: { 'Authorization': `Bearer ${api.token}` }
+    });
+    const d = await r.json();
+    if (d.status === 'confirmado') {
+      clearInterval(_pollPagamento);
+      clearInterval(_pixTimerInterval);
+      document.getElementById('pagtoStatus').className = 'pagto-status pagto-ok';
+      document.getElementById('pagtoStatus').textContent = '✅ Pagamento confirmado! Catraca liberada.';
+      _beep('acesso');
+      const prazoMin = d.prazo_entrada_minutos;
+      toast(prazoMin
+        ? `✅ Acesso liberado! Você tem ${prazoMin} min para passar pela catraca.`
+        : '✅ Acesso liberado! Dirija-se à catraca.');
+      await verificarAcessoHoje();
+      setTimeout(() => {
+        document.getElementById('modalPagamento').classList.remove('ativo');
+        document.getElementById('pagtoStatus').textContent = '';
+      }, 3000);
+    }
+  } catch(e) {}
+}
+
 function _iniciarPollStatus() {
   clearInterval(_pollPagamento);
-  _pollPagamento = setInterval(async () => {
-    if (!sess.usuario) { clearInterval(_pollPagamento); return; }
-    try {
-      const r = await fetch(`${API_BASE}/api/pagamentos?acao=status-hoje&usuario_id=${sess.usuario.id}`, {
-        headers: { 'Authorization': `Bearer ${api.token}` }
-      });
-      const d = await r.json();
-      if (d.status === 'confirmado') {
-        clearInterval(_pollPagamento);
-        clearInterval(_pixTimerInterval);
-        document.getElementById('pagtoStatus').className = 'pagto-status pagto-ok';
-        document.getElementById('pagtoStatus').textContent = '✅ Pagamento confirmado! Catraca liberada.';
-        _beep('acesso');
-        const prazoMin = d.prazo_entrada_minutos;
-        toast(prazoMin
-          ? `✅ Acesso liberado! Você tem ${prazoMin} min para passar pela catraca.`
-          : '✅ Acesso liberado! Dirija-se à catraca.');
-        await verificarAcessoHoje();
-        setTimeout(() => {
-          document.getElementById('modalPagamento').classList.remove('ativo');
-          document.getElementById('pagtoStatus').textContent = '';
-        }, 3000);
-      }
-    } catch(e) {}
-  }, 3000);
+  _pollPagamento = setInterval(_verificarStatusPagamentoAgora, 3000);
 }
+
+// NOVO: quando o usuário volta pra aba (ex: depois de pagar no app do banco
+// ou na aba do gateway de cartão), o navegador/SO costuma suspender os
+// timers em segundo plano — sem isso, a confirmação só aparecia depois de
+// um novo login manual, porque o polling ficava "congelado" até o usuário
+// voltar. Força uma checagem imediata assim que a aba volta a ficar visível.
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible' && _pollPagamento) {
+    _verificarStatusPagamentoAgora();
+  }
+});
 
 // ── Atualiza visual do seletor ─────────────────────────────
 function _atualizarSeletorUI(tipo) {
