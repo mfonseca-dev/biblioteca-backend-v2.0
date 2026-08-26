@@ -758,6 +758,7 @@ button:focus-visible,a:focus-visible{outline:3px solid var(--verde);outline-offs
           <div class="dot cinza" id="dotSt"></div>
           <span id="txtSt">Verificando...</span>
         </div>
+        <div id="prazoEntradaInfo" style="display:none;margin-top:9px;text-align:center;font-size:.78rem;font-weight:600"></div>
         <button class="btn btn-dourado" id="btnAcesso">
           <span id="lblBtn">💳 Pagar e Garantir Acesso</span>
         </button>
@@ -3589,7 +3590,24 @@ function _atualizarGarantiaCountdown() {
   garantiaInfo.textContent = `🔒 Vaga garantida até ${fmtHora(sess.garantia.vaga_garantida_ate)} · faltam ${restanteMin} min`;
   garantiaInfo.style.color = restanteMin <= 10 ? 'var(--laranja)' : 'var(--azul)';
 }
+let _prazoEntradaInterval = null;
 
+function _atualizarPrazoEntradaCountdown() {
+  const prazoInfo = document.getElementById('prazoEntradaInfo');
+  if (!prazoInfo || !sess.acesso || !sess.acesso.prazo_entrada_ate) return;
+
+  const alvo = new Date(sess.acesso.prazo_entrada_ate).getTime();
+  const restanteMin = Math.round((alvo - Date.now()) / 60000);
+
+  if (restanteMin <= 0) {
+    prazoInfo.style.display = 'none';
+    clearInterval(_prazoEntradaInterval);
+    return;
+  }
+
+  prazoInfo.textContent = `⏳ Você tem ${restanteMin} min para passar pela catraca`;
+  prazoInfo.style.color = restanteMin <= 5 ? 'var(--vermelho)' : 'var(--laranja)';
+}
 function renderizarStatusAcesso() {
   const box          = document.getElementById('statusBox');
   const dot          = document.getElementById('dotSt');
@@ -3602,51 +3620,80 @@ function renderizarStatusAcesso() {
   const garantiaInfo = document.getElementById('garantiaInfo');
 
   clearInterval(_garantiaInterval);
+clearInterval(_prazoEntradaInterval); // NOVO
 
-  if(sess.acesso) {
-    box.className = 'st-box presente';
-    dot.className = 'dot verde';
-    txt.textContent = `Acesso ativo desde ${fmtHora(sess.acesso.entrada_em)}`;
-    lblBtn.textContent = '✅ Acesso Ativo';
-    btn.disabled = true;
-    if (btnSairLib) btnSairLib.style.display = 'block';
-    if (btnTravar) btnTravar.style.display = 'none';
-    if (garantiaInfo) garantiaInfo.style.display = 'none';
-    ticket.style.display = 'block';
-    document.getElementById('ticketNome').textContent = sess.usuario.nome;
-    document.getElementById('ticketDetalhe').textContent = `CPF: ${fmtCpf(sess.usuario.cpf)} • Entrada: ${fmtHora(sess.acesso.entrada_em)}`;
-  } else if (sess.garantia) {
-    box.className = 'st-box presente';
-    dot.className = 'dot azul';
-    txt.textContent = 'Fora da biblioteca — vaga garantida';
-    lblBtn.textContent = '💳 Pagar e Garantir Acesso';
-    btn.disabled = false;
-    if (btnSairLib) btnSairLib.style.display = 'none';
-    ticket.style.display = 'none';
+if(sess.acesso) {
+  box.className = 'st-box presente';
+  dot.className = 'dot verde';
+  txt.textContent = `Acesso ativo desde ${fmtHora(sess.acesso.entrada_em)}`;
+  lblBtn.textContent = '✅ Acesso Ativo';
+  btn.disabled = true;
 
-    if (garantiaInfo) {
-      garantiaInfo.style.display = 'block';
-      _atualizarGarantiaCountdown();
-      _garantiaInterval = setInterval(_atualizarGarantiaCountdown, 30000);
+  if (btnSairLib) btnSairLib.style.display = 'block';
+  if (btnTravar) btnTravar.style.display = 'none';
+  if (garantiaInfo) garantiaInfo.style.display = 'none';
+
+  ticket.style.display = 'block';
+  document.getElementById('ticketNome').textContent = sess.usuario.nome;
+  document.getElementById('ticketDetalhe').textContent =
+    `CPF: ${fmtCpf(sess.usuario.cpf)} • Entrada: ${fmtHora(sess.acesso.entrada_em)}`;
+
+  // NOVO: mostra o prazo para passar na catraca
+  const prazoInfo = document.getElementById('prazoEntradaInfo');
+
+  if (prazoInfo) {
+    if (
+      sess.acesso.prazo_entrada_ate &&
+      new Date(sess.acesso.prazo_entrada_ate).getTime() > Date.now()
+    ) {
+      prazoInfo.style.display = 'block';
+      _atualizarPrazoEntradaCountdown();
+      _prazoEntradaInterval = setInterval(
+        _atualizarPrazoEntradaCountdown,
+        15000
+      );
+    } else {
+      prazoInfo.style.display = 'none';
     }
-    if (btnTravar) {
-      btnTravar.style.display = 'block';
-      btnTravar.disabled = !!sess.garantia.trava_manual;
-      btnTravar.textContent = sess.garantia.trava_manual
-        ? '🔒 Vaga já travada'
-        : '🔒 Travar Vaga';
-    }
-  } else {
-    box.className = 'st-box ausente';
-    dot.className = 'dot cinza';
-    txt.textContent = 'Sem acesso ativo para hoje';
-    lblBtn.textContent = '💳 Pagar e Garantir Acesso';
-    btn.disabled = false;
-    if (btnSairLib) btnSairLib.style.display = 'none';
-    if (btnTravar) btnTravar.style.display = 'none';
-    if (garantiaInfo) garantiaInfo.style.display = 'none';
-    ticket.style.display = 'none';
   }
+
+} else if (sess.garantia) {
+  box.className = 'st-box presente';
+  dot.className = 'dot azul';
+  txt.textContent = 'Fora da biblioteca — vaga garantida';
+  lblBtn.textContent = '💳 Pagar e Garantir Acesso';
+  btn.disabled = false;
+  if (btnSairLib) btnSairLib.style.display = 'none';
+  ticket.style.display = 'none';
+  const prazoInfo1 = document.getElementById('prazoEntradaInfo'); // NOVO: evita a caixa de prazo ficar presa visível ao mudar de estado
+  if (prazoInfo1) prazoInfo1.style.display = 'none';               // NOVO
+  if (garantiaInfo) {
+    garantiaInfo.style.display = 'block';
+    _atualizarGarantiaCountdown();
+    _garantiaInterval = setInterval(
+      _atualizarGarantiaCountdown,
+      30000
+    );
+  }
+  if (btnTravar) {
+    btnTravar.style.display = 'block';
+    btnTravar.disabled = !!sess.garantia.trava_manual;
+    btnTravar.textContent = sess.garantia.trava_manual
+      ? '🔒 Vaga já travada'
+      : '🔒 Travar Vaga';
+  }
+} else {
+  box.className = 'st-box ausente';
+  dot.className = 'dot cinza';
+  txt.textContent = 'Sem acesso ativo para hoje';
+  lblBtn.textContent = '💳 Pagar e Garantir Acesso';
+  btn.disabled = false;
+  if (btnSairLib) btnSairLib.style.display = 'none';
+  if (btnTravar) btnTravar.style.display = 'none';
+  if (garantiaInfo) garantiaInfo.style.display = 'none';
+  ticket.style.display = 'none';
+  const prazoInfo2 = document.getElementById('prazoEntradaInfo'); // NOVO: mesma correção pro estado "sem acesso"
+  if (prazoInfo2) prazoInfo2.style.display = 'none';               // NOVO
 }
 
 // ═══════════════════════════════════════════════════════════

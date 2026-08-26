@@ -40,6 +40,10 @@
     {
       "path": "/api/acessos?acao=processar-garantias",
       "schedule": "0 23 * * *"
+    },
+    {
+      "path": "/api/pagamentos?acao=processar-prazos-expirados",
+      "schedule": "50 22 * * *"
     }
   ]
 }
