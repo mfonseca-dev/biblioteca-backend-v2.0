@@ -6565,16 +6565,40 @@ if ('serviceWorker' in navigator) {
   });
 }
 
-// ── Som ao receber push ──────────────────────────────────────
+// ── Som + atualização de estado ao receber push ──────────────
+// Antes só tocava o beep — sess.garantia/sess.acesso ficavam
+// desatualizados até o usuário fechar e reabrir o app. Agora também
+// re-busca o estado (?acao=meu), que é o que decide se o botão
+// "travar vaga" aparece (renderizarStatusAcesso).
 const _pushChannel = new BroadcastChannel('ala-push');
 _pushChannel.onmessage = e => {
-  if (e.data?.tipo === 'PUSH_RECEBIDO') _beep(e.data.somTipo || 'acesso');
+  if (e.data?.tipo === 'PUSH_RECEBIDO') {
+    _beep(e.data.somTipo || 'acesso');
+    if (sess.usuario) verificarAcessoHoje();
+  }
 };
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.addEventListener('message', e => {
-    if (e.data?.tipo === 'PUSH_RECEBIDO') _beep(e.data.somTipo || 'acesso');
+    if (e.data?.tipo === 'PUSH_RECEBIDO') {
+      _beep(e.data.somTipo || 'acesso');
+      if (sess.usuario) verificarAcessoHoje();
+    }
   });
 }
+
+// ── Atualiza estado ao voltar do background (app minimizado) ──
+// Throttle: evita rebuscar toda vez que o usuário troca de aba
+// rapidamente — só revalida se já passou 10s desde a última checagem.
+let _ultimaVerificacaoAcesso = 0;
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible' && sess.usuario) {
+    const agora = Date.now();
+    if (agora - _ultimaVerificacaoAcesso > 10000) {
+      _ultimaVerificacaoAcesso = agora;
+      verificarAcessoHoje();
+    }
+  }
+});
 
 // ═══════════════════════════════════════════════════════════
 //  VER TERMO (APP)
